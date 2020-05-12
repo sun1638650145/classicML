@@ -130,19 +130,21 @@ def pre_pruning(x_train, y_train, x_validation, y_validation, tree=None):
             down_part_train = x_train.loc[:, tree.feature_name] < tree.split_value
             down_part_validation = x_validation.loc[:, tree.feature_name] < tree.split_value
 
-            tree.subtree['>={:.3f}'.format(tree.split_value)] = pre_pruning(x_train[up_part_train],
-                                                                             y_train[up_part_train],
-                                                                             x_validation[up_part_validation],
-                                                                             y_validation[up_part_validation],
-                                                                             tree.subtree['>= {:.3f}'.format(tree.split_value)])
-            tree.subtree['<{:.3f}'.format(tree.split_value)] = pre_pruning(x_train[down_part_train],
-                                                                            y_train[down_part_train],
-                                                                            x_validation[down_part_validation],
-                                                                            y_validation[down_part_validation],
-                                                                            tree.subtree['< {:.3f}'.format(tree.split_value)])
+            up_subtree = pre_pruning(x_train[up_part_train],
+                                     y_train[up_part_train],
+                                     x_validation[up_part_validation],
+                                     y_validation[up_part_validation],
+                                     tree.subtree['>={:.3f}'.format(tree.split_value)])
+            down_subtree = pre_pruning(x_train[down_part_train],
+                                       y_train[down_part_train],
+                                       x_validation[down_part_validation],
+                                       y_validation[down_part_validation],
+                                       tree.subtree['<{:.3f}'.format(tree.split_value)])
 
-            tree.leaf_num = (tree.subtree['>={:.3f}'.format(tree.split_value)].leaf_num + tree.subtree['< {:.3f}'.format(tree.split_value)])
-            tree.high = max(tree.subtree['<{:.3f}'.format(tree.split_value)].high, tree.subtree['< {:.3f}'.format(tree.split_value)].high) + 1
+            tree.subtree['>={:.3f}'.format(tree.split_value)] = up_subtree
+            tree.subtree['<{:.3f}'.format(tree.split_value)] = down_subtree
+            tree.leaf_num = (up_subtree.leaf_num + down_subtree.leaf_num)
+            tree.high = max(up_subtree.high, down_subtree.high) + 1
 
     return tree
 
