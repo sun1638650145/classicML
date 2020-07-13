@@ -1,5 +1,5 @@
-from DecisionTree.tree_model.split import *
-from DecisionTree.tree_model.pruning import *
+from classicML.DecisionTree.tree_model.split import *
+from classicML.DecisionTree.tree_model.pruning import *
 
 
 class Node:

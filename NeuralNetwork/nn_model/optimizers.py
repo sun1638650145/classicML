@@ -1,6 +1,6 @@
 import numpy as np
-from NeuralNetwork.nn_model.backend import forward, backward, compute_loss, compute_accuracy, display_verbose
-from NeuralNetwork.nn_model.initializers import adam_initializer
+from classicML.NeuralNetwork.nn_model.backend import forward, backward, compute_loss, compute_accuracy, display_verbose
+from classicML.NeuralNetwork.nn_model.initializers import adam_initializer
 
 
 def apply_GradientDescent(parameters, grad, learning_rate):

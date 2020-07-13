@@ -1,7 +1,7 @@
 import copy
-from NeuralNetwork.nn_model.initializers import *
-from NeuralNetwork.nn_model.optimizers import *
-from NeuralNetwork.nn_model.history import *
+from classicML.NeuralNetwork.nn_model.initializers import *
+from classicML.NeuralNetwork.nn_model.optimizers import *
+from classicML.NeuralNetwork.nn_model.history import *
 
 
 class BackPropagationNeuralNetwork:

@@ -1,7 +1,7 @@
 import time
 import numpy as np
-from NeuralNetwork.nn_model.losses import binary_crossentropy, categorical_crossentropy
-from NeuralNetwork.nn_model.metrics import binary_accuracy, categorical_accuracy
+from classicML.NeuralNetwork.nn_model.losses import binary_crossentropy, categorical_crossentropy
+from classicML.NeuralNetwork.nn_model.metrics import binary_accuracy, categorical_accuracy
 
 
 def ReLU(z):
