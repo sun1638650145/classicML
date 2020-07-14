@@ -1,5 +1,6 @@
 import numpy as np
 from classicML.NeuralNetwork.nn_model.backend import forward, backward, compute_loss, compute_accuracy, display_verbose
+from classicML.NeuralNetwork.nn_model.backend import rbf_forward, rbf_backward
 from classicML.NeuralNetwork.nn_model.initializers import adam_initializer
 
 
@@ -38,6 +39,15 @@ def apply_Adam(parameters, grad, learning_rate, beta_1, beta_2, epsilon, m, v, e
         parameters['b' + str(i)] -= learning_rate * m_b_correct / np.sqrt(v_b_correct + epsilon)
 
     return parameters, m, v
+
+
+def apply_RBF(parameters, grad, learning_rate):
+    """基于梯度更新参数"""
+    parameters['w'] -= learning_rate * grad['d_w']
+    parameters['b'] -= learning_rate * grad['d_b']
+    parameters['beta'] -= learning_rate * grad['d_beta']
+
+    return parameters
 
 
 def GradientDescent(x, y, epochs, verbose, parameters, learning_rate, metrics):
@@ -124,6 +134,31 @@ def Adam(x, y, epochs, verbose, parameters, metrics, seed, learning_rate=1e-3, b
         loss = compute_loss(y_pred, y)
         acc = compute_accuracy(y_pred, y, metrics)
 
+        if verbose:
+            display_verbose(epoch, epochs, loss, acc)
+        loss_list.append(loss)
+        acc_list.append(acc)
+
+    print()
+
+    return parameters, loss_list, acc_list
+
+
+def RBFOptimizer(x, y, epochs, verbose, parameters, learning_rate):
+    """RBF网络优化器"""
+    loss_list = []
+    acc_list = []
+
+    for epoch in range(epochs):
+        # 前向传播
+        y_pred, cache = rbf_forward(x, parameters)
+        # 反向传播
+        grad = rbf_backward(y_pred, y, cache)
+        # 更新参数
+        parameters = apply_RBF(parameters, grad, learning_rate)
+
+        loss = compute_loss(y_pred, y, model='RBF')
+        acc = compute_accuracy(y_pred, y, 'binary_accuracy')
         if verbose:
             display_verbose(epoch, epochs, loss, acc)
         loss_list.append(loss)

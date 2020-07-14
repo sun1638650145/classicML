@@ -1,6 +1,6 @@
 import time
 import numpy as np
-from classicML.NeuralNetwork.nn_model.losses import binary_crossentropy, categorical_crossentropy
+from classicML.NeuralNetwork.nn_model.losses import binary_crossentropy, categorical_crossentropy, mean_squared_error
 from classicML.NeuralNetwork.nn_model.metrics import binary_accuracy, categorical_accuracy
 
 
@@ -153,14 +153,59 @@ def backward(y_pred, y, caches):
     return grad
 
 
-def compute_loss(y_pred, y):
+def rbf_forward(x, parameters):
+    """计算RBF的前向传播"""
+    num_of_x, attr_of_x = x.shape
+
+    w = parameters['w']
+    b = parameters['b']
+    c = parameters['c']
+    beta = parameters['beta']
+
+    units = c.shape[0]
+    rho = np.zeros((num_of_x, units))
+    x_ci = np.zeros((num_of_x, units))
+    for unit in range(units):
+        x_ci[:, unit] = np.linalg.norm(x - c[[unit], ], axis=1) ** 2
+        # 高斯径向基函数
+        rho[:, unit] = np.exp(-beta[0, unit] * x_ci[:, unit])
+
+    y_pred = np.matmul(rho, w.T) + b
+    cache = (rho, x_ci, w, beta)
+
+    return y_pred, cache
+
+
+def rbf_backward(y_pred, y, cache):
+    """计算RBF的反向传播"""
+    grad = {}
+    (rho, x_ci, w, beta) = cache
+    y_shape = y.shape[0]
+
+    d_a = y_pred - y
+    d_w = np.matmul(d_a.T, rho) / y_shape
+    d_b = np.sum(d_a, axis=0, keepdims=True) / y_shape
+    d_rho = np.matmul(y_pred, w)
+    d_beta = np.sum(d_rho * rho * (-x_ci), axis=0, keepdims=True) / y_shape
+
+    grad['d_w'] = d_w
+    grad['d_b'] = d_b
+    grad['d_beta'] = d_beta
+
+    return grad
+
+
+def compute_loss(y_pred, y, model=None):
     """计算loss"""
-    if y.ndim == 1:
-        y = y.reshape(-1, 1)
-    if y.shape[1] == 1:
-        loss = binary_crossentropy(y_pred, y)
+    if model is None:
+        if y.ndim == 1:
+            y = y.reshape(-1, 1)
+        if y.shape[1] == 1:
+            loss = binary_crossentropy(y_pred, y)
+        else:
+            loss = categorical_crossentropy(y_pred, y)
     else:
-        loss = categorical_crossentropy(y_pred, y)
+        loss = mean_squared_error(y_pred, y)
 
     return loss
 

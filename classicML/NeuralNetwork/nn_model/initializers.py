@@ -57,5 +57,19 @@ def adam_initializer(parameters):
     return m, v
 
 
+def rbf_initializer(hidden_units, seed):
+    """对RBF网络参数初始化"""
+    np.random.seed(seed)
+
+    parameters = {}
+
+    parameters['w'] = np.zeros((1, hidden_units))
+    parameters['b'] = np.zeros([1, 1])
+    parameters['c'] = np.random.rand(hidden_units, 2)
+    parameters['beta'] = np.random.randn(1, hidden_units)
+
+    return parameters
+
+
 # alias
 glorot = xavier

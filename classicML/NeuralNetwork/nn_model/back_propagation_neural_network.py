@@ -33,6 +33,7 @@ class BackPropagationNeuralNetwork:
             y = y.reshape(-1, 1)
 
         # 参数初始化
+        epochs = int(epochs)  # 使用科学记数法的时候也能正常
         if self.initializer == 'he_normal':
             self.parameters = he_normal(layer_dim, self.seed)
         elif self.initializer in ('xavier', 'glorot'):
