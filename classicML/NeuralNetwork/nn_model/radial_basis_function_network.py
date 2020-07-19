@@ -11,6 +11,7 @@ class RadialBasisFuncionNetwork:
         self.seed = seed
 
     def compile(self, learning_rate, hidden_units):
+        """编译超参数"""
         self.learning_rate = learning_rate
         self.hidden_units = hidden_units
 
@@ -39,5 +40,10 @@ class RadialBasisFuncionNetwork:
             raise Exception('你必须先进行训练')
 
         y_pred, _ = rbf_forward(x, self.parameters)
+        if y_pred.shape[1] == 1:
+            ans = np.zeros(y_pred.shape)
+            ans[y_pred >= 0.5] = 1
+        else:
+            ans = np.argmax(y_pred, axis=1)
 
-        return y_pred
+        return ans

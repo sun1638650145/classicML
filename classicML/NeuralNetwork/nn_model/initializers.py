@@ -63,10 +63,10 @@ def rbf_initializer(hidden_units, seed):
 
     parameters = {}
 
-    parameters['w'] = np.zeros((1, hidden_units))
+    parameters['w'] = np.zeros([1, hidden_units])
     parameters['b'] = np.zeros([1, 1])
-    parameters['c'] = np.random.rand(hidden_units, 2)
-    parameters['beta'] = np.random.randn(1, hidden_units)
+    parameters['c'] = np.random.rand(hidden_units, 2)  # 神经元对应的中心坐标
+    parameters['beta'] = np.random.randn(1, hidden_units)  # 高斯径向基函数的beta
 
     return parameters
 

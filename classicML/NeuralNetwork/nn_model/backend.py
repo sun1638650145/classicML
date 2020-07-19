@@ -165,9 +165,10 @@ def rbf_forward(x, parameters):
     units = c.shape[0]
     rho = np.zeros((num_of_x, units))
     x_ci = np.zeros((num_of_x, units))
+    # 高斯径向基函数
+    # rho(x, c_i) = e^{-beta||x-c_i||^2)}
     for unit in range(units):
         x_ci[:, unit] = np.linalg.norm(x - c[[unit], ], axis=1) ** 2
-        # 高斯径向基函数
         rho[:, unit] = np.exp(-beta[0, unit] * x_ci[:, unit])
 
     y_pred = np.matmul(rho, w.T) + b
@@ -182,9 +183,10 @@ def rbf_backward(y_pred, y, cache):
     (rho, x_ci, w, beta) = cache
     y_shape = y.shape[0]
 
-    d_a = y_pred - y
-    d_w = np.matmul(d_a.T, rho) / y_shape
-    d_b = np.sum(d_a, axis=0, keepdims=True) / y_shape
+    d_y = y_pred - y  # 这里不能叫d_y 就是预测值和真实值之间的误差
+    d_w = np.matmul(d_y.T, rho) / y_shape
+    d_b = np.sum(d_y, axis=0, keepdims=True) / y_shape
+
     d_rho = np.matmul(y_pred, w)
     d_beta = np.sum(d_rho * rho * (-x_ci), axis=0, keepdims=True) / y_shape
 

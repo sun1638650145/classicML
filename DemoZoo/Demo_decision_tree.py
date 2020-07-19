@@ -12,7 +12,7 @@ tree = cml.DecisionTree(critertion='gini', pruning=None)
 # 训练
 tree.fit(x, y)
 # 绘图
-cml.plot_tree.plot_decision_tree(tree.tree)
+cml.plot_decision_tree(tree.tree)
 # 测试
 x_test_2 = ['稍凹', '浅白', '稍蜷', '浊响', '清晰', '软粘']
 ans = tree.predict(x_test_2)

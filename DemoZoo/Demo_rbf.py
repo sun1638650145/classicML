@@ -1,7 +1,7 @@
 import numpy as np
 import classicML as cml
 
-# 读取数据
+# 读取数据（试图拟合一个异或的神经网络）
 x = np.asarray([[1, 0], [0, 1], [1, 1], [0, 0]])
 y = np.asarray([[1], [1], [0], [0]])
 # 生成RBF网络
@@ -16,6 +16,4 @@ history = model.fit(x, y,
 cml.plot_history([history.loss], ['loss'])
 # 测试
 ans = model.predict(x)
-ans[ans >= 0.5] = 1
-ans[ans < 0.5] = 0
 print(ans)
