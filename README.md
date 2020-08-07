@@ -24,3 +24,7 @@ pip install classicML
 
 1. 添加径向基函数神经网络
 2. 例行修复BUG
+
+### version v0.2.4
+
+1. 重写sklearn依赖函数，添加到DecisionTree.tree_model.backend，显著减少安装后实际的环境大小
