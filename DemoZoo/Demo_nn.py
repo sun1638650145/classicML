@@ -1,7 +1,6 @@
 import pandas as pd
 import classicML as cml
 
-
 DATASET_PATH = '西瓜数据集.csv'
 # 读取数据
 df = pd.read_csv(DATASET_PATH, index_col=0)

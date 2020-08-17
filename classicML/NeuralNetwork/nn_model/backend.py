@@ -1,5 +1,5 @@
-from classicML.NeuralNetwork.nn_model.losses import *
-from classicML.NeuralNetwork.nn_model.metrics import *
+from .losses import *
+from .metrics import *
 
 
 def ReLU(z):

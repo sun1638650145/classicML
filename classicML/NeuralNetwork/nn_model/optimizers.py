@@ -1,9 +1,9 @@
 import numpy as np
 from time import time
-from classicML.NeuralNetwork.nn_model.terminal_display import display_verbose
-from classicML.NeuralNetwork.nn_model.backend import forward, backward, compute_loss, compute_accuracy
-from classicML.NeuralNetwork.nn_model.backend import rbf_forward, rbf_backward
-from classicML.NeuralNetwork.nn_model.initializers import adam_initializer
+from .terminal_display import display_verbose
+from .backend import forward, backward, rbf_forward, rbf_backward
+from .backend import compute_loss, compute_accuracy
+from .initializers import adam_initializer
 
 
 def apply_GradientDescent(parameters, grad, learning_rate):

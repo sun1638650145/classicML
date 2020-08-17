@@ -1,4 +1,4 @@
-from classicML.DecisionTree.tree_model.backend import *
+from .backend import *
 
 
 def choose_best_split_with_gain(x, y):
