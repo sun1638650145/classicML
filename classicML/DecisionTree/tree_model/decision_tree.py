@@ -7,26 +7,35 @@ class Node:
         self.feature_name = None
         self.feature_index = None
 
-        self.subtree = {}# 属性值分支
+        self.subtree = {}  # 属性值分支
 
         self.purity = None
-        self.is_continuous = False# 是否是离散的特征
+        self.is_continuous = False  # 是否是离散的特征
         self.split_value = None
-        self.is_leaf = False# 是否是叶结点
-        self.leaf_class = None# 结点所属分类
-        self.leaf_num = None# 表示无 树桩1
-        self.high = -1# 表示无 树桩0
+        self.is_leaf = False  # 是否是叶结点
+        self.leaf_class = None  # 结点所属分类
+        self.leaf_num = None  # 表示无 树桩1
+        self.high = -1  # 表示无 树桩0
 
 
 class DecisionTree:
     """生成一个决策树"""
 
-    def __init__(self, critertion='gain', pruning=None):
+    def __init__(self):
+        pass
+
+    def compile(self, critertion='gain', pruning=None, feature_attr=None):
         assert critertion in ('gain', 'gini', 'entropy')
         assert pruning in (None, 'pre', 'post')
 
         self.critertion = critertion
         self.pruning = pruning
+        self.feature_attr = feature_attr
+        try:
+            if self.feature_attr is None:
+                raise UserWarning
+        except UserWarning:
+            print("Warning: 如果feature_attr为None, 请保证输出的x为pandas.DataFrame")
 
     def fit(self, x, y, x_validation=None, y_validation=None):
 
@@ -36,6 +45,8 @@ class DecisionTree:
                 raise Exception("没有验证集不能进行剪枝")
 
         # 添加index列
+        x = pd.DataFrame(x, columns=self.feature_attr)
+        y = pd.Series(y)
         x.reset_index(drop=True, inplace=True)
         y.reset_index(drop=True, inplace=True)
 
@@ -43,6 +54,8 @@ class DecisionTree:
         self.original_x = x
 
         if (x_validation is not None) and (y_validation is not None):
+            x_validation = pd.DataFrame(x_validation, columns=self.feature_attr)
+            y_validation = pd.Series(y_validation)
             x_validation.reset_index(drop=True, inplace=True)
             y_validation.reset_index(drop=True, inplace=True)
 

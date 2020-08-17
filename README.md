@@ -28,3 +28,8 @@ pip install classicML
 ### version v0.2.4
 
 1. 重写sklearn依赖函数，添加到DecisionTree.tree_model.backend，显著减少安装后实际的环境大小
+
+### version v0.3
+
+1. DecisionTree: 优化API调用方式，是语法更统一；增加决策树的输入特征数据类型，理论上现在支持一切的array-like的数据类型
+2. NeuralNetwork: verbose支持显示预计时间；BPNN支持自定义损失函数

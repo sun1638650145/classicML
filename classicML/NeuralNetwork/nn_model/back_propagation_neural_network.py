@@ -12,8 +12,9 @@ class BackPropagationNeuralNetwork:
         self.seed = seed
         self.initializer = initializer
 
-    def compile(self, layer_dim, optimizer, learning_rate, metrics=None, beta_1=0.9, beta_2=0.999, epsilon=1e-7):
+    def compile(self, layer_dim, loss=None, optimizer='SGD', learning_rate=1e-2, metrics=None, beta_1=0.9, beta_2=0.999, epsilon=1e-7):
         self.layer_dim = layer_dim
+        self.loss_function = loss  # loss为None将自动推理 优先使用cross_entropy
         self.optimizer = optimizer
         self.learning_rate = learning_rate
         self.metrics = metrics
@@ -44,11 +45,11 @@ class BackPropagationNeuralNetwork:
 
         # 优化器优化
         if self.optimizer in ('GD', 'GradientDescent', GD, GradientDescent):
-            parameters, loss, acc = GradientDescent(x, y, epochs, verbose, self.parameters, self.learning_rate, self.metrics)
+            parameters, loss, acc = GradientDescent(x, y, epochs, verbose, self.parameters, self.learning_rate, self.loss_function, self.metrics)
         elif self.optimizer in ('SGD', 'StochasticGradientDescent', SGD, StochasticGradientDescent):
-            parameters, loss, acc = SGD(x, y, epochs, verbose, self.parameters, self.learning_rate, self.metrics, self.seed)
+            parameters, loss, acc = SGD(x, y, epochs, verbose, self.parameters, self.learning_rate, self.loss_function, self.metrics, self.seed)
         elif self.optimizer in ('Adam', Adam):
-            parameters, loss, acc = Adam(x, y, epochs, verbose, self.parameters, self.metrics, self.seed, self.learning_rate, self.beta_1, self.beta_2, self.epsilon)
+            parameters, loss, acc = Adam(x, y, epochs, verbose, self.parameters, self.loss_function, self.metrics, self.seed, self.learning_rate, self.beta_1, self.beta_2, self.epsilon)
 
         self.parameters = parameters
         self.history.add_loss(loss)

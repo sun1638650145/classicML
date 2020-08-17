@@ -13,18 +13,19 @@ y = df['好瓜']
 model = cml.BPNN(seed=16)
 model.compile(layer_dim=[3, 1],  # 定义隐含层和输出层神经元数量
               optimizer='Adam',
-              learning_rate=1e-1,
+              loss='ce',
+              learning_rate=1e-3,
               metrics='accuracy')
 # 训练
 history = model.fit(x.values,
                     y.values,
-                    epochs=100,
+                    epochs=10000,
                     verbose=1)
 # 绘图
 cml.plot_history([history.loss, history.acc], ['loss', 'acc'])
 # 测试
 ans = model.predict(x.values[0])
 if ans == 1:
-    print('这是一个好瓜')
+    print('好')
 else:
-    print('这是一个坏瓜')
+    print('坏')

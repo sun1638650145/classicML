@@ -1,7 +1,5 @@
-import time
-import numpy as np
-from classicML.NeuralNetwork.nn_model.losses import binary_crossentropy, categorical_crossentropy, mean_squared_error
-from classicML.NeuralNetwork.nn_model.metrics import binary_accuracy, categorical_accuracy
+from classicML.NeuralNetwork.nn_model.losses import *
+from classicML.NeuralNetwork.nn_model.metrics import *
 
 
 def ReLU(z):
@@ -197,17 +195,29 @@ def rbf_backward(y_pred, y, cache):
     return grad
 
 
-def compute_loss(y_pred, y, model=None):
+def compute_loss(y_pred, y, loss_function, model=None):
     """计算loss"""
-    if model is None:
+    if loss_function is None:
+        if model is None:
+            if y.ndim == 1:
+                y = y.reshape(-1, 1)
+            if y.shape[1] == 1:
+                loss = binary_crossentropy(y_pred, y)
+            else:
+                loss = categorical_crossentropy(y_pred, y)
+        else:
+            loss = mean_squared_error(y_pred, y)
+    else:
         if y.ndim == 1:
             y = y.reshape(-1, 1)
-        if y.shape[1] == 1:
+        if loss_function in ('binary_crossentropy', binary_crossentropy):
             loss = binary_crossentropy(y_pred, y)
-        else:
+        elif loss_function in ('ce', 'categorical_crossentropy', categorical_crossentropy):
             loss = categorical_crossentropy(y_pred, y)
-    else:
-        loss = mean_squared_error(y_pred, y)
+        elif loss_function in ('mse', 'mean_squared_error', mean_squared_error):
+            loss = mean_squared_error(y_pred, y)
+        else:
+            raise Exception("请检查输入的损失函数")
 
     return loss
 
@@ -229,23 +239,3 @@ def compute_accuracy(y_pred, y, metrics):
             acc = categorical_accuracy(y_pred, y)
 
     return acc
-
-
-def display_verbose(i, epochs, loss, accuracy, timesleep=0):
-    """进度条显示函数"""
-    if i == 0:
-        print('\rEpoch %d/%d [>........................] - loss: %.4f - accuracy: %.4f' % (i+1, epochs, loss, accuracy), end='')
-    elif i > (epochs - epochs/25):
-        print('\rEpoch %d/%d [=========================] - loss: %.4f - accuracy: %.4f' % (i+1, epochs, loss, accuracy), end='')
-    else:
-        print('\rEpoch %d/%d [' % (i+1, epochs), end='')
-
-        arrow = int(np.ceil((i+1)/(epochs/25)))
-        for num in range(arrow-1):
-            print('=', end='')
-        print('>', end='')
-        for num in range(25 - arrow):
-            print('.', end='')
-
-        print('] - loss: %.4f - accuracy: %.4f' % (loss, accuracy), end='')
-    time.sleep(timesleep)

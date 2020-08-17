@@ -1,5 +1,7 @@
 import numpy as np
-from classicML.NeuralNetwork.nn_model.backend import forward, backward, compute_loss, compute_accuracy, display_verbose
+from time import time
+from classicML.NeuralNetwork.nn_model.terminal_display import display_verbose
+from classicML.NeuralNetwork.nn_model.backend import forward, backward, compute_loss, compute_accuracy
 from classicML.NeuralNetwork.nn_model.backend import rbf_forward, rbf_backward
 from classicML.NeuralNetwork.nn_model.initializers import adam_initializer
 
@@ -50,11 +52,15 @@ def apply_RBF(parameters, grad, learning_rate):
     return parameters
 
 
-def GradientDescent(x, y, epochs, verbose, parameters, learning_rate, metrics):
+def GradientDescent(x, y, epochs, verbose, parameters, learning_rate, loss_function, metrics):
     """梯度下降优化器"""
     loss_list = []
     acc_list = []
+
+    ETD = time()
     for epoch in range(epochs):
+        # 每轮开始时间
+        starting_time = time()
         # 前向传播
         y_pred, caches = forward(x, parameters)
         # 反向传播
@@ -62,11 +68,11 @@ def GradientDescent(x, y, epochs, verbose, parameters, learning_rate, metrics):
         # 更新参数
         parameters = apply_GradientDescent(parameters, grad, learning_rate)
 
-        loss = compute_loss(y_pred, y)
+        loss = compute_loss(y_pred, y, loss_function)
         acc = compute_accuracy(y_pred, y, metrics)
 
         if verbose:
-            display_verbose(epoch, epochs, loss, acc)
+            display_verbose(epoch, epochs, loss, acc, starting_time, ETD)
         loss_list.append(loss)
         acc_list.append(acc)
 
@@ -75,7 +81,7 @@ def GradientDescent(x, y, epochs, verbose, parameters, learning_rate, metrics):
     return parameters, loss_list, acc_list
 
 
-def StochasticGradientDescent(x, y, epochs, verbose, parameters, learning_rate, metrics, seed):
+def StochasticGradientDescent(x, y, epochs, verbose, parameters, learning_rate, loss_function, metrics, seed):
     """随机梯度下降优化器"""
     np.random.seed(seed)
 
@@ -84,7 +90,10 @@ def StochasticGradientDescent(x, y, epochs, verbose, parameters, learning_rate, 
 
     num_of_features = x.shape[0]
 
+    ETD = time()
     for epoch in range(epochs):
+        # 每轮开始时间
+        starting_time = time()
         # 随机选择样本
         random_index = np.random.randint(0, num_of_features)
         # 用于更新参数的y_pred_one的前向传播
@@ -95,11 +104,11 @@ def StochasticGradientDescent(x, y, epochs, verbose, parameters, learning_rate, 
         # 更新参数后计算损失的y_pred，y_pred_one维度和y不一致不便于计算损失
         y_pred, _ = forward(x, parameters)
 
-        loss = compute_loss(y_pred, y)
+        loss = compute_loss(y_pred, y, loss_function)
         acc = compute_accuracy(y_pred, y, metrics)
 
         if verbose:
-            display_verbose(epoch, epochs, loss, acc)
+            display_verbose(epoch, epochs, loss, acc, starting_time, ETD)
         loss_list.append(loss)
         acc_list.append(acc)
 
@@ -108,7 +117,7 @@ def StochasticGradientDescent(x, y, epochs, verbose, parameters, learning_rate, 
     return parameters, loss_list, acc_list
 
 
-def Adam(x, y, epochs, verbose, parameters, metrics, seed, learning_rate=1e-3, beta_1=0.9, beta_2=0.999, epsilon=1e-7):
+def Adam(x, y, epochs, verbose, parameters, loss_function, metrics, seed, learning_rate=1e-3, beta_1=0.9, beta_2=0.999, epsilon=1e-7):
     """自适应矩估计优化器"""
     np.random.seed(seed)
 
@@ -120,7 +129,10 @@ def Adam(x, y, epochs, verbose, parameters, metrics, seed, learning_rate=1e-3, b
     # 对Adam进行初始化
     m, v = adam_initializer(parameters)
 
+    ETD = time()
     for epoch in range(epochs):
+        # 每轮开始时间
+        starting_time = time()
         # 随机选择样本
         random_index = np.random.randint(0, num_of_features)
         # 用于更新参数的y_pred_one
@@ -131,11 +143,11 @@ def Adam(x, y, epochs, verbose, parameters, metrics, seed, learning_rate=1e-3, b
         # 更新参数后计算损失的y_pred
         y_pred, _ = forward(x, parameters)
 
-        loss = compute_loss(y_pred, y)
+        loss = compute_loss(y_pred, y, loss_function)
         acc = compute_accuracy(y_pred, y, metrics)
 
         if verbose:
-            display_verbose(epoch, epochs, loss, acc)
+            display_verbose(epoch, epochs, loss, acc, starting_time, ETD)
         loss_list.append(loss)
         acc_list.append(acc)
 
@@ -149,7 +161,10 @@ def RBFOptimizer(x, y, epochs, verbose, parameters, learning_rate):
     loss_list = []
     acc_list = []
 
+    ETD = time()
     for epoch in range(epochs):
+        # 每轮开始时间
+        starting_time = time()
         # 前向传播
         y_pred, cache = rbf_forward(x, parameters)
         # 反向传播
@@ -157,10 +172,10 @@ def RBFOptimizer(x, y, epochs, verbose, parameters, learning_rate):
         # 更新参数
         parameters = apply_RBF(parameters, grad, learning_rate)
 
-        loss = compute_loss(y_pred, y, model='RBF')
+        loss = compute_loss(y_pred, y, loss_function=None, model='RBF')
         acc = compute_accuracy(y_pred, y, 'binary_accuracy')
         if verbose:
-            display_verbose(epoch, epochs, loss, acc)
+            display_verbose(epoch, epochs, loss, acc, starting_time, ETD)
         loss_list.append(loss)
         acc_list.append(acc)
 

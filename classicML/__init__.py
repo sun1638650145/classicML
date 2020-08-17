@@ -1,5 +1,5 @@
 """An easy-to-use ML framework"""
-__version__ = '0.2.4'
+__version__ = '0.3rc1'
 
 from classicML.DecisionTree import *
 from classicML.NeuralNetwork import *
@@ -8,6 +8,8 @@ from classicML.DecisionTree.tree_model.decision_tree import DecisionTree
 
 from classicML.NeuralNetwork.nn_model.back_propagation_neural_network import BackPropagationNeuralNetwork
 from classicML.NeuralNetwork.nn_model.back_propagation_neural_network import BackPropagationNeuralNetwork as BPNN
+from classicML.NeuralNetwork.nn_model import optimizers
+from classicML.NeuralNetwork.nn_model import losses
 from classicML.NeuralNetwork.nn_model.radial_basis_function_network import RadialBasisFuncionNetwork
 from classicML.NeuralNetwork.nn_model.radial_basis_function_network import RadialBasisFuncionNetwork as RBF
 
