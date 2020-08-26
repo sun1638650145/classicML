@@ -35,3 +35,8 @@ pip install classicML
 
 1. DecisionTree: 优化API调用方式，是语法更统一；增加决策树的输入特征数据类型，理论上现在支持一切的array-like的数据类型
 2. NeuralNetwork: verbose支持显示预计时间；BPNN支持自定义损失函数
+
+### rc2
+
+3. SupportVectorMachine: 添加支持向量分类器
+4. 支持的核函数有线性核、多项式核、高斯核
