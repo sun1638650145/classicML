@@ -40,3 +40,7 @@ pip install classicML
 
 3. SupportVectorMachine: 添加支持向量分类器
 4. 支持的核函数有线性核、多项式核、高斯核
+
+### rc3
+
+5. 修复线性核和多项式核的BUG
