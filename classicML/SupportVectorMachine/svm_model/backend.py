@@ -23,12 +23,15 @@ def calc_error(x, y, i, b, alphas, non_zero_alpha, kernel, degree, gamma):
         valid_y = y[non_zero_alpha]
         valid_alphas = alphas[non_zero_alpha]
         kappa_x_i = kappa_xi_x(kernel, valid_x, x_i, degree, gamma)
-
-        gx = np.dot((valid_alphas.reshape(-1, 1) * valid_y).T, kappa_x_i) + b
+        
+        if kernel is not 'rbf':
+            fx = np.dot((valid_alphas.reshape(-1, 1) * valid_y).T, kappa_x_i.T) + b
+        else:
+            fx = np.dot((valid_alphas.reshape(-1, 1) * valid_y).T, kappa_x_i) + b
     else:
-        gx = b
+        fx = b
 
-    error = gx - y_i
+    error = fx - y_i
 
     return np.squeeze(error)
 
