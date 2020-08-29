@@ -19,7 +19,16 @@ def polynomial_kernel(x_i, x_j, degree):
 
 def rbf_kernel(x_i, x_j, gamma):
     """
-        高斯核函数
+        径向基/高斯核函数
         kappa(x_i, x_j) = exp(-gamma * (||x_i - x_j||^2)/2*sigma^2)
     """
     return np.exp(-gamma * np.sum(np.power(x_j - x_i, 2), axis=1))
+
+
+def sigmoid_kernel(x_i, x_j, beta, theta):
+    """
+        sigmoid核函数
+        kappa(x_i, x_j) = tanh(beta * (x_i^T * x_j) + theta)
+    """
+
+    return np.tanh(beta * np.dot(x_j, x_i.T) + theta)

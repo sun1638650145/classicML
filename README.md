@@ -44,3 +44,9 @@ pip install classicML
 ### rc3
 
 5. 修复线性核和多项式核的BUG
+
+
+### rc4 
+
+6. 增加sigmoid核函数
+7. 提供核函数接口用户可以自定义, 并在在DemoZoo提供例子

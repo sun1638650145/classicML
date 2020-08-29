@@ -19,35 +19,49 @@ class SupportVectorClassification:
         self.support_alpha_ = None
         self.support_y_ = None
 
-    def compile(self, C=10000.0, kernel='rbf', gamma='auto', max_iter=-1, degree=3, tol=1e-3):
+    def compile(self, C=10000.0, kernel='rbf', gamma='auto', max_iter=-1, degree=3, beta=1., theta=-1., tol=1e-3, customize_kernel=None):
         """
         给支持向量分类器进行编译,配置参数项
         Parameters
         ----------
         C : float, optional
             软间隔的正则化系数
-        kernel : str, optional
+        kernel : {'rbf', 'linear', 'poly', 'sigmoid'}, optional
             核函数, 默认是高斯核函数
             现在支持的核函数有高斯核'rbf', 线性核'linear', 多项式核'poly'
         gamma : {'auto', 'scale'} or float, optional
-            核函数系数
+            高斯核函数系数
+            如果不使用高斯核函数, 此参数无效
         max_iter : int, default=-1, optional
             最大的迭代次数(可避免过拟合)
             -1表示没有限制, 直到找到所有样本都满足KKT条件的时候
         degree : int, default=3, optional
             多项式核函数的次数
-            如果不使用多项式核函数, 此参数无效, 默认3
+            如果不使用多项式核函数, 此参数无效
+        beta : float, default=1, optional
+            sigmoid核函数的参数
+            如果不使用sigmoid核函数, 此参数无效
+        theta : float, default=-1, optional
+            sigmoid核函数的参数, 小于0的整数
+            如果不使用sigmoid核函数, 此参数无效
         tol : float, default=1e-3, optional
             停止训练的误差值
+        customize_kernel : function, default=None, optional
+            自定义核函数
+            kernel是'customize', 需要用户手动实现核函数, 核函数的形式必须是my_kernel(x_i, x_j, *args, **kwargs)
+            注意, 自定义的核函数不一定保证存在解
         """
-        assert kernel in ('rbf', 'linear', 'poly')
+        assert kernel in ('rbf', 'linear', 'poly', 'sigmoid', 'customize')
         assert gamma in ('auto', 'scale') or type(gamma) == float or type(gamma) == int
 
         self.C = C
         self.kernel = kernel
         self.max_iter = max_iter
         self.degree = degree
+        self.beta = beta
+        self.theta = theta
         self.tol = tol
+        self.customize_kernel = customize_kernel
         if type(gamma) is int:
             self.gamma = float(gamma)
         else:
@@ -110,7 +124,7 @@ class SupportVectorClassification:
         num_of_sample = x.shape[0]
         y_pred = np.ones((num_of_sample, ))
         for sample in range(num_of_sample):
-            kappa_i = kappa_xi_x(self.kernel, x[sample], self.support_vector_, self.degree, self.gamma)
+            kappa_i = kappa_xi_x(self.kernel, x[sample], self.support_vector_, self.degree, self.gamma, self.beta, self.theta, self.customize_kernel)
             fx = np.dot((self.support_alpha_.reshape(-1, 1) * self.support_y_).T, kappa_i) + self.b
             if fx < 0:
                 y_pred[sample] = -1

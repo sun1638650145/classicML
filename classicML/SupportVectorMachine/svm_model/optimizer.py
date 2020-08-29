@@ -7,7 +7,7 @@ def SMO_inner_loop(svc, x, y, i):
     if svc.non_bound_alpha[i]:
         error_i = svc.error_cache[i]
     else:
-        error_i = calc_error(x, y, i, svc.b, svc.alphas, svc.non_zero_alpha, svc.kernel, svc.degree, svc.gamma)
+        error_i = calc_error(x, y, i, svc.b, svc.alphas, svc.non_zero_alpha, svc.kernel, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
 
     num_of_sample = x.shape[0]
     y_i = y[i, :]
@@ -34,7 +34,7 @@ def SMO_inner_loop(svc, x, y, i):
         for j in np.random.permutation(num_of_sample):
             if j in non_bound_index:
                 continue
-            error_j = calc_error(x, y, j, svc.b, svc.alphas, svc.non_zero_alpha, svc.kernel, svc.degree, svc.gamma)
+            error_j = calc_error(x, y, j, svc.b, svc.alphas, svc.non_zero_alpha, svc.kernel, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
             if update_alpha(svc, x, y, i, j, error_i, error_j):
                 return 1
 

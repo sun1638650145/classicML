@@ -1,5 +1,5 @@
 """An easy-to-use ML framework"""
-__version__ = '0.3rc3'
+__version__ = '0.3rc4'
 
 from .DecisionTree import *
 from .NeuralNetwork import *
