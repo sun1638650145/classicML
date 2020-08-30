@@ -1,5 +1,6 @@
 import numpy as np
-from .optimizer import SMO, kappa_xi_x
+from .optimizer import SMO
+from .backend import kappa_xi_x
 
 
 class SupportVectorClassification:
@@ -9,8 +10,19 @@ class SupportVectorClassification:
         支持向量分类器初始化
         Parameters
         ----------
-        seed : int or None, default=None, optional
+        seed : int, default=None, optional
             随机种子
+
+        Arguments
+        ---------
+        support_ : numpy.ndarray
+            支持向量分类器的支持向量下标组成的数组
+        support_vector_ : numpy.ndarray
+            支持向量分类器的支持向量组成的数组
+        support_alpha_ : numpy.ndarray
+            支持向量分类器的拉格朗日乘子组成的数组
+        support_y_ : numpy.ndarray
+            支持向量分类器的支持向量对应的标签组成的数组
         """
         np.random.seed(seed)
 
@@ -26,9 +38,9 @@ class SupportVectorClassification:
         ----------
         C : float, optional
             软间隔的正则化系数
-        kernel : {'rbf', 'linear', 'poly', 'sigmoid'}, optional
+        kernel : {'rbf', 'linear', 'poly', 'sigmoid', 'customize'}, optional
             核函数, 默认是高斯核函数
-            现在支持的核函数有高斯核'rbf', 线性核'linear', 多项式核'poly'
+            注意, 使用'customize'的时候, customize_kernel需要提供
         gamma : {'auto', 'scale'} or float, optional
             高斯核函数系数
             如果不使用高斯核函数, 此参数无效
@@ -48,7 +60,7 @@ class SupportVectorClassification:
             停止训练的误差值
         customize_kernel : function, default=None, optional
             自定义核函数
-            kernel是'customize', 需要用户手动实现核函数, 核函数的形式必须是my_kernel(x_i, x_j, *args, **kwargs)
+            kernel是'customize', 需要用户手动实现核函数, 核函数的形式必须是my_kernel(x_i, x_j); kernel不是'customize', 该参数无效
             注意, 自定义的核函数不一定保证存在解
         """
         assert kernel in ('rbf', 'linear', 'poly', 'sigmoid', 'customize')

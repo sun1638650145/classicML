@@ -31,22 +31,8 @@ pip install classicML
 
 ## version v0.3
 
-### rc1
-
 1. DecisionTree: 优化API调用方式，是语法更统一；增加决策树的输入特征数据类型，理论上现在支持一切的array-like的数据类型
 2. NeuralNetwork: verbose支持显示预计时间；BPNN支持自定义损失函数
-
-### rc2
-
-3. SupportVectorMachine: 添加支持向量分类器
-4. 支持的核函数有线性核、多项式核、高斯核
-
-### rc3
-
-5. 修复线性核和多项式核的BUG
-
-
-### rc4 
-
-6. 增加sigmoid核函数
-7. 提供核函数接口用户可以自定义, 并在在DemoZoo提供例子
+3. SupportVectorMachine: 添加支持向量分类器；支持的核函数有线性核、多项式核、高斯核、Sigmoid核和自定义核函数
+4. 自定义核函数接口用户可以自定义, 并在DemoZoo提供例子
+5. 例行修复BUG
