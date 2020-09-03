@@ -2,7 +2,7 @@ import numpy as np
 from .kernel import linear_kernel, polynomial_kernel, rbf_kernel, sigmoid_kernel
 
 
-def kappa_xi_x(kernel, x_i, x_j, degree, gamma, beta, theta, customize_kernel):
+def kappa(kernel, x_i, x_j, degree, gamma, beta, theta, customize_kernel):
     """选择核函数"""
     if kernel == 'linear':
         kappa_i = linear_kernel(x_i, x_j)
@@ -27,7 +27,7 @@ def calc_error(x, y, i, b, alphas, non_zero_alpha, kernel, degree, gamma, beta, 
         valid_y = y[non_zero_alpha]
         valid_alphas = alphas[non_zero_alpha]
 
-        kappa_x_i = kappa_xi_x(kernel, valid_x, x_i, degree, gamma, beta, theta, customize_kernel)
+        kappa_x_i = kappa(kernel, valid_x, x_i, degree, gamma, beta, theta, customize_kernel)
 
         fx = np.dot((valid_alphas.reshape(-1, 1) * valid_y).T, kappa_x_i.T) + b
     else:
@@ -51,25 +51,6 @@ def select_second_alpha(error, error_cache, non_bound_alpha):
     error_alpha_j = error_cache[index_alpha_j]
 
     return index_alpha_j, error_alpha_j
-
-
-def kappa_xi_xj(kernel, x, i, j, degree, gamma, beta, theta, customize_kernel):
-    """选择核函数"""
-    x_i = x[[i], :]
-    x_j = x[[j], :]
-
-    if kernel == 'linear':
-        kappa_i = linear_kernel(x_i, x_j)
-    elif kernel == 'poly':
-        kappa_i = polynomial_kernel(x_i, x_j, degree)
-    elif kernel == 'rbf':
-        kappa_i = rbf_kernel(x_i, x_j, gamma)
-    elif kernel == 'sigmoid':
-        kappa_i = sigmoid_kernel(x_i, x_j, beta, theta)
-    else:
-        kappa_i = customize_kernel(x_i, x_j)
-
-    return np.squeeze(kappa_i)
 
 
 def clip_alpha(alpha, low, high):
@@ -118,13 +99,10 @@ def update_alpha(svc, x, y, i, j, error_i, error_j):
 
     x_i = x[[i], :]
     x_j = x[[j], :]
-    kappa_ii = kappa_xi_x(svc.kernel, x_i, x_i, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
-    kappa_ij = kappa_xi_x(svc.kernel, x_i, x_j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
-    kappa_jj = kappa_xi_x(svc.kernel, x_j, x_j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
+    kappa_ii = kappa(svc.kernel, x_i, x_i, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
+    kappa_ij = kappa(svc.kernel, x_i, x_j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
+    kappa_jj = kappa(svc.kernel, x_j, x_j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
 
-    # kappa_ii = kappa_xi_xj(svc.kernel, x, i, i, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
-    # kappa_ij = kappa_xi_xj(svc.kernel, x, i, j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
-    # kappa_jj = kappa_xi_xj(svc.kernel, x, j, j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
     eta = kappa_ii + kappa_jj - 2 * kappa_ij
     # 失败情况3-2范数小于0
     if eta <= 0:

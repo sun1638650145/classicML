@@ -1,6 +1,6 @@
 import numpy as np
 from .optimizer import SMO
-from .backend import kappa_xi_x
+from .backend import kappa
 
 
 class SupportVectorClassification:
@@ -136,7 +136,7 @@ class SupportVectorClassification:
         num_of_sample = x.shape[0]
         y_pred = np.ones((num_of_sample, ))
         for sample in range(num_of_sample):
-            kappa_i = kappa_xi_x(self.kernel, x[sample], self.support_vector_, self.degree, self.gamma, self.beta, self.theta, self.customize_kernel)
+            kappa_i = kappa(self.kernel, x[sample], self.support_vector_, self.degree, self.gamma, self.beta, self.theta, self.customize_kernel)
             fx = np.dot((self.support_alpha_.reshape(-1, 1) * self.support_y_).T, kappa_i) + self.b
             if fx < 0:
                 y_pred[sample] = -1
