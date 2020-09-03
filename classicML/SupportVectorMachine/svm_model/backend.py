@@ -116,9 +116,15 @@ def update_alpha(svc, x, y, i, j, error_i, error_j):
     if low == high:
         return False
 
-    kappa_ii = kappa_xi_xj(svc.kernel, x, i, i, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
-    kappa_ij = kappa_xi_xj(svc.kernel, x, i, j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
-    kappa_jj = kappa_xi_xj(svc.kernel, x, j, j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
+    x_i = x[[i], :]
+    x_j = x[[j], :]
+    kappa_ii = kappa_xi_x(svc.kernel, x_i, x_i, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
+    kappa_ij = kappa_xi_x(svc.kernel, x_i, x_j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
+    kappa_jj = kappa_xi_x(svc.kernel, x_j, x_j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
+
+    # kappa_ii = kappa_xi_xj(svc.kernel, x, i, i, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
+    # kappa_ij = kappa_xi_xj(svc.kernel, x, i, j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
+    # kappa_jj = kappa_xi_xj(svc.kernel, x, j, j, svc.degree, svc.gamma, svc.beta, svc.theta, svc.customize_kernel)
     eta = kappa_ii + kappa_jj - 2 * kappa_ij
     # 失败情况3-2范数小于0
     if eta <= 0:

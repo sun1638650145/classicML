@@ -1,5 +1,5 @@
 import pandas as pd
-from lm_model.logistic_regression import LogisticRegression
+import classicML as cml
 
 
 DATASET_PATH = '西瓜数据集a.csv'
@@ -10,8 +10,10 @@ y = df.iloc[:, 2].values
 y[y == '是'] = 1
 y[y == '否'] = 0
 # 生成逻辑回归模型
-model = LogisticRegression(seed=16)
-model.compile(optimizer='GD',
+model = cml.LogisticRegression()
+model.compile(optimizer='Newton',
               learning_rate=1e-2)
 # 训练
 model.fit(x, y, epochs=10000, verbose=True)
+# 绘图
+cml.plot_logistic_regression(model.beta, x, y)

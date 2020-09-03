@@ -36,3 +36,7 @@ pip install classicML
 3. SupportVectorMachine: 添加支持向量分类器；支持的核函数有线性核、多项式核、高斯核、Sigmoid核和自定义核函数
 4. 自定义核函数接口用户可以自定义, 并在DemoZoo提供例子
 5. 例行修复BUG
+
+## version v0.4b
+
+1. LinearModel: 增加LogisticRegression

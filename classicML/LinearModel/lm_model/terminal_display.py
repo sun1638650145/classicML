@@ -1,9 +1,10 @@
 from time import time
+
 import numpy as np
 
 
 def display_verbose(epoch, epochs, loss, accuracy, starting_time, ETD):
-    """"""
+    """显示日志信息"""
     if epoch == 0:
         print('\rEpoch %d/%d [>........................] ETA: 00:00 - loss: %.4f - accuracy: %.4f' % (
         epoch + 1, epochs, loss, accuracy), end='')
