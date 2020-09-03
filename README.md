@@ -40,4 +40,4 @@ pip install classicML
 ## version v0.4b1
 
 1. LinearModel: 增加LogisticRegression
-2. SupportVectorMachine: 优化计算核函数的函数，减少代码重复是
+2. SupportVectorMachine: 优化计算核函数的函数，减少代码重复
