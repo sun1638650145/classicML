@@ -62,3 +62,17 @@ def compute_metric(y_pred, y, metrics):
         raise Exception('请检查输入的评估函数')
 
     return acc
+
+
+def get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1):
+    """获得类内散度矩阵"""
+
+    S_0 = np.dot((X_0 - mu_0).T, (X_0 - mu_0))
+    S_1 = np.dot((X_1 - mu_1).T, (X_1 - mu_1))
+
+    return S_0 + S_1
+
+
+def get_w(S_w, mu_0, mu_1):
+    """获得LDA的投影向量"""
+    return np.dot(np.linalg.inv(S_w), (mu_0 - mu_1).T).reshape(1, -1)
