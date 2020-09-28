@@ -1,5 +1,5 @@
 """An easy-to-use ML framework"""
-__version__ = '0.4b2'
+__version__ = '0.4'
 
 from .DecisionTree import *
 from .LinearModel import *

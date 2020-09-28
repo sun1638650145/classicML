@@ -37,11 +37,8 @@ pip install classicML
 4. 自定义核函数接口用户可以自定义, 并在DemoZoo提供例子
 5. 例行修复BUG
 
-## version v0.4b1
+## version v0.4
 
 1. LinearModel: 增加LogisticRegression
-2. SupportVectorMachine: 优化计算核函数的函数，减少代码重复
-
-## version v0.4b2
-
-1. LinearModel: 增加LinearDiscriminantAnalysis
+2. LinearModel: 增加LinearDiscriminantAnalysis
+3. SupportVectorMachine: 优化计算核函数的函数，减少代码重复
