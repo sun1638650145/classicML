@@ -4,7 +4,7 @@ import pandas as pd
 import classicML as cml
 
 
-DATASET_PATH = './datasets/西瓜数据集alpha.csv'
+DATASET_PATH = '../datasets/西瓜数据集alpha.csv'
 
 
 # 自定义核函数

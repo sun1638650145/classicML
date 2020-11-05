@@ -3,7 +3,7 @@ import pandas as pd
 import classicML as cml
 
 
-DATASET_PATH = './datasets/西瓜数据集.csv'
+DATASET_PATH = '../datasets/西瓜数据集.csv'
 CALLBACKS = [cml.callbacks.History(loss_name='crossentropy',
                                    metric_name='accuracy')]
 

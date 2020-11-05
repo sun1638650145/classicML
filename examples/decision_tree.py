@@ -4,7 +4,7 @@ import pandas as pd
 import classicML as cml
 
 
-DATASET_PATH = './datasets/西瓜数据集.csv'
+DATASET_PATH = '../datasets/西瓜数据集.csv'
 ATTRIBUTE_NAME = ['脐部', '色泽', '根蒂', '敲声', '纹理', '触感', '密度', '含糖率']
 
 # 读取数据
