@@ -1,44 +1,39 @@
-# classicML 
-Python简单易用的经典机器学习框架
-## 重要信息
+# classicML
 
-你可以使用pip安装
+简单易用的经典机器学习框架，classicML支持数种机器学习算法，是你入门学习机器学习的首选
 
-```shell
-pip install classicML
-```
+## 重要信息⚠️
 
-## version v0.1
-1. 添加决策树
-2. 决策树支持离散值、连续值
-3. 基于信息熵、信息增益、基尼指数划分；支持预剪枝和后剪枝；暂不支持多变量决策树和缺失值处理（建议在读入数据集之前处理）
+1. 推荐你直接使用pip安装预编译的软件包(stable version)
 
-## version v0.2
-1. 添加神经网络
-2. 神经网络支持交叉熵损失函数和均方误差损失函数；支持的优化器有GradientDescent、SGD、Adam
+   ```shell
+   pip install classicML
+   ```
 
-### version v0.2.2
-1. 发行版发布到PyPi
+2. 如果你有了比较高软件开发和编程水平可以从GitHub上下载源码进行编译安装
 
-### version v0.2.3
+   ```
+   git clone https://github.com/sun1638650145/classicML.git
+   ```
 
-1. 添加径向基函数神经网络
-2. 例行修复BUG
+3. 部分算法支持了使用CPP作为后端进行加速，你需要在开头使用这条语句切换后端
 
-### version v0.2.4
+   ```python
+   import os
+   os.environ['CLASSICML_ENGINE'] = 'CC'
+   ```
+   
+4. 使用CPP加速的版本是0.5alpha版本, 需要用户手动编译且目前只支持macOS和Linux暂不支持Windows.
 
-1. 重写sklearn依赖函数，添加到DecisionTree.tree_model.backend，显著减少安装后实际的环境大小
+5. 0.5版本的API接口略有改动, 修改了部分模块的路径, 结构更为合理.
 
-## version v0.3
+6. 0.5版本添加benchmark模块可以监控内存和时间开销.
 
-1. DecisionTree: 优化API调用方式，是语法更统一；增加决策树的输入特征数据类型，理论上现在支持一切的array-like的数据类型
-2. NeuralNetwork: verbose支持显示预计时间；BPNN支持自定义损失函数
-3. SupportVectorMachine: 添加支持向量分类器；支持的核函数有线性核、多项式核、高斯核、Sigmoid核和自定义核函数
-4. 自定义核函数接口用户可以自定义, 并在DemoZoo提供例子
-5. 例行修复BUG
+## 目前的已支持的算法
 
-## version v0.4
-
-1. LinearModel: 增加LogisticRegression
-2. LinearModel: 增加LinearDiscriminantAnalysis
-3. SupportVectorMachine: 优化计算核函数的函数，减少代码重复
+* 逻辑回归	
+* 线性判别分析(添加CPP支持, 0.5alpha版本)
+* BP神经网络
+* 径向基函数神经网络
+* 支持向量分类器(添加CPP支持, 0.5alpha版本)
+* 分类决策树

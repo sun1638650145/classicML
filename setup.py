@@ -5,8 +5,8 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="classicML",
-    version="0.4",
-    author="Steve Sun",
+    version="0.5alpha",
+    author="Steve R. Sun",
     license='Apache Software License',
     author_email="s1638650145@gmail.com",
     description="An easy-to-use ML framework",
@@ -21,8 +21,8 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'numpy>=1.18.4',
-        'pandas>=1.0.3',
-        'matplotlib>=3.2.1'
+        'numpy>=1.19.2',
+        'pandas>=1.1.3',
+        'matplotlib>=3.3.2'
     ],
 )

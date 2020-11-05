@@ -1,0 +1,39 @@
+import os
+
+from classicML import CLASSICML_LOGGER
+
+from classicML.backend.python import activations
+from classicML.backend.python import callbacks
+from classicML.backend.python import initializers
+from classicML.backend.python import kernels
+from classicML.backend.python import losses
+from classicML.backend.python import metrics
+from classicML.backend.python import optimizers
+from classicML.backend.python import tree
+
+if os.environ['CLASSICML_ENGINE'] == 'CC':
+    from classicML.backend.cc.ops import __version__
+    from classicML.backend.cc.ops import cc_calculate_error
+    from classicML.backend.cc.ops import cc_calculate_error as calculate_error
+    from classicML.backend.cc.ops import cc_clip_alpha
+    from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
+    from classicML.backend.cc.ops import cc_get_w
+    from classicML.backend.cc.ops import cc_get_w as get_w
+    from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
+    from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix as get_within_class_scatter_matrix
+    from classicML.backend.cc.ops import cc_select_second_alpha
+    from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
+    CLASSICML_LOGGER.info('后端版本是: {}'.format(__version__))
+else:
+    from classicML.backend.python.ops import calculate_error
+    from classicML.backend.python.ops import clip_alpha
+    from classicML.backend.python.ops import get_w
+    from classicML.backend.python.ops import get_within_class_scatter_matrix
+    from classicML.backend.python.ops import select_second_alpha
+
+from classicML.backend.training import get_initializer
+from classicML.backend.training import get_kernel
+from classicML.backend.training import get_loss
+from classicML.backend.training import get_metric
+from classicML.backend.training import get_optimizer
+from classicML.backend.training import get_pruner

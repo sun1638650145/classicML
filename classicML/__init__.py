@@ -1,32 +1,37 @@
-"""An easy-to-use ML framework"""
-__version__ = '0.4'
+"""An easy-to-use ML framework."""
+__version__ = '0.5alpha'
 
-from .DecisionTree import *
-from .LinearModel import *
-from .NeuralNetwork import *
-from .SupportVectorMachine import *
+import os
+import logging
 
-from .DecisionTree.tree_model.decision_tree import DecisionTree
+# 配置默认环境变量
+os.environ.setdefault('CLASSICML_ENGINE', 'Python')
+os.environ.setdefault('CLASSICML_FONT', 'Arial Unicode MS')
+# 系统logger
+logging.basicConfig(level=logging.INFO)
+CLASSICML_LOGGER = logging.getLogger(name='classicML')
+CLASSICML_LOGGER.info('正在使用 {} 引擎'.format(os.environ['CLASSICML_ENGINE']))
 
-from .NeuralNetwork.nn_model.back_propagation_neural_network import BackPropagationNeuralNetwork
-from .NeuralNetwork.nn_model.back_propagation_neural_network import BackPropagationNeuralNetwork as BPNN
-from .NeuralNetwork.nn_model import optimizers
-from .NeuralNetwork.nn_model import losses
-from .NeuralNetwork.nn_model.radial_basis_function_network import RadialBasisFuncionNetwork
-from .NeuralNetwork.nn_model.radial_basis_function_network import RadialBasisFuncionNetwork as RBF
+from classicML.api import models
+from classicML.api import plots
 
-from .SupportVectorMachine.svm_model.support_vector_classification import SupportVectorClassification
-from .SupportVectorMachine.svm_model.support_vector_classification import SVC
+from classicML.api import BackPropagationNeuralNetwork
+from classicML.api import BPNN
+from classicML.api import DecisionTreeClassifier
+from classicML.api import LogisticRegression
+from classicML.api import LinearDiscriminantAnalysis
+from classicML.api import LDA
+from classicML.api import RadialBasisFunctionNetwork
+from classicML.api import RBF
+from classicML.api import SupportVectorClassifier
+from classicML.api import SVC
 
-from .LinearModel.lm_model.logistic_regression import LogisticRegression
-from .LinearModel.lm_model.linear_discriminant_analysis import LinearDiscriminantAnalysis
-from .LinearModel.lm_model.linear_discriminant_analysis import LinearDiscriminantAnalysis as LDA
+from classicML.backend import activations
+from classicML.backend import callbacks
+from classicML.backend import initializers
+from classicML.backend import kernels
+from classicML.backend import losses
+from classicML.backend import metrics
+from classicML.backend import optimizers
 
-# plot
-from .DecisionTree.tree_plot.plot_tree import plot_decision_tree
-from .NeuralNetwork.nn_plot.plot_nn import plot_history
-from .SupportVectorMachine.svm_plot.plot_svm import plot_svc
-from .LinearModel.lm_plot.plot_lr import plot_logistic_regression
-from .LinearModel.lm_plot.plot_lr import plot_logistic_regression as plot_lr
-from .LinearModel.lm_plot.plot_lda import plot_linear_discriminant_analysis
-from .LinearModel.lm_plot.plot_lda import plot_linear_discriminant_analysis as plot_lda
+from classicML import benchmarks
