@@ -1,7 +1,11 @@
+import os
 import numpy as np
 import pandas as pd
 
-from classicML.backend.python.ops import type_of_target
+if os.environ['CLASSICML_ENGINE'] == 'CC':
+    from classicML.backend.cc.ops import cc_type_of_target as type_of_target
+else:
+    from classicML.backend.python.ops import type_of_target
 
 
 class Criterion(object):

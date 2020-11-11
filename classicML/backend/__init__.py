@@ -23,6 +23,8 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix as get_within_class_scatter_matrix
     from classicML.backend.cc.ops import cc_select_second_alpha
     from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
+    from classicML.backend.cc.ops import cc_type_of_target
+    from classicML.backend.cc.ops import cc_type_of_target as type_of_target
     CLASSICML_LOGGER.info('后端版本是: {}'.format(__version__))
 else:
     from classicML.backend.python.ops import calculate_error
@@ -30,6 +32,7 @@ else:
     from classicML.backend.python.ops import get_w
     from classicML.backend.python.ops import get_within_class_scatter_matrix
     from classicML.backend.python.ops import select_second_alpha
+    from classicML.backend.python.ops import type_of_target
 
 from classicML.backend.training import get_initializer
 from classicML.backend.training import get_kernel

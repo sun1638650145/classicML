@@ -189,3 +189,72 @@ std::tuple<int, double> SelectSecondAlpha(const double &error,
     
     return alpha_tuple;
 }
+
+// 返回输入数据的数据类型的字符串, 输入为待测试数据.
+// 只处理float64的输入数据.
+std::string TypeOfTarget(const Eigen::MatrixXd &y) {
+    bool any = true;
+    std::set<double> buffer;
+
+    // 任何一个元素取整不等于它本身的就是连续值.
+    for (int row = 0; row < y.rows(); row ++) {
+        for (int col = 0; col < y.cols(); col ++) {
+            buffer.insert(y(row, col));
+            if (y(row, col) != (int)y(row, col)) {
+                any = false;
+            }
+        }
+    }
+    if (any == false) {
+        return "continuous";
+    }
+
+    // 取唯一值统计元素个数.
+    if (y.cols() == 1) {
+        if (buffer.size() == 2) {
+            return "binary";
+        } else if (buffer.size() > 2) {
+            return "multiclass";
+        }
+    }
+
+    // 行数不为一, 且元素个数超过二.
+    if (buffer.size() >= 2) {
+        return "multilabel";
+    }
+
+    return "unknown";
+}
+
+// 返回输入数据的数据类型的字符串, 输入为待测试数据.
+// 只处理int64的输入数据.
+std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &y) {
+    // 取唯一值统计元素个数.
+    std::set<double> buffer;
+    for (int row = 0; row < y.rows(); row ++) {
+        for (int col = 0; col < y.cols(); col ++) {
+            buffer.insert(y(row, col));
+        }
+    }
+    if (y.cols() == 1) {
+        if (buffer.size() == 2) {
+            return "binary";
+        } else if (buffer.size() > 2) {
+            return "multiclass";
+        }
+    }
+
+    // 行数不为一, 且元素个数超过二.
+    if (buffer.size() >= 2) {
+        return "multilabel";
+    }
+
+    return "unknown";
+}
+
+// 返回输入数据的数据类型的字符串, 输入为待测试数据.
+// 处理其他类型的输入数据.
+// TODO(Steve R. Sun): Python版本的和CC版本在对于判断str类型的有差异, CC版本全部返回的是unknown.
+std::string TypeOfTarget(const pybind11::array &y) {
+    return "unknown";
+}

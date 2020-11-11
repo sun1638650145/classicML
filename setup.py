@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="classicML",
-    version="0.5alpha",
+    version="0.5alpha2",
     author="Steve R. Sun",
     license='Apache Software License',
     author_email="s1638650145@gmail.com",

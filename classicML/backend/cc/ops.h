@@ -10,6 +10,7 @@
 
 #include <math.h>
 #include <string.h>
+#include <set>
 #include <tuple>
 #include <vector>
 
@@ -39,9 +40,14 @@ std::tuple<int, double> SelectSecondAlpha(const double &error,
                                           const Eigen::RowVectorXd &error_cache,
                                           const Eigen::RowVectorXd &non_bound_alphas);
 
+// overload
+std::string TypeOfTarget(const Eigen::MatrixXd &y);
+std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &y);
+std::string TypeOfTarget(const pybind11::array &y);
+
 PYBIND11_MODULE(ops, m) {
     m.doc() = R"pbdoc(classicML的cc后端)pbdoc";
-    
+
     m.def("cc_calculate_error", &CalculateError, R"pbdoc(
 计算KKT条件的违背值.
 
@@ -59,7 +65,7 @@ PYBIND11_MODULE(ops, m) {
           pybind11::arg("x"), pybind11::arg("y"), pybind11::arg("i"),
           pybind11::arg("kernel"), pybind11::arg("alphas"), pybind11::arg("non_zero_alphas"),
           pybind11::arg("b"));
-    
+
     m.def("cc_clip_alpha", &ClipAlpha, R"pbdoc(
 修剪拉格朗日乘子.
 
@@ -113,7 +119,61 @@ PYBIND11_MODULE(ops, m) {
         拉格朗日乘子的下标和违背值.)pbdoc",
           pybind11::arg("error"), pybind11::arg("error_cache"), pybind11::arg("non_bound_alphas"));
 
-    m.attr("__version__") = "0.5_ops.V2.0.1";
+    m.def("cc_type_of_target", pybind11::overload_cast<const Eigen::MatrixXd &>(&TypeOfTarget), R"pbdoc(
+判断输入数据的类型.
+
+    Arguments:
+        y: numpy.ndarray,
+            待判断类型的数据.
+
+    Returns:
+        'binary': 元素只有两个离散值, 类型不限.
+        'continuous': 元素都是浮点数, 且不是对应整数的浮点数.
+        'multiclass': 元素不只有两个离散值, 类型不限.
+        'multilabel': 元素标签不为一, 类型不限.
+        'unknown': 类型未知.
+
+    Notes:
+        - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
+          pybind11::arg("y"));
+    m.def("cc_type_of_target", pybind11::overload_cast<const Eigen::Matrix<std::int64_t,
+                                                             Eigen::Dynamic,
+                                                             Eigen::Dynamic> &>(&TypeOfTarget), R"pbdoc(
+判断输入数据的类型.
+
+    Arguments:
+        y: numpy.ndarray,
+            待判断类型的数据.
+
+    Returns:
+        'binary': 元素只有两个离散值, 类型不限.
+        'continuous': 元素都是浮点数, 且不是对应整数的浮点数.
+        'multiclass': 元素不只有两个离散值, 类型不限.
+        'multilabel': 元素标签不为一, 类型不限.
+        'unknown': 类型未知.
+
+    Notes:
+        - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
+          pybind11::arg("y"));
+    m.def("cc_type_of_target", pybind11::overload_cast<const pybind11::array &>(&TypeOfTarget), R"pbdoc(
+判断输入数据的类型.
+
+    Arguments:
+        y: numpy.ndarray,
+            待判断类型的数据.
+
+    Returns:
+        'binary': 元素只有两个离散值, 类型不限.
+        'continuous': 元素都是浮点数, 且不是对应整数的浮点数.
+        'multiclass': 元素不只有两个离散值, 类型不限.
+        'multilabel': 元素标签不为一, 类型不限.
+        'unknown': 类型未知.
+
+    Notes:
+        - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
+          pybind11::arg("y"));
+
+    m.attr("__version__") = "0.5_ops.V3";
 }
 
 #endif /* OPS_H */

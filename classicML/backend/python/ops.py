@@ -157,6 +157,11 @@ def type_of_target(y):
         'multiclass': 元素不只有两个离散值, 类型不限.
         'multilabel': 元素标签不为一, 类型不限.
         'unknown': 类型未知.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你有可能使用其他的版本, 但是函数的调用方式和接口一致.
+        - Python和CC针对str类型的返回暂不相同.
     """
     if y.dtype == object or np.ndim(y) > 2:
         return 'unknown'
@@ -164,7 +169,12 @@ def type_of_target(y):
     if y.dtype.kind == 'f' and np.any(y != y.astype(int)):
         return 'continuous'
 
-    if y.shape[1] == 1:
+    if np.ndim(y) == 1:
+        if len(np.unique(y)) == 2:
+            return 'binary'
+        elif len(np.unique(y)) > 2:
+            return 'multiclass'
+    elif y.shape[1] == 1:
         if len(np.unique(y)) == 2:
             return 'binary'
         elif len(np.unique(y)) > 2:
