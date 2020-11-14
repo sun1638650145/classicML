@@ -8,15 +8,15 @@
 
    * 安装Python版本(没有加速)
 
-   ```shell
-   pip install classicML-python
-   ```
+     ```shell
+     pip install classicML-python
+     ```
 
    * 安装CPP版本(只支持macOS和LInux)
 
-   ```shell
-   pip install classicML
-   ```
+     ```shell
+     pip install classicML
+     ```
 
 2. 如果你有了比较高软件开发和编程水平可以从GitHub上下载源码进行编译安装, 请预装
 
@@ -24,7 +24,7 @@
    * pybind 2.6+
    * 并且保证c++的版本最低版本为c++14
 
-   ```
+   ```shell
    git clone https://github.com/sun1638650145/classicML.git
    cd classicML
    python3 setup.py install
@@ -49,4 +49,5 @@
 * 径向基函数神经网络
 * 支持向量分类器(已添加CPP支持)
 * 分类决策树(已添加CPP支持)
+* coming soon
 
