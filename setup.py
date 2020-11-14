@@ -24,7 +24,7 @@ setup(
     author_email='s1638650145@gmail.com',
     description='An easy-to-use ML framework',
     long_description=long_description,
-    long_description_content_type='text/matkdown',
+    long_description_content_type='text/markdown',
     url='https://github.com/sun1638650145/classicML',
     packages=find_packages(),
     classifiers=[
