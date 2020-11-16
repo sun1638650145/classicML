@@ -12,7 +12,7 @@
      pip install classicML-python
      ```
 
-   * 安装CPP版本(只支持macOS和LInux)
+   * 安装CPP版本(只支持macOS和Linux)
 
      ```shell
      pip install classicML

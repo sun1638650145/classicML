@@ -1,5 +1,5 @@
 """An easy-to-use ML framework."""
-__version__ = '0.5b1'
+__version__ = '0.5b2'
 
 import os
 import logging
@@ -15,12 +15,16 @@ CLASSICML_LOGGER.info('正在使用 {} 引擎'.format(os.environ['CLASSICML_ENGI
 from classicML.api import models
 from classicML.api import plots
 
+from classicML.api import AveragedOneDependentEstimator
+from classicML.api import AODE
 from classicML.api import BackPropagationNeuralNetwork
 from classicML.api import BPNN
 from classicML.api import DecisionTreeClassifier
 from classicML.api import LogisticRegression
 from classicML.api import LinearDiscriminantAnalysis
 from classicML.api import LDA
+from classicML.api import NaiveBayesClassifier
+from classicML.api import NB
 from classicML.api import RadialBasisFunctionNetwork
 from classicML.api import RBF
 from classicML.api import SupportVectorClassifier

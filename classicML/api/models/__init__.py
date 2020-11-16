@@ -1,3 +1,8 @@
+from classicML.api.models.bayes.naive_bayes_classifier import NaiveBayesClassifier
+from classicML.api.models.bayes.naive_bayes_classifier import NaiveBayesClassifier as NB
+from classicML.api.models.bayes.semi_naive_bayes_classifiers import AveragedOneDependentEstimator
+from classicML.api.models.bayes.semi_naive_bayes_classifiers import AveragedOneDependentEstimator as AODE
+
 from classicML.api.models.linear_model.linear_discriminant_analysis import LinearDiscriminantAnalysis
 from classicML.api.models.linear_model.linear_discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from classicML.api.models.linear_model.logistic_regression import LogisticRegression
