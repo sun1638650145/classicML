@@ -66,6 +66,68 @@ def clip_alpha(alpha, low, high):
     return alpha
 
 
+def get_conditional_probability(samples_on_attribute,
+                                samples_in_category,
+                                num_of_categories,
+                                smoothing):
+    """获取类条件概率.
+
+    Argument:
+        samples_on_attribute: numpy.ndarray, 在某个属性的样本.
+        samples_in_category: numpy.ndarray, 在某个类别上的样本.
+        num_of_categories: int, 类别的数量.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        类条件概率.
+    """
+    if smoothing:
+        samples_on_attribute += 1
+        samples_in_category += num_of_categories
+
+    probability = samples_on_attribute / samples_in_category
+
+    return probability
+
+
+def get_prior_probability(x, y, smoothing):
+    """获取类先验概率.
+
+    Argument:
+        x: numpy.ndarray, 特征数据.
+        y: numpy.ndarray, 标签.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        类先验概率.
+    """
+    number_of_sample, number_of_attributes = x.shape
+
+    # 执行平滑操作.
+    if smoothing:
+        p_0 = (len(y[y == 0]) + 1) / (number_of_sample + len(np.unique(y)))
+    else:
+        p_0 = len(y[y == 0]) / number_of_sample
+
+    return p_0, 1 - p_0
+
+
+def get_probability_density(sample, mean, var):
+    """获得概率密度.
+
+    Argument:
+        sample: float, 样本的取值.
+        mean: float, 样本在某个属性的上的均值.
+        var: float, 样本在某个属性上的方差.
+
+    Returns:
+        概率密度.
+    """
+    probability = 1 / (np.sqrt(2 * np.pi) * var) * np.exp(-(sample - mean) ** 2 / (2 * var ** 2))
+
+    return probability
+
+
 def get_w(S_w, mu_0, mu_1):
     """获得投影向量.
 

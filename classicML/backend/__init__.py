@@ -17,6 +17,9 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
     from classicML.backend.cc.ops import cc_clip_alpha
     from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
+    from classicML.backend.python.ops import get_conditional_probability
+    from classicML.backend.python.ops import get_prior_probability
+    from classicML.backend.python.ops import get_probability_density
     from classicML.backend.cc.ops import cc_get_w
     from classicML.backend.cc.ops import cc_get_w as get_w
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
@@ -29,6 +32,9 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
 else:
     from classicML.backend.python.ops import calculate_error
     from classicML.backend.python.ops import clip_alpha
+    from classicML.backend.python.ops import get_conditional_probability
+    from classicML.backend.python.ops import get_prior_probability
+    from classicML.backend.python.ops import get_probability_density
     from classicML.backend.python.ops import get_w
     from classicML.backend.python.ops import get_within_class_scatter_matrix
     from classicML.backend.python.ops import select_second_alpha
