@@ -73,13 +73,18 @@ def get_conditional_probability(samples_on_attribute,
     """获取类条件概率.
 
     Argument:
-        samples_on_attribute: numpy.ndarray, 在某个属性的样本.
-        samples_in_category: numpy.ndarray, 在某个类别上的样本.
+        samples_on_attribute: float, 在某个属性的样本.
+        samples_in_category: float, 在某个类别上的样本.
         num_of_categories: int, 类别的数量.
         smoothing: bool, 是否使用平滑.
 
     Returns:
         类条件概率.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
     """
     if smoothing:
         samples_on_attribute += 1
@@ -100,6 +105,11 @@ def get_prior_probability(x, y, smoothing):
 
     Returns:
         类先验概率.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
     """
     number_of_sample, number_of_attributes = x.shape
 
@@ -122,6 +132,11 @@ def get_probability_density(sample, mean, var):
 
     Returns:
         概率密度.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
     """
     probability = 1 / (np.sqrt(2 * np.pi) * var) * np.exp(-(sample - mean) ** 2 / (2 * var ** 2))
 

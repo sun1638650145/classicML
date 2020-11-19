@@ -8,8 +8,8 @@
 #ifndef OPS_H
 #define OPS_H
 
-#include <math.h>
-#include <string.h>
+#include <cmath>
+#include <cstring>
 #include <set>
 #include <tuple>
 #include <vector>
@@ -28,6 +28,19 @@ Eigen::MatrixXd CalculateError(const Eigen::MatrixXd &x,
                                const Eigen::MatrixXd &b);
 
 Eigen::ArrayXd ClipAlpha(const double &alpha, const double &low, const double &high);
+
+double GetConditionalProbability(const double &samples_on_attribute,
+                                 const int &samples_in_category,
+                                 const int &num_of_categories,
+                                 const bool &smoothing);
+
+std::tuple<double, double> GetPriorProbability(const Eigen::MatrixXd &x,
+                                               const Eigen::RowVectorXd &y,
+                                               const bool &smoothing);
+
+double GetProbabilityDensity(const double &sample,
+                             const double &mean,
+                             const double &var);
 
 Eigen::MatrixXd GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1);
 
@@ -77,6 +90,44 @@ PYBIND11_MODULE(ops, m) {
     Returns:
         拉格朗日乘子.)pbdoc",
           pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
+
+    m.def("cc_get_conditional_probability", &GetConditionalProbability, R"pbdoc(
+获取类条件概率.
+
+    Argument:
+        samples_on_attribute: float, 在某个属性的样本.
+        samples_in_category: float, 在某个类别上的样本.
+        num_of_categories: int, 类别的数量.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        类条件概率.)pbdoc",
+          pybind11::arg("samples_on_attribute"), pybind11::arg("samples_in_category"),
+          pybind11::arg("num_of_categories"), pybind11::arg("smoothing"));
+
+    m.def("cc_get_prior_probability", &GetPriorProbability, R"pbdoc(
+获取类先验概率.
+
+    Argument:
+        x: numpy.ndarray, 特征数据.
+        y: numpy.ndarray, 标签.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        类先验概率.)pbdoc",
+          pybind11::arg("x"), pybind11::arg("y"), pybind11::arg("smoothing"));
+
+    m.def("cc_get_probability_density", &GetProbabilityDensity, R"pbdoc(
+获得概率密度.
+
+    Argument:
+        sample: float, 样本的取值.
+        mean: float, 样本在某个属性的上的均值.
+        var: float, 样本在某个属性上的方差.
+
+    Returns:
+        概率密度.)pbdoc",
+          pybind11::arg("sample"), pybind11::arg("mean"), pybind11::arg("var"));
 
     m.def("cc_get_w", &GetW, R"pbdoc(
 获得投影向量.
@@ -173,7 +224,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "0.5_ops.V3";
+    m.attr("__version__") = "0.5_ops.V4";
 }
 
 #endif /* OPS_H */

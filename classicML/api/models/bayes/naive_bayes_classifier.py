@@ -81,7 +81,7 @@ class NaiveBayesClassifier(object):
         # 获取每个属性类条件概率P(x_i|c)或类概率密度p(x_i|c).
         for attribute in range(number_of_attributes):
             xi = x.iloc[:, attribute]
-            continuous = (type_of_target(xi) == 'continuous')
+            continuous = (type_of_target(xi.values) == 'continuous')
 
             xi0 = negative_samples.iloc[:, attribute]
             xi1 = positive_samples.iloc[:, attribute]

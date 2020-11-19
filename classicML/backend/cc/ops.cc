@@ -258,3 +258,49 @@ std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen
 std::string TypeOfTarget(const pybind11::array &y) {
     return "unknown";
 }
+
+// 获取类条件概率, 输入某个属性值的样本总数, 某个类别的样本总数, 类别的数量和是否使用平滑.
+double GetConditionalProbability(const double &samples_on_attribute,
+                                 const int &samples_in_category,
+                                 const int &num_of_categories,
+                                 const bool &smoothing) {
+    if (smoothing) {
+        return (samples_on_attribute + 1) / (samples_in_category + num_of_categories);
+    } else {
+        return samples_on_attribute / samples_in_category;
+    }
+}
+
+// 获取类先验概率, 输入特征数据, 标签和是否使用平滑.
+std::tuple<double, double> GetPriorProbability(const Eigen::MatrixXd &x,
+                                               const Eigen::RowVectorXd &y,
+                                               const bool &smoothing) {
+    int number_of_sample = (int)x.rows();
+
+    // 遍历获得反例的个数.
+    double num_of_negative_sample = 0.0;
+    for (int i = 0; i < y.size(); i ++) {
+        if (y[i] == 0) {
+            num_of_negative_sample += 1;
+        }
+    }
+
+    if (smoothing) {
+        double p_0 = (num_of_negative_sample + 1) / (number_of_sample + 2);
+        std::tuple<double, double> probability(p_0, 1 - p_0);
+
+        return probability;
+    } else {
+        double p_0 = num_of_negative_sample / number_of_sample;
+        std::tuple<double, double> probability(p_0, 1 - p_0);
+
+        return probability;
+    }
+}
+
+// 获取概率密度, 输入样本的取值, 样本在某个属性的上的均值和样本在某个属性上的方差.
+double GetProbabilityDensity(const double &sample,
+                             const double &mean,
+                             const double &var) {
+    return 1 / (sqrt(2 * M_PI) * var) * exp(-(pow((sample - mean), 2) / (2 * pow(var, 2))));
+}
