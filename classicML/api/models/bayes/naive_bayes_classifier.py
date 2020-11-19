@@ -75,7 +75,7 @@ class NaiveBayesClassifier(object):
         num_of_positive_samples = len(positive_samples)
 
         # 获取类先验概率P(c).
-        self.p_0, self.p_1 = get_prior_probability(x.values, y.values, self.smoothing)
+        self.p_0, self.p_1 = get_prior_probability(len(x.values), y.values, self.smoothing)
 
         number_of_samples, number_of_attributes = x.shape
         # 获取每个属性类条件概率P(x_i|c)或类概率密度p(x_i|c).

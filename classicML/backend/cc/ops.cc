@@ -272,11 +272,9 @@ double GetConditionalProbability(const double &samples_on_attribute,
 }
 
 // 获取类先验概率, 输入特征数据, 标签和是否使用平滑.
-std::tuple<double, double> GetPriorProbability(const Eigen::MatrixXd &x,
+std::tuple<double, double> GetPriorProbability(const int &number_of_sample,
                                                const Eigen::RowVectorXd &y,
                                                const bool &smoothing) {
-    int number_of_sample = (int)x.rows();
-
     // 遍历获得反例的个数.
     double num_of_negative_sample = 0.0;
     for (int i = 0; i < y.size(); i ++) {

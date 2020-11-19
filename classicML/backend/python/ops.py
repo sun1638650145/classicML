@@ -95,11 +95,11 @@ def get_conditional_probability(samples_on_attribute,
     return probability
 
 
-def get_prior_probability(x, y, smoothing):
+def get_prior_probability(number_of_sample, y, smoothing):
     """获取类先验概率.
 
     Argument:
-        x: numpy.ndarray, 特征数据.
+        number_of_sample: int, 样本的总数.
         y: numpy.ndarray, 标签.
         smoothing: bool, 是否使用平滑.
 
@@ -111,11 +111,8 @@ def get_prior_probability(x, y, smoothing):
           你有可能使用其他的版本, 但是函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
-    number_of_sample, number_of_attributes = x.shape
-
-    # 执行平滑操作.
     if smoothing:
-        p_0 = (len(y[y == 0]) + 1) / (number_of_sample + len(np.unique(y)))
+        p_0 = (len(y[y == 0]) + 1) / (number_of_sample + len(np.unique(y)))  # 执行平滑操作.
     else:
         p_0 = len(y[y == 0]) / number_of_sample
 

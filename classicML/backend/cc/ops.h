@@ -34,7 +34,7 @@ double GetConditionalProbability(const double &samples_on_attribute,
                                  const int &num_of_categories,
                                  const bool &smoothing);
 
-std::tuple<double, double> GetPriorProbability(const Eigen::MatrixXd &x,
+std::tuple<double, double> GetPriorProbability(const int &number_of_sample,
                                                const Eigen::RowVectorXd &y,
                                                const bool &smoothing);
 
@@ -109,13 +109,13 @@ PYBIND11_MODULE(ops, m) {
 获取类先验概率.
 
     Argument:
-        x: numpy.ndarray, 特征数据.
+        number_of_sample: int, 样本的总数.
         y: numpy.ndarray, 标签.
         smoothing: bool, 是否使用平滑.
 
     Returns:
         类先验概率.)pbdoc",
-          pybind11::arg("x"), pybind11::arg("y"), pybind11::arg("smoothing"));
+          pybind11::arg("number_of_sample"), pybind11::arg("y"), pybind11::arg("smoothing"));
 
     m.def("cc_get_probability_density", &GetProbabilityDensity, R"pbdoc(
 获得概率密度.
@@ -224,7 +224,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "0.5_ops.V4";
+    m.attr("__version__") = "0.5_ops.V4.1";
 }
 
 #endif /* OPS_H */

@@ -1,6 +1,4 @@
 """这个例子将展示如何使用朴素贝叶斯分类器."""
-import os
-os.environ['CLASSICML_ENGINE'] = 'CC'
 import pandas as pd
 import classicML as cml
 
@@ -18,6 +16,3 @@ model = cml.NB(attribute_name=ATTRIBUTE_NAME)
 model.compile()
 # 训练模型
 model.fit(x, y)
-# 使用模型进行预测
-y_pred = model.predict(x)
-print(y_pred)
