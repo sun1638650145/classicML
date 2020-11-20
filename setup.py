@@ -10,7 +10,7 @@ extension_modules = [
         'classicML/backend/cc/ops',
         sorted(glob('classicML/backend/cc/*.cc')),
         include_dirs=[
-            '/usr/include/eigen3',  # /path/to/eigen3/download 默认为Ubuntu的路径, macOS是/usr/local/include/eigen3
+            '/usr/local/include/eigen3',  # /path/to/eigen3/download
         ],
         language='c++',
     )

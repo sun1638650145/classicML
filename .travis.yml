@@ -7,7 +7,9 @@ branches:
     - master
 
 before_install:
-  - apt install libeigen3-dev
+  - sudo apt update
+  - sudo apt install libeigen3-dev
+  - sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3
   - pip install pybind11
 
 install:
