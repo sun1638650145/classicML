@@ -1,2 +1,7 @@
 language: python
+
 script: true
+
+branches:
+  only:
+    - master
