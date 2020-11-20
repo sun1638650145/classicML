@@ -1,7 +1,17 @@
 language: python
 
-script: true
+sudo: required
 
 branches:
   only:
     - master
+
+before_install:
+  - sudo apt install libeigen3-dev
+  - pip install pybind11
+
+install:
+  python3 setup.py install
+
+script:
+  pytest tests/test_backend_ops.py
