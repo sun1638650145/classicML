@@ -7,11 +7,11 @@ branches:
     - master
 
 before_install:
-  - sudo apt install libeigen3-dev
+  - apt install libeigen3-dev
   - pip install pybind11
 
 install:
-  python3 setup.py install
+  - python3 setup.py install
 
 script:
-  pytest tests/test_backend_ops.py
+  - pytest tests/test_backend_ops.py
