@@ -78,7 +78,7 @@ class NaiveBayesClassifier(object):
         self.p_0, self.p_1 = get_prior_probability(len(x.values), y.values, self.smoothing)
 
         number_of_samples, number_of_attributes = x.shape
-        # 获取每个属性类条件概率P(x_i|c)或类概率密度p(x_i|c).
+        # 获取每个属性类条件概率P(x_i|c)或类概率密度p(x_i|c)所需的信息.
         for attribute in range(number_of_attributes):
             xi = x.iloc[:, attribute]
             continuous = (type_of_target(xi.values) == 'continuous')
@@ -86,7 +86,7 @@ class NaiveBayesClassifier(object):
             xi0 = negative_samples.iloc[:, attribute]
             xi1 = positive_samples.iloc[:, attribute]
             if continuous:
-                # 连续值计算概率密度函数.
+                # 连续值概率密度函数信息.
                 xi0_mean = np.mean(xi0)
                 xi1_mean = np.mean(xi1)
 
@@ -100,7 +100,7 @@ class NaiveBayesClassifier(object):
                                   'continuous': continuous,
                                   'values': [xi1_mean, xi1_var]}})
             else:
-                # 离散值计算条件概率.
+                # 离散值计算条件概率信息.
                 unique_value = xi.unique()
                 num_of_unique_value = len(unique_value)
 
@@ -192,8 +192,9 @@ class NaiveBayesClassifier(object):
                 p_1 += np.log(get_probability_density(x[index], mean1, var1))
             else:
                 D_c_x0, D_c0, N0 = pxi_0['values']
-                p_0 += np.log(get_conditional_probability(D_c_x0[x[index]], D_c0, N0, self.smoothing))
                 D_c_x1, D_c1, N1 = pxi_1['values']
+
+                p_0 += np.log(get_conditional_probability(D_c_x0[x[index]], D_c0, N0, self.smoothing))
                 p_1 += np.log(get_conditional_probability(D_c_x1[x[index]], D_c1, N1, self.smoothing))
 
         if probability:
