@@ -23,6 +23,7 @@ before_install:
       sudo apt install -y libeigen3-dev
       sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3
     elif ["$TRAVIS_OS_NAME" = "osx"]; then
+      sudo brew update
       sudo brew install eigen3
     fi
   - pip install pybind11
