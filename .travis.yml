@@ -1,9 +1,5 @@
 language: python
 
-os: linux
-
-dist: xenial
-
 matrix:
   include:
     - os: linux
@@ -12,6 +8,8 @@ matrix:
       env: PYTHON=3.7
     - os: linux
       env: PYTHON=3.8
+    - os: osx
+      env: PYTHON=3.7
 
 branches:
   only:
@@ -23,6 +21,9 @@ before_install:
       sudo apt update;
       sudo apt install -y libeigen3-dev;
       sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
+      pip install pybind11;
+    elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
+      brew install -y eigen3;
       pip install pybind11;
     fi
 
