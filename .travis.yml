@@ -2,18 +2,42 @@ language: python
 
 sudo: required
 
+matrix:
+  include:
+    - os: linux
+      env: PYTHON=3.5
+    - os: linux
+      env: PYTHON=3.6
+    - os: linux
+      env: PYTHON=3.7
+    - os: linux
+      env: PYTHON=3.8
+    - os: osx
+      env: PYTHON=3.5
+    - os: osx
+      env: PYTHON=3.6
+    - os: osx
+      env: PYTHON=3.7
+    - os: osx
+      env: PYTHON=3.8
+
 branches:
   only:
     - master
 
 before_install:
-  - sudo apt update
-  - sudo apt install libeigen3-dev
-  - sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3
+  - |
+    if ["$TRAVIS_OS_NAME" = "linux"]; then
+      sudo apt update
+      sudo apt install -y libeigen3-dev
+      sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3
+    elif ["$TRAVIS_OS_NAME" = "osx"]; then
+      sudo brew install eigen3
+    fi
   - pip install pybind11
 
 install:
   - python3 setup.py install
 
 script:
-  - pytest tests/test_backend_ops.py
+  - pytest
