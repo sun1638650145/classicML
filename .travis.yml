@@ -1,5 +1,7 @@
 language: python
 
+os: linux
+
 dist: xenial
 
 matrix:
@@ -16,11 +18,13 @@ branches:
     - master
 
 before_install:
-  - sudo apt update
-  - sudo apt install -y libeigen3-dev
-  # Linux和macOS的默认安装路径有差异.
-  - sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3
-  - pip install pybind11
+  - |
+    if ["$TRAVIS_OS_NAME" = "linux"]; then
+      sudo apt update;
+      sudo apt install -y libeigen3-dev;
+      sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
+      pip install pybind11
+    fi
 
 install:
   - python3 setup.py install
