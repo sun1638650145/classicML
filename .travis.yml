@@ -1,5 +1,9 @@
 language: python
 
+# 这两个选项不写就有个warning
+os: linux
+dist: xenial
+
 jobs:
   include:
     - name: "Python 3.6 on Linux"
@@ -44,6 +48,4 @@ install:
   - python3 setup.py install
 
 script:
-  - cd classicML
   - pytest
-  - python3 examples/rbf.py
