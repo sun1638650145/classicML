@@ -23,7 +23,7 @@ before_install:
       sudo apt update;
       sudo apt install -y libeigen3-dev;
       sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
-      pip install pybind11
+      pip install pybind11;
     fi
 
 install:
