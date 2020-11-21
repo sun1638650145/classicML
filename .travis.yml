@@ -29,6 +29,7 @@ before_install:
       pip install pybind11;
     elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
       brew install -y eigen3;
+      pip3 install pytest;
       pip3 install pybind11;
     fi
 
@@ -37,4 +38,4 @@ install:
 
 script:
   - pytest
-  - python3 examples/custon-kernel_svc.py
+  - python3 examples/rbf.py
