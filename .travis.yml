@@ -2,30 +2,17 @@ language: python
 
 sudo: required
 
-python:
-  - "3.5"
-  - "3.6"
-  - "3.7"
-  - "3.8"
-
 os:
   - linux
-  - osx
 
 branches:
   only:
     - master
 
 before_install:
-  - |
-    if ["$TRAVIS_OS_NAME" = "linux"]; then
-      sudo apt update
-      sudo apt install -y libeigen3-dev
-      sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3
-    elif ["$TRAVIS_OS_NAME" = "osx"]; then
-      sudo brew update
-      sudo brew install eigen3
-    fi
+  - sudo apt update
+  - sudo apt install -y libeigen3-dev
+  - sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3
   - pip install pybind11
 
 install:
