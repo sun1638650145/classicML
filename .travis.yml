@@ -37,3 +37,4 @@ install:
 
 script:
   - pytest
+  - python examples/custon-kernel_svc.py
