@@ -2,24 +2,15 @@ language: python
 
 sudo: required
 
-matrix:
-  include:
-    - os: linux
-      env: PYTHON=3.5
-    - os: linux
-      env: PYTHON=3.6
-    - os: linux
-      env: PYTHON=3.7
-    - os: linux
-      env: PYTHON=3.8
-    - os: osx
-      env: PYTHON=3.5
-    - os: osx
-      env: PYTHON=3.6
-    - os: osx
-      env: PYTHON=3.7
-    - os: osx
-      env: PYTHON=3.8
+python:
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  - "3.8"
+
+os:
+  - linux
+  - osx
 
 branches:
   only:
