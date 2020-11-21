@@ -29,7 +29,7 @@ before_install:
       pip install pybind11;
     elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
       brew install -y eigen3;
-      pip install pybind11;
+      pip3 install pybind11;
     fi
 
 install:
@@ -37,4 +37,4 @@ install:
 
 script:
   - pytest
-  - python examples/custon-kernel_svc.py
+  - python3 examples/custon-kernel_svc.py
