@@ -12,12 +12,15 @@ from classicML.backend.cc.ops import cc_get_conditional_probability
 from classicML.backend.cc.ops import cc_get_prior_probability
 from classicML.backend.cc.ops import cc_get_probability_density
 from classicML.backend.cc.ops import cc_get_w
+from classicML.backend.cc.ops import cc_type_of_target
+
 from classicML.backend.python.ops import calculate_error
 from classicML.backend.python.ops import clip_alpha
 from classicML.backend.python.ops import get_conditional_probability
 from classicML.backend.python.ops import get_prior_probability
 from classicML.backend.python.ops import get_probability_density
 from classicML.backend.python.ops import get_w
+from classicML.backend.python.ops import type_of_target
 
 
 class TestCalculateError(object):
@@ -114,10 +117,52 @@ class TestGetProbabilityDensity(object):
 class TestGetW(object):
     def test_answer(self):
         S_w = np.asmatrix([[1, 2], [3, 4]])
-        mu_0 = np.asarray([[1], [2]])
-        mu_1 = np.asarray([[3], [4]])
+        mu_0 = np.asarray([[1, 2]])
+        mu_1 = np.asarray([[3, 4]])
 
         cc_answer = cc_get_w(S_w, mu_0, mu_1)
         py_answer = get_w(S_w, mu_0, mu_1)
 
-        assert cc_answer == py_answer
+        assert cc_answer.all() == py_answer.all()
+
+
+class TestTypeOfTarget(object):
+    def test_binary(self):
+        y = np.asarray([1.0, 0.0, 1.0, 1.0])
+
+        cc_answer = cc_type_of_target(y)
+        py_answer = type_of_target(y)
+
+        assert (cc_answer == py_answer) and (py_answer == 'binary')
+
+    def test_continuous(self):
+        y = np.asarray([1.0, 1.1, 1.2])
+
+        cc_answer = cc_type_of_target(y)
+        py_answer = type_of_target(y)
+
+        assert (cc_answer == py_answer) and (py_answer == 'continuous')
+
+    def test_multiclass(self):
+        y = np.asarray([1.0, 2.0, 3.0])
+
+        cc_answer = cc_type_of_target(y)
+        py_answer = type_of_target(y)
+
+        assert (cc_answer == py_answer) and (py_answer == 'multiclass')
+
+    def test_multilabel(self):
+        y = np.asarray([[1, 2], [0, 1], [0, 1], [0, 2]])
+
+        cc_answer = cc_type_of_target(y)
+        py_answer = type_of_target(y)
+
+        assert (cc_answer == py_answer) and (py_answer == 'multilabel')
+
+    def test_unknown(self):
+        y = np.asarray(['a', 1, [2, 'b']])
+
+        cc_answer = cc_type_of_target(y)
+        py_answer = type_of_target(y)
+
+        assert (cc_answer == py_answer) and (py_answer == 'unknown')
