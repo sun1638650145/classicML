@@ -5,12 +5,19 @@
 import numpy as np
 
 from classicML.backend import kernels
+
 from classicML.backend.cc.ops import cc_calculate_error
 from classicML.backend.cc.ops import cc_clip_alpha
 from classicML.backend.cc.ops import cc_get_conditional_probability
+from classicML.backend.cc.ops import cc_get_prior_probability
+from classicML.backend.cc.ops import cc_get_probability_density
+from classicML.backend.cc.ops import cc_get_w
 from classicML.backend.python.ops import calculate_error
 from classicML.backend.python.ops import clip_alpha
 from classicML.backend.python.ops import get_conditional_probability
+from classicML.backend.python.ops import get_prior_probability
+from classicML.backend.python.ops import get_probability_density
+from classicML.backend.python.ops import get_w
 
 
 class TestCalculateError(object):
@@ -72,4 +79,45 @@ class TestGetConditionalProbability(object):
         py_answer = get_conditional_probability(samples_on_attribute, samples_in_category, num_of_categories, False)
 
         assert cc_answer_smoothing == py_answer_smoothing
+        assert cc_answer == py_answer
+
+
+class TestGetPriorProbability(object):
+    def test_answer(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        number_of_sample = np.random.randint(10, 15)
+        y = np.asarray([1, 1, 0, 0, 1, 0, 1, 0, 1])
+
+        cc_answer_smoothing = cc_get_prior_probability(number_of_sample, y, True)
+        py_answer_smoothing = get_prior_probability(number_of_sample, y, True)
+
+        cc_answer = cc_get_prior_probability(number_of_sample, y, False)
+        py_answer = get_prior_probability(number_of_sample, y, False)
+
+        assert cc_answer_smoothing == py_answer_smoothing
+        assert cc_answer == py_answer
+
+
+class TestGetProbabilityDensity(object):
+    def test_answer(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        sample = np.random.rand()
+        mean = np.random.rand()
+        var = np.random.rand()
+
+        cc_answer = cc_get_probability_density(sample, mean, var)
+        py_answer = get_probability_density(sample, mean, var)
+
+        assert cc_answer == py_answer
+
+
+class TestGetW(object):
+    def test_answer(self):
+        S_w = np.asmatrix([[1, 2], [3, 4]])
+        mu_0 = np.asarray([[1], [2]])
+        mu_1 = np.asarray([[3], [4]])
+
+        cc_answer = cc_get_w(S_w, mu_0, mu_1)
+        py_answer = get_w(S_w, mu_0, mu_1)
+
         assert cc_answer == py_answer
