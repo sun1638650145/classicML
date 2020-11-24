@@ -12,6 +12,8 @@ from classicML.backend.cc.ops import cc_get_conditional_probability
 from classicML.backend.cc.ops import cc_get_prior_probability
 from classicML.backend.cc.ops import cc_get_probability_density
 from classicML.backend.cc.ops import cc_get_w
+from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
+from classicML.backend.cc.ops import cc_select_second_alpha
 from classicML.backend.cc.ops import cc_type_of_target
 
 from classicML.backend.python.ops import calculate_error
@@ -20,6 +22,8 @@ from classicML.backend.python.ops import get_conditional_probability
 from classicML.backend.python.ops import get_prior_probability
 from classicML.backend.python.ops import get_probability_density
 from classicML.backend.python.ops import get_w
+from classicML.backend.python.ops import get_within_class_scatter_matrix
+from classicML.backend.python.ops import select_second_alpha
 from classicML.backend.python.ops import type_of_target
 
 
@@ -124,6 +128,31 @@ class TestGetW(object):
         py_answer = get_w(S_w, mu_0, mu_1)
 
         assert cc_answer.all() == py_answer.all()
+
+
+class TestGetWithinClassScatterMatrix(object):
+    def test_answer(self):
+        X_0 = np.asarray([[1, 2], [3, 4]])
+        X_1 = np.asarray([[3, 4], [1, 2]])
+        mu_0 = np.asarray([[1, 2]])
+        mu_1 = np.asarray([[3, 4]])
+
+        cc_answer = cc_get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1)
+        py_answer = get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1)
+
+        assert cc_answer.all() == py_answer.all()
+
+
+class TestSelectSecondAlpha(object):
+    def test_answer(self):
+        error = np.random.rand()
+        error_cache = np.asarray([0.1, 0.2, 0.3])
+        non_bound_alphas = np.asarray([1, 2, 3])
+
+        cc_answer = cc_select_second_alpha(error, error_cache, non_bound_alphas)
+        py_answer = select_second_alpha(error, error_cache, non_bound_alphas)
+
+        assert cc_answer == py_answer
 
 
 class TestTypeOfTarget(object):
