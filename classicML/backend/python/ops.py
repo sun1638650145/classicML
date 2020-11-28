@@ -95,6 +95,29 @@ def get_conditional_probability(samples_on_attribute,
     return probability
 
 
+def get_dependent_prior_probability(samples_on_attribute_in_category,
+                                    number_of_sample,
+                                    values_on_attribute,
+                                    smoothing):
+    """获取有依赖的类先验概率.
+
+    Argument:
+        samples_on_attribute_in_category: int, 类别为c的属性i上取值为xi的样本.
+        number_of_sample: int, 样本的总数.
+        values_on_attribute: int, 在属性i上的取值数.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        先验概率.
+    """
+    if smoothing:
+        probability = (samples_on_attribute_in_category + 1) / (number_of_sample + 2 * values_on_attribute)  # 执行平滑操作.
+    else:
+        probability = samples_on_attribute_in_category / number_of_sample
+
+    return probability
+
+
 def get_prior_probability(number_of_sample, y, smoothing):
     """获取类先验概率.
 
@@ -136,6 +159,9 @@ def get_probability_density(sample, mean, var):
           Python版本是没有优化的原始公式版本.
     """
     probability = 1 / (np.sqrt(2 * np.pi) * var) * np.exp(-(sample - mean) ** 2 / (2 * var ** 2))
+
+    if probability == 0:
+        probability = 1e-36  # probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
 
     return probability
 

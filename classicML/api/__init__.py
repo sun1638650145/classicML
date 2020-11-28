@@ -10,5 +10,7 @@ from classicML.api.models import NaiveBayesClassifier
 from classicML.api.models import NB
 from classicML.api.models import RadialBasisFunctionNetwork
 from classicML.api.models import RBF
+from classicML.api.models import SuperParentOneDependentEstimator
+from classicML.api.models import SPODE
 from classicML.api.models import SupportVectorClassifier
 from classicML.api.models import SVC

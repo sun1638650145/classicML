@@ -1,5 +1,5 @@
 """An easy-to-use ML framework."""
-__version__ = '0.5b2'
+__version__ = '0.5b3'
 
 import os
 import logging
@@ -27,6 +27,8 @@ from classicML.api import NaiveBayesClassifier
 from classicML.api import NB
 from classicML.api import RadialBasisFunctionNetwork
 from classicML.api import RBF
+from classicML.api import SuperParentOneDependentEstimator
+from classicML.api import SPODE
 from classicML.api import SupportVectorClassifier
 from classicML.api import SVC
 
