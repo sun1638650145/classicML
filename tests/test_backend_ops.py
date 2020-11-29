@@ -9,6 +9,7 @@ from classicML.backend import kernels
 from classicML.backend.cc.ops import cc_calculate_error
 from classicML.backend.cc.ops import cc_clip_alpha
 from classicML.backend.cc.ops import cc_get_conditional_probability
+from classicML.backend.cc.ops import cc_get_dependent_prior_probability
 from classicML.backend.cc.ops import cc_get_prior_probability
 from classicML.backend.cc.ops import cc_get_probability_density
 from classicML.backend.cc.ops import cc_get_w
@@ -19,6 +20,7 @@ from classicML.backend.cc.ops import cc_type_of_target
 from classicML.backend.python.ops import calculate_error
 from classicML.backend.python.ops import clip_alpha
 from classicML.backend.python.ops import get_conditional_probability
+from classicML.backend.python.ops import get_dependent_prior_probability
 from classicML.backend.python.ops import get_prior_probability
 from classicML.backend.python.ops import get_probability_density
 from classicML.backend.python.ops import get_w
@@ -84,6 +86,35 @@ class TestGetConditionalProbability(object):
 
         cc_answer = cc_get_conditional_probability(samples_on_attribute, samples_in_category, num_of_categories, False)
         py_answer = get_conditional_probability(samples_on_attribute, samples_in_category, num_of_categories, False)
+
+        assert cc_answer_smoothing == py_answer_smoothing
+        assert cc_answer == py_answer
+
+
+class TestGetDependentPriorProbability(object):
+    def test_answer(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        samples_on_attribute_in_category = np.random.randint(5, 10)
+        number_of_sample = np.random.randint(20, 30)
+        values_on_attribute = np.random.randint(3, 5)
+
+        cc_answer_smoothing = cc_get_dependent_prior_probability(samples_on_attribute_in_category,
+                                                                 number_of_sample,
+                                                                 values_on_attribute,
+                                                                 True)
+        py_answer_smoothing = get_dependent_prior_probability(samples_on_attribute_in_category,
+                                                              number_of_sample,
+                                                              values_on_attribute,
+                                                              True)
+
+        cc_answer = cc_get_conditional_probability(samples_on_attribute_in_category,
+                                                   number_of_sample,
+                                                   values_on_attribute,
+                                                   False)
+        py_answer = get_conditional_probability(samples_on_attribute_in_category,
+                                                number_of_sample,
+                                                values_on_attribute,
+                                                False)
 
         assert cc_answer_smoothing == py_answer_smoothing
         assert cc_answer == py_answer

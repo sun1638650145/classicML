@@ -34,6 +34,11 @@ double GetConditionalProbability(const double &samples_on_attribute,
                                  const int &num_of_categories,
                                  const bool &smoothing);
 
+double GetDependentPriorProbability(const int &samples_on_attribute_in_category,
+                                    const int &number_of_sample,
+                                    const int &values_on_attribute,
+                                    const bool &smoothing);
+
 std::tuple<double, double> GetPriorProbability(const int &number_of_sample,
                                                const Eigen::RowVectorXd &y,
                                                const bool &smoothing);
@@ -104,6 +109,20 @@ PYBIND11_MODULE(ops, m) {
         类条件概率.)pbdoc",
           pybind11::arg("samples_on_attribute"), pybind11::arg("samples_in_category"),
           pybind11::arg("num_of_categories"), pybind11::arg("smoothing"));
+
+    m.def("cc_get_dependent_prior_probability", &GetDependentPriorProbability, R"pbdoc(
+获取有依赖的类先验概率.
+
+    Argument:
+        samples_on_attribute_in_category: int, 类别为c的属性i上取值为xi的样本.
+        number_of_sample: int, 样本的总数.
+        values_on_attribute: int, 在属性i上的取值数.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        先验概率.)pbdoc",
+          pybind11::arg("samples_on_attribute_in_category"), pybind11::arg("number_of_sample"),
+          pybind11::arg("values_on_attribute"), pybind11::arg("smoothing"));
 
     m.def("cc_get_prior_probability", &GetPriorProbability, R"pbdoc(
 获取类先验概率.
@@ -224,7 +243,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "0.5_ops.V4.1";
+    m.attr("__version__") = "0.5_ops.V5";
 }
 
 #endif /* OPS_H */

@@ -109,6 +109,11 @@ def get_dependent_prior_probability(samples_on_attribute_in_category,
 
     Returns:
         先验概率.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
     """
     if smoothing:
         probability = (samples_on_attribute_in_category + 1) / (number_of_sample + 2 * values_on_attribute)  # 执行平滑操作.

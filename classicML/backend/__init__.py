@@ -15,7 +15,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_calculate_error
     from classicML.backend.cc.ops import cc_clip_alpha
     from classicML.backend.cc.ops import cc_get_conditional_probability
-    from classicML.backend.python.ops import get_dependent_prior_probability
+    from classicML.backend.cc.ops import cc_get_dependent_prior_probability
     from classicML.backend.cc.ops import cc_get_prior_probability
     from classicML.backend.cc.ops import cc_get_probability_density
     from classicML.backend.cc.ops import cc_get_w
@@ -26,6 +26,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
     from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
     from classicML.backend.cc.ops import cc_get_conditional_probability as get_conditional_probability
+    from classicML.backend.cc.ops import cc_get_dependent_prior_probability as get_dependent_prior_probability
     from classicML.backend.cc.ops import cc_get_prior_probability as get_prior_probability
     from classicML.backend.cc.ops import cc_get_probability_density as get_probability_density
     from classicML.backend.cc.ops import cc_get_w as get_w

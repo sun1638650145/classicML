@@ -14,7 +14,7 @@ Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
     if (matrix.rows() != non_zero_mark.rows()) {
         throw "行数不同, 无法操作";
     }
-    
+
     // 初始化子矩阵.
     // TODO(Steve R. Sun): Eigen::MatrixXd实例化动态矩阵会不能进行逐行赋值, 只能先通过一个循环统计非零元素个数.
     int row = 0;
@@ -24,7 +24,7 @@ Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
         }
     }
     Eigen::MatrixXd sub_matrix(row, matrix.cols());
-    
+
     row = 0;
     for (int i = 0; i < non_zero_mark.rows(); i ++) {
         if (non_zero_mark[i] == 1) {
@@ -32,20 +32,20 @@ Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
             row ++;
         }
     }
-    
+
     return sub_matrix;
 }
 
 // 返回非零元素下标组成的数组, 输入为数组.
 std::vector<int> NonZero(const Eigen::RowVectorXd &array) {
     std::vector<int> buffer;
-    
+
     for (int i = 0; i < array.size(); i ++) {
         if (array[i] != 0.0) {
             buffer.push_back(i);
         }
     }
-    
+
     return buffer;
 }
 
@@ -53,7 +53,7 @@ std::vector<int> NonZero(const Eigen::RowVectorXd &array) {
 Eigen::MatrixXd Reshape(Eigen::MatrixXd matrix, const int &row, const int &column) {
     int new_row = row;
     int new_column = column;
-    
+
     // 可以将一个维度指定为-1, 函数将自动推理.
     if (row == -1 && column == -1) {
         throw "只能指定维度为一个未知维度";
@@ -64,11 +64,11 @@ Eigen::MatrixXd Reshape(Eigen::MatrixXd matrix, const int &row, const int &colum
             new_column = (int)matrix.size() / row;
         }
     }
-    
+
     // 在官方API中Eigen没有提供reshape方法, 这里是参照官方文档实现的一种代替方式.
     Eigen::Map<Eigen::MatrixXd> map(matrix.data(), new_row, new_column);
     Eigen::MatrixXd reshaped_matrix = map;
-    
+
     return reshaped_matrix;
 }
 
@@ -77,7 +77,7 @@ Eigen::MatrixXd Sub(const Eigen::MatrixXd &matrix, const Eigen::RowVectorXd &vec
     if (matrix.cols() != vector.cols()) {
         throw "列数不同, 无法操作";
     }
-    
+
     Eigen::MatrixXd new_matrix(matrix.rows(), matrix.cols());
     for (int row = 0; row < matrix.rows(); row ++) {
         new_matrix.row(row) = matrix.row(row) - vector;
@@ -98,7 +98,7 @@ Eigen::MatrixXd CalculateError(const Eigen::MatrixXd &x,
                                const Eigen::MatrixXd &b) {
     Eigen::MatrixXd x_i = x.row(i);
     Eigen::MatrixXd y_i = y.row(i);
-    
+
     // 拉格朗日乘子全是零的时候, 每个样本都不会对结果产生影响.
     Eigen::MatrixXd fx = b;
     // 如果有非零元素, 提取全部合格的标签和对应的拉格朗日乘子.
@@ -106,11 +106,11 @@ Eigen::MatrixXd CalculateError(const Eigen::MatrixXd &x,
         Eigen::MatrixXd valid_x = GetNonZeroSubMatrix(x, non_zero_alphas);
         Eigen::ArrayXd valid_y = GetNonZeroSubMatrix(y, non_zero_alphas);
         Eigen::MatrixXd valid_alphas = GetNonZeroSubMatrix(alphas, non_zero_alphas);
-        
+
         // 调用核函数的__call__方法.
         pybind11::object py_kappa = kernel(valid_x, x_i);
         Eigen::MatrixXd kappa = py_kappa.cast<Eigen::MatrixXd>();
-        
+
         // 这里是Hadamard积, 故临时需要使用ArrayXd.
         Eigen::ArrayXd temp = Reshape(valid_alphas, -1, 1);
         temp = temp * valid_y;
@@ -118,9 +118,9 @@ Eigen::MatrixXd CalculateError(const Eigen::MatrixXd &x,
 
         fx = matrix_temp * kappa.transpose() + b;
     }
-    
+
     Eigen::MatrixXd error = fx - y_i;
-    
+
     return error;
 }
 
@@ -138,12 +138,79 @@ Eigen::ArrayXd ClipAlpha(const double &alpha, const double &low, const double &h
     return clipped_alpha;
 }
 
+// 获取类条件概率, 输入某个属性值的样本总数, 某个类别的样本总数, 类别的数量和是否使用平滑.
+double GetConditionalProbability(const double &samples_on_attribute,
+                                 const int &samples_in_category,
+                                 const int &num_of_categories,
+                                 const bool &smoothing) {
+    if (smoothing) {
+        return (samples_on_attribute + 1) / (samples_in_category + num_of_categories);
+    } else {
+        return samples_on_attribute / samples_in_category;
+    }
+}
+
+// 获取有依赖的类先验概率, 输入类别为c的属性i上取值为xi的样本, 样本的总数, 特征数据和是否使用平滑.
+double GetDependentPriorProbability(const int &samples_on_attribute_in_category,
+                                    const int &number_of_sample,
+                                    const int &values_on_attribute,
+                                    const bool &smoothing) {
+    double probability = 0.0;
+
+    if (smoothing) {
+        probability = (double)(samples_on_attribute_in_category + 1) / (number_of_sample + 2 * values_on_attribute);
+    } else {
+        probability = (double)samples_on_attribute_in_category / number_of_sample;
+    }
+
+    return probability;
+}
+// 获取类先验概率, 输入特征数据, 标签和是否使用平滑.
+std::tuple<double, double> GetPriorProbability(const int &number_of_sample,
+                                               const Eigen::RowVectorXd &y,
+                                               const bool &smoothing) {
+    // 遍历获得反例的个数.
+    double num_of_negative_sample = 0.0;
+    for (int i = 0; i < y.size(); i ++) {
+        if (y[i] == 0) {
+            num_of_negative_sample += 1;
+        }
+    }
+
+    if (smoothing) {
+        double p_0 = (num_of_negative_sample + 1) / (number_of_sample + 2);
+        std::tuple<double, double> probability(p_0, 1 - p_0);
+
+        return probability;
+    } else {
+        double p_0 = num_of_negative_sample / number_of_sample;
+        std::tuple<double, double> probability(p_0, 1 - p_0);
+
+        return probability;
+    }
+}
+
+
+// 获取概率密度, 输入样本的取值, 样本在某个属性的上的均值和样本在某个属性上的方差.
+double GetProbabilityDensity(const double &sample,
+                             const double &mean,
+                             const double &var) {
+    double probability =  1 / (sqrt(2 * M_PI) * var) * exp(-(pow((sample - mean), 2) / (2 * pow(var, 2))));
+
+    // probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
+    if (probability == 0) {
+        probability = 1e-36;
+    }
+
+    return probability;
+}
+
 // 返回投影向量, 输入为类内散度矩阵和反正例的均值向量.
 Eigen::MatrixXd GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1) {
     // 公式(数学公式难以表示, 使用latex语法): w = (S_w)^{-1}(\mu_0 - \mu_1)
     Eigen::MatrixXd S_w_inv = S_w.inverse();
     Eigen::MatrixXd mu_t = (mu_0 - mu_1).transpose();
-    
+
     Eigen::MatrixXd w = S_w_inv * mu_t;
 
     return Reshape(w, 1, -1);
@@ -159,7 +226,7 @@ Eigen::MatrixXd GetWithinClassScatterMatrix(const Eigen::MatrixXd &X_0,
     // \sum_i = \sum_{x \in X_i}(x - \mu_0)(x - \mu_1)^T
     Eigen::MatrixXd S_0 = (Sub(X_0, mu_0)).transpose() * (Sub(X_0, mu_0));
     Eigen::MatrixXd S_1 = (Sub(X_1, mu_1)).transpose() * (Sub(X_1, mu_1));
-    
+
     Eigen::MatrixXd S_w = S_0 + S_1;
 
     return S_w;
@@ -174,7 +241,7 @@ std::tuple<int, double> SelectSecondAlpha(const double &error,
     int index_alpha = 0;
     double error_alpha = error_cache[index_alpha];
     double delta_e = 0.0;
-    
+
     // 选取最大间隔的拉格朗日乘子对应的下标和违背值.
     for (int i = 0; i < non_bound_index.size(); i ++) {
         double temp = abs(error - error_cache[non_bound_index[i]]);
@@ -184,9 +251,9 @@ std::tuple<int, double> SelectSecondAlpha(const double &error,
             error_alpha = error_cache[index_alpha];
         }
     }
-    
+
     std::tuple<int, double> alpha_tuple(index_alpha, error_alpha);
-    
+
     return alpha_tuple;
 }
 
@@ -257,48 +324,4 @@ std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen
 // TODO(Steve R. Sun): Python版本的和CC版本在对于判断str类型的有差异, CC版本全部返回的是unknown.
 std::string TypeOfTarget(const pybind11::array &y) {
     return "unknown";
-}
-
-// 获取类条件概率, 输入某个属性值的样本总数, 某个类别的样本总数, 类别的数量和是否使用平滑.
-double GetConditionalProbability(const double &samples_on_attribute,
-                                 const int &samples_in_category,
-                                 const int &num_of_categories,
-                                 const bool &smoothing) {
-    if (smoothing) {
-        return (samples_on_attribute + 1) / (samples_in_category + num_of_categories);
-    } else {
-        return samples_on_attribute / samples_in_category;
-    }
-}
-
-// 获取类先验概率, 输入特征数据, 标签和是否使用平滑.
-std::tuple<double, double> GetPriorProbability(const int &number_of_sample,
-                                               const Eigen::RowVectorXd &y,
-                                               const bool &smoothing) {
-    // 遍历获得反例的个数.
-    double num_of_negative_sample = 0.0;
-    for (int i = 0; i < y.size(); i ++) {
-        if (y[i] == 0) {
-            num_of_negative_sample += 1;
-        }
-    }
-
-    if (smoothing) {
-        double p_0 = (num_of_negative_sample + 1) / (number_of_sample + 2);
-        std::tuple<double, double> probability(p_0, 1 - p_0);
-
-        return probability;
-    } else {
-        double p_0 = num_of_negative_sample / number_of_sample;
-        std::tuple<double, double> probability(p_0, 1 - p_0);
-
-        return probability;
-    }
-}
-
-// 获取概率密度, 输入样本的取值, 样本在某个属性的上的均值和样本在某个属性上的方差.
-double GetProbabilityDensity(const double &sample,
-                             const double &mean,
-                             const double &var) {
-    return 1 / (sqrt(2 * M_PI) * var) * exp(-(pow((sample - mean), 2) / (2 * pow(var, 2))));
 }
