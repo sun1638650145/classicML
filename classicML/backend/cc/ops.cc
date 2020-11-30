@@ -243,7 +243,7 @@ std::tuple<int, double> SelectSecondAlpha(const double &error,
     double delta_e = abs(error - error_cache[non_bound_index[0]]);
 
     // 选取最大间隔的拉格朗日乘子对应的下标和违背值.
-    for (int i = 0; i < non_bound_index.size(); i ++) {
+    for (int i = 0; i < (int)non_bound_index.size(); i ++) {
         double temp = abs(error - error_cache[non_bound_index[i]]);
         if (temp > delta_e) {
             delta_e = temp;

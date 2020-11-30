@@ -243,7 +243,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "0.5_ops.V5.1";
+    m.attr("__version__") = "0.5_ops.V5.2";
 }
 
 #endif /* OPS_H */
