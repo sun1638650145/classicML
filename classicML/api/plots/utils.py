@@ -1,6 +1,12 @@
 from classicML.api.plots import _plt as plt
 
 
+def _set_bayes_axis(axes):
+    """设置贝叶斯画布的坐标轴."""
+    axes.spines['top'].set_color('none')
+    axes.spines['right'].set_color('none')
+
+
 def _set_lda_axis(axes):
     """设置线性判别分析画布的坐标轴."""
     axes.spines['top'].set_color('none')
@@ -35,6 +41,13 @@ def _set_tree_axis(axes):
 
     axes.set_xticks([])
     axes.set_yticks([])
+
+
+def _bayes_plot_config(x_label, y_label):
+    """设置贝叶斯画布的其他配置项"""
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.legend()
 
 
 def _history_plot_config():
