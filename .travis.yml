@@ -43,7 +43,7 @@ before_install:
       brew install -y eigen3;
       pip3 install pytest;
       pip3 install pybind11;
-      pip3 install scikit-learn==0.23.2;
+      pip3 install -y scikit-learn==0.23.2;
     fi
 
 install:
