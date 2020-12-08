@@ -11,7 +11,8 @@ def _plot_background(bayes, x):
     """绘制背景分界图.
 
     Arguments:
-        bayes: classicML.models.NB, 朴素贝叶斯分类器实例.
+        bayes: classicML.models.NB or classicML.models.SPODE,
+            朴素贝叶斯分类器或超父独依赖估计器实例.
         x: numpy.ndarray, array-like, 特征数据.
     """
     # 生成向量空间.
@@ -61,7 +62,8 @@ def plot_bayes(bayes, x, y):
     """贝叶斯分类器的二维示意图.
 
     Arguments:
-        bayes: classicML.models.NB, 朴素贝叶斯分类器实例.
+        bayes: classicML.models.NB or classicML.models.SPODE,
+            朴素贝叶斯分类器或超父独依赖估计器实例.
         x: numpy.ndarray, array-like, 特征数据.
         y: numpy.ndarray, array-like, 标签.
     """
