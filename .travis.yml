@@ -38,12 +38,12 @@ before_install:
       sudo apt install -y libeigen3-dev;
       sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
       pip install pybind11;
-      pip install scikit-learn;
+      pip install scikit-learn==0.23.2;
     elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
       brew install -y eigen3;
       pip3 install pytest;
       pip3 install pybind11;
-      pip3 install scikit-learn;
+      pip3 install scikit-learn==0.23.2;
     fi
 
 install:
@@ -53,14 +53,7 @@ script:
   # 测试两个后端的结果
   - pytest
   # 测试全部的样例能否正常运行
-  - python3 examples/aode.py
-  - python3 examples/custom-kernel_svc.py
-  - python3 examples/decision_tree.py
-  - python3 examples/lda.py
-  - python3 examples/logistic_regression.py
-  - python3 examples/multi-class_neural_network.py
-  - python3 examples/naive_bayes.py
-  - python3 examples/percetron.py
-  - python3 examples/rbf.py
-  - python3 examples/spode.py
-  - python3 examples/svc.py
+  - |
+    for filename in `ls examples`; do
+      python3 examples/$filename;
+    done
