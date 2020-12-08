@@ -1,9 +1,11 @@
 """这个例子将展示如何使用BP神经网络构建简单的感知机"""
+import sys
+
 import pandas as pd
 import classicML as cml
 
 
-DATASET_PATH = '../datasets/西瓜数据集.csv'
+DATASET_PATH = './datasets/西瓜数据集.csv'
 CALLBACKS = [cml.callbacks.History(loss_name='crossentropy',
                                    metric_name='accuracy')]
 
@@ -22,5 +24,7 @@ model.compile(network_structure=[3, 1],
               metric='accuracy')
 # 训练神经网络
 model.fit(x, y, epochs=2500, verbose=True, callbacks=CALLBACKS)
-# 可视化历史记录
-cml.plots.plot_history(CALLBACKS[0])
+
+# 可视化历史记录(如果您使用的是MacOS, 请注释掉此句, 这句是为了在CI上测试用的.)
+if sys.platform != 'darwin':
+    cml.plots.plot_history(CALLBACKS[0])

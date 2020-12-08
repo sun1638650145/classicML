@@ -50,8 +50,17 @@ install:
   - python3 setup.py install
 
 script:
-  - pwd
-  - ls
+  # 测试两个后端的结果
   - pytest
+  # 测试全部的样例能否正常运行
+  - python3 examples/aode.py
+  - python3 examples/custom-kernel_svc.py
+  - python3 examples/decision_tree.py
+  - python3 examples/lda.py
+  - python3 examples/logistic_regression.py
   - python3 examples/multi-class_neural_network.py
+  - python3 examples/naive_bayes.py
+  - python3 examples/percetron.py
   - python3 examples/rbf.py
+  - python3 examples/spode.py
+  - python3 examples/svc.py

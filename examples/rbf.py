@@ -1,4 +1,5 @@
 """这个例子将展示如何使用径向基函数网络拟合一个异或数据集"""
+import sys
 import classicML as cml
 
 
@@ -13,5 +14,6 @@ model = cml.models.RBF(seed=2020)
 model.compile(hidden_units=16)
 # 训练神经网络
 model.fit(x, y, epochs=1000, verbose=True, callbacks=CALLBACKS)
-# 可视化历史记录
-cml.plots.plot_history(CALLBACKS[0])
+# 可视化历史记录(如果您使用的是MacOS, 请注释掉此句, 这句是为了在CI上测试用的.)
+if sys.platform != 'darwin':
+    cml.plots.plot_history(CALLBACKS[0])

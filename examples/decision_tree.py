@@ -1,10 +1,11 @@
 """这个例子将展示如何使用决策树进行分类."""
+import sys
 import numpy as np
 import pandas as pd
 import classicML as cml
 
 
-DATASET_PATH = '../datasets/西瓜数据集.csv'
+DATASET_PATH = './datasets/西瓜数据集.csv'
 ATTRIBUTE_NAME = ['脐部', '色泽', '根蒂', '敲声', '纹理', '触感', '密度', '含糖率']
 
 # 读取数据
@@ -21,5 +22,6 @@ model.compile(criterion='gain',
               pruning='pre')
 # 训练模型
 model.fit(x_train, y_train, x_validation, y_validation)
-# 可视化模型
-cml.plots.plot_tree(model)
+# 可视化模型(如果您使用的是MacOS, 请注释掉此句, 这句是为了在CI上测试用的.)
+if sys.platform != 'darwin':
+    cml.plots.plot_tree(model)
