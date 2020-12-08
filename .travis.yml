@@ -38,14 +38,20 @@ before_install:
       sudo apt install -y libeigen3-dev;
       sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
       pip install pybind11;
+      pip install scikit-learn;
     elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
       brew install -y eigen3;
       pip3 install pytest;
       pip3 install pybind11;
+      pip3 install scikit-learn;
     fi
 
 install:
   - python3 setup.py install
 
 script:
+  - pwd
+  - ls
   - pytest
+  - python3 examples/multi-class_neural_network.py
+  - python3 examples/rbf.py
