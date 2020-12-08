@@ -8,70 +8,6 @@
 
 #include "ops.h"
 
-// 获取非零元素组成的子矩阵, 输入父矩阵和非零标签.
-Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
-                                    const Eigen::VectorXd &non_zero_mark) {
-    if (matrix.rows() != non_zero_mark.rows()) {
-        throw "行数不同, 无法操作";
-    }
-
-    // 初始化子矩阵.
-    // TODO(Steve R. Sun): Eigen::MatrixXd实例化动态矩阵会不能进行逐行赋值, 只能先通过一个循环统计非零元素个数.
-    int row = 0;
-    for (int i = 0; i < non_zero_mark.rows(); i ++) {
-        if (non_zero_mark[i] == 1) {
-            row ++;
-        }
-    }
-    Eigen::MatrixXd sub_matrix(row, matrix.cols());
-
-    row = 0;
-    for (int i = 0; i < non_zero_mark.rows(); i ++) {
-        if (non_zero_mark[i] == 1) {
-            sub_matrix.row(row) = matrix.row(i);
-            row ++;
-        }
-    }
-
-    return sub_matrix;
-}
-
-// 返回非零元素下标组成的数组, 输入为数组.
-std::vector<int> NonZero(const Eigen::RowVectorXd &array) {
-    std::vector<int> buffer;
-
-    for (int i = 0; i < array.size(); i ++) {
-        if (array[i] != 0.0) {
-            buffer.push_back(i);
-        }
-    }
-
-    return buffer;
-}
-
-// 返回一个有相同数据的值的新形状的矩阵, 输入为要改变形状的矩阵, 改变后的行数和列数.
-Eigen::MatrixXd Reshape(Eigen::MatrixXd matrix, const int &row, const int &column) {
-    int new_row = row;
-    int new_column = column;
-
-    // 可以将一个维度指定为-1, 函数将自动推理.
-    if (row == -1 && column == -1) {
-        throw "只能指定维度为一个未知维度";
-    } else {
-        if (row == -1) {
-            new_row = (int)matrix.size() / column;
-        } else if (column == -1) {
-            new_column = (int)matrix.size() / row;
-        }
-    }
-
-    // 在官方API中Eigen没有提供reshape方法, 这里是参照官方文档实现的一种代替方式.
-    Eigen::Map<Eigen::MatrixXd> map(matrix.data(), new_row, new_column);
-    Eigen::MatrixXd reshaped_matrix = map;
-
-    return reshaped_matrix;
-}
-
 // 返回一个矩阵, 计算向量减法, 输入为矩阵和行向量(矩阵和行向量的列数必须相同).
 Eigen::MatrixXd Sub(const Eigen::MatrixXd &matrix, const Eigen::RowVectorXd &vector) {
     if (matrix.cols() != vector.cols()) {
@@ -155,7 +91,7 @@ double GetDependentPriorProbability(const int &samples_on_attribute_in_category,
                                     const int &number_of_sample,
                                     const int &values_on_attribute,
                                     const bool &smoothing) {
-    double probability = 0.0;
+    double probability;
 
     if (smoothing) {
         probability = (double)(samples_on_attribute_in_category + 1) / (number_of_sample + 2 * values_on_attribute);
@@ -165,6 +101,7 @@ double GetDependentPriorProbability(const int &samples_on_attribute_in_category,
 
     return probability;
 }
+
 // 获取类先验概率, 输入特征数据, 标签和是否使用平滑.
 std::tuple<double, double> GetPriorProbability(const int &number_of_sample,
                                                const Eigen::RowVectorXd &y,
@@ -243,11 +180,11 @@ std::tuple<int, double> SelectSecondAlpha(const double &error,
     double delta_e = abs(error - error_cache[non_bound_index[0]]);
 
     // 选取最大间隔的拉格朗日乘子对应的下标和违背值.
-    for (int i = 0; i < (int)non_bound_index.size(); i ++) {
-        double temp = abs(error - error_cache[non_bound_index[i]]);
+    for (int i : non_bound_index) {
+        double temp = abs(error - error_cache[i]);
         if (temp > delta_e) {
             delta_e = temp;
-            index_alpha = non_bound_index[i];
+            index_alpha = i;
             error_alpha = error_cache[index_alpha];
         }
     }
@@ -272,7 +209,7 @@ std::string TypeOfTarget(const Eigen::MatrixXd &y) {
             }
         }
     }
-    if (any == false) {
+    if (!any) {
         return "continuous";
     }
 

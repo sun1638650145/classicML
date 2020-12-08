@@ -19,6 +19,8 @@
 #include "pybind11/pybind11.h"
 #include "pybind11/stl.h"
 
+#include "matrix_op.h"
+
 Eigen::MatrixXd CalculateError(const Eigen::MatrixXd &x,
                                const Eigen::MatrixXd &y,
                                const int &i,
@@ -64,9 +66,9 @@ std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen
 std::string TypeOfTarget(const pybind11::array &y);
 
 PYBIND11_MODULE(ops, m) {
-    m.doc() = R"pbdoc(classicML的cc后端)pbdoc";
+m.doc() = R"pbdoc(classicML的cc后端)pbdoc";
 
-    m.def("cc_calculate_error", &CalculateError, R"pbdoc(
+m.def("cc_calculate_error", &CalculateError, R"pbdoc(
 计算KKT条件的违背值.
 
     Arguments:
@@ -80,11 +82,11 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         违背值.)pbdoc",
-          pybind11::arg("x"), pybind11::arg("y"), pybind11::arg("i"),
-          pybind11::arg("kernel"), pybind11::arg("alphas"), pybind11::arg("non_zero_alphas"),
-          pybind11::arg("b"));
+pybind11::arg("x"), pybind11::arg("y"), pybind11::arg("i"),
+pybind11::arg("kernel"), pybind11::arg("alphas"), pybind11::arg("non_zero_alphas"),
+pybind11::arg("b"));
 
-    m.def("cc_clip_alpha", &ClipAlpha, R"pbdoc(
+m.def("cc_clip_alpha", &ClipAlpha, R"pbdoc(
 修剪拉格朗日乘子.
 
     Arguments:
@@ -94,9 +96,9 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         拉格朗日乘子.)pbdoc",
-          pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
+pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
 
-    m.def("cc_get_conditional_probability", &GetConditionalProbability, R"pbdoc(
+m.def("cc_get_conditional_probability", &GetConditionalProbability, R"pbdoc(
 获取类条件概率.
 
     Argument:
@@ -107,10 +109,10 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         类条件概率.)pbdoc",
-          pybind11::arg("samples_on_attribute"), pybind11::arg("samples_in_category"),
-          pybind11::arg("num_of_categories"), pybind11::arg("smoothing"));
+pybind11::arg("samples_on_attribute"), pybind11::arg("samples_in_category"),
+pybind11::arg("num_of_categories"), pybind11::arg("smoothing"));
 
-    m.def("cc_get_dependent_prior_probability", &GetDependentPriorProbability, R"pbdoc(
+m.def("cc_get_dependent_prior_probability", &GetDependentPriorProbability, R"pbdoc(
 获取有依赖的类先验概率.
 
     Argument:
@@ -121,10 +123,10 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         先验概率.)pbdoc",
-          pybind11::arg("samples_on_attribute_in_category"), pybind11::arg("number_of_sample"),
-          pybind11::arg("values_on_attribute"), pybind11::arg("smoothing"));
+pybind11::arg("samples_on_attribute_in_category"), pybind11::arg("number_of_sample"),
+pybind11::arg("values_on_attribute"), pybind11::arg("smoothing"));
 
-    m.def("cc_get_prior_probability", &GetPriorProbability, R"pbdoc(
+m.def("cc_get_prior_probability", &GetPriorProbability, R"pbdoc(
 获取类先验概率.
 
     Argument:
@@ -134,9 +136,9 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         类先验概率.)pbdoc",
-          pybind11::arg("number_of_sample"), pybind11::arg("y"), pybind11::arg("smoothing"));
+pybind11::arg("number_of_sample"), pybind11::arg("y"), pybind11::arg("smoothing"));
 
-    m.def("cc_get_probability_density", &GetProbabilityDensity, R"pbdoc(
+m.def("cc_get_probability_density", &GetProbabilityDensity, R"pbdoc(
 获得概率密度.
 
     Argument:
@@ -146,9 +148,9 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         概率密度.)pbdoc",
-          pybind11::arg("sample"), pybind11::arg("mean"), pybind11::arg("var"));
+pybind11::arg("sample"), pybind11::arg("mean"), pybind11::arg("var"));
 
-    m.def("cc_get_w", &GetW, R"pbdoc(
+m.def("cc_get_w", &GetW, R"pbdoc(
 获得投影向量.
 
     Arguments:
@@ -158,9 +160,9 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         投影向量.)pbdoc",
-          pybind11::arg("S_w"), pybind11::arg("mu_0"), pybind11::arg("mu_1"));
+pybind11::arg("S_w"), pybind11::arg("mu_0"), pybind11::arg("mu_1"));
 
-    m.def("cc_get_within_class_scatter_matrix", &GetWithinClassScatterMatrix, R"pbdoc(
+m.def("cc_get_within_class_scatter_matrix", &GetWithinClassScatterMatrix, R"pbdoc(
 获得类内散度矩阵.
 
     Arguments:
@@ -171,9 +173,9 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         类内散度矩阵.)pbdoc",
-          pybind11::arg("X_0"), pybind11::arg("X_1"), pybind11::arg("mu_0"), pybind11::arg("mu_1"));
+pybind11::arg("X_0"), pybind11::arg("X_1"), pybind11::arg("mu_0"), pybind11::arg("mu_1"));
 
-    m.def("cc_select_second_alpha", &SelectSecondAlpha, R"pbdoc(
+m.def("cc_select_second_alpha", &SelectSecondAlpha, R"pbdoc(
 选择第二个拉格朗日乘子, SMO采用的是启发式寻找的思想,
 找到目标函数变化量足够大, 即选取变量样本间隔最大.
 
@@ -187,9 +189,9 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         拉格朗日乘子的下标和违背值.)pbdoc",
-          pybind11::arg("error"), pybind11::arg("error_cache"), pybind11::arg("non_bound_alphas"));
+pybind11::arg("error"), pybind11::arg("error_cache"), pybind11::arg("non_bound_alphas"));
 
-    m.def("cc_type_of_target", pybind11::overload_cast<const Eigen::MatrixXd &>(&TypeOfTarget), R"pbdoc(
+m.def("cc_type_of_target", pybind11::overload_cast<const Eigen::MatrixXd &>(&TypeOfTarget), R"pbdoc(
 判断输入数据的类型.
 
     Arguments:
@@ -205,10 +207,10 @@ PYBIND11_MODULE(ops, m) {
 
     Notes:
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
-          pybind11::arg("y"));
-    m.def("cc_type_of_target", pybind11::overload_cast<const Eigen::Matrix<std::int64_t,
-                                                             Eigen::Dynamic,
-                                                             Eigen::Dynamic> &>(&TypeOfTarget), R"pbdoc(
+pybind11::arg("y"));
+m.def("cc_type_of_target", pybind11::overload_cast<const Eigen::Matrix<std::int64_t,
+Eigen::Dynamic,
+Eigen::Dynamic> &>(&TypeOfTarget), R"pbdoc(
 判断输入数据的类型.
 
     Arguments:
@@ -224,8 +226,8 @@ PYBIND11_MODULE(ops, m) {
 
     Notes:
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
-          pybind11::arg("y"));
-    m.def("cc_type_of_target", pybind11::overload_cast<const pybind11::array &>(&TypeOfTarget), R"pbdoc(
+pybind11::arg("y"));
+m.def("cc_type_of_target", pybind11::overload_cast<const pybind11::array &>(&TypeOfTarget), R"pbdoc(
 判断输入数据的类型.
 
     Arguments:
@@ -241,9 +243,9 @@ PYBIND11_MODULE(ops, m) {
 
     Notes:
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
-          pybind11::arg("y"));
+pybind11::arg("y"));
 
-    m.attr("__version__") = "0.5_ops.V5.2";
+m.attr("__version__") = "0.5_ops.V6";
 }
 
 #endif /* OPS_H */
