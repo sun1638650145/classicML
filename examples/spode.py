@@ -2,8 +2,8 @@
 import pandas as pd
 import classicML as cml
 
-DATASET_PATH = '../datasets/西瓜数据集.csv'
-ATTRIBUTE_NAME = ['脐部', '色泽', '根蒂', '敲声', '纹理', '触感', '密度', '含糖率']
+DATASET_PATH = '../datasets/西瓜数据集alpha.csv'
+ATTRIBUTE_NAME = ['密度', '含糖率']
 
 # 读取数据
 dataframe = pd.read_csv(DATASET_PATH, index_col=0, header=0)
@@ -13,7 +13,9 @@ y[y == '是'] = 1
 y[y == '否'] = 0
 # 生成模型
 model = cml.SuperParentOneDependentEstimator(attribute_name=ATTRIBUTE_NAME)
-model.compile(super_parent_name='脐部',
+model.compile(super_parent_name='密度',
               smoothing=True)
 # 训练模型
 model.fit(x, y)
+# 可视化模型
+cml.plots.plot_bayes(model, x, y)

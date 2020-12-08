@@ -177,11 +177,13 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
 
         return self
 
-    def predict(self, x):
+    def predict(self, x, probability=False):
         """使用超父独依赖估计器进行预测.
 
         Argument:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
+            probability: bool, default=False,
+                是否使用归一化的概率形式.
 
         Returns:
             SuperParentOneDependentEstimator的预测结果.
@@ -196,19 +198,25 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
         y_pred = list()
 
         if len(x.shape) == 1:
-            _y_pred = self._predict(x)
-            if _y_pred[0] > _y_pred[1]:
-                y_pred.append(0)
+            p_0, p_1 = self._predict(x)
+            if probability:
+                y_pred.append([p_0 / (p_0 + p_1), p_1 / (p_0 + p_1)])
             else:
-                y_pred.append(1)
-        else:
-            for i in range(x.shape[0]):
-                x_test = x.iloc[i, :]
-                _y_pred = self._predict(x_test)
-                if _y_pred[0] > _y_pred[1]:
+                if p_0 > p_1:
                     y_pred.append(0)
                 else:
                     y_pred.append(1)
+        else:
+            for i in range(x.shape[0]):
+                x_test = x.iloc[i, :]
+                p_0, p_1 = self._predict(x_test)
+                if probability:
+                    y_pred.append([p_0 / (p_0 + p_1), p_1 / (p_0 + p_1)])
+                else:
+                    if p_0 > p_1:
+                        y_pred.append(0)
+                    else:
+                        y_pred.append(1)
 
         return y_pred
 
@@ -368,7 +376,7 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
 
         return self
 
-    def predict(self, x):
+    def predict(self, x, **kwargs):
         """使用平均独依赖估计器进行预测.
 
         Argument:
