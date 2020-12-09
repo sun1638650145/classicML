@@ -25,7 +25,7 @@ jobs:
         pip install pybind11;
     - name: Install
       run: |
-        - python3 setup.py install
+        python3 setup.py install
     - name: Test with pytest
       run: |
         pytest
