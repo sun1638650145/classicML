@@ -176,7 +176,7 @@ class TestGetWithinClassScatterMatrix(object):
 
 class TestSelectSecondAlpha(object):
     def test_answer(self):
-        error = np.random.rand()
+        error = 0.5
         error_cache = np.asarray([0.1, 0.2, 0.3])
         non_bound_alphas = np.asarray([1, 2, 3])
 
