@@ -22,6 +22,7 @@ jobs:
         sudo apt install -y libeigen3-dev;
         sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
         python -m pip install --upgrade pip;
+        pip install pytest;
         pip install pybind11;
     - name: Install
       run: |
