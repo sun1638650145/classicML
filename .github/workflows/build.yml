@@ -25,11 +25,11 @@ jobs:
       run: |
         # 安装 eigen3
         if [ "${{ matrix.os }}" = "macos-10.15" ]; then
+          brew install eigen3;
+        else
           sudo apt update;
           sudo apt install -y libeigen3-dev;
           sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
-        else
-          brew install eigen3;
         fi
         # 安装 pybind11, pytest和scikit-learn
         python -m pip install --upgrade pip;
