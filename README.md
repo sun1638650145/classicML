@@ -1,5 +1,5 @@
 # classicML 
-[![Build Status](https://travis-ci.com/sun1638650145/classicML.svg?branch=master)](https://travis-ci.com/sun1638650145/classicML)
+![build](https://github.com/sun1638650145/classicML/workflows/build/badge.svg)
 
 简单易用的经典机器学习框架，classicML支持数种机器学习算法，是你入门学习机器学习的首选
 
