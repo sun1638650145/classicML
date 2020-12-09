@@ -25,6 +25,7 @@ jobs:
       run: |
         # 安装 eigen3
         if [ "${{ matrix.os }}" = "macos-10.15" ]; then
+          brew update;
           brew install eigen3;
         else
           sudo apt update;
