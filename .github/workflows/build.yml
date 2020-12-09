@@ -1,4 +1,4 @@
-name: Python build
+name: build
 
 on:
   push:
@@ -9,24 +9,37 @@ jobs:
   build:
 
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.6
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: 3.6
-    - name: Install dependencies
+        python-version: ${{ matrix.python-version }}
+    - name: Before install
       run: |
+        # 安装 eigen3
         sudo apt update;
         sudo apt install -y libeigen3-dev;
         sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
+        # 安装 pybind11, pytest和scikit-learn
         python -m pip install --upgrade pip;
-        pip install pytest;
         pip install pybind11;
+        pip install pytest;
+        pip install scikit-learn==0.23.2;
     - name: Install
       run: |
         python3 setup.py install
     - name: Test with pytest
+      # 测试两个的后端结果
       run: |
         pytest
+    - name: Test examples
+      # 测试全部的样例能否正常运行
+      run: |
+        for filename in `ls examples`; do
+          python3 examples/$filename;
+        done
