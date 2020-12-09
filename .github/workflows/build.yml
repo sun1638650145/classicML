@@ -1,0 +1,31 @@
+name: Python build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.6
+    - name: Install dependencies
+      run: |
+        sudo apt update;
+        sudo apt install -y libeigen3-dev;
+        sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
+        python -m pip install --upgrade pip;
+        pip install pybind11;
+    - name: Install
+      run: |
+        - python3 setup.py install
+    - name: Test with pytest
+      run: |
+        pytest
