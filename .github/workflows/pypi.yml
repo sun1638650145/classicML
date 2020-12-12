@@ -23,9 +23,19 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Before install
       run: |
-        # 安装 twine
-        python3 -m pip install --upgrade pip
-        pip install setuptools wheel twine
+        # 安装 setuptools, wheel, twine和pybind11
+        python3 -m pip install --upgrade pip;
+        pip install setuptools wheel twine pybind11;
+        # 安装 eigen3
+        if [ "${{ matrix.os }}" = "macos-10.15" ]; then
+          rm -rf /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core;
+          brew update;
+          brew install eigen;
+        else
+          sudo apt update;
+          sudo apt install -y libeigen3-dev;
+          sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
+        fi
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
