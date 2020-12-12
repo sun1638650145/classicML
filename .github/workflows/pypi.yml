@@ -1,0 +1,40 @@
+name: PypI
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+
+    runs-on: $ {{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, macos-10.15]
+        python-version: [3.6, 3.7, 3.8]
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: $ {{ matrix.python-version }}
+    - name: Before install
+      run: |
+        # 安装 twine
+        python3 -m pip install --upgrade pip
+        pip install setuptools wheel twine
+    - name: Build and publish
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        python3 setup.py sdist bdist_wheel
+        # 修改Linux下的包名
+        if [ "${{ matrix.os}}" = "ubuntu-18.04" ]; then
+          filename=`ls dist/*.whl`;
+          newfilename=${filename/"linux"/"manylinux2010"};
+          mv $filename $newfilename;
+        fi
+        python3 -m twine upload --repository pypi dist/ --skip-existing
