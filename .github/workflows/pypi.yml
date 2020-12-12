@@ -1,9 +1,8 @@
 name: PyPI
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published, created]
 
 jobs:
   deploy:
