@@ -1,4 +1,4 @@
-name: PypI
+name: PyPI
 
 on:
   release:
@@ -7,7 +7,7 @@ on:
 jobs:
   deploy:
 
-    runs-on: $ {{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-18.04, macos-10.15]
