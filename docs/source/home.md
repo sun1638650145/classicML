@@ -1,6 +1,6 @@
 # classicML: 简单易用的经典机器学习框架
 
-![build](https://github.com/sun1638650145/classicML/workflows/build/badge.svg) ![PyPI](https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg)
+![build](https://github.com/sun1638650145/classicML/workflows/build/badge.svg) ![PyPI](https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg) [![Documentation Status](https://readthedocs.org/projects/classicml/badge/?version=latest)](https://classicml.readthedocs.io/en/latest/?badge=latest)
 
 classicML是一个用Python和CPP混编的机器学习项目，它的设计目标是简单易用，快速入门，编程风格简洁。
 
@@ -93,7 +93,7 @@ wget https://github.com/sun1638650145/classicML/blob/master/datasets/西瓜数�
 
 ## 切换后端
 
-为了保证兼容性classicML默认使用的是Python后端，部分算法支持了使用CPP作为后端进行加速，你需要在开头使用这条语句切换后端，或者直接修改项目文件的超参数(不推荐)
+为了保证兼容性classicML默认使用Python后端，部分算法支持了使用CPP作为后端进行加速，你需要在开头使用这条语句切换后端，或者直接修改项目文件中的预设环境变量(不推荐)
 
 ```python
 import os
