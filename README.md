@@ -1,5 +1,6 @@
 # classicML 
-![build](https://github.com/sun1638650145/classicML/workflows/build/badge.svg) ![PyPI](https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg)
+![build](https://github.com/sun1638650145/classicML/workflows/build/badge.svg) ![PyPI](https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg) [![Documentation Status](https://readthedocs.org/projects/classicml/badge/?version=latest)](https://classicml.readthedocs.io/en/latest/?badge=latest)
+
 
 简单易用的经典机器学习框架，classicML支持数种机器学习算法，是你入门学习机器学习的首选
 
@@ -40,7 +41,9 @@
 
 4. 0.5版本的API接口略有改动, 修改了部分模块的路径, 结构更为合理.
 
-5. 0.5版本添加benchmark模块可以监控内存和时间开销.
+5. 0.5版本添加benchmarks模块可以监控内存和时间开销.
+
+6. 更多内容请访问文档 [classicml.readthedocs.io](https://classicml.readthedocs.io/en/latest/home.html)
 
 ## 目前的已支持的算法
 
