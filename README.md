@@ -43,7 +43,7 @@
 
 5. 0.5版本添加benchmarks模块可以监控内存和时间开销.
 
-6. 更多内容请访问文档 [classicml.readthedocs.io](https://classicml.readthedocs.io/en/latest/home.html)
+6. 更多内容请访问文档 [classicml.readthedocs.io](https://classicml.readthedocs.io/zh_CN/latest/home.html)
 
 ## 目前的已支持的算法
 
