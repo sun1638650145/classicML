@@ -2,7 +2,12 @@ version: 2
 
 sphinx:
   configuration: docs/source/conf.py
-  
+
+# 创建PDF和ePub
+formats:
+  - pdf
+  - epub
+
 # 编译文档时需要的依赖
 python:
   version: 3.7
