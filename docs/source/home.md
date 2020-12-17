@@ -2,66 +2,28 @@
 
 ![build](https://github.com/sun1638650145/classicML/workflows/build/badge.svg) ![PyPI](https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg) [![Documentation Status](https://readthedocs.org/projects/classicml/badge/?version=latest)](https://classicml.readthedocs.io/en/latest/?badge=latest)
 
-classicML是一个用Python和CPP混编的机器学习项目，它的设计目标是简单易用，快速入门，编程风格简洁。
+classicML 是一个用Python和CPP混编的机器学习项目，它既实现了Python的简单易用快速上手，又实现了CPP的高效性能。classicML的设计目标是简单易用，快速入门，编程风格简洁。
 
-## 第一步
+## 多后端支持
 
-### 使用PyPI安装预编译的软件包
-
-注意：PyPI提供了macOS和Linux的预编译CPP加速包，和macOS、Linux和Windows的预编译Python包
-
-* 安装Python版本
-
-```shell
-pip install classicML-python
-```
-
-* 安装CPP版本
-
-```shell
-pip install classicML
-```
-
-### 从GitHub上下载源码进行编译安装
-
-注意：从源码安装将默认安装CPP版本，Windows仅在理论上支持未经过软件测试且作者长时间内不会针对适配
-
-* 安装依赖的CPP库(以macOS为例)
-
-```shell
-brew install eigen
-```
-
-* 安装依赖的Python库
+classicML 本身是一个Python项目，但是机器学习中涉及到的复杂的矩阵运算对于Python有点儿捉襟见肘，因此我们提供了使用CPP后端的函数的加速版本。为了保证兼容性，classicML默认使用Python后端，部分算法支持了使用CPP作为后端进行加速，你需要安装标准版的classicML，然后在开头使用这条语句切换后端。
 
 ```python
-pip install pybind11
+import os
+os.environ['CLASSICML_ENGINE'] = 'CC'
 ```
 
-* 使用git克隆仓库
+## 第一个机器学习程序
+
+使用线性判别分析进行二分类
+
+* 下载示例数据集
 
 ```shell
-git clone https://github.com/sun1638650145/classicML.git
+wget https://github.com/sun1638650145/classicML/blob/master/datasets/西瓜数据集alpha.csv
 ```
 
-* 进行安装
-
-```shell
-cd classicML
-python3 setup.py install
-```
-
-### 重要信息⚠️
-
-* classicML兼容的Python版本: Python 3.6-3.8
-* classicML仅支持64位的系统，强行使用32位系统可能会导致精度异常
-* classicML要求的Eigen版本是 3.3.7+
-* classicML要求的pybind版本是 2.6+
-* 编译使用的c++版本不能低于 c++14
-
-## 第一行
-
-* 使用线性判别分析
+* 运行下面的代码
 
 ```python
 import pandas as pd
@@ -83,24 +45,11 @@ model.fit(x, y)
 cml.plots.plot_lda(model, x, y, '密度', '含糖率')
 ```
 
-* 下载示例数据集
-
-```shell
-wget https://github.com/sun1638650145/classicML/blob/master/datasets/西瓜数据集alpha.csv
-```
-
 * [更多示例代码点击](https://github.com/sun1638650145/classicML/tree/master/examples)
 
-## 切换后端
-
-为了保证兼容性classicML默认使用Python后端，部分算法支持了使用CPP作为后端进行加速，你需要在开头使用这条语句切换后端，或者直接修改项目文件中的预设环境变量(不推荐)
-
-```python
-import os
-os.environ['CLASSICML_ENGINE'] = 'CC'
-```
-
 ## 目前的已支持的算法
+
+classicML 目前支持数种机器学习算法，但是每种算法实现的情况有所不同和差异。
 
 |      算法名称      | 支持多分类 | 使用CC加速 | 可视化 | 同时处理离散和连续值 |
 | :----------------: | :--------: | :--------: | :----: | :------------------: |
