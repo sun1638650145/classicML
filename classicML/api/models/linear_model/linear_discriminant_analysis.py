@@ -52,6 +52,8 @@ class LinearDiscriminantAnalysis(object):
         S_w = get_within_class_scatter_matrix(X_0, X_1, self.mu_0, self.mu_1)
         # 获得投影向量
         self.w = get_w(S_w, self.mu_0, self.mu_1)
+        # 标记训练完成
+        self.is_trained = True
 
         return self
 
