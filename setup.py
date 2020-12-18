@@ -38,6 +38,7 @@ setup(
     license='Apache Software License',
     cmdclass={'build_ext': build_ext},
     install_requires=[
+        'h5py==2.10.0',
         'matplotlib>=3.3.2',
         'numpy>=1.19.2, <=1.19.4',
         'pandas>=1.1.3, <=1.1.4',

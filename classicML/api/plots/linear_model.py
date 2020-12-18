@@ -39,8 +39,8 @@ def plot_linear_discriminant_analysis(lda, x, y, x_label=None, y_label=None):
         y_label: str, default=None,
             纵轴的标签.
     """
-    if lda.w is None:
-        CLASSICML_LOGGER.error('模型没有训练')
+    if lda.is_trained is False and lda.is_loaded is False:
+        CLASSICML_LOGGER.error('模型没有权重')
         raise ValueError('你必须先进行训练')
 
     _, ax = plt.subplots(figsize=(5, 5))

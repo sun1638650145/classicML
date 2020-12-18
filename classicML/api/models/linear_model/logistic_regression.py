@@ -22,7 +22,7 @@ class LogisticRegression(object):
         metric: str, classicML.metrics.Metric 实例, default='accuracy'
             模型使用的评估函数.
         beta: numpy.ndarray, 模型的参数矩阵.
-        is_trained: bool, default=None, 模型训练后将被标记为True.
+        is_trained: bool, default=False, 模型训练后将被标记为True.
     """
     def __init__(self, seed=None, initializer=None):
         """初始化模型.

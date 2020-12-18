@@ -1,63 +1,67 @@
-# classicML 
+# classicML: 简单易用的经典机器学习框架
+
 ![build](https://github.com/sun1638650145/classicML/workflows/build/badge.svg) ![PyPI](https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg) [![Documentation Status](https://readthedocs.org/projects/classicml/badge/?version=latest)](https://classicml.readthedocs.io/en/latest/?badge=latest)
 
+classicML 是一个用Python和CPP混编的机器学习项目，它既实现了Python的简单易用快速上手，又实现了CPP的高效性能。classicML的设计目标是简单易用，快速入门，编程风格简洁。
 
-简单易用的经典机器学习框架，classicML支持数种机器学习算法，是你入门学习机器学习的首选
+## 多后端支持
 
-## 重要信息⚠️
+classicML 本身是一个Python项目，但是机器学习中涉及到的复杂的矩阵运算对于Python有点儿捉襟见肘，因此我们提供了使用CPP后端的函数的加速版本。为了保证兼容性，classicML默认使用Python后端，部分算法支持了使用CPP作为后端进行加速，你需要安装标准版的classicML，然后在开头使用这条语句切换后端。
 
-1. 推荐你直接使用pip安装预编译的软件包(stable version)
+```python
+import os
+os.environ['CLASSICML_ENGINE'] = 'CC'
+```
 
-   * 安装Python版本(没有加速)
+## 第一个机器学习程序
 
-     ```shell
-     pip install classicML-python
-     ```
+使用线性判别分析进行二分类
 
-   * 安装CPP版本(只支持macOS和Linux)
+* 下载示例数据集
 
-     ```shell
-     pip install classicML
-     ```
+```shell
+wget https://github.com/sun1638650145/classicML/blob/master/datasets/西瓜数据集alpha.csv
+```
 
-2. 从GitHub上下载源码进行编译安装, 请预装依赖的CPP库
+* 运行下面的代码
 
-   * Eigen 3.3.7+
-   * pybind 2.6+
-   * 并且保证c++的最低版本为c++14
+```python
+import pandas as pd
+import classicML as cml
 
-   ```shell
-   git clone https://github.com/sun1638650145/classicML.git
-   cd classicML
-   python3 setup.py install
-   ```
+DATASET_PATH = '/path/to/西瓜数据集alpha.csv'
 
-3. 部分算法支持了使用CPP作为后端进行加速，你需要在开头使用这条语句切换后端
+# 读取数据
+dataframe = pd.read_csv(DATASET_PATH, index_col=0, header=0)
+x = dataframe.iloc[:, :2].values
+y = dataframe.iloc[:, 2].values
+y[y == '是'] = 1
+y[y == '否'] = 0
+# 生成模型
+model = cml.models.LDA()
+# 训练模型
+model.fit(x, y)
+# 可视化模型
+cml.plots.plot_lda(model, x, y, '密度', '含糖率')
+```
 
-   ```python
-   import os
-   os.environ['CLASSICML_ENGINE'] = 'CC'
-   ```
-
-4. 0.5版本的API接口略有改动, 修改了部分模块的路径, 结构更为合理.
-
-5. 0.5版本添加benchmarks模块可以监控内存和时间开销.
-
-6. 更多内容请访问文档 [classicml.readthedocs.io](https://classicml.readthedocs.io/zh_CN/latest/home.html)
+* [更多示例代码点击](https://github.com/sun1638650145/classicML/tree/master/examples)
 
 ## 目前的已支持的算法
 
-|      算法名称      | 支持多分类 | 使用CC加速 | 可视化 |      同时处理离散和连续值      |
-| :----------------: | :--------: | :--------: | :----: | :----------------------------: |
-|      逻辑回归      |            |            |   ✅    |                                |
-| 线性判别分析 |            |     ✅      |   ✅    |                                |
-|     BP神经网络     |     ✅      |            |   ✅    | ✅ |
-| 径向基函数神经网络 |            |            |   ✅    |                                |
-| 支持向量分类器  |            |     ✅      |   ✅    |                                |
-|     分类决策树     |     ✅      |     ✅      |   ✅    |               ✅                |
-| 朴素贝叶斯分类器 |            |     ✅      | ✅ |               ✅                |
-| 平均独依赖估计器 | | ✅ | | ✅ |
-| 超父独依赖估计器 | | ✅ | ✅ | ✅ |
+classicML 目前支持数种机器学习算法，但是每种算法实现的情况有所不同和差异。
+
+|      算法名称      | 支持多分类 | 使用CC加速 | 可视化 | 同时处理离散和连续值 | 保存和加载权重(experimental) |
+| :----------------: | :--------: | :--------: | :----: | :------------------: | :--------------------------: |
+|      逻辑回归      |            |            |   ✅    |                      |                              |
+|    线性判别分析    |            |     ✅      |   ✅    |                      |              ✅               |
+|     BP神经网络     |     ✅      |            |   ✅    |          ✅           |                              |
+| 径向基函数神经网络 |            |            |   ✅    |                      |                              |
+|   支持向量分类器   |            |     ✅      |   ✅    |                      |                              |
+|     分类决策树     |     ✅      |     ✅      |   ✅    |          ✅           |                              |
+|  朴素贝叶斯分类器  |            |     ✅      |   ✅    |          ✅           |                              |
+|  平均独依赖估计器  |            |     ✅      |        |          ✅           |                              |
+|  超父独依赖估计器  |            |     ✅      |   ✅    |          ✅           |                              |
 
 1. 全部神经网络只能可视化损失和评估函数曲线，暂不能可视化结构信息
 
