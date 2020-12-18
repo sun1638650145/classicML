@@ -119,6 +119,7 @@ class LinearDiscriminantAnalysis(object):
             self.w = parameters_ds.attrs['w']
             self.mu_0 = parameters_ds.attrs['mu_0']
             self.mu_1 = parameters_ds.attrs['mu_1']
+            # 标记加载完成
             self.is_loaded = True
         except KeyError:
             CLASSICML_LOGGER.error('模型权重加载失败, 请检查文件是否损坏')
