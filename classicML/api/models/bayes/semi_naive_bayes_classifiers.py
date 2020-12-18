@@ -40,7 +40,7 @@ class OneDependentEstimator(object):
     def fit(self, x, y):
         """训练独依赖估计器.
 
-        Argument:
+        Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
             y: numpy.ndarray or pandas.DataFrame, array-like, 标签.
         """
@@ -49,7 +49,7 @@ class OneDependentEstimator(object):
     def predict(self, x):
         """使用独依赖估计器进行预测.
 
-        Argument:
+        Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
         """
         raise NotImplementedError
@@ -100,7 +100,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
     def fit(self, x, y):
         """训练超父独依赖估计器.
 
-        Argument:
+        Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
             y: numpy.ndarray or pandas.DataFrame, array-like, 标签.
 
@@ -180,7 +180,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
     def predict(self, x, probability=False):
         """使用超父独依赖估计器进行预测.
 
-        Argument:
+        Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
             probability: bool, default=False,
                 是否使用归一化的概率形式.
@@ -223,7 +223,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
     def _predict(self, x, attribute_list=None, super_parent_index=None):
         """通过平均独依赖估计器预测单个样本.
 
-        Argument:
+        Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like,
                 特征数据.
             attribute_list: list, default=None,
@@ -327,7 +327,7 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
     def compile(self, smoothing=True, m=0, **kwargs):
         """编译平均独依赖估计器.
 
-        Argument:
+        Arguments:
             smoothing: bool, default=True,
                 是否使用平滑, 这里的实现是拉普拉斯修正.
             m: int, default=0,
@@ -339,8 +339,8 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
     def fit(self, x, y):
         """训练平均独依赖估计器.
 
-        Argument:
-            x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据
+        Arguments:
+            x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
             y: numpy.ndarray or pandas.DataFrame, array-like, 标签.
 
         Returns:
@@ -379,7 +379,7 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
     def predict(self, x, **kwargs):
         """使用平均独依赖估计器进行预测.
 
-        Argument:
+        Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
 
         Returns:
@@ -406,7 +406,7 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
         """
         通过平均独依赖估计器预测单个样本.
 
-        Argument:
+        Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
 
         Returns:
