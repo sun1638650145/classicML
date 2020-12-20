@@ -74,12 +74,15 @@ class DecisionTreeClassifier(object):
 
         Returns:
             DecisionTreeClassifier实例.
+
+        Raises:
+            AttributeError: 没有验证集.
         """
         if isinstance(x, np.ndarray) and self.attribute_name is None:
             CLASSICML_LOGGER.warn("属性名称缺失, 请使用pandas.DataFrame; 或检查 self.attributes_name")
         if (self.pruner is not None) and (x_validation is None or y_validation is None):
             CLASSICML_LOGGER.error("没有验证集, 无法对决策树进行剪枝")
-            raise AttributeError
+            raise AttributeError('没有验证集')
 
         # 为特征数据添加属性信息.
         x = pd.DataFrame(x, columns=self.attribute_name)
@@ -107,7 +110,7 @@ class DecisionTreeClassifier(object):
         return self
 
     def predict(self, x):
-        """使用分类器进行预测.
+        """使用决策树分类器进行预测.
 
         Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like,
