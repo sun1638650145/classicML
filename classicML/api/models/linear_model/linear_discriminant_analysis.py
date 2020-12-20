@@ -1,12 +1,9 @@
-import re
-from time import time
-
-import h5py
 import numpy as np
 
 from classicML import CLASSICML_LOGGER
 from classicML.backend import get_within_class_scatter_matrix
 from classicML.backend import get_w
+from classicML.backend import io
 
 
 class LinearDiscriminantAnalysis(object):
@@ -91,31 +88,14 @@ class LinearDiscriminantAnalysis(object):
             filepath: str, 权重文件加载的路径.
 
         Raises:
-            IOError: 文件打开失败.
-            ValueError: 文件核验失败.
-            KeyError: 权重加载失败.
+            KeyError: 模型权重加载失败.
         """
+        # 初始化权重文件.
+        parameters_ds = io.initialize_weights_file(filepath=filepath,
+                                                   mode='r',
+                                                   model_name='LinearDiscriminantAnalysis')
+        # 加载模型参数.
         try:
-            fp = h5py.File(filepath, 'r')
-        except IOError:
-            CLASSICML_LOGGER.error('文件打开失败, 请检查文件是否存在或损坏')
-            raise IOError('文件打开失败')
-
-        description_gp = fp['description']
-        _version = description_gp.attrs['__version__']
-        _model_name = description_gp.attrs['model_name']
-
-        if _model_name != 'LinearDiscriminantAnalysis':
-            CLASSICML_LOGGER.error('文件核验失败, 模型不匹配')
-            raise ValueError('文件核验失败')
-        # _version_list[0]是主版本号, _version_list[1]是权重文件的版本号.
-        _version_list = re.findall('\\d+.?\\d*', _version)
-        if _version_list[0] != '0.5' or _version_list[1] != '1':
-            CLASSICML_LOGGER.error('文件核验失败, 版本不兼容')
-            raise ValueError('文件核验失败')
-
-        try:
-            parameters_ds = fp['parameters']
             self.w = parameters_ds.attrs['w']
             self.mu_0 = parameters_ds.attrs['mu_0']
             self.mu_1 = parameters_ds.attrs['mu_1']
@@ -132,22 +112,17 @@ class LinearDiscriminantAnalysis(object):
             filepath: str, 权重文件保存的路径.
 
         Raises:
-            IOError: 模型权重保存失败.
+            TypeError: 模型权重保存失败.
         """
+        # 初始化权重文件.
+        parameters_ds = io.initialize_weights_file(filepath=filepath,
+                                                   mode='w',
+                                                   model_name='LinearDiscriminantAnalysis')
+        # 保存模型参数.
         try:
-            fp = h5py.File(filepath, 'w')
-            # 创建描述信息组.
-            description_gp = fp.create_group(name='description')
-            description_gp.attrs['__version__'] = '0.5_weights.V1'
-            description_gp.attrs['model_name'] = 'LinearDiscriminantAnalysis'
-            description_gp.attrs['saved_time'] = time()
-            # 创建参数数据集.
-            parameters_ds = fp.create_dataset(name='parameters', dtype=np.float64)
             parameters_ds.attrs['w'] = self.w
             parameters_ds.attrs['mu_0'] = self.mu_0
             parameters_ds.attrs['mu_1'] = self.mu_1
-
-            fp.close()
-        except IOError:
-            CLASSICML_LOGGER.error('模型权重保存失败.')
-            raise IOError('模型权重保存失败')
+        except TypeError:
+            CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
+            raise TypeError('模型权重保存失败')

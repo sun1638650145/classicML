@@ -245,7 +245,7 @@ Eigen::Dynamic> &>(&TypeOfTarget), R"pbdoc(
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "0.5_ops.V6";
+    m.attr("__version__") = "backend.cc.ops.0.6";
 }
 
 #endif /* OPS_H */

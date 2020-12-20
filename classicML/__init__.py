@@ -35,6 +35,7 @@ from classicML.api import SVC
 from classicML.backend import activations
 from classicML.backend import callbacks
 from classicML.backend import initializers
+from classicML.backend import io
 from classicML.backend import kernels
 from classicML.backend import losses
 from classicML.backend import metrics

@@ -5,6 +5,7 @@ from classicML import CLASSICML_LOGGER
 from classicML.backend.python import activations
 from classicML.backend.python import callbacks
 from classicML.backend.python import initializers
+from classicML.backend.python import io
 from classicML.backend.python import kernels
 from classicML.backend.python import losses
 from classicML.backend.python import metrics

@@ -5,6 +5,7 @@ from classicML.backend import get_initializer
 from classicML.backend import get_optimizer
 from classicML.backend import get_loss
 from classicML.backend import get_metric
+from classicML.backend import io
 
 
 class LogisticRegression(object):
@@ -23,6 +24,8 @@ class LogisticRegression(object):
             模型使用的评估函数.
         beta: numpy.ndarray, 模型的参数矩阵.
         is_trained: bool, default=False, 模型训练后将被标记为True.
+        is_loaded: bool, default=False,
+            如果模型加载了权重将被标记为True.
     """
     def __init__(self, seed=None, initializer=None):
         """初始化模型.
@@ -43,6 +46,7 @@ class LogisticRegression(object):
         self.metric = None
         self.beta = None
         self.is_trained = False
+        self.is_loaded = False
 
     def compile(self, optimizer='newton', loss='log_likelihood', metric='accuracy'):
         """编译模型, 配置训练时使用的超参数.
@@ -100,7 +104,7 @@ class LogisticRegression(object):
         Raises:
             ValueError: 模型没有训练的错误.
         """
-        if self.is_trained is False:
+        if self.is_trained is False and self.is_loaded is False:
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
@@ -108,3 +112,51 @@ class LogisticRegression(object):
         y_pred = np.squeeze(y_pred)
 
         return y_pred
+
+    def load_weights(self, filepath):
+        """加载模型参数.
+
+        Arguments:
+            filepath: str, 权重文件加载的路径.
+
+        Raises:
+            KeyError: 模型权重加载失败.
+
+        Notes:
+            模型将不会加载关于优化器和损失函数的超参数.
+        """
+        # 初始化权重文件.
+        parameters_ds = io.initialize_weights_file(filepath=filepath,
+                                                   mode='r',
+                                                   model_name='LogisticRegression')
+        # 加载模型参数.
+        try:
+            self.beta = parameters_ds.attrs['beta']
+            # 标记加载完成
+            self.is_loaded = True
+        except KeyError:
+            CLASSICML_LOGGER.error('模型权重加载失败, 请检查文件是否损坏')
+            raise KeyError('模型权重加载失败')
+
+    def save_weights(self, filepath):
+        """将模型权重保存为一个HDF5文件.
+
+        Arguments:
+            filepath: str, 权重文件保存的路径.
+
+        Raises:
+            TypeError: 模型权重保存失败.
+
+        Notes:
+            模型将不会保存关于优化器和损失函数的超参数.
+        """
+        # 初始化权重文件.
+        parameters_ds = io.initialize_weights_file(filepath=filepath,
+                                                   mode='w',
+                                                   model_name='LogisticRegression')
+        # 保存模型参数.
+        try:
+            parameters_ds.attrs['beta'] = self.beta
+        except TypeError:
+            CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
+            raise TypeError('模型权重保存失败')

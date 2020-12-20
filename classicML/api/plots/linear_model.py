@@ -90,7 +90,7 @@ def plot_logistic_regression(logistic_regression, x, y, x_label=None, y_label=No
         y_label: str, default=None,
             纵轴的标签.
     """
-    if logistic_regression.is_trained is False:
+    if logistic_regression.is_trained is False and logistic_regression.is_loaded is False:
         CLASSICML_LOGGER.error('模型没有训练')
         raise ValueError('你必须先进行训练')
 
