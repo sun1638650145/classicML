@@ -236,3 +236,117 @@ predict(x)
 #### 异常
 
 * ValueError: 模型没有训练的错误.
+
+## LinearDiscriminantAnalysis
+
+线性判别分析。
+
+```python
+cml.models.LinearDiscriminantAnalysis()  # 可以使用缩写 cml.models.LDA()
+```
+
+### fit
+
+```python
+fit(x, y)
+```
+
+训练模型.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，或者是Pandas的DataFrame，特征数据.
+* <b>y</b>: 一个 Numpy数组，或者是Pandas的DataFrame，标签.
+
+#### 返回
+
+一个```LinearDiscriminantAnalysis```实例.
+
+### predict
+
+```python
+predict(x)
+```
+
+模型进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+
+#### 返回
+
+预测的Numpy数组.
+
+#### 异常
+
+* ValueError: 模型没有训练的错误.
+
+## LogisticRegression
+
+逻辑回归。
+
+```python
+cml.models.LogisticRegression(seed=None, initializer=None)
+```
+
+### 参数
+
+* <b>seed</b>: 整数，随机种子.
+* <b>initializer</b>: 字符串，或者```cml.initializers.Initializer```实例，初始化器.
+
+### compile
+
+```python
+compile(optimizer='newton', loss='log_likelihood', metric='accuracy')
+```
+
+编译模型，配置训练时使用的超参数.
+
+#### 参数
+
+* optimizer: 字符串，或者```cml.optimizers.Optimizer```实例，模型使用的优化器.
+
+* loss: 字符串，或者```cml.losses.Loss```实例，模型使用的损失函数.
+
+* metric: 字符串，或者```cml.metrics.Metric```实例，模型使用的评估函数.
+
+### fit
+
+```python
+fit(x, y, epochs=1, verbose=True, callbacks=None)
+```
+
+训练神经网络.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+* <b>epochs</b>: 整数，训练的轮数.
+* <b>verbose</b>: 布尔值（可选参数），显示日志信息.
+* <b>callbacks</b>: 列表，模型训练过程的中间数据记录器.
+
+#### 返回
+
+一个```LogisticRegression```实例.
+
+### predict
+
+```python
+predict(x)
+```
+
+使用神经网络进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+
+#### 返回
+
+预测的Numpy数组（以概率形式）.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
