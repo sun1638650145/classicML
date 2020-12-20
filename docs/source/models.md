@@ -112,17 +112,19 @@ compile(network_structure, optimizer='sgd', loss='crossentropy', metric='accurac
 
 #### 参数
 
-* network_structure: 列表，神经网络的结构，定义神经网络的隐含层和输出层的神经元个数(输入层目前将自动推理)；例如：
+* <b>network_structure</b>: 列表，神经网络的结构，定义神经网络的隐含层和输出层的神经元个数(输入层目前将自动推理)，
 
-  [3, 1]是一个隐含层3个神经元和输出层1个神经元的网络，
+  例如：
 
-  [5, 5, 2]是一个有两个隐含层每层有5个神经元和输出层2个神经元的网络.
+  ​	[3, 1]是一个隐含层3个神经元和输出层1个神经元的网络，
 
-* optimizer: 字符串，或者```cml.optimizers.Optimizer```实例，神经网络使用的优化器.
+  ​	[5, 5, 2]是一个有两个隐含层每层有5个神经元和输出层2个神经元的网络.
 
-* loss: 字符串，或者```cml.losses.Loss```实例，神经网络使用的损失函数.
+* <b>optimizer</b>: 字符串，或者```cml.optimizers.Optimizer```实例，神经网络使用的优化器.
 
-* metric: 字符串，或者```cml.metrics.Metric```实例，神经网络使用的评估函数.
+* <b>loss</b>: 字符串，或者```cml.losses.Loss```实例，神经网络使用的损失函数.
+
+* <b>metric</b>: 字符串，或者```cml.metrics.Metric```实例，神经网络使用的评估函数.
 
 ### fit
 
@@ -235,7 +237,7 @@ predict(x)
 
 #### 异常
 
-* ValueError: 模型没有训练的错误.
+* <b>ValueError</b>: 模型没有训练的错误.
 
 ## LinearDiscriminantAnalysis
 
@@ -280,7 +282,7 @@ predict(x)
 
 #### 异常
 
-* ValueError: 模型没有训练的错误.
+* <b>ValueError</b>: 模型没有训练的错误.
 
 ## LogisticRegression
 
@@ -305,11 +307,11 @@ compile(optimizer='newton', loss='log_likelihood', metric='accuracy')
 
 #### 参数
 
-* optimizer: 字符串，或者```cml.optimizers.Optimizer```实例，模型使用的优化器.
+* <b>optimizer</b>: 字符串，或者```cml.optimizers.Optimizer```实例，模型使用的优化器.
 
-* loss: 字符串，或者```cml.losses.Loss```实例，模型使用的损失函数.
+* <b>loss</b>: 字符串，或者```cml.losses.Loss```实例，模型使用的损失函数.
 
-* metric: 字符串，或者```cml.metrics.Metric```实例，模型使用的评估函数.
+* <b>metric</b>: 字符串，或者```cml.metrics.Metric```实例，模型使用的评估函数.
 
 ### fit
 
