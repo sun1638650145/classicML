@@ -3,9 +3,9 @@ from classicML.api.models import AODE
 from classicML.api.models import BackPropagationNeuralNetwork
 from classicML.api.models import BPNN
 from classicML.api.models import DecisionTreeClassifier
-from classicML.api.models import LogisticRegression
 from classicML.api.models import LinearDiscriminantAnalysis
 from classicML.api.models import LDA
+from classicML.api.models import LogisticRegression
 from classicML.api.models import NaiveBayesClassifier
 from classicML.api.models import NB
 from classicML.api.models import RadialBasisFunctionNetwork
