@@ -56,7 +56,7 @@ class RadialBasisFunctionNetwork(object):
                 径向基函数网络使用的评估函数.
 
         Notes:
-            - 注意RBF只能是用RadialBasisFunctionOptimizer优化器,
+            - 注意RBF只能时用RadialBasisFunctionOptimizer优化器,
               之所以开放优化器选项, 只是为了满足用户修改学习率的需求.
             - 使用交叉熵作为损失函数有潜在异常的可能性,
               除隐含层神经元个数和学习率之外, 建议使用默认参数.
@@ -79,6 +79,7 @@ class RadialBasisFunctionNetwork(object):
                 显示日志信息.
             callbacks: list, default=None,
                 模型训练过程的中间数据记录器.
+
         Returns:
             RadialBasisFunctionNetwork实例.
         """

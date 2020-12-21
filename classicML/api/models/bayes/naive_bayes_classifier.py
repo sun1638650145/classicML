@@ -43,7 +43,7 @@ class NaiveBayesClassifier(object):
     def compile(self, smoothing=True):
         """编译朴素贝叶斯分类器.
 
-        Argument:
+        Arguments:
             smoothing: bool, default=True,
                 是否使用平滑, 这里的实现是拉普拉斯修正.
         """
@@ -52,7 +52,7 @@ class NaiveBayesClassifier(object):
     def fit(self, x, y):
         """训练朴素贝叶斯分类器.
 
-        Argument:
+        Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据
             y: numpy.ndarray or pandas.DataFrame, array-like, 标签.
 
@@ -136,7 +136,7 @@ class NaiveBayesClassifier(object):
     def predict(self, x, probability=False):
         """使用朴素贝叶斯分类器进行预测.
 
-        Argument:
+        Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
             probability: bool, default=False,
                 是否使用归一化的概率形式.
@@ -169,7 +169,7 @@ class NaiveBayesClassifier(object):
     def _predict(self, x, p_0, p_1, probability):
         """通过朴素贝叶斯分类器预测单个样本.
 
-        Argument:
+        Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
             p_0: float, 反例的类先验概率.
             p_1: float, 正例的类先验概率.

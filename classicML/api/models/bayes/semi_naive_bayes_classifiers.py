@@ -186,7 +186,8 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
                 是否使用归一化的概率形式.
 
         Returns:
-            SuperParentOneDependentEstimator的预测结果.
+            SuperParentOneDependentEstimator的预测结果,
+            不使用概率形式将返回0或1的标签数组, 使用将返回反正例概率的数组.
 
         Raises:
             ValueError: 模型没有训练的错误.

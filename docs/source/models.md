@@ -352,3 +352,272 @@ predict(x)
 #### 异常
 
 * <b>ValueError</b>: 模型没有训练的错误.
+
+## NaiveBayesClassifier
+
+朴素贝叶斯分类器。
+
+```python
+cml.models.NaiveBayesClassifier(attribute_name=None)  # 可以使用缩写 cml.models.NB()
+```
+
+### 参数
+
+* <b>attribute_name</b>: 字符串列表，属性的名称.
+
+### compile
+
+```python
+compile(smoothing=True)
+```
+
+编译朴素贝叶斯分类器.
+
+#### 参数
+
+* <b>smoothing</b>: 布尔值，是否使用平滑，这里的实现是拉普拉斯修正.
+
+### fit
+
+```python
+fit(x, y)
+```
+
+训练朴素贝叶斯分类器.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，或者是Pandas的DataFrame，特征数据.
+* <b>y</b>: 一个 Numpy数组，或者是Pandas的DataFrame，标签.
+
+#### 返回
+
+一个```NaiveBayesClassifier```实例.
+
+### predict
+
+```python
+predict(x, probability=False)
+```
+
+使用朴素贝叶斯分类器进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，或者是Pandas的DataFrame，特征数据.
+* <b>probability</b>: 布尔值，是否使用归一化的概率形式.
+
+#### 返回
+
+预测的Numpy数组，不使用概率形式将返回0或1的标签数组, 使用将返回反正例概率的数组.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
+## RadialBasisFunctionNetwork
+
+径向基函数网络。
+
+```python
+cml.models.RadialBasisFunctionNetwork(seed=None)  # 可以使用缩写 cml.models.RBF()
+```
+
+### 参数
+
+* <b>seed</b>: 整数，随机种子.
+
+### compile
+
+```python
+compile(hidden_units, optimizer='rbf', loss='mse', metric='accuracy')
+```
+
+编译径向基函数网络, 配置训练时使用的超参数.
+
+#### 参数
+
+* <b>hidden_units</b>: 整数，径向基函数网络的隐含层神经元数量.
+
+* <b>optimizer</b>: 字符串，或者```cml.optimizers.Optimizer```实例，径向基函数网络使用的优化器.
+
+* <b>loss</b>: 字符串，或者```cml.losses.Loss```实例，径向基函数网络使用的损失函数.
+
+* <b>metric</b>: 字符串，或者```cml.metrics.Metric```实例，径向基函数网络使用的评估函数.
+
+#### 注意
+
+* 注意RBF只能使用```cml.optimizers.RadialBasisFunctionOptimizer```优化器，之所以开放优化器选项，只是为了满足用户修改学习率的需求.
+* 使用交叉熵作为损失函数有潜在异常的可能性，除隐含层神经元个数和学习率之外，建议使用默认参数.
+
+### fit
+
+```python
+fit(x, y, epochs=1, verbose=True, callbacks=None)
+```
+
+训练径向基函数网络.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+* <b>epochs</b>: 整数，训练的轮数.
+* <b>verbose</b>: 布尔值（可选参数），显示日志信息.
+* <b>callbacks</b>: 列表，模型训练过程的中间数据记录器.
+
+#### 返回
+
+一个```RadialBasisFunctionNetwork```实例.
+
+### predict
+
+```python
+predict(x)
+```
+
+使用径向基函数网络进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+
+#### 返回
+
+预测的Numpy数组（以概率形式）.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
+## SuperParentOneDependentEstimator
+
+超父独依赖估计器，一种半朴素贝叶斯分类器。
+
+```python
+cml.models.SuperParentOneDependentEstimator(attribute_name=None)  # 可以使用缩写 cml.models.SPODE()
+```
+
+### 参数
+
+* <b>attribute_name</b>: 字符串列表，属性的名称.
+
+### compile
+
+```python
+compile(super_parent_name, smoothing=True)
+```
+
+编译超父独依赖估计器.
+
+#### 参数
+
+* <b>super_parent_name</b>: 字符串，超父的名称.
+* <b>smoothing</b>: 布尔值，是否使用平滑，这里的实现是拉普拉斯修正.
+
+### fit
+
+```python
+fit(x, y)
+```
+
+训练超父独依赖估计器.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，或者是Pandas的DataFrame，特征数据.
+* <b>y</b>: 一个 Numpy数组，或者是Pandas的DataFrame，标签.
+
+#### 返回
+
+一个```SuperParentOneDependentEstimator```实例.
+
+### predict
+
+```python
+predict(x, probability=False)
+```
+
+使用超父独依赖估计器进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，或者是Pandas的DataFrame，特征数据.
+* <b>probability</b>: 布尔值，是否使用归一化的概率形式.
+
+#### 返回
+
+预测的Numpy数组，不使用概率形式将返回0或1的标签数组, 使用将返回反正例概率的数组.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
+## SupportVectorClassifier
+
+支持向量分类器
+
+```python
+cml.models.SupportVectorClassifier(seed=None)  # 可以使用缩写 cml.models.SVC()
+```
+
+### 参数
+
+* <b>seed</b>: 整数，随机种子.
+
+### compile
+
+```python
+compile(C=1.0, kernel='rbf', gamma='auto', tol=1e-3)
+```
+
+编译分类器, 配置训练时使用的超参数.
+
+#### 参数
+
+* <b>C</b>: 浮点数，软间隔正则化系数.
+* <b>kernel</b>: 字符串，或者```cml.kernel.Kernels```实例，分类器使用的核函数.
+* <b>gamma</b>: {'auto', 'scale'} 或者浮点数，在使用高斯(径向基)核, sigmoid核或者多项式核时,的核函数系数，使用其他核函数时无效.
+* <b>tol</b>: 浮点数，停止训练的最大误差值.
+
+### fit
+
+```python
+fit(x, y, epochs=1000)
+```
+
+训练分类器.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+
+* <b>y</b>: 一个 Numpy数组，标签.
+
+* <b>epochs</b>: 整数，最大的训练轮数,，如果是-1则表示需要所有的样本满足条件时，
+
+  ​        才能停止训练，即没有限制.
+
+#### 返回
+
+一个```SupportVectorClassifier```实例.
+
+### predict
+
+```python
+predict(x)
+```
+
+使用分类器进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+
+#### 返回
+
+预测的Numpy数组.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.

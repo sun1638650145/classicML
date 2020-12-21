@@ -69,7 +69,7 @@ class SupportVectorClassifier(object):
                 软间隔正则化系数.
             kernel: str, classicML.kernel.Kernels 实例, default='rbf',
                 分类器使用的核函数.
-            gamma: {'auto', 'scale'} or float, default='gamma',
+            gamma: {'auto', 'scale'} or float, default='auto',
                 在使用高斯(径向基)核, sigmoid核或者多项式核时, 核函数系数,
                 使用其他核函数时无效.
             tol: float, default=1e-3,
