@@ -80,7 +80,7 @@ def get_optimizer(optimizer):
     if isinstance(optimizer, str):
         if optimizer in ('gd', 'gradient_descent'):
             return optimizers.GradientDescent()
-        elif optimizer == 'newton':
+        elif optimizer in ('newton', 'newton_method'):
             return optimizers.NewtonMethod()
         elif optimizer in ('sgd', 'stochastic_gradient_descent'):
             return optimizers.StochasticGradientDescent()

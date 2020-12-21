@@ -83,8 +83,9 @@ class LogisticRegression(object):
 
         _attributes_of_feature = x.shape[1]
 
-        # 使用初始化器初始化参数
-        self.beta = self.initializer(attributes_or_structure=_attributes_of_feature)
+        # 没有使用权重文件, 则使用初始化器初始化参数
+        if self.is_loaded is False:
+            self.beta = self.initializer(attributes_or_structure=_attributes_of_feature)
         # 使用优化器优化
         self.beta = self.optimizer(x, y, epochs, self.beta, verbose, self.loss, self.metric, callbacks)
         # 标记训练完成
@@ -123,7 +124,7 @@ class LogisticRegression(object):
             KeyError: 模型权重加载失败.
 
         Notes:
-            模型将不会加载关于优化器和损失函数的超参数.
+            模型将不会加载关于优化器的超参数.
         """
         # 初始化权重文件.
         parameters_ds = io.initialize_weights_file(filepath=filepath,
@@ -132,6 +133,9 @@ class LogisticRegression(object):
         # 加载模型参数.
         try:
             self.beta = parameters_ds.attrs['beta']
+            self.optimizer = get_optimizer(parameters_ds.attrs['optimizer'])
+            self.loss = get_loss(parameters_ds.attrs['loss'])
+            self.metric = get_metric(parameters_ds.attrs['metric'])
             # 标记加载完成
             self.is_loaded = True
         except KeyError:
@@ -148,7 +152,7 @@ class LogisticRegression(object):
             TypeError: 模型权重保存失败.
 
         Notes:
-            模型将不会保存关于优化器和损失函数的超参数.
+            模型将不会保存关于优化器的超参数.
         """
         # 初始化权重文件.
         parameters_ds = io.initialize_weights_file(filepath=filepath,
@@ -157,6 +161,9 @@ class LogisticRegression(object):
         # 保存模型参数.
         try:
             parameters_ds.attrs['beta'] = self.beta
+            parameters_ds.attrs['optimizer'] = self.optimizer.name
+            parameters_ds.attrs['loss'] = self.loss.name
+            parameters_ds.attrs['metric'] = self.metric.name
         except TypeError:
             CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
             raise TypeError('模型权重保存失败')
