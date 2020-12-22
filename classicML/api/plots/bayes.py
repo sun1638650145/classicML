@@ -59,13 +59,16 @@ def _plot_scatter(x, y):
 
 
 def plot_bayes(bayes, x, y):
-    """贝叶斯分类器的二维示意图.
+    """可视化朴素贝叶斯分类器或超父独依赖估计器的二维示意图.
 
     Arguments:
         bayes: classicML.models.NB or classicML.models.SPODE,
             朴素贝叶斯分类器或超父独依赖估计器实例.
         x: numpy.ndarray, array-like, 特征数据.
         y: numpy.ndarray, array-like, 标签.
+
+    Raises:
+        ValueError: 模型没有训练的错误.
     """
     if bayes.is_trained is False:
         CLASSICML_LOGGER.error('模型没有训练')
