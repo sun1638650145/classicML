@@ -41,7 +41,7 @@ jobs:
       run: |
         python3 setup.py install
     - name: Test with pytest
-      # 测试两个的后端结果
+      # 测试模块功能
       run: |
         pytest
     - name: Test examples

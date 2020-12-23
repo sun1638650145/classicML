@@ -28,7 +28,7 @@ def _plot_sample_scatter(x, y):
 
 
 def plot_linear_discriminant_analysis(lda, x, y, x_label=None, y_label=None):
-    """线性判别分析二维示意图.
+    """可视化线性判别分析二维示意图.
 
     Arguments:
         lda: classicML.models.LDA, 线性判别分析实例.
@@ -38,6 +38,9 @@ def plot_linear_discriminant_analysis(lda, x, y, x_label=None, y_label=None):
             横轴的标签.
         y_label: str, default=None,
             纵轴的标签.
+
+    Raises:
+        ValueError: 模型没有训练的错误.
     """
     if lda.is_trained is False and lda.is_loaded is False:
         CLASSICML_LOGGER.error('模型没有权重')
@@ -79,7 +82,7 @@ def plot_linear_discriminant_analysis(lda, x, y, x_label=None, y_label=None):
 
 
 def plot_logistic_regression(logistic_regression, x, y, x_label=None, y_label=None):
-    """逻辑回归二维示意图.
+    """可视化逻辑回归二维示意图.
 
     Arguments:
         logistic_regression: classicML.models.LogisticRegression, 逻辑回归实例.
@@ -89,6 +92,9 @@ def plot_logistic_regression(logistic_regression, x, y, x_label=None, y_label=No
             横轴的标签.
         y_label: str, default=None,
             纵轴的标签.
+
+    Raises:
+        ValueError: 模型没有训练的错误.
     """
     if logistic_regression.is_trained is False and logistic_regression.is_loaded is False:
         CLASSICML_LOGGER.error('模型没有训练')

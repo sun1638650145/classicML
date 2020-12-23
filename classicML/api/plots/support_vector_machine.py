@@ -47,7 +47,7 @@ def _plot_decision_boundary(svc):
 
 
 def plot_support_vector_classifier(svc, x, y, x_label=None, y_label=None):
-    """支持向量分类器二维示意图.
+    """可视化支持向量分类器二维示意图.
 
     Arguments:
         svc: classicML.models.SVC, 支持向量分类器实例.
@@ -57,6 +57,9 @@ def plot_support_vector_classifier(svc, x, y, x_label=None, y_label=None):
             横轴的标签.
         y_label: str, default=None,
             纵轴的标签.
+
+    Raises:
+        ValueError: 模型没有训练的错误.
     """
     if svc.support is None:
         CLASSICML_LOGGER.error('模型没有训练')

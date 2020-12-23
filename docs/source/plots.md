@@ -35,3 +35,87 @@ cml.plots.plot_bayes(bayes, x, y)
 #### 异常
 
 * <b>ValueError</b>: 模型没有训练的错误.
+
+### plot_history
+
+```python
+plot_history(history)
+```
+
+可视化历史记录.
+
+#### 参数
+
+* <b>history</b>: ```cml.backend.callbacks.History``` ，callbacks实例.
+
+### plot_linear_discriminant_analysis
+
+```python
+plot_linear_discriminant_analysis(lda, x, y, x_label=None, y_label=None)  # 可以使用缩写 plot_lda()
+```
+
+可视化线性判别分析二维示意图.
+
+#### 参数
+
+* <b>lda</b>: ```cml.models.LDA```，线性判别分析实例.
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+* <b>x_label</b>: 字符串，横轴的标签.
+* <b>y_label</b>: 字符串，纵轴的标签.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
+### plot_logistic_regression
+
+```python
+plot_logistic_regression(logistic_regression, x, y, x_label=None, y_label=None)
+```
+
+可视化逻辑回归二维示意图.
+
+#### 参数
+
+* <b>logistic_regression</b>: ```cml.models.LogisticRegression```，逻辑回归实例.
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+* <b>x_label</b>: 字符串，横轴的标签.
+* <b>y_label</b>: 字符串，纵轴的标签.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
+### plot_support_vector_classifier
+
+```python
+plot_support_vector_classifier(svc, x, y, x_label=None, y_label=None)  # 可以使用缩写 plot_svc()
+```
+
+可视化支持向量分类器二维示意图.
+
+#### 参数
+
+* <b>svc</b>: ```cml.models.SVC```，支持向量分类器实例.
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+* <b>x_label</b>: 字符串，横轴的标签.
+* <b>y_label</b>: 字符串，纵轴的标签.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
+### plot_tree
+
+```python
+plot_tree(tree)
+```
+
+绘制树的示意图.
+
+#### 参数
+
+* <b>tree</b>: ```cml.models.Tree```，树实例.
