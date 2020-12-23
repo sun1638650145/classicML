@@ -241,7 +241,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
             for i in self._list_of_p_c:
                 self._calculate_posterior_probability(x, i, y_pred)
         else:
-            # TODO(Steve R. Sun): 这里是为了满足AODE调用的便利.
+            # TODO(Steve R. Sun, tag:performance): 这里是为了满足AODE调用的便利.
             for i in attribute_list[super_parent_index]:
                 if i['attribute'] == x[super_parent_index]:
                     self._calculate_posterior_probability(x, i, y_pred)

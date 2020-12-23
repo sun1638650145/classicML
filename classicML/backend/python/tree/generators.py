@@ -127,7 +127,7 @@ class DecisionTreeGenerator(TreeGenerator):
             decision_tree.num_of_leaves += 1
             decision_tree.leaf = True
             decision_tree.height = 0
-            # TODO(Steve R. Sun): 函数value_counts在两类元素值相同时, 不会按照某种顺序排序,
+            # TODO(Steve R. Sun, tag:code): 函数value_counts在两类元素值相同时, 不会按照某种顺序排序.
             # 而是随机返回, 因此可能遇到决策树生成不一样的情况. 应该重写此函数.
             decision_tree.category = pd.value_counts(y).index[0]
 

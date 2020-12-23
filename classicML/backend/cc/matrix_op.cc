@@ -15,7 +15,7 @@ Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
     }
 
     // 初始化子矩阵.
-    // TODO(Steve R. Sun): Eigen::MatrixXd实例化动态矩阵会不能进行逐行赋值, 只能先通过一个循环统计非零元素个数.
+    // TODO(Steve R. Sun, tag:performance): Eigen::MatrixXd实例化动态矩阵会不能进行逐行赋值, 只能先通过一个循环统计非零元素个数.
     int row = 0;
     for (int i = 0; i < non_zero_mark.rows(); i ++) {
         if (non_zero_mark[i] == 1) {

@@ -49,7 +49,7 @@ class PostPruner(Pruner):
         if x_validation.empty:
             return tree
 
-        # TODO(Steve R. Sun): 函数value_counts在两类元素值相同时, 不会按照某种顺序排序,
+        # TODO(Steve R. Sun, tag:code): 函数value_counts在两类元素值相同时, 不会按照某种顺序排序.
         # 而是随机返回, 因此可能遇到决策树生成不一样的情况. 应该重写此函数.
         current_category = pd.value_counts(y).index[0]
         accuracy_after_pruning = np.mean(y_validation == current_category)
@@ -175,7 +175,7 @@ class PrePruner(Pruner):
         if x_validation.empty:
             return tree
 
-        # TODO(Steve R. Sun): 函数value_counts在两类元素值相同时, 不会按照某种顺序排序,
+        # TODO(Steve R. Sun, tag:code): 函数value_counts在两类元素值相同时, 不会按照某种顺序排序.
         # 而是随机返回, 因此可能遇到决策树生成不一样的情况. 应该重写此函数.
         current_category = pd.value_counts(y).index[0]
         accuracy_before_pruning = np.mean(y_validation == current_category)

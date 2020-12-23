@@ -3,17 +3,17 @@ import sys
 import numpy as np
 import pandas as pd
 import classicML as cml
-from sklearn import datasets
 
 
-DATASET = datasets.load_iris()
+DATASET_PATH = './datasets/iris_dataset.csv'
 CALLBACKS = [cml.callbacks.History(loss_name='categorical_crossentropy',
                                    metric_name='accuracy')]
 
 # 读取数据
-x = pd.DataFrame(DATASET['data'], columns=DATASET['feature_names'])
+dataframe = pd.read_csv(DATASET_PATH, index_col=0, header=0)
+x = dataframe.iloc[:, :-1]
 x = (x - np.mean(x, axis=0)) / np.var(x, axis=0)
-y = pd.Series(DATASET['target_names'][DATASET['target']])
+y = dataframe.iloc[:, -1]
 y = pd.get_dummies(y)
 # 生成神经网络
 model = cml.BPNN(seed=2020)

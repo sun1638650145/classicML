@@ -24,7 +24,7 @@ Eigen::MatrixXd Sub(const Eigen::MatrixXd &matrix, const Eigen::RowVectorXd &vec
 
 // 返回KKT条件的违背值;
 // 输入特征数据, 标签, 要计算的样本下标, 支持向量分类器使用的核函数, 全部拉格朗日乘子, 非零拉格朗日乘子和偏置项.
-// TODO(Steve R. Sun): 在CC中使用Python实现的核函数实际性能和Python没差别, 但是由于其他地方依旧使用的是CC代码, 还是会有明显的性能提高.
+// TODO(Steve R. Sun, tag:performance): 在CC中使用Python实现的核函数实际性能和Python没差别, 但是由于其他地方依旧使用的是CC代码, 还是会有明显的性能提高.
 Eigen::MatrixXd CalculateError(const Eigen::MatrixXd &x,
                                const Eigen::MatrixXd &y, // 列向量
                                const int &i,
@@ -144,6 +144,7 @@ double GetProbabilityDensity(const double &sample,
 
 // 返回投影向量, 输入为类内散度矩阵和反正例的均值向量.
 Eigen::MatrixXd GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1) {
+    // TODO(Steve R. Sun, tag:bug): 应该使用奇异值分解的方式求解S_w的逆矩阵.
     // 公式(数学公式难以表示, 使用latex语法): w = (S_w)^{-1}(\mu_0 - \mu_1)
     Eigen::MatrixXd S_w_inv = S_w.inverse();
     Eigen::MatrixXd mu_t = (mu_0 - mu_1).transpose();
@@ -258,7 +259,7 @@ std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen
 
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.
 // 处理其他类型的输入数据.
-// TODO(Steve R. Sun): Python版本的和CC版本在对于判断str类型的有差异, CC版本全部返回的是unknown.
+// TODO(Steve R. Sun, tag:code): Python版本的和CC版本在对于判断str类型的有差异, CC版本全部返回的是unknown.
 std::string TypeOfTarget(const pybind11::array &y) {
     return "unknown";
 }

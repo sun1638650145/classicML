@@ -982,7 +982,7 @@ class SequentialMinimalOptimization(Optimizer):
             error_i = calculate_error(x, y, i, self.kernel, self.alphas, self.non_zero_alphas, self.b)
 
         # 更新的变化量的绝对值要大于tol, 且alpha要满足软间隔C的条件限制.
-        # TODO(Steve R. Sun): 直接使用绝对值会导致异常, 但是这样就能正常运行.
+        # TODO(Steve R. Sun, tag:code): 直接使用绝对值会导致异常, 但是这样就能正常运行.
         if ((y_i * error_i < -self.tol) and (alpha_i < self.C)) or ((y_i * error_i > self.tol) and (0 < alpha_i)):
             # 存在非边界拉格朗日乘子.
             if np.sum(self.non_bound_alphas) > 0:
