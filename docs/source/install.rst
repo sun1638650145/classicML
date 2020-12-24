@@ -108,4 +108,4 @@ Eigen3 在不同平台软件包的名称可能有差异，安装方法也有差�
 
    git clone https://github.com/sun1638650145/classicML.git
    cd classicML
-   python3 setup.py install
+   python3 setup.py index

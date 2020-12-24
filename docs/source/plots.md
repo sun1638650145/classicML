@@ -119,3 +119,4 @@ plot_tree(tree)
 #### 参数
 
 * <b>tree</b>: ```cml.models.Tree```，树实例.
+
