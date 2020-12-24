@@ -127,15 +127,18 @@ class LogisticRegression(object):
             模型将不会加载关于优化器的超参数.
         """
         # 初始化权重文件.
-        parameters_ds = io.initialize_weights_file(filepath=filepath,
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
                                                    mode='r',
                                                    model_name='LogisticRegression')
         # 加载模型参数.
         try:
-            self.beta = parameters_ds.attrs['beta']
-            self.optimizer = get_optimizer(parameters_ds.attrs['optimizer'])
-            self.loss = get_loss(parameters_ds.attrs['loss'])
-            self.metric = get_metric(parameters_ds.attrs['metric'])
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            self.optimizer = get_optimizer(compile_ds.attrs['optimizer'])
+            self.loss = get_loss(compile_ds.attrs['loss'])
+            self.metric = get_metric(compile_ds.attrs['metric'])
+            self.beta = weights_ds.attrs['beta']
             # 标记加载完成
             self.is_loaded = True
         except KeyError:
@@ -155,15 +158,18 @@ class LogisticRegression(object):
             模型将不会保存关于优化器的超参数.
         """
         # 初始化权重文件.
-        parameters_ds = io.initialize_weights_file(filepath=filepath,
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
                                                    mode='w',
                                                    model_name='LogisticRegression')
         # 保存模型参数.
         try:
-            parameters_ds.attrs['beta'] = self.beta
-            parameters_ds.attrs['optimizer'] = self.optimizer.name
-            parameters_ds.attrs['loss'] = self.loss.name
-            parameters_ds.attrs['metric'] = self.metric.name
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            compile_ds.attrs['optimizer'] = self.optimizer.name
+            compile_ds.attrs['loss'] = self.loss.name
+            compile_ds.attrs['metric'] = self.metric.name
+            weights_ds.attrs['beta'] = self.beta
         except TypeError:
             CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
             raise TypeError('模型权重保存失败')

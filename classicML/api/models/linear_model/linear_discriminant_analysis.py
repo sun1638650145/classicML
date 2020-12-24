@@ -91,14 +91,15 @@ class LinearDiscriminantAnalysis(object):
             KeyError: 模型权重加载失败.
         """
         # 初始化权重文件.
-        parameters_ds = io.initialize_weights_file(filepath=filepath,
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
                                                    mode='r',
                                                    model_name='LinearDiscriminantAnalysis')
         # 加载模型参数.
         try:
-            self.w = parameters_ds.attrs['w']
-            self.mu_0 = parameters_ds.attrs['mu_0']
-            self.mu_1 = parameters_ds.attrs['mu_1']
+            weights_ds = parameters_gp['weights']
+            self.w = weights_ds.attrs['w']
+            self.mu_0 = weights_ds.attrs['mu_0']
+            self.mu_1 = weights_ds.attrs['mu_1']
             # 标记加载完成
             self.is_loaded = True
         except KeyError:
@@ -115,14 +116,15 @@ class LinearDiscriminantAnalysis(object):
             TypeError: 模型权重保存失败.
         """
         # 初始化权重文件.
-        parameters_ds = io.initialize_weights_file(filepath=filepath,
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
                                                    mode='w',
                                                    model_name='LinearDiscriminantAnalysis')
         # 保存模型参数.
         try:
-            parameters_ds.attrs['w'] = self.w
-            parameters_ds.attrs['mu_0'] = self.mu_0
-            parameters_ds.attrs['mu_1'] = self.mu_1
+            weights_ds = parameters_gp['weights']
+            weights_ds.attrs['w'] = self.w
+            weights_ds.attrs['mu_0'] = self.mu_0
+            weights_ds.attrs['mu_1'] = self.mu_1
         except TypeError:
             CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
             raise TypeError('模型权重保存失败')
