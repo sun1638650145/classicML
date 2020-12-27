@@ -61,7 +61,7 @@ def plot_support_vector_classifier(svc, x, y, x_label=None, y_label=None):
     Raises:
         ValueError: 模型没有训练的错误.
     """
-    if svc.support is None:
+    if svc.is_trained is False and svc.is_loaded is False:
         CLASSICML_LOGGER.error('模型没有训练')
         raise ValueError('你必须先进行训练')
 

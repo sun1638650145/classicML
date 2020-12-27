@@ -22,8 +22,10 @@ class LogisticRegression(object):
             模型使用的损失函数.
         metric: str, classicML.metrics.Metric 实例, default='accuracy'
             模型使用的评估函数.
-        beta: numpy.ndarray, 模型的参数矩阵.
-        is_trained: bool, default=False, 模型训练后将被标记为True.
+        beta: numpy.ndarray,
+            模型的参数矩阵.
+        is_trained: bool, default=False,
+            模型训练后将被标记为True.
         is_loaded: bool, default=False,
             如果模型加载了权重将被标记为True.
     """
