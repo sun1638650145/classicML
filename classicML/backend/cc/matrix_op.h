@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "Eigen/Dense"
+#include "pybind11/pybind11.h"
 
 Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
                                     const Eigen::VectorXd &non_zero_mark);
