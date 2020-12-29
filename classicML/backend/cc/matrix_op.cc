@@ -11,7 +11,7 @@
 Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
                                     const Eigen::VectorXd &non_zero_mark) {
     if (matrix.rows() != non_zero_mark.rows()) {
-        throw "行数不同, 无法操作";
+        throw pybind11::value_error("行数不同, 无法操作");
     }
 
     // 初始化子矩阵.
@@ -55,7 +55,7 @@ Eigen::MatrixXd Reshape(Eigen::MatrixXd matrix, const int &row, const int &colum
 
     // 可以将一个维度指定为-1, 函数将自动推理.
     if (row == -1 && column == -1) {
-        throw "只能指定维度为一个未知维度";
+        throw pybind11::value_error("只能指定维度为一个未知维度");
     } else {
         if (row == -1) {
             new_row = (int)matrix.size() / column;

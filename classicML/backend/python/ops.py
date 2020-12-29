@@ -18,7 +18,7 @@ def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
-          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
     x_i = x[[i], :]
@@ -55,7 +55,7 @@ def clip_alpha(alpha, low, high):
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
-          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
     if alpha > high:
@@ -83,7 +83,7 @@ def get_conditional_probability(samples_on_attribute,
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
-          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
     if smoothing:
@@ -112,7 +112,7 @@ def get_dependent_prior_probability(samples_on_attribute_in_category,
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
-          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
     if smoothing:
@@ -136,7 +136,7 @@ def get_prior_probability(number_of_sample, y, smoothing):
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
-          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
     if smoothing:
@@ -160,7 +160,7 @@ def get_probability_density(sample, mean, var):
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
-          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
     probability = 1 / (np.sqrt(2 * np.pi) * var) * np.exp(-(sample - mean) ** 2 / (2 * var ** 2))
@@ -184,7 +184,7 @@ def get_w(S_w, mu_0, mu_1):
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
-          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
     S_w_i = np.linalg.inv(S_w)
@@ -207,7 +207,7 @@ def get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1):
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
-          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
     S_0 = np.matmul((X_0 - mu_0).T, (X_0 - mu_0))
@@ -235,9 +235,9 @@ def select_second_alpha(error, error_cache, non_bound_alphas):
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
-          你有可能使用其他的版本, 但是函数的调用方式和接口一致,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
-        - Python和CC存在精度差异, 存在潜在的可能性导致同样的数据和随机种子单但不同后端的结果不一致,
+        - Python和CC存在精度差异, 存在潜在的可能性导致使用同样的数据和随机种子但不同后端的结果不一致,
           不过随着训练的轮数的增加, 这种差异会逐渐消失.
     """
     non_bound_index = non_bound_alphas.nonzero()[0]
@@ -265,7 +265,8 @@ def type_of_target(y):
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
-          你有可能使用其他的版本, 但是函数的调用方式和接口一致.
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
         - Python和CC针对str类型的返回暂不相同.
     """
     if y.dtype == object or np.ndim(y) > 2:

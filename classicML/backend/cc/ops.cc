@@ -11,7 +11,7 @@
 // 返回一个矩阵, 计算向量减法, 输入为矩阵和行向量(矩阵和行向量的列数必须相同).
 Eigen::MatrixXd Sub(const Eigen::MatrixXd &matrix, const Eigen::RowVectorXd &vector) {
     if (matrix.cols() != vector.cols()) {
-        throw "列数不同, 无法操作";
+        throw pybind11::value_error("列数不同, 无法操作");
     }
 
     Eigen::MatrixXd new_matrix(matrix.rows(), matrix.cols());
