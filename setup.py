@@ -6,6 +6,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 extension_modules = [
+    # backend.ops模块
     Pybind11Extension(
         'classicML/backend/cc/ops',
         sorted(glob('classicML/backend/cc/*.cc')),
@@ -13,12 +14,21 @@ extension_modules = [
             '/usr/local/include/eigen3',  # /path/to/eigen3/download
         ],
         language='c++',
+    ),
+    # backend.metrics模块
+    Pybind11Extension(
+        'classicML/backend/cc/metrics',
+        sorted(glob('classicML/backend/cc/metrics.cc')),
+        include_dirs=[
+            '/usr/local/include/eigen3',
+        ],
+        language='c++',
     )
 ]
 
 setup(
     name='classicML',
-    version='0.5',
+    version='0.5.1b1',
     description='An easy-to-use ML framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -28,7 +38,7 @@ setup(
     packages=find_packages(),
     ext_modules=extension_modules,
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Programming Language :: C++',

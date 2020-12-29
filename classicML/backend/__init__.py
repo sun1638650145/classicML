@@ -8,7 +8,13 @@ from classicML.backend.python import initializers
 from classicML.backend.python import io
 from classicML.backend.python import kernels
 from classicML.backend.python import losses
-from classicML.backend.python import metrics
+if os.environ['CLASSICML_ENGINE'] == 'CC':
+    from classicML.backend.cc.metrics import __version__
+    from classicML.backend.cc import metrics
+    CLASSICML_LOGGER.info('后端版本是: {}'.format(__version__))
+else:
+    from classicML.backend.python import metrics
+
 from classicML.backend.python import optimizers
 from classicML.backend.python import tree
 
