@@ -31,6 +31,6 @@ class TestMetric(object):
         cat_y_pred = np.random.randint(low=0, high=5, size=10)
         cat_y_pred = np.eye(5)[cat_y_pred]
 
-        assert cc_acc.name == py_acc.name
+        assert cc_acc.name != py_acc.name
         assert cc_acc(binary_y_pred, binary_y_true) == py_acc(binary_y_pred, binary_y_true)
         assert cc_acc(cat_y_pred, cat_y_true) == py_acc(cat_y_pred, cat_y_true)
