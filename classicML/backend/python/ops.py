@@ -109,7 +109,7 @@ def get_dependent_prior_probability(samples_on_attribute_in_category,
         smoothing: bool, 是否使用平滑.
 
     Returns:
-        先验概率.
+        类先验概率.
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
