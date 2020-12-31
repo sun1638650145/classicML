@@ -66,7 +66,7 @@ std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen
 std::string TypeOfTarget(const pybind11::array &y);
 
 PYBIND11_MODULE(ops, m) {
-    m.doc() = R"pbdoc(classicML的cc后端)pbdoc";
+    m.doc() = R"pbdoc(classicML的底层核心操作, 以CC实现)pbdoc";
 
     m.def("cc_calculate_error", &CalculateError, R"pbdoc(
 计算KKT条件的违背值.
@@ -81,7 +81,7 @@ PYBIND11_MODULE(ops, m) {
         b: float, 偏置项.
 
     Returns:
-        违背值.)pbdoc",
+        KKT条件的违背值.)pbdoc",
           pybind11::arg("x"), pybind11::arg("y"), pybind11::arg("i"),
           pybind11::arg("kernel"), pybind11::arg("alphas"), pybind11::arg("non_zero_alphas"),
           pybind11::arg("b"));
@@ -95,13 +95,13 @@ PYBIND11_MODULE(ops, m) {
         high: float, 正则化系数的上界.
 
     Returns:
-        拉格朗日乘子.)pbdoc",
+        修剪后的拉格朗日乘子.)pbdoc",
           pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
 
     m.def("cc_get_conditional_probability", &GetConditionalProbability, R"pbdoc(
 获取类条件概率.
 
-    Argument:
+    Arguments:
         samples_on_attribute: float, 在某个属性的样本.
         samples_in_category: float, 在某个类别上的样本.
         num_of_categories: int, 类别的数量.
@@ -115,7 +115,7 @@ PYBIND11_MODULE(ops, m) {
     m.def("cc_get_dependent_prior_probability", &GetDependentPriorProbability, R"pbdoc(
 获取有依赖的类先验概率.
 
-    Argument:
+    Arguments:
         samples_on_attribute_in_category: int, 类别为c的属性i上取值为xi的样本.
         number_of_sample: int, 样本的总数.
         values_on_attribute: int, 在属性i上的取值数.
@@ -129,7 +129,7 @@ PYBIND11_MODULE(ops, m) {
     m.def("cc_get_prior_probability", &GetPriorProbability, R"pbdoc(
 获取类先验概率.
 
-    Argument:
+    Arguments:
         number_of_sample: int, 样本的总数.
         y: numpy.ndarray, 标签.
         smoothing: bool, 是否使用平滑.
@@ -141,7 +141,7 @@ PYBIND11_MODULE(ops, m) {
     m.def("cc_get_probability_density", &GetProbabilityDensity, R"pbdoc(
 获得概率密度.
 
-    Argument:
+    Arguments:
         sample: float, 样本的取值.
         mean: float, 样本在某个属性的上的均值.
         var: float, 样本在某个属性上的方差.

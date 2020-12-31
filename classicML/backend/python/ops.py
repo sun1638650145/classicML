@@ -1,3 +1,4 @@
+"""classicML的底层核心操作."""
 import numpy as np
 
 
@@ -14,7 +15,7 @@ def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):
         b: float, 偏置项.
 
     Returns:
-        违背值.
+        KKT条件的违背值.
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
@@ -51,7 +52,7 @@ def clip_alpha(alpha, low, high):
         high: float, 正则化系数的上界.
 
     Returns:
-        拉格朗日乘子.
+        修剪后的拉格朗日乘子.
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
@@ -72,7 +73,7 @@ def get_conditional_probability(samples_on_attribute,
                                 smoothing):
     """获取类条件概率.
 
-    Argument:
+    Arguments:
         samples_on_attribute: float, 在某个属性的样本.
         samples_in_category: float, 在某个类别上的样本.
         num_of_categories: int, 类别的数量.
@@ -101,7 +102,7 @@ def get_dependent_prior_probability(samples_on_attribute_in_category,
                                     smoothing):
     """获取有依赖的类先验概率.
 
-    Argument:
+    Arguments:
         samples_on_attribute_in_category: int, 类别为c的属性i上取值为xi的样本.
         number_of_sample: int, 样本的总数.
         values_on_attribute: int, 在属性i上的取值数.
@@ -126,7 +127,7 @@ def get_dependent_prior_probability(samples_on_attribute_in_category,
 def get_prior_probability(number_of_sample, y, smoothing):
     """获取类先验概率.
 
-    Argument:
+    Arguments:
         number_of_sample: int, 样本的总数.
         y: numpy.ndarray, 标签.
         smoothing: bool, 是否使用平滑.
@@ -150,7 +151,7 @@ def get_prior_probability(number_of_sample, y, smoothing):
 def get_probability_density(sample, mean, var):
     """获得概率密度.
 
-    Argument:
+    Arguments:
         sample: float, 样本的取值.
         mean: float, 样本在某个属性的上的均值.
         var: float, 样本在某个属性上的方差.

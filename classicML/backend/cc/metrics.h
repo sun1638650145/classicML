@@ -75,7 +75,7 @@ class CategoricalAccuracy: public Metric {
 };
 
 PYBIND11_MODULE(metrics, m) {
-    m.doc() = R"pbdoc(classicML的cc后端)pbdoc";
+    m.doc() = R"pbdoc(classicML的评估函数, 以CC实现)pbdoc";
 
     // 注册自定义异常
     pybind11::register_exception<NotImplementedError>(m, "NotImplementedError", PyExc_NotImplementedError);
