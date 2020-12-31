@@ -6,7 +6,7 @@ classicML: 简单易用的经典机器学习框架
 |image0| |image1| |image2|
 
 classicML
-是一个用Python和CPP混编的机器学习项目，它既实现了Python的简单易用快速上手，又实现了CPP的高效性能。classicML的设计目标是简单易用，快速入门，编程风格简洁。
+是一个用Python和CPP混编的机器学习项目，它既实现了Python的简单易用快速上手，又实现了CPP的高效性能. classicML的设计目标是简单易用，快速入门，编程风格简洁.
 
 .. _header-n4:
 
@@ -14,7 +14,7 @@ classicML
 ----------
 
 classicML
-本身是一个Python项目，但是机器学习中涉及到的复杂的矩阵运算对于Python有点儿捉襟见肘，因此我们提供了使用CPP后端的函数的加速版本。为了保证兼容性，classicML默认使用Python后端，部分算法支持了使用CPP作为后端进行加速，你需要安装标准版的classicML，然后在开头使用这条语句切换后端。
+本身是一个Python项目，但是机器学习中涉及到的复杂的矩阵运算对于Python有点儿捉襟见肘，因此我们提供了使用CPP后端的函数的加速版本. 为了保证兼容性，classicML默认使用Python后端，部分算法支持了使用CPP作为后端进行加速，你需要安装标准版的classicML，然后在开头使用这条语句切换后端.
 
 .. code:: python
 

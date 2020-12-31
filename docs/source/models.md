@@ -1,6 +1,6 @@
 # models
 
-在 classicML 中最基本也是最重要的就是模型，通过预定义的模型你可以实现你的机器学习任务。你可以直接实例化一个你想使用的模型，比如：
+在 classicML 中最基本也是最重要的就是模型，通过预定义的模型你可以实现你的机器学习任务. 你可以直接实例化一个你想使用的模型，比如：
 
 ```python
 import classicML as cml
@@ -13,7 +13,7 @@ model = cml.models.SVC()
 model = cml.models.DecisionTreeClassifier()
 ```
 
-目前，在 classicML 中大部分模型都有三个类方法```model.compile()```，```model.fit()```，```model.predict()```，这三个类方法分别控制模型工作流程中的编译模型参数，训练模型，使用训练好的模型进行预测推理。以支持向量机为例，流程大概是这样的：
+目前，在 classicML 中大部分模型都有三个类方法```model.compile()```，```model.fit()```，```model.predict()```，这三个类方法分别控制模型工作流程中的编译模型参数，训练模型，使用训练好的模型进行预测推理. 以支持向量机为例，流程大概是这样的：
 
 ```python
 import classicML as cml
@@ -29,7 +29,7 @@ y_pred = model.predict(x_test)
 
 ## AveragedOneDependentEstimator
 
-平均独依赖估计器，一种半朴素贝叶斯分类器。
+平均独依赖估计器，一种半朴素贝叶斯分类器.
 
 ```python
 cml.models.AveragedOneDependentEstimator(attribute_name=None)  # 可以使用缩写 cml.models.AODE()
@@ -91,7 +91,7 @@ predict(x)
 
 ## BackPropagationNeuralNetwork
 
-BP神经网络。
+BP神经网络.
 
 ```python
 cml.models.BackPropagationNeuralNetwork(seed=None, initializer=None)  # 可以使用缩写 cml.models.BPNN()
@@ -169,7 +169,7 @@ predict(x)
 
 ## DecisionTreeClassifier
 
-决策树分类器。
+决策树分类器.
 
 ```python
 cml.models.DecisionTreeClassifier(attribute_name=None)
@@ -241,7 +241,7 @@ predict(x)
 
 ## LinearDiscriminantAnalysis
 
-线性判别分析。
+线性判别分析.
 
 ```python
 cml.models.LinearDiscriminantAnalysis()  # 可以使用缩写 cml.models.LDA()
@@ -286,7 +286,7 @@ predict(x)
 
 ## LogisticRegression
 
-逻辑回归。
+逻辑回归.
 
 ```python
 cml.models.LogisticRegression(seed=None, initializer=None)
@@ -355,7 +355,7 @@ predict(x)
 
 ## NaiveBayesClassifier
 
-朴素贝叶斯分类器。
+朴素贝叶斯分类器.
 
 ```python
 cml.models.NaiveBayesClassifier(attribute_name=None)  # 可以使用缩写 cml.models.NB()
@@ -417,7 +417,7 @@ predict(x, probability=False)
 
 ## RadialBasisFunctionNetwork
 
-径向基函数网络。
+径向基函数网络.
 
 ```python
 cml.models.RadialBasisFunctionNetwork(seed=None)  # 可以使用缩写 cml.models.RBF()
@@ -492,7 +492,7 @@ predict(x)
 
 ## SuperParentOneDependentEstimator
 
-超父独依赖估计器，一种半朴素贝叶斯分类器。
+超父独依赖估计器，一种半朴素贝叶斯分类器.
 
 ```python
 cml.models.SuperParentOneDependentEstimator(attribute_name=None)  # 可以使用缩写 cml.models.SPODE()
@@ -555,7 +555,7 @@ predict(x, probability=False)
 
 ## SupportVectorClassifier
 
-支持向量分类器
+支持向量分类器.
 
 ```python
 cml.models.SupportVectorClassifier(seed=None)  # 可以使用缩写 cml.models.SVC()

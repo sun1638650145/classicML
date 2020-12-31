@@ -6,8 +6,8 @@
 .. warning::
 
     1. classicML 兼容的Python版本: Python 3.6-3.8
-    2. classicML 仅支持64位的系统，强行使用32位系统可能会导致精度异常。
-    3. classicML 目前仅支持x86-64架构的平台，arm架构暂不支持。
+    2. classicML 仅支持64位的系统，强行使用32位系统可能会导致精度异常
+    3. classicML 目前仅支持x86-64架构的平台，arm架构暂不支持
 
 .. _header-n67:
 
@@ -22,7 +22,7 @@
    pip3 --version
    virtualenv --version
 
-如果已经安装这些软件包，请直接跳过。
+如果已经安装这些软件包，请直接跳过.
 
 否则，请安装
 `Python <https://www.python.org>`__\ 、\ `pip软件包管理器 <https://pip.pypa.io/en/stable/installing/>`__\ 、\ `virtualenv虚拟环境 <https://docs.python.org/zh-cn/3/library/venv.html>`__
@@ -44,7 +44,7 @@ Python 虚拟环境用于将软件包和系统隔离，避免你的误操作导�
 3.安装classicML
 ---------------
 
-使用PyPI安装预编译的软件包。
+使用PyPI安装预编译的软件包.
 
 .. code:: shell
 
@@ -56,7 +56,7 @@ Python 虚拟环境用于将软件包和系统隔离，避免你的误操作导�
 --------------------------
 
 .. warning::
-    你执行完上面的操作就已经安装成功classicML，但是，你可以通过下面的方式安装拥有加速版本的classicML。你可以选择以下两种方式中的任意一种进行安装加速版的classicML。值得注意的是，PyPI预编译软件包仅适配了macOS和Linux；仅在理论上可以使用源码编译的方式在Windows安装，Windows未经过软件测试且作者长时间内不会针对适配。
+    你执行完上面的操作就已经安装成功classicML，但是，你可以通过下面的方式安装拥有加速版本的classicML. 你可以选择以下两种方式中的任意一种进行安装加速版的classicML。值得注意的是，PyPI预编译软件包仅适配了macOS和Linux；仅在理论上可以使用源码编译的方式在Windows安装，Windows未经过软件测试且作者长时间内不会针对适配.
 
 .. _header-n136:
 
@@ -102,7 +102,7 @@ Eigen3 在不同平台软件包的名称可能有差异，安装方法也有差�
 下载源码并安装classicML
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-使用Git克隆仓库，安装脚本将自动安装classicML软件包。
+使用Git克隆仓库，安装脚本将自动安装classicML软件包.
 
 .. code:: shell
 

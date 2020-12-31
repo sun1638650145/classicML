@@ -1,10 +1,10 @@
 # cc
 
-```cc```后端将逐步重写```python```后端的全部函数和接口，并针对时间和内存开销进行大幅度的优化。```cc```后端暴露出来的函数将以```cc_xxx_function```与原函数进行区分，类暂时和原```Python```的类名一致，不同时调用多后端函数请忽略。
+```cc```后端将逐步重写```python```后端的全部函数和接口，并针对时间和内存开销进行大幅度的优化。```cc```后端暴露出来的函数将以```cc_xxx_function```与原函数进行区分，类暂时和原```Python```的类名一致，不同时调用多后端函数请忽略.
 
 ## ops
 
-classicML的底层核心操作。
+classicML的底层核心操作.
 
 ### cc_calculate_error
 
@@ -139,4 +139,61 @@ cc_get_w(S_w, mu_0, mu_1)
 #### 返回
 
 投影向量.
+
+### cc_get_within_class_scatter_matrix
+
+```python
+cc_get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1)
+```
+
+获得类内散度矩阵.
+
+#### 参数
+
+* <b>X_0</b>: 一个 Numpy数组，反例集合.
+* <b>X_1</b>: 一个 Numpy数组，正例集合.
+* <b>mu_0</b>: 一个 Numpy数组，反例的均值向量.
+* <b>mu_1</b>: 一个 Numpy数组，正例的均值向量.
+
+#### 返回
+
+类内散度矩阵.
+
+### cc_select_second_alpha
+
+```python
+cc_select_second_alpha(error, error_cache, non_bound_alphas)
+```
+
+选择第二个拉格朗日乘子，SMO采用的是启发式寻找的思想，找到目标函数变化量足够大，即选取变量样本间隔最大.
+
+#### 参数
+
+* <b>error</b>: 浮点数，KKT条件的违背值.
+* <b>error_cache</b>: 一个 Numpy数组，KKT条件的违背值缓存.
+* <b>non_bound_alphas</b>: 一个 Numpy数组，非边界拉格朗日乘子.
+
+#### 返回
+
+拉格朗日乘子的下标和违背值.
+
+### cc_type_of_target
+
+```python
+cc_type_of_target(y)
+```
+
+判断输入数据的类型.
+
+#### 参数
+
+* <b>y</b>: 一个 Numpy数组，待判断类型的数据.
+
+#### 返回
+
+* ```'binary'```: 元素只有两个离散值，类型不限.
+* ```'continuous'```: 元素都是浮点数，且不是对应整数的浮点数.
+* ```'multiclass'```: 元素不只有两个离散值，类型不限.
+* ```'multilabel'```: 元素标签不为一，类型不限.
+* ```'unknown'```: 类型未知.
 
