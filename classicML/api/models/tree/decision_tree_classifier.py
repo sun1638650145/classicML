@@ -194,7 +194,9 @@ class DecisionTreeClassifier(object):
             weights_ds = parameters_gp['weights']
 
             self.criterion = compile_ds.attrs['criterion']
-            self.pruner = get_pruner(compile_ds.attrs['pruning'])
+            if self.pruner is not None:
+                self.pruner = get_pruner(compile_ds.attrs['pruning'])
+
             self.tree = loads(weights_ds.attrs['tree'].tobytes())
 
             # 标记加载完成
@@ -228,7 +230,8 @@ class DecisionTreeClassifier(object):
             weights_ds = parameters_gp['weights']
 
             compile_ds.attrs['criterion'] = self.criterion
-            compile_ds.attrs['pruning'] = self.pruner.name
+            if self.pruner is not None:
+                compile_ds.attrs['pruning'] = self.pruner.name
             weights_ds.attrs['tree'] = np.void(dumps(self.tree))
         except TypeError:
             CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
