@@ -58,6 +58,10 @@ class Sigmoid(Activation):
             a: numpy.ndarray, 输入张量.
             args:
                 y_true: numpy.ndarray, 真实的标签.
+
+        Returns:
+            Sigmoid的导数(微分).
+
         Notes:
             Sigmoid的导数f' = a * (1 - a),
             但是作为输出层就需要乘上误差.
