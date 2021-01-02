@@ -1,9 +1,12 @@
+from pickle import dumps, loads
+
 import numpy as np
 import pandas as pd
 
 from classicML import CLASSICML_LOGGER
-from classicML.backend import tree
 from classicML.backend import get_pruner
+from classicML.backend import io
+from classicML.backend import tree
 
 
 class DecisionTreeClassifier(object):
@@ -20,6 +23,10 @@ class DecisionTreeClassifier(object):
             生成决策树的实现算法.
         pruner: classicML.backend.tree.Pruner实例,
             决策树的剪枝器.
+        is_trained: bool, default=False,
+            模型训练后将被标记为True.
+        is_loaded: bool, default=False,
+            如果模型加载了权重将被标记为True.
     """
     def __init__(self, attribute_name=None):
         """初始化决策树.
@@ -35,6 +42,9 @@ class DecisionTreeClassifier(object):
         self.criterion = None
         self.generator = None
         self.pruner = None
+
+        self.is_trained = False
+        self.is_loaded = False
 
     def compile(self, criterion='gain', pruning=None):
         """编译决策树, 配置训练时使用的超参数.
@@ -100,12 +110,16 @@ class DecisionTreeClassifier(object):
             y_validation = pd.Series(y_validation)
             y_validation.reset_index(drop=True, inplace=True)
 
-        # 生成决策树分类器.
-        self.tree = self.generator(x, y)
+        # 没有使用权重文件, 则生成决策树分类器.
+        if self.is_loaded is False:
+            self.tree = self.generator(x, y)
 
         # 进行剪枝.
         if self.pruner:
             self.tree = self.pruner(x, y, x_validation, y_validation, self.tree)
+
+        # 标记训练完成
+        self.is_trained = True
 
         return self
 
@@ -122,7 +136,7 @@ class DecisionTreeClassifier(object):
         Raises:
             ValueError: 模型没有训练的错误.
         """
-        if self.tree is None:
+        if self.is_trained is False and self.is_loaded is False:
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
@@ -157,3 +171,65 @@ class DecisionTreeClassifier(object):
                 return self._predict(x, decision_tree.subtree['< {:.3f}'.format(decision_tree.dividing_point)])
         else:
             return self._predict(x, decision_tree.subtree[x[decision_tree.feature_index]])
+
+    def load_weights(self, filepath):
+        """加载模型参数.
+
+        Arguments:
+            filepath: str, 权重文件加载的路径.
+
+        Raises:
+            KeyError: 模型权重加载失败.
+
+        Notes:
+            模型将不会加载关于优化器的超参数.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='r',
+                                                   model_name='DecisionTreeClassifier')
+        # 加载模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            self.criterion = compile_ds.attrs['criterion']
+            self.pruner = get_pruner(compile_ds.attrs['pruning'])
+            self.tree = loads(weights_ds.attrs['tree'].tobytes())
+
+            # 标记加载完成
+            self.is_loaded = True
+        except KeyError:
+            CLASSICML_LOGGER.error('模型权重加载失败, 请检查文件是否损坏')
+            raise KeyError('模型权重加载失败')
+
+    def save_weights(self, filepath):
+        """将模型权重保存为一个HDF5文件.
+
+        Arguments:
+            filepath: str, 权重文件保存的路径.
+
+        Raises:
+            TypeError: 模型权重保存失败.
+
+        References:
+            - [如何存储原始的二进制数据](https://docs.h5py.org/en/2.3/strings.html)
+
+        Notes:
+            模型将不会保存关于优化器的超参数.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='w',
+                                                   model_name='DecisionTreeClassifier')
+        # 保存模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            compile_ds.attrs['criterion'] = self.criterion
+            compile_ds.attrs['pruning'] = self.pruner.name
+            weights_ds.attrs['tree'] = np.void(dumps(self.tree))
+        except TypeError:
+            CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
+            raise TypeError('模型权重保存失败')
