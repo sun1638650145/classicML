@@ -32,6 +32,42 @@ class Activation(object):
         raise NotImplementedError
 
 
+class Relu(Activation):
+    """ReLU激活函数.
+    """
+    def __init__(self, name='relu'):
+        super(Relu, self).__init__(name=name)
+
+    def __call__(self, z):
+        """
+        Arguments:
+            z: numpy.ndarray, 输入的张量.
+
+        Returns:
+            经过激活后的张量.
+        """
+        result = np.maximum(0, z)
+
+        return result
+
+    def diff(self, output, a, *args, **kwargs):
+        """ReLU函数的微分.
+
+        Arguments:
+            output: numpy.ndarray, 前向传播输出的张量.
+            a: numpy.ndarray, 输入的张量.
+
+        Notes:
+            ReLU函数在大于零区间的导数应该是恒为一, 如果按此计算在实际应用上会随着训练轮数的增加, 最后模型的输出是一个随机概率,
+            作者个人认为原因是随着轮数的增加, 大部分神经元都恒为激活态, 成为一个线性操作(缩放实际上相当于不参与计算了).
+            在实际应用中使用原值发现可以避免这种想象.
+        """
+        da = np.asarray(output)
+        da[a <= 0] = 0
+
+        return da
+
+
 class Sigmoid(Activation):
     """Sigmoid激活函数.
     """
@@ -74,42 +110,6 @@ class Sigmoid(Activation):
         return da
 
 
-class Relu(Activation):
-    """ReLU激活函数.
-    """
-    def __init__(self, name='relu'):
-        super(Relu, self).__init__(name=name)
-
-    def __call__(self, z):
-        """
-        Arguments:
-            z: numpy.ndarray, 输入的张量.
-
-        Returns:
-            经过激活后的张量.
-        """
-        result = np.maximum(0, z)
-
-        return result
-
-    def diff(self, output, a, *args, **kwargs):
-        """ReLU函数的微分.
-
-        Arguments:
-            output: numpy.ndarray, 前向传播输出的张量.
-            a: numpy.ndarray, 输入的张量.
-
-        Notes:
-            ReLU函数在大于零区间的导数应该是恒为一, 如果按此计算在实际应用上会随着训练轮数的增加, 最后模型的输出是一个随机概率,
-            作者个人认为原因是随着轮数的增加, 大部分神经元都恒为激活态, 成为一个线性操作(缩放实际上相当于不参与计算了).
-            在实际应用中使用原值发现可以避免这种想象.
-        """
-        da = np.asarray(output)
-        da[a <= 0] = 0
-
-        return da
-
-
 class Softmax(Activation):
     """Softmax激活函数.
     """
@@ -145,6 +145,6 @@ class Softmax(Activation):
 
 
 # Instances.
-sigmoid = Sigmoid()
 relu = Relu()
+sigmoid = Sigmoid()
 softmax = Softmax()
