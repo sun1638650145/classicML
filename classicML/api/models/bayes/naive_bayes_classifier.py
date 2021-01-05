@@ -1,3 +1,5 @@
+from pickle import loads, dumps
+
 import numpy as np
 import pandas as pd
 
@@ -6,6 +8,7 @@ from classicML.backend import type_of_target
 from classicML.backend import get_conditional_probability
 from classicML.backend import get_prior_probability
 from classicML.backend import get_probability_density
+from classicML.backend import io
 
 
 class NaiveBayesClassifier(object):
@@ -22,6 +25,8 @@ class NaiveBayesClassifier(object):
         pi_1: dict, 正例的类条件概率(概率密度).
         is_trained: bool, default=False,
             模型训练后将被标记为True.
+        is_loaded: bool, default=False,
+            如果模型加载了权重将被标记为True.
     """
     def __init__(self, attribute_name=None):
         """初始化朴素贝叶斯分类器.
@@ -39,6 +44,7 @@ class NaiveBayesClassifier(object):
         self.pi_1 = dict()
         self.smoothing = None
         self.is_trained = False
+        self.is_loaded = False
 
     def compile(self, smoothing=True):
         """编译朴素贝叶斯分类器.
@@ -148,7 +154,7 @@ class NaiveBayesClassifier(object):
         Raises:
             ValueError: 模型没有训练的错误.
         """
-        if self.is_trained is False:
+        if self.is_trained is False and self.is_loaded is False:
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
@@ -204,3 +210,66 @@ class NaiveBayesClassifier(object):
                 return 0
             else:
                 return 1
+
+    def load_weights(self, filepath):
+        """加载模型参数.
+
+        Arguments:
+            filepath: str, 权重文件加载的路径.
+
+        Raises:
+            KeyError: 模型权重加载失败.
+
+        Notes:
+            模型将不会加载关于优化器的超参数.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='r',
+                                                   model_name='NaiveBayesClassifier')
+        # 加载模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            self.smoothing = compile_ds.attrs['smoothing']
+            self.p_0 = weights_ds.attrs['p_0']
+            self.p_1 = weights_ds.attrs['p_1']
+            self.pi_0 = loads(weights_ds.attrs['pi_0'].tobytes())
+            self.pi_1 = loads(weights_ds.attrs['pi_1'].tobytes())
+
+            # 标记加载完成
+            self.is_loaded = True
+        except KeyError:
+            CLASSICML_LOGGER.error('模型权重加载失败, 请检查文件是否损坏')
+            raise KeyError('模型权重加载失败')
+
+    def save_weights(self, filepath):
+        """将模型权重保存为一个HDF5文件.
+
+        Arguments:
+            filepath: str, 权重文件保存的路径.
+
+        Raises:
+            TypeError: 模型权重保存失败.
+
+        Notes:
+            模型将不会保存关于优化器的超参数.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='w',
+                                                   model_name='NaiveBayesClassifier')
+        # 保存模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            compile_ds.attrs['smoothing'] = self.smoothing
+            weights_ds.attrs['p_0'] = self.p_0
+            weights_ds.attrs['p_1'] = self.p_1
+            weights_ds.attrs['pi_0'] = np.void(dumps(self.pi_0))
+            weights_ds.attrs['pi_1'] = np.void(dumps(self.pi_1))
+        except TypeError:
+            CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
+            raise TypeError('模型权重保存失败')

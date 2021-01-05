@@ -70,7 +70,7 @@ def plot_bayes(bayes, x, y):
     Raises:
         ValueError: 模型没有训练的错误.
     """
-    if bayes.is_trained is False:
+    if bayes.is_trained is False and bayes.is_loaded is False:
         CLASSICML_LOGGER.error('模型没有训练')
         raise ValueError('你必须先进行训练')
 
