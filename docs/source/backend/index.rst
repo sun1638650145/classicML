@@ -38,7 +38,7 @@ classicML
 针对专业用户，你可以查看下面所列的全部函数和接口
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    
    cc
-   python
+   python/index
