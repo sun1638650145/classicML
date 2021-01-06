@@ -1,3 +1,5 @@
+from pickle import loads, dumps
+
 import numpy as np
 import pandas as pd
 
@@ -6,6 +8,7 @@ from classicML.backend import get_conditional_probability
 from classicML.backend import get_dependent_prior_probability
 from classicML.backend import get_probability_density
 from classicML.backend import type_of_target
+from classicML.backend import io
 
 
 class OneDependentEstimator(object):
@@ -16,6 +19,8 @@ class OneDependentEstimator(object):
             属性的名称.
         is_trained: bool, default=False,
             模型训练后将被标记为True.
+        is_loaded: bool, default=False,
+            如果模型加载了权重将被标记为True.
 
     Raises:
         NotImplementedError: compile, fit, predict方法需要用户实现.
@@ -31,6 +36,7 @@ class OneDependentEstimator(object):
         self.attribute_name = attribute_name
 
         self.is_trained = False
+        self.is_loaded = False
 
     def compile(self, *args, **kwargs):
         """编译独依赖估计器.
@@ -51,6 +57,34 @@ class OneDependentEstimator(object):
 
         Arguments:
             x: numpy.ndarray or pandas.DataFrame, array-like, 特征数据.
+        """
+        raise NotImplementedError
+
+    def load_weights(self, filepath):
+        """加载模型参数.
+
+        Arguments:
+            filepath: str, 权重文件加载的路径.
+
+        Raises:
+            KeyError: 模型权重加载失败.
+
+        Notes:
+            模型将不会加载关于优化器的超参数.
+        """
+        raise NotImplementedError
+
+    def save_weights(self, filepath):
+        """将模型权重保存为一个HDF5文件.
+
+        Arguments:
+            filepath: str, 权重文件保存的路径.
+
+        Raises:
+            TypeError: 模型权重保存失败.
+
+        Notes:
+            模型将不会保存关于优化器的超参数.
         """
         raise NotImplementedError
 
@@ -192,7 +226,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
         Raises:
             ValueError: 模型没有训练的错误.
         """
-        if self.is_trained is False:
+        if self.is_trained is False and self.is_loaded is False:
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
@@ -220,6 +254,65 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
                         y_pred.append(1)
 
         return y_pred
+
+    def load_weights(self, filepath):
+        """加载模型参数.
+
+        Arguments:
+            filepath: str, 权重文件加载的路径.
+
+        Raises:
+            KeyError: 模型权重加载失败.
+
+        Notes:
+            模型将不会加载关于优化器的超参数.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='r',
+                                                   model_name='SuperParentOneDependentEstimator')
+        # 加载模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            self.super_parent_name = compile_ds.attrs['super_parent_name']
+            self.smoothing = compile_ds.attrs['smoothing']
+            self._list_of_p_c = loads(weights_ds.attrs['_list_of_p_c'].tobytes())
+
+            # 标记加载完成
+            self.is_loaded = True
+        except KeyError:
+            CLASSICML_LOGGER.error('模型权重加载失败, 请检查文件是否损坏')
+            raise KeyError('模型权重加载失败')
+
+    def save_weights(self, filepath):
+        """将模型权重保存为一个HDF5文件.
+
+        Arguments:
+            filepath: str, 权重文件保存的路径.
+
+        Raises:
+            TypeError: 模型权重保存失败.
+
+        Notes:
+            模型将不会保存关于优化器的超参数.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='w',
+                                                   model_name='SuperParentOneDependentEstimator')
+        # 保存模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            compile_ds.attrs['super_parent_name'] = self.super_parent_name
+            compile_ds.attrs['smoothing'] = self.smoothing
+            weights_ds.attrs['_list_of_p_c'] = np.void(dumps(self._list_of_p_c))
+        except TypeError:
+            CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
+            raise TypeError('模型权重保存失败')
 
     def _predict(self, x, attribute_list=None, super_parent_index=None):
         """通过平均独依赖估计器预测单个样本.
