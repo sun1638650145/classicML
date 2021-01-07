@@ -443,6 +443,9 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
         if isinstance(x, np.ndarray) and self.attribute_name is None:
             CLASSICML_LOGGER.warn("属性名称缺失, 请使用pandas.DataFrame; 或检查 self.attributes_name")
 
+        # TODO(Steve R. Sun, tag:code): 暂时没有找到合理的断点续训的理论支持.
+        self._attribute_list = list()
+
         # 为特征数据添加属性信息.
         x = pd.DataFrame(x, columns=self.attribute_name)
         x.reset_index(drop=True, inplace=True)
