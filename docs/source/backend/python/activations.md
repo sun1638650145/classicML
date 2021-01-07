@@ -1,4 +1,4 @@
-## Activations
+## activations
 
 classicML的激活函数.
 

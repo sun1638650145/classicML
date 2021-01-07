@@ -1,3 +1,4 @@
+"""classicML的初始化函数."""
 import numpy as np
 
 
