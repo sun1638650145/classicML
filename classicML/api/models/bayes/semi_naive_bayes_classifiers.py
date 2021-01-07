@@ -482,7 +482,7 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
         Raises:
             ValueError: 模型没有训练的错误.
         """
-        if self.is_trained is False:
+        if self.is_trained is False and self.is_loaded is False:
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
@@ -495,6 +495,65 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
                 y_pred.append(self._predict(x_test))
 
         return y_pred
+
+    def load_weights(self, filepath):
+        """加载模型参数.
+
+        Arguments:
+            filepath: str, 权重文件加载的路径.
+
+        Raises:
+            KeyError: 模型权重加载失败.
+
+        Notes:
+            模型将不会加载关于优化器的超参数.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='r',
+                                                   model_name='AveragedOneDependentEstimator')
+        # 加载模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            self.smoothing = compile_ds.attrs['smoothing']
+            self.m = compile_ds.attrs['m']
+            self._attribute_list = loads(weights_ds.attrs['_attribute_list'].tobytes())
+
+            # 标记加载完成
+            self.is_loaded = True
+        except KeyError:
+            CLASSICML_LOGGER.error('模型权重加载失败, 请检查文件是否损坏')
+            raise KeyError('模型权重加载失败')
+
+    def save_weights(self, filepath):
+        """将模型权重保存为一个HDF5文件.
+
+        Arguments:
+            filepath: str, 权重文件保存的路径.
+
+        Raises:
+            TypeError: 模型权重保存失败.
+
+        Notes:
+            模型将不会保存关于优化器的超参数.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='w',
+                                                   model_name='AveragedOneDependentEstimator')
+        # 保存模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            compile_ds.attrs['smoothing'] = self.smoothing
+            compile_ds.attrs['m'] = self.m
+            weights_ds.attrs['_attribute_list'] = np.void(dumps(self._attribute_list))
+        except TypeError:
+            CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
+            raise TypeError('模型权重保存失败')
 
     def _predict(self, x, **kwargs):
         """
