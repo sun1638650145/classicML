@@ -15,7 +15,8 @@ class Initializer(object):
        NotImplementedError: __call__方法需要用户实现.
     """
     def __init__(self, name=None, seed=None):
-        """
+        """函数实现.
+
         Arguments:
             name: str, default=None,
                 初始化器的名称.
@@ -37,10 +38,11 @@ class RandomNormal(Initializer):
         super(RandomNormal, self).__init__(name=name, seed=seed)
 
     def __call__(self, attributes_or_structure):
-        """
+        """函数实现.
+
         Arguments:
             attributes_or_structure: int or list,
-                如果是逻辑回归就是样本的特征数,
+                如果是逻辑回归就是样本的特征数;
                 如果是神经网络, 就是定义神经网络的网络结构.
         """
         if isinstance(attributes_or_structure, int):
