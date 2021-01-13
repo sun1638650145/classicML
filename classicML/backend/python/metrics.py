@@ -1,3 +1,4 @@
+"""classicML的评估函数."""
 import numpy as np
 
 
@@ -25,6 +26,7 @@ class Metric(object):
         self.name = name
 
     def __call__(self, y_pred, y_true):
+        """函数实现."""
         raise NotImplementedError
 
 
@@ -41,7 +43,8 @@ class Accuracy(Metric):
         super(Accuracy, self).__init__(name=name)
 
     def __call__(self, y_pred, y_true):
-        """
+        """函数实现.
+
         Arguments:
             y_pred: numpy.ndarray, 预测的标签.
             y_true: numpy.ndarray, 真实的标签.
@@ -70,7 +73,8 @@ class BinaryAccuracy(Metric):
         super(BinaryAccuracy, self).__init__(name=name)
 
     def __call__(self, y_pred, y_true):
-        """
+        """函数实现.
+
         Arguments:
             y_pred: numpy.ndarray, 预测的标签.
             y_true: numpy.ndarray, 真实的标签.
@@ -101,7 +105,8 @@ class CategoricalAccuracy(Metric):
         super(CategoricalAccuracy, self).__init__(name=name)
 
     def __call__(self, y_pred, y_true):
-        """
+        """函数实现.
+
         Arguments:
             y_pred: numpy.ndarray, 预测的标签.
             y_true: numpy.ndarray, 真实的标签.

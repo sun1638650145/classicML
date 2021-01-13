@@ -14,3 +14,5 @@ python
    io
    kernels
    losses
+   metrics
+   ops
