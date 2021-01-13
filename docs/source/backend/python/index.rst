@@ -13,4 +13,4 @@ python
    initializers
    io
    kernels
-   
+   losses

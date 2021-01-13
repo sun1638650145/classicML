@@ -1,3 +1,4 @@
+"""classicML的损失函数."""
 import numpy as np
 
 

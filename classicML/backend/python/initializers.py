@@ -15,8 +15,7 @@ class Initializer(object):
        NotImplementedError: __call__方法需要用户实现.
     """
     def __init__(self, name=None, seed=None):
-        """函数实现.
-
+        """
         Arguments:
             name: str, default=None,
                 初始化器的名称.

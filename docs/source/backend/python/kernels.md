@@ -26,3 +26,62 @@ __call__(x_i, x_j)
 
 * <b>NotImplementedError</b>: 函数没有实现.
 
+## Linear
+
+线性核函数.
+
+```python
+cml.kernels.Linear(name='linear')
+```
+
+### 参数
+
+* <b>name</b>: 字符串，核函数名称.
+
+### \__call__
+
+函数实现.
+
+```python
+__call__(x_i, x_j)
+```
+
+#### 参数
+
+* <b>x_i</b>: 一个 Numpy数组，第一组特征向量.
+* <b>x_j</b>: 一个 Numpy数组，第二组特征向量.
+
+#### 返回
+
+核函数映射后的特征向量.
+
+## RBF
+
+径向基核函数.
+
+```python
+cml.kernels.Linear(name='rbf', gamma=1.0)
+```
+
+### 参数
+
+* <b>name</b>: 字符串，核函数名称.
+* <b>gamma</b>: 浮点数，核函数系数.
+
+### \__call__
+
+函数实现.
+
+```python
+__call__(x_i, x_j)
+```
+
+#### 参数
+
+* <b>x_i</b>: 一个 Numpy数组，第一组特征向量.
+* <b>x_j</b>: 一个 Numpy数组，第二组特征向量.
+
+#### 返回
+
+核函数映射后的特征向量.
+

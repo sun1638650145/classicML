@@ -24,26 +24,6 @@ class Kernel(object):
         raise NotImplementedError
 
 
-class Linear(Kernel):
-    """线性核函数.
-    """
-    def __init__(self, name='linear'):
-        super(Linear, self).__init__(name=name)
-
-    def __call__(self, x_i, x_j):
-        """
-        Arguments:
-            x_i: numpy.ndarray, 第一组特征向量.
-            x_j: numpy.ndarray, 第二组特征向量.
-
-        Returns:
-            核函数映射后的特征向量.
-        """
-        kappa = np.matmul(x_j, x_i.T)
-
-        return np.asmatrix(kappa)
-
-
 class RBF(Kernel):
     """径向基核函数.
 
@@ -59,7 +39,8 @@ class RBF(Kernel):
         self.gamma = gamma
 
     def __call__(self, x_i, x_j):
-        """
+        """函数实现.
+
         Arguments:
             x_i: numpy.ndarray, 第一组特征向量.
             x_j: numpy.ndarray, 第二组特征向量.
@@ -80,6 +61,27 @@ class Gaussian(RBF):
         super(Gaussian, self).__init__(name=name, gamma=gamma)
 
 
+class Linear(Kernel):
+    """线性核函数.
+    """
+    def __init__(self, name='linear'):
+        super(Linear, self).__init__(name=name)
+
+    def __call__(self, x_i, x_j):
+        """函数实现.
+
+        Arguments:
+            x_i: numpy.ndarray, 第一组特征向量.
+            x_j: numpy.ndarray, 第二组特征向量.
+
+        Returns:
+            核函数映射后的特征向量.
+        """
+        kappa = np.matmul(x_j, x_i.T)
+
+        return np.asmatrix(kappa)
+
+
 class Polynomial(Kernel):
     """多项式核函数.
 
@@ -98,7 +100,8 @@ class Polynomial(Kernel):
         self.degree = degree
 
     def __call__(self, x_i, x_j):
-        """
+        """函数实现.
+
         Arguments:
             x_i: numpy.ndarray, 第一组特征向量.
             x_j: numpy.ndarray, 第二组特征向量.
@@ -132,7 +135,8 @@ class Sigmoid(Kernel):
         self.theta = theta
 
     def __call__(self, x_i, x_j):
-        """
+        """函数实现.
+
         Arguments:
             x_i: numpy.ndarray, 第一组特征向量.
             x_j: numpy.ndarray, 第二组特征向量.
