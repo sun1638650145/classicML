@@ -12,4 +12,5 @@ python
    callbacks
    initializers
    io
+   kernels
    
