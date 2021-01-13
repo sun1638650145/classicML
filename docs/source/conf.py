@@ -1,10 +1,10 @@
 # 项目信息
 project = 'classicML'
-copyright = '2020, Steve R. Sun'
+copyright = '2020-2021, Steve R. Sun'
 author = 'Steve R. Sun'
 
 # 版本号
-release = '0.5'
+release = '0.5.1'
 
 # markdown插件
 extensions = [
