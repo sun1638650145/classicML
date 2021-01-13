@@ -1,8 +1,8 @@
-## activations
+# activations
 
 classicML的激活函数.
 
-### Activation
+## Activation
 
 激活函数基类.
 
@@ -10,11 +10,11 @@ classicML的激活函数.
 cml.activations.Activation(name=None)
 ```
 
-#### 参数
+### 参数
 
 * <b>name</b>: 字符串，激活函数名称.
 
-#### \__call__
+### \__call__
 
 函数实现.
 
@@ -22,15 +22,15 @@ cml.activations.Activation(name=None)
 __call__(z)
 ```
 
-##### 参数
+#### 参数
 
 * <b>z</b>: 一个Numpy数组，输入张量.
 
-##### 异常
+#### 异常
 
 * <b>NotImplementedError</b>: 函数没有实现.
 
-#### diff
+### diff
 
 函数的导数(微分).
 
@@ -38,16 +38,16 @@ __call__(z)
 diff(output, a, *args, **kwargs)
 ```
 
-##### 参数
+#### 参数
 
 * <b>output</b>: 一个Numpy数组，输出张量.
 * <b>a</b>: 一个Numpy数组，输入张量.
 
-##### 异常
+#### 异常
 
 * <b>NotImplementedError</b>: 函数没有实现.
 
-### Relu
+## Relu
 
 ReLU激活函数.
 
@@ -55,11 +55,11 @@ ReLU激活函数.
 cml.activations.Relu(name='relu')
 ```
 
-#### 参数
+### 参数
 
 * <b>name</b>: 字符串，激活函数名称.
 
-#### \__call__
+### \__call__
 
 函数实现.
 
@@ -67,7 +67,7 @@ cml.activations.Relu(name='relu')
 __call__(z)
 ```
 
-##### 参数
+#### 参数
 
 * <b>z</b>: 一个Numpy数组，输入张量.
 
@@ -83,16 +83,16 @@ Relu的导数(微分).
 diff(output, a, *args, **kwargs)
 ```
 
-##### 参数
+#### 参数
 
 * <b>output</b>: 一个Numpy数组，输出张量.
 * <b>a</b>: 一个Numpy数组，输入张量.
 
-##### 返回
+#### 返回
 
 Relu的导数(微分).
 
-### Sigmoid
+## Sigmoid
 
 Sigmoid激活函数.
 
@@ -100,11 +100,11 @@ Sigmoid激活函数.
 cml.activations.Sigmoid(name='sigmoid')
 ```
 
-#### 参数
+### 参数
 
 * <b>name</b>: 字符串，激活函数名称.
 
-#### \__call__
+### \__call__
 
 函数实现.
 
@@ -112,11 +112,11 @@ cml.activations.Sigmoid(name='sigmoid')
 __call__(z)
 ```
 
-##### 参数
+#### 参数
 
 * <b>z</b>: 一个Numpy数组，输入张量.
 
-##### 返回
+#### 返回
 
 经过激活后的张量.
 
@@ -128,17 +128,17 @@ Sigmoid的导数(微分).
 diff(output, a, *args, **kwargs)
 ```
 
-##### 参数
+#### 参数
 
 * <b>output</b>: 一个Numpy数组，输出张量.
 * <b>a</b>: 一个Numpy数组，输入张量.
 * <b>y_true</b>: numpy.ndarray，真实的标签.
 
-##### 返回
+#### 返回
 
 Sigmoid的导数(微分).
 
-### Softmax
+## Softmax
 
 Softmax激活函数.
 
