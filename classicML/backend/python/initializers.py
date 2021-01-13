@@ -75,7 +75,7 @@ class HeNormal(Initializer):
 
         Arguments:
             attributes_or_structure: int or list,
-                如果是逻辑回归就是样本的特征数,
+                如果是逻辑回归就是样本的特征数;
                 如果是神经网络, 就是定义神经网络的网络结构.
         """
         if isinstance(attributes_or_structure, int):
@@ -112,7 +112,7 @@ class XavierNormal(Initializer):
 
         Arguments:
             attributes_or_structure: int or list,
-                如果是逻辑回归就是样本的特征数,
+                如果是逻辑回归就是样本的特征数;
                 如果是神经网络, 就是定义神经网络的网络结构.
         """
         if isinstance(attributes_or_structure, int):
