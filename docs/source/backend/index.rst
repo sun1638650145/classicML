@@ -40,5 +40,6 @@ classicML
 .. toctree::
    :maxdepth: 1
    
-   cc
+   cc/index
    python/index
+   training
