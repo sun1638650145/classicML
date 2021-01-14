@@ -32,7 +32,8 @@ class ProgressBar(object):
         self.metric = metric
 
     def __call__(self, epoch, current, loss_value, metric_value):
-        """
+        """函数实现.
+
         Arguments:
             epoch: int, 当前的训练轮数.
             current: float, 当前的时间戳.
