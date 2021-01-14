@@ -1,3 +1,4 @@
+"""classicML的工具类."""
 import sys
 from time import time
 

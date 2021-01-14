@@ -17,3 +17,4 @@ python
    metrics
    ops
    optimizers
+   utils

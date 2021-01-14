@@ -113,7 +113,7 @@ class StochasticGradientDescent(Optimizer):
     """随机梯度下降优化器.
 
     Notes:
-        - 如果想固定随机种子实现, 实现复现的话,
+        - 如果想固定随机种子, 实现复现的话,
           请在模型实例化的时候将随机种子置为一个常整数.
     """
 
@@ -617,6 +617,7 @@ class NewtonMethod(Optimizer):
                     模型使用的损失函数.
                 metric: str, classicML.metrics.Metric 实例,
                     模型使用的评估函数.
+
         Returns:
             模型的参数矩阵.
         """
@@ -906,7 +907,7 @@ class SequentialMinimalOptimization(Optimizer):
             args:
                 C: float,
                     软间隔正则化系数.
-                kernel: str, classicML.kernel.Kernels 实例,
+                kernel: str, classicML.kernels.Kernel 实例,
                     分类器使用的核函数.
                 tol: float,
                     停止训练的最大误差值.
