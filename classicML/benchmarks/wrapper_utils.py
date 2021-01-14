@@ -6,20 +6,6 @@ import psutil
 from classicML import CLASSICML_LOGGER
 
 
-def timer(function):
-    """程序计时装饰器.
-    """
-    def wrapper(*args, **kwargs):
-        start_time = time.perf_counter()  # 注意将记录time.sleep()的时间
-        return_values = function(*args, **kwargs)
-        end_time = time.perf_counter()
-        CLASSICML_LOGGER.info('耗时 {:.5f} s'.format(end_time - start_time))
-
-        return return_values
-
-    return wrapper
-
-
 def memory_monitor(function):
     """内存监视装饰器.
 
@@ -34,6 +20,20 @@ def memory_monitor(function):
         current_process = psutil.Process(pid)
         process_memory = current_process.memory_full_info()
         CLASSICML_LOGGER.info('占用内存 {:.5f} MB'.format(process_memory.uss / 1024 / 1024))
+        return return_values
+
+    return wrapper
+
+
+def timer(function):
+    """程序计时装饰器.
+    """
+    def wrapper(*args, **kwargs):
+        start_time = time.perf_counter()  # 注意将记录time.sleep()的时间
+        return_values = function(*args, **kwargs)
+        end_time = time.perf_counter()
+        CLASSICML_LOGGER.info('耗时 {:.5f} s'.format(end_time - start_time))
+
         return return_values
 
     return wrapper
