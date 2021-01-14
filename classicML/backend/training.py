@@ -1,3 +1,4 @@
+"""classicML的training模块用于安全的智能的访问classicML的后端函数."""
 from classicML import CLASSICML_LOGGER
 from classicML.backend import initializers
 from classicML.backend import kernels
@@ -5,6 +6,27 @@ from classicML.backend import losses
 from classicML.backend import optimizers
 from classicML.backend import metrics
 from classicML.backend.python import tree
+
+
+def get_criterion(criterion):
+    """获取使用的划分选择方式.
+
+    Arguments:
+        criterion: str,
+            决策树学习的划分方式.
+
+    Raises:
+        AttributeError: 选择错误.
+    """
+    if criterion == 'gini':
+        return tree.criterions.Gini()
+    elif criterion == 'gain':
+        return tree.criterions.Gain()
+    elif criterion == 'entropy':
+        return tree.criterions.Entropy()
+    else:
+        CLASSICML_LOGGER.error('选择错误')
+        raise AttributeError
 
 
 def get_initializer(initializer, seed):
@@ -36,91 +58,6 @@ def get_initializer(initializer, seed):
         return initializers.RandomNormal(seed=seed)
     else:
         CLASSICML_LOGGER.error('初始化器调用错误')
-        raise AttributeError
-
-
-def get_loss(loss):
-    """获取使用的损失函数实例.
-
-    Arguments:
-        loss: str or classicML.losses.Loss 实例,
-            损失函数.
-    """
-    if isinstance(loss, str):
-        if loss in ('mse', 'mean_squared_error'):
-            return losses.MeanSquaredError()
-        elif loss == 'log_likelihood':
-            return losses.LogLikelihood()
-        elif loss == 'binary_crossentropy':
-            return losses.BinaryCrossentropy()
-        elif loss == 'categorical_crossentropy':
-            return losses.CategoricalCrossentropy()
-        elif loss == 'crossentropy':
-            return losses.Crossentropy()
-        else:
-            CLASSICML_LOGGER.warn('你没有输入损失函数或者输入的损失函数不正确, 将使用默认的损失函数')
-            return losses.Crossentropy()
-    elif isinstance(loss, losses.Loss):
-        return loss
-    else:
-        CLASSICML_LOGGER.warn('你没有输入损失函数或者输入的损失函数不正确, 将使用默认的损失函数')
-        return losses.Crossentropy()
-
-
-def get_optimizer(optimizer):
-    """获取使用的优化器实例.
-
-    Arguments:
-        optimizer: str or classicML.optimizers.Optimizer 实例,
-            优化器.
-
-    Raises:
-        AttributeError: 模型编译的参数输入错误.
-    """
-    if isinstance(optimizer, str):
-        if optimizer in ('gd', 'gradient_descent'):
-            return optimizers.GradientDescent()
-        elif optimizer in ('newton', 'newton_method'):
-            return optimizers.NewtonMethod()
-        elif optimizer in ('sgd', 'stochastic_gradient_descent'):
-            return optimizers.StochasticGradientDescent()
-        elif optimizer == 'adam':
-            return optimizers.Adam()
-        elif optimizer == 'rbf':
-            return optimizers.RadialBasisFunctionOptimizer()
-        elif optimizer == 'SMO':
-            return optimizers.SequentialMinimalOptimization()
-        else:
-            CLASSICML_LOGGER.error('优化器调用错误')
-            raise AttributeError
-    elif isinstance(optimizer, optimizers.Optimizer):
-        return optimizer
-    else:
-        CLASSICML_LOGGER.error('优化器调用错误')
-        raise AttributeError
-
-
-def get_metric(metric):
-    """获取使用的评估函数实例.
-
-    Arguments:
-        metric: str or classicML.metrics.Metric 实例,
-            评估函数.
-
-    Raises:
-        AttributeError: 模型编译的参数输入错误.
-    """
-    if isinstance(metric, str):
-        if metric == 'binary_accuracy':
-            return metrics.BinaryAccuracy()
-        elif metric == 'categorical_accuracy':
-            return metrics.CategoricalAccuracy()
-        elif metric == 'accuracy':
-            return metrics.Accuracy()
-    elif isinstance(metric, metrics.Metric):
-        return metric
-    else:
-        CLASSICML_LOGGER.error('评估函数调用错误')
         raise AttributeError
 
 
@@ -156,24 +93,88 @@ def get_kernel(kernel, gamma):
         raise AttributeError
 
 
-def get_criterion(criterion):
-    """获取使用的划分选择方式.
+def get_loss(loss):
+    """获取使用的损失函数实例.
 
     Arguments:
-        criterion: str,
-            决策树学习的划分方式.
+        loss: str or classicML.losses.Loss 实例,
+            损失函数.
+    """
+    if isinstance(loss, str):
+        if loss in ('mse', 'mean_squared_error'):
+            return losses.MeanSquaredError()
+        elif loss == 'log_likelihood':
+            return losses.LogLikelihood()
+        elif loss == 'binary_crossentropy':
+            return losses.BinaryCrossentropy()
+        elif loss == 'categorical_crossentropy':
+            return losses.CategoricalCrossentropy()
+        elif loss == 'crossentropy':
+            return losses.Crossentropy()
+        else:
+            CLASSICML_LOGGER.warn('你没有输入损失函数或者输入的损失函数不正确, 将使用默认的损失函数')
+            return losses.Crossentropy()
+    elif isinstance(loss, losses.Loss):
+        return loss
+    else:
+        CLASSICML_LOGGER.warn('你没有输入损失函数或者输入的损失函数不正确, 将使用默认的损失函数')
+        return losses.Crossentropy()
+
+
+def get_metric(metric):
+    """获取使用的评估函数实例.
+
+    Arguments:
+        metric: str or classicML.metrics.Metric 实例,
+            评估函数.
 
     Raises:
-        AttributeError: 选择错误.
+        AttributeError: 模型编译的参数输入错误.
     """
-    if criterion == 'gini':
-        return tree.criterions.Gini()
-    elif criterion == 'gain':
-        return tree.criterions.Gain()
-    elif criterion == 'entropy':
-        return tree.criterions.Entropy()
+    if isinstance(metric, str):
+        if metric == 'binary_accuracy':
+            return metrics.BinaryAccuracy()
+        elif metric == 'categorical_accuracy':
+            return metrics.CategoricalAccuracy()
+        elif metric == 'accuracy':
+            return metrics.Accuracy()
+    elif isinstance(metric, metrics.Metric):
+        return metric
     else:
-        CLASSICML_LOGGER.error('选择错误')
+        CLASSICML_LOGGER.error('评估函数调用错误')
+        raise AttributeError
+
+
+def get_optimizer(optimizer):
+    """获取使用的优化器实例.
+
+    Arguments:
+        optimizer: str or classicML.optimizers.Optimizer 实例,
+            优化器.
+
+    Raises:
+        AttributeError: 模型编译的参数输入错误.
+    """
+    if isinstance(optimizer, str):
+        if optimizer in ('gd', 'gradient_descent'):
+            return optimizers.GradientDescent()
+        elif optimizer in ('newton', 'newton_method'):
+            return optimizers.NewtonMethod()
+        elif optimizer in ('sgd', 'stochastic_gradient_descent'):
+            return optimizers.StochasticGradientDescent()
+        elif optimizer == 'adam':
+            return optimizers.Adam()
+        elif optimizer == 'rbf':
+            return optimizers.RadialBasisFunctionOptimizer()
+        elif optimizer == 'SMO':
+            return optimizers.SequentialMinimalOptimization()
+        else:
+            CLASSICML_LOGGER.error('优化器调用错误')
+            raise AttributeError
+    elif isinstance(optimizer, optimizers.Optimizer):
+        return optimizer
+    else:
+        CLASSICML_LOGGER.error('优化器调用错误')
         raise AttributeError
 
 

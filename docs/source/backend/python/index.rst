@@ -18,3 +18,4 @@ python
    ops
    optimizers
    utils
+   tree/index
