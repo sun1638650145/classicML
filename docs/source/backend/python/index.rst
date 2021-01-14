@@ -16,3 +16,4 @@ python
    losses
    metrics
    ops
+   optimizers
