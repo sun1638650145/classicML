@@ -8,6 +8,6 @@ tree
 .. toctree::
    :maxdepth: 2
    
-   criterions
+   criteria
    generators
    pruners
