@@ -19,11 +19,11 @@ def get_criterion(criterion):
         AttributeError: 选择错误.
     """
     if criterion == 'gini':
-        return tree.criterions.Gini()
+        return tree.criteria.Gini()
     elif criterion == 'gain':
-        return tree.criterions.Gain()
+        return tree.criteria.Gain()
     elif criterion == 'entropy':
-        return tree.criterions.Entropy()
+        return tree.criteria.Entropy()
     else:
         CLASSICML_LOGGER.error('选择错误')
         raise AttributeError
