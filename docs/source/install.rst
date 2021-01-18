@@ -7,7 +7,8 @@
 
     1. classicML 兼容的Python版本: Python 3.6-3.8
     2. classicML 仅支持64位的系统，强行使用32位系统可能会导致精度异常
-    3. classicML 目前仅支持x86-64架构的平台，arm架构暂不支持
+    3. classicML 目前仅支持x86-64架构的平台
+    4. classicML 使用Rosetta 2转译的方式可以在Apple M1上运行, 原生支持arm64架构的版本将在近期发布
 
 .. _header-n67:
 
@@ -108,4 +109,4 @@ Eigen3 在不同平台软件包的名称可能有差异，安装方法也有差�
 
    git clone https://github.com/sun1638650145/classicML.git
    cd classicML
-   python3 setup.py index
+   python3 setup.py install
