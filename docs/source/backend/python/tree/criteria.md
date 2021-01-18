@@ -24,7 +24,7 @@ __call__(D)
 
 #### 参数
 
-* <b>D</b>: 一个Pandas的```Series```序列数据，需要计算的数据集.
+* <b>D</b>: Pandas的Series，需要计算的数据集.
 
 #### 异常
 
@@ -40,8 +40,8 @@ get_value(*args, **kwargs)
 
 #### 参数
 
-- <b>D</b>: 一个Pandas的```Series```序列数据，需要计算的数据集.
-- <b>y</b>: 一个Pandas的```DataFrame```结构化数据，对应的标签.
+- <b>D</b>: Pandas的Series，需要计算的数据集.
+- <b>y</b>: Pandas的DataFrame，对应的标签.
 - <b>continuous:</b> 布尔值, 是否是连续属性.
 
 ### optimal_division
@@ -54,8 +54,8 @@ optimal_division(x, y)
 
 #### 参数
 
-* <b>x</b>: 一个Pandas的```DataFrame```结构化数据，特征数据.
-* <b>y</b>: 一个Pandas的```DataFrame```结构化数据，标签.
+* <b>x</b>: Pandas的DataFrame，特征数据.
+* <b>y</b>: Pandas的DataFrame，标签.
 
 ## Entropy
 
@@ -79,7 +79,7 @@ __call__(D)
 
 #### 参数
 
-* <b>D</b>: 一个Pandas的```Series```序列数据，需要计算的数据集.
+* <b>D</b>: Pandas的Series，需要计算的数据集.
 
 ## Gain
 
@@ -103,8 +103,8 @@ get_value(D, y, D_entropy, continuous)
 
 #### 参数
 
-- <b>D</b>: 一个Pandas的```Series```序列数据，需要计算的数据集.
-- <b>y</b>: 一个Pandas的```DataFrame```结构化数据，对应的标签.
+- <b>D</b>: Pandas的Series，需要计算的数据集.
+- <b>y</b>: Pandas的DataFrame，对应的标签.
 - <b>D_entropy</b>: 浮点数，整个数据集的信息熵.
 - <b>continuous:</b> 布尔值, 是否是连续属性.
 
@@ -118,8 +118,8 @@ optimal_division(x, y)
 
 #### 参数
 
-* <b>x</b>: 一个Pandas的```DataFrame```结构化数据，特征数据.
-* <b>y</b>: 一个Pandas的```DataFrame```结构化数据，标签.
+* <b>x</b>: Pandas的DataFrame，特征数据.
+* <b>y</b>: Pandas的DataFrame，标签.
 
 ## Gini
 
@@ -143,4 +143,4 @@ __call__(D)
 
 #### 参数
 
-* <b>D</b>: 一个Pandas的```Series```序列数据，需要计算的数据集.
+* <b>D</b>: Pandas的Series，需要计算的数据集.

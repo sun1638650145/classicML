@@ -1,9 +1,15 @@
+"""classicML中的树的剪枝器."""
 import numpy as np
 import pandas as pd
 
 
 class Pruner(object):
-    """剪枝器基类."""
+    """剪枝器基类.
+
+    Attributes:
+        name: str, default=None,
+            剪枝器的名称.
+    """
     def __init__(self, name=None):
         super(Pruner, self).__init__()
         self.name = name

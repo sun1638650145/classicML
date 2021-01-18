@@ -1,3 +1,4 @@
+"""classicML中树结构的生成器."""
 import pandas as pd
 
 from classicML.backend.training import get_criterion
@@ -79,6 +80,7 @@ class TreeGenerator(object):
         self.criterion = get_criterion(criterion)
 
     def __call__(self, *args, **kwargs):
+        """功能实现."""
         return self.tree_generate(*args, **kwargs)
 
     def tree_generate(self, *args, **kwargs):
