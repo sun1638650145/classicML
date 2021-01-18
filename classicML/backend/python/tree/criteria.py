@@ -1,3 +1,4 @@
+"""classicML中决策树的划分标准."""
 import os
 import numpy as np
 import pandas as pd
@@ -11,11 +12,20 @@ else:
 class Criterion(object):
     """划分标准基类."""
     def __init__(self, name=None):
+        """
+        Arguments:
+            name: str, default=None,
+                划分标准的名称.
+        """
         super(Criterion, self).__init__()
         self.name = name
 
     def __call__(self, D):
         """划分标准算法实现.
+
+        Arguments:
+            D: pandas.Series,
+                需要计算的数据集.
         """
         raise NotImplementedError
 
@@ -88,31 +98,13 @@ class Criterion(object):
         return best_attribute, best_criterion_value
 
 
-class Gini(Criterion):
-    """基尼指数."""
-    def __init__(self, name='gini'):
-        super(Gini, self).__init__(name=name)
-
-    def __call__(self, D):
-        """计算基尼指数.
-
-        Arguments:
-            D: pandas.Series,
-                需要计算的数据集.
-        """
-        pk = pd.value_counts(D) / D.shape[0]
-        value = 1 - np.sum(pk ** 2)
-
-        return value
-
-
 class Entropy(Criterion):
     """信息熵."""
     def __init__(self, name='entropy'):
         super(Entropy, self).__init__(name=name)
 
     def __call__(self, D):
-        """信息熵.
+        """计算信息熵.
 
         Arguments:
             D: pandas.Series,
@@ -176,3 +168,21 @@ class Gain(Entropy):
                 best_attribute = attribute
 
         return best_attribute, best_gain_value
+
+
+class Gini(Criterion):
+    """基尼指数."""
+    def __init__(self, name='gini'):
+        super(Gini, self).__init__(name=name)
+
+    def __call__(self, D):
+        """计算基尼指数.
+
+        Arguments:
+            D: pandas.Series,
+                需要计算的数据集.
+        """
+        pk = pd.value_counts(D) / D.shape[0]
+        value = 1 - np.sum(pk ** 2)
+
+        return value
