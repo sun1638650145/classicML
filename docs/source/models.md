@@ -13,7 +13,7 @@ model = cml.models.SVC()
 model = cml.models.DecisionTreeClassifier()
 ```
 
-目前，在 classicML 中大部分模型都有三个类方法```model.compile()```，```model.fit()```，```model.predict()```，这三个类方法分别控制模型工作流程中的编译模型参数，训练模型，使用训练好的模型进行预测推理. 以支持向量机为例，流程大概是这样的：
+目前，在 classicML 中大部分模型都有五个类方法```model.compile()```，```model.fit()```，```model.predict()```，```model.save_weights()```，```model.load_weights()```；前三个类方法分别控制模型工作流程中的编译模型参数，训练模型，使用训练好的模型进行预测推理；后两个方法可以实现模型权重的保存和加载. 以支持向量机为例，流程大概是这样的：
 
 ```python
 import classicML as cml
@@ -25,6 +25,8 @@ model.compile(C=10000.0, kernel='rbf')
 model.fit(x, y)
 # 在测试集上测试
 y_pred = model.predict(x_test)
+# 保存模型权重
+model.save_weights('./weights.h5')
 ```
 
 ## AveragedOneDependentEstimator
@@ -88,6 +90,46 @@ predict(x)
 #### 异常
 
 * <b>ValueError</b>: 模型没有训练的错误.
+
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+#### 注意
+
+* 模型将不会加载关于优化器的超参数.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
+#### 注意
+
+* 模型将不会保存关于优化器的超参数.
 
 ## BackPropagationNeuralNetwork
 
@@ -167,6 +209,46 @@ predict(x)
 * <b>ValueError</b>: 模型没有训练的错误.
 * <b>TypeError</b>: 输入参数的类型错误.
 
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+#### 注意
+
+* 模型将不会加载关于优化器的超参数.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
+#### 注意
+
+* 模型将不会保存关于优化器的超参数.
+
 ## DecisionTreeClassifier
 
 决策树分类器.
@@ -239,6 +321,50 @@ predict(x)
 
 * <b>ValueError</b>: 模型没有训练的错误.
 
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+#### 注意
+
+* 模型将不会加载关于优化器的超参数.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
+#### 参考文献
+
+* [如何存储原始的二进制数据](https://docs.h5py.org/en/2.3/strings.html)
+
+#### 注意
+
+* 模型将不会保存关于优化器的超参数.
+
 ## LinearDiscriminantAnalysis
 
 线性判别分析.
@@ -283,6 +409,42 @@ predict(x)
 #### 异常
 
 * <b>ValueError</b>: 模型没有训练的错误.
+
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+#### 注意
+
+* 模型将不会加载关于优化器的超参数.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
 
 ## LogisticRegression
 
@@ -353,6 +515,46 @@ predict(x)
 
 * <b>ValueError</b>: 模型没有训练的错误.
 
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+#### 注意
+
+* 模型将不会加载关于优化器的超参数.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
+#### 注意
+
+* 模型将不会保存关于优化器的超参数.
+
 ## NaiveBayesClassifier
 
 朴素贝叶斯分类器.
@@ -414,6 +616,46 @@ predict(x, probability=False)
 #### 异常
 
 * <b>ValueError</b>: 模型没有训练的错误.
+
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+#### 注意
+
+* 模型将不会加载关于优化器的超参数.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
+#### 注意
+
+* 模型将不会保存关于优化器的超参数.
 
 ## RadialBasisFunctionNetwork
 
@@ -490,6 +732,46 @@ predict(x)
 
 * <b>ValueError</b>: 模型没有训练的错误.
 
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+#### 注意
+
+* 模型将不会加载关于优化器的超参数.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
+#### 注意
+
+* 模型将不会保存关于优化器的超参数.
+
 ## SuperParentOneDependentEstimator
 
 超父独依赖估计器，一种半朴素贝叶斯分类器.
@@ -552,6 +834,46 @@ predict(x, probability=False)
 #### 异常
 
 * <b>ValueError</b>: 模型没有训练的错误.
+
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+#### 注意
+
+* 模型将不会加载关于优化器的超参数.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
+#### 注意
+
+* 模型将不会保存关于优化器的超参数.
 
 ## SupportVectorClassifier
 
@@ -619,3 +941,43 @@ predict(x)
 #### 异常
 
 * <b>ValueError</b>: 模型没有训练的错误.
+
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+#### 注意
+
+* 模型将不会加载关于优化器的超参数.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
+#### 注意
+
+* 模型将不会保存关于优化器的超参数.
