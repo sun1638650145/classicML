@@ -28,7 +28,7 @@ class Pruner(object):
         raise NotImplementedError
 
     def calculation_accuracy(self, *args, **kwargs):
-        """计算使用预后剪枝操作的之后前的准确率."""
+        """计算使用预(后)剪枝操作的之后(前)的准确率."""
         raise NotImplementedError
 
 
