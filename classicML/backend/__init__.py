@@ -2,6 +2,12 @@ import os
 
 from classicML import CLASSICML_LOGGER
 
+if os.environ['CLASSICML_ENGINE'] == 'CC':
+    from classicML.backend.cc import activations
+    from classicML.backend.cc.activations import __version__
+    CLASSICML_LOGGER.info('后端版本是: {}'.format(__version__))
+else:
+    from classicML.backend.python import activations
 from classicML.backend.python import activations
 from classicML.backend.python import callbacks
 from classicML.backend.python import initializers
@@ -9,8 +15,8 @@ from classicML.backend.python import io
 from classicML.backend.python import kernels
 from classicML.backend.python import losses
 if os.environ['CLASSICML_ENGINE'] == 'CC':
-    from classicML.backend.cc.metrics import __version__
     from classicML.backend.cc import metrics
+    from classicML.backend.cc.metrics import __version__
     CLASSICML_LOGGER.info('后端版本是: {}'.format(__version__))
 else:
     from classicML.backend.python import metrics

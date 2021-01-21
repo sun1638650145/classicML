@@ -6,12 +6,12 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 extension_modules = [
-    # backend.ops模块
+    # backend.activations模块
     Pybind11Extension(
-        'classicML/backend/cc/ops',
-        sorted(glob('classicML/backend/cc/*.cc')),
+        'classicML/backend/cc/activations',
+        sorted(glob('classicML/backend/cc/activations.cc')),
         include_dirs=[
-            '/usr/local/include/eigen3',  # /path/to/eigen3/download
+            '/usr/local/include/eigen3',
         ],
         language='c++',
     ),
@@ -21,6 +21,15 @@ extension_modules = [
         sorted(glob('classicML/backend/cc/metrics.cc')),
         include_dirs=[
             '/usr/local/include/eigen3',
+        ],
+        language='c++',
+    ),
+    # backend.ops模块
+    Pybind11Extension(
+        'classicML/backend/cc/ops',
+        sorted(glob('classicML/backend/cc/*.cc')),
+        include_dirs=[
+            '/usr/local/include/eigen3',  # /path/to/eigen3/download
         ],
         language='c++',
     )

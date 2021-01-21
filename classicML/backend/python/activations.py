@@ -5,14 +5,14 @@ class Activation(object):
     """激活函数基类.
 
     Attributes:
-        name: str, default=None,
+        name: str, default='activation',
             激活函数名称.
 
     Raises:
        NotImplementedError: __call__, diff方法需要用户实现.
     """
     def __init__(self, name=None):
-        self.name = name
+        self.name = 'activation'
 
     def __call__(self, z):
         """函数实现.
