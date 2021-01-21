@@ -28,7 +28,7 @@ extension_modules = [
 
 setup(
     name='classicML',
-    version='0.5.1',
+    version='0.6.0a0',
     description='An easy-to-use ML framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -38,7 +38,7 @@ setup(
     packages=find_packages(),
     ext_modules=extension_modules,
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Programming Language :: C++',
@@ -48,7 +48,7 @@ setup(
     license='Apache Software License',
     cmdclass={'build_ext': build_ext},
     install_requires=[
-        'h5py==2.10.0',
+        'h5py>=2.10.0',
         'matplotlib>=3.3.2',
         'numpy>=1.19.2, <=1.19.4',
         'pandas>=1.1.3, <=1.1.4',

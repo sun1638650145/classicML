@@ -15,12 +15,7 @@
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
 
-class NotImplementedError: public std::exception {
-  public:
-    const char * what() const noexcept override {
-        return "基类没有实现";
-    }
-};
+#include "exceptions.h"
 
 // 评估函数的基类.
 class Metric {
