@@ -7,6 +7,7 @@ cc
 
 .. toctree::
    :maxdepth: 2
-   
+
+   activations
    metrics
    ops

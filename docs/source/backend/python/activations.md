@@ -7,7 +7,7 @@ classicML的激活函数.
 激活函数基类.
 
 ```python
-cml.activations.Activation(name=None)
+cml.activations.Activation(name='activation')
 ```
 
 ### 参数

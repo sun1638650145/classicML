@@ -11,8 +11,8 @@ class Activation(object):
     Raises:
        NotImplementedError: __call__, diff方法需要用户实现.
     """
-    def __init__(self, name=None):
-        self.name = 'activation'
+    def __init__(self, name='activation'):
+        self.name = name
 
     def __call__(self, z):
         """函数实现.
