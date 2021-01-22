@@ -63,3 +63,77 @@ Eigen::MatrixXd Relu::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd 
 
     return da;
 }
+
+Sigmoid::Sigmoid() {
+    this->name = "sigmoid";
+}
+
+Sigmoid::Sigmoid(std::string name) {
+    this->name = std::move(name);
+}
+
+// 经过激活后的张量, 输入为张量.
+Eigen::MatrixXd Sigmoid::PyCall(const Eigen::MatrixXd &z) {
+    Eigen::MatrixXd result(z.rows(), z.cols());
+
+    for (int row = 0; row < z.rows(); row ++) {
+        for (int col = 0; col < z.cols(); col ++) {
+            result(row, col) = 1 / (1 + exp(-z(row, col)));
+        }
+    }
+
+    return result;
+}
+
+// 计算函数的微分, 输入为输出的张量, 输入的张量和真实的标签.
+Eigen::MatrixXd Sigmoid::Diff(const Eigen::MatrixXd &output,
+                              const Eigen::MatrixXd &a,
+                              const Eigen::MatrixXd &y_true) {
+    Eigen::MatrixXd error = y_true - output;
+    Eigen::MatrixXd da = a;
+
+    for (int row = 0; row < a.rows(); row ++) {
+        for (int col = 0; col < a.cols(); col ++) {
+            da(row, col) *= (1 - a(row, col));
+            da(row, col) *= error(row, col);
+        }
+    }
+
+    return da;
+}
+
+Softmax::Softmax() {
+    this->name = "softmax";
+}
+
+Softmax::Softmax(std::string name) {
+    this->name = std::move(name);
+}
+
+// 经过激活后的张量, 输入为张量.
+Eigen::MatrixXd Softmax::PyCall(const Eigen::MatrixXd &z) {
+    Eigen::MatrixXd temp_z = z;
+    Eigen::MatrixXd result = z;
+
+    for (int row = 0; row < z.rows(); row ++) {
+        for (int col = 0; col < z.cols(); col ++) {
+            temp_z(row, col) -= z.maxCoeff();  // 为了避免溢出减去最大值
+            temp_z(row, col) = exp(temp_z(row, col));
+        }
+    }
+
+    for (int row = 0; row < z.rows(); row ++) {
+        for (int col = 0; col < z.cols(); col ++) {
+            result(row, col) = temp_z(row, col) / temp_z.row(row).sum();
+        }
+    }
+
+    return result;
+}
+
+// Softmax函数的微分, 输入为输出的张量, 输入的张量和真实的标签.
+Eigen::MatrixXd Softmax::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
+    Eigen::MatrixXd da = a - output;
+
+    return da;
+}

@@ -1,4 +1,4 @@
-"""这个例子将展示如何使用BP神经网络构建多分类的神经网络"""
+"""这个例子将展示如何使用BP神经网络构建多分类的神经网络."""
 import sys
 import numpy as np
 import pandas as pd

@@ -6,8 +6,8 @@ import numpy as np
 
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.activations import relu
-    from classicML.backend.python.activations import sigmoid
-    from classicML.backend.python.activations import softmax
+    from classicML.backend.cc.activations import sigmoid
+    from classicML.backend.cc.activations import softmax
 else:
     from classicML.backend.python.activations import relu
     from classicML.backend.python.activations import sigmoid

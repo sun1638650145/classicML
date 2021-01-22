@@ -1,4 +1,4 @@
-"""这个例子将展示如何使用逻辑回归"""
+"""这个例子将展示如何使用逻辑回归."""
 import sys
 import pandas as pd
 import classicML as cml
