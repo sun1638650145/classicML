@@ -132,7 +132,7 @@ diff(output, a, *args, **kwargs)
 
 * <b>output</b>: 一个Numpy数组，输出张量.
 * <b>a</b>: 一个Numpy数组，输入张量.
-* <b>y_true</b>: numpy.ndarray，真实的标签.
+* <b>y_true</b>: 一个Numpy数组，真实的标签.
 
 #### 返回
 
