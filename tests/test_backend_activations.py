@@ -12,8 +12,6 @@ from classicML.backend.cc.activations import Activation as CcActivation
 from classicML.backend.cc.activations import Relu as CcRelu
 from classicML.backend.cc.activations import Sigmoid as CcSigmoid
 from classicML.backend.cc.activations import Softmax as CcSoftmax
-from classicML.backend.cc.activations import Activation as CcActivation
-from classicML.backend.cc.activations import Relu as CcRelu
 
 from classicML.backend.python.activations import Activation as PyActivation
 from classicML.backend.python.activations import Relu as PyRelu
