@@ -9,8 +9,6 @@
 #ifndef LOSSES_H
 #define LOSSES_H
 
-#include <iostream>
-
 #include "Eigen/Dense"
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
@@ -43,6 +41,32 @@ class BinaryCrossentropy: public Loss {
     std::string name;
 };
 
+// 多分类交叉熵损失函数.
+class CategoricalCrossentropy: public Loss {
+  public:
+    CategoricalCrossentropy();
+    explicit CategoricalCrossentropy(std::string name);
+
+    double PyCall(const Eigen::MatrixXd &y_pred,
+                  const Eigen::MatrixXd &y_true) override;
+
+  public:
+    std::string name;
+};
+
+// 交叉熵损失函数.
+class Crossentropy: public Loss {
+  public:
+    Crossentropy();
+    explicit Crossentropy(std::string name);
+
+    double PyCall(const Eigen::MatrixXd &y_pred,
+                  const Eigen::MatrixXd &y_true) override;
+
+  public:
+    std::string name;
+};
+
 PYBIND11_MODULE(losses, m) {
     m.doc() = R"pbdoc(classicML的损失函数, 以CC实现)pbdoc";
 
@@ -60,12 +84,12 @@ PYBIND11_MODULE(losses, m) {
        NotImplementedError: __call__方法需要用户实现.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
-    Arguments:
-            name: str, default=None,
+        Arguments:
+            name: str, default='loss',
                 损失函数名称.
 )pbdoc")
         .def(pybind11::init<std::string>(), R"pbdoc(
-    Arguments:
+        Arguments:
             name: str, default=None,
                 损失函数名称.
 )pbdoc", pybind11::arg("name"))
@@ -76,18 +100,58 @@ PYBIND11_MODULE(losses, m) {
 二分类交叉熵损失函数.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
-    Arguments:
-            name: str, default=None,
+        Arguments:
+            name: str, default='binary_crossentropy',
                 损失函数名称.
 )pbdoc")
         .def(pybind11::init<std::string>(), R"pbdoc(
-    Arguments:
-            name: str, default=None,
+        Arguments:
+            name: str, default='binary_crossentropy',
                 损失函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readonly("name", &BinaryCrossentropy::name)
-        .def("__call__", &BinaryCrossentropy::PyCall, pybind11::arg("y_pred"), pybind11::arg("y_true"));
+        .def("__call__", &BinaryCrossentropy::PyCall,
+             pybind11::arg("y_pred"),
+             pybind11::arg("y_true"));
 
-    m.attr("__version__") = "backend.cc.losses.0.1";
+    pybind11::class_<CategoricalCrossentropy, Loss>(m, "CategoricalCrossentropy", pybind11::dynamic_attr(), R"pbdoc(
+多分类交叉熵损失函数.
+)pbdoc")
+        .def(pybind11::init(), R"pbdoc(
+        Arguments:
+            name: str, default='categorical_crossentropy',
+                损失函数名称.
+)pbdoc")
+        .def(pybind11::init<std::string>(), R"pbdoc(
+        Arguments:
+            name: str, default='categorical_crossentropy',
+                损失函数名称.
+)pbdoc", pybind11::arg("name"))
+        .def_readonly("name", &CategoricalCrossentropy::name)
+        .def("__call__", &CategoricalCrossentropy::PyCall,
+             pybind11::arg("y_pred"),
+             pybind11::arg("y_true"));
+
+    pybind11::class_<Crossentropy, Loss>(m, "Crossentropy", pybind11::dynamic_attr(), R"pbdoc(
+交叉熵损失函数,
+将根据标签的实际形状自动使用二分类或者多分类损失函数.
+)pbdoc")
+        .def(pybind11::init(), R"pbdoc(
+        Arguments:
+            name: str, default='crossentropy',
+                损失函数名称.
+)pbdoc")
+        .def(pybind11::init<std::string>(), R"pbdoc(
+        Arguments:
+            name: str, default='crossentropy',
+                损失函数名称.
+)pbdoc", pybind11::arg("name"))
+        .def_readonly("name", &Crossentropy::name)
+        .def("__call__", &Crossentropy::PyCall,
+             pybind11::arg("y_pred"),
+             pybind11::arg("y_true"));
+
+    m.attr("__version__") = "backend.cc.losses.0.2";
 }
+
 #endif /* LOSSES_H */
