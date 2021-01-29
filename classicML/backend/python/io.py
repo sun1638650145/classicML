@@ -8,7 +8,7 @@ import numpy as np
 from classicML import CLASSICML_LOGGER
 from classicML import __version__ as cml_version
 
-__version__ = 'backend.io.0.4'
+__version__ = 'backend.io.0.5'
 
 min_cml_version = '0.5'
 min__version__ = 'backend.io.0.3'
@@ -24,8 +24,8 @@ def _parse(model_name, fp):
     """
     description_gp = fp['description']
 
-    file_cml_version = re.findall('\\d+\\.\\d+\\.\\d+', description_gp.attrs['version'])[0]
-    file_backend_version = 'backend.io' + re.findall('\\d+\\.\\d+', description_gp.attrs['version'])[-1]
+    file_cml_version = re.findall('\\d+\\.\\d+(?:\\.\\d+)*', description_gp.attrs['version'])[0]
+    file_backend_version = 'backend.io.' + re.findall('\\d+\\.\\d+', description_gp.attrs['version'])[-1]
 
     if (file_cml_version < min_cml_version) or (file_backend_version < min__version__):
         CLASSICML_LOGGER.error('文件核验失败, 模型版本过低')
