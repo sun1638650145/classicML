@@ -11,6 +11,15 @@ extension_modules = [
         'classicML/backend/cc/activations',
         sorted(glob('classicML/backend/cc/activations.cc')),
         include_dirs=[
+            '/usr/local/include/eigen3',  # /path/to/eigen3/download
+        ],
+        language='c++',
+    ),
+    # backend.losses模块
+    Pybind11Extension(
+        'classicML/backend/cc/losses',
+        sorted(glob('classicML/backend/cc/losses.cc')),
+        include_dirs=[
             '/usr/local/include/eigen3',
         ],
         language='c++',
@@ -29,7 +38,7 @@ extension_modules = [
         'classicML/backend/cc/ops',
         sorted(glob('classicML/backend/cc/*.cc')),
         include_dirs=[
-            '/usr/local/include/eigen3',  # /path/to/eigen3/download
+            '/usr/local/include/eigen3',
         ],
         language='c++',
     )
@@ -37,7 +46,7 @@ extension_modules = [
 
 setup(
     name='classicML',
-    version='0.6.0a0',
+    version='0.6a1',
     description='An easy-to-use ML framework',
     long_description=long_description,
     long_description_content_type='text/markdown',

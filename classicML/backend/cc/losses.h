@@ -9,6 +9,8 @@
 #ifndef LOSSES_H
 #define LOSSES_H
 
+#include <cmath>
+
 #include "Eigen/Dense"
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
@@ -65,6 +67,41 @@ class Crossentropy: public Loss {
 
   public:
     std::string name;
+};
+
+// 对数似然损失函数.
+class LogLikelihood: public Loss {
+  public:
+    LogLikelihood();
+    explicit LogLikelihood(std::string name);
+
+    double PyCall(const Eigen::MatrixXd &y_true,
+                  const Eigen::MatrixXd &beta,
+                  const Eigen::MatrixXd &x_hat);
+
+  public:
+    std::string name;
+};
+
+// 均方误差损失函数.
+class MeanSquaredError: public Loss {
+  public:
+    MeanSquaredError();
+    explicit MeanSquaredError(std::string name);
+
+    double PyCall(const Eigen::MatrixXd &y_pred,
+                  const Eigen::MatrixXd &y_true) override;
+
+  public:
+    std::string name;
+};
+
+// Aliases.
+// 受限于CPP语言特性, 必须定义一个子类, 而不能直接使用别名.
+class MSE: public MeanSquaredError {
+public:
+    MSE();
+    explicit MSE(std::string name);
 };
 
 PYBIND11_MODULE(losses, m) {
@@ -151,7 +188,60 @@ PYBIND11_MODULE(losses, m) {
              pybind11::arg("y_pred"),
              pybind11::arg("y_true"));
 
-    m.attr("__version__") = "backend.cc.losses.0.2";
+    pybind11::class_<LogLikelihood, Loss>(m, "LogLikelihood", pybind11::dynamic_attr(), R"pbdoc(
+对数似然损失函数.
+)pbdoc")
+        .def(pybind11::init(), R"pbdoc(
+        Arguments:
+            name: str, default='log_likelihood',
+                损失函数名称.
+)pbdoc")
+        .def(pybind11::init<std::string>(), R"pbdoc(
+        Arguments:
+            name: str, default='log_likelihood',
+                损失函数名称.
+)pbdoc")
+        .def_readonly("name", &LogLikelihood::name)
+        .def("__call__", &LogLikelihood::PyCall,
+             pybind11::arg("y_true"),
+             pybind11::arg("beta"),
+             pybind11::arg("x_hat"));
+
+    pybind11::class_<MeanSquaredError, Loss>(m, "MeanSquaredError", pybind11::dynamic_attr(), R"pbdoc(
+均方误差损失函数.
+)pbdoc")
+        .def(pybind11::init(), R"pbdoc(
+        Arguments:
+            name: str, default='mean_squared_error',
+                损失函数名称.
+)pbdoc")
+        .def(pybind11::init<std::string>(), R"pbdoc(
+        Arguments:
+            name: str, default='mean_squared_error',
+                损失函数名称.
+)pbdoc")
+        .def_readonly("name", &MeanSquaredError::name)
+        .def("__call__", &MeanSquaredError::PyCall,
+             pybind11::arg("y_pred"),
+             pybind11::arg("y_true"));
+
+    // Aliases.
+    pybind11::class_<MSE, Loss>(m, "MSE", pybind11::dynamic_attr(), R"pbdoc(
+均方误差损失函数.
+)pbdoc")
+        .def(pybind11::init(), R"pbdoc(
+        Arguments:
+            name: str, default='mean_squared_error',
+                损失函数名称.
+)pbdoc")
+        .def(pybind11::init<std::string>(), R"pbdoc(
+        Arguments:
+            name: str, default='mean_squared_error',
+                损失函数名称.
+)pbdoc")
+        .def_readonly("name", &MSE::name);
+
+    m.attr("__version__") = "backend.cc.losses.0.3";
 }
 
 #endif /* LOSSES_H */

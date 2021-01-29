@@ -13,7 +13,12 @@ from classicML.backend.python import callbacks
 from classicML.backend.python import initializers
 from classicML.backend.python import io
 from classicML.backend.python import kernels
-from classicML.backend.python import losses
+if os.environ['CLASSICML_ENGINE'] == 'CC':
+    from classicML.backend.cc import losses
+    from classicML.backend.cc.losses import __version__
+    CLASSICML_LOGGER.info('后端版本是: {}'.format(__version__))
+else:
+    from classicML.backend.python import losses
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc import metrics
     from classicML.backend.cc.metrics import __version__
