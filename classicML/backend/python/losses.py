@@ -66,6 +66,9 @@ class CategoricalCrossentropy(Loss):
         Returns:
             当前的损失值.
         """
+        if y_true.ndim == 1:
+            y_true = y_true.reshape(-1, 1)
+
         y_shape = y_true.shape[0]
         loss = -np.sum(y_true * np.log(y_pred)) / y_shape
 
