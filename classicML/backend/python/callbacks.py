@@ -10,6 +10,7 @@ class History(object):
             使用评估函数的名称.
         loss: list, 损失值组成的列表
         metric: list, 评估值组成的列表
+
     Notes:
         - 使用该函数记录数据, 会导致运行速度的降低.
     """

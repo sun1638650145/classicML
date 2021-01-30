@@ -16,6 +16,7 @@ class ProgressBar(object):
         metric: str, classicML.metrics.Metric 实例,
             模型使用的评估函数.
     """
+
     def __init__(self, epochs, loss, metric):
         """
         Arguments:
