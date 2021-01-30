@@ -531,7 +531,7 @@ class GradientDescent(Optimizer):
             beta = self._update_parameters(beta, grad)
             # 以下的操作是为了更好可视化的, 不参与实际优化
             if self._progressbar or callbacks is not None:
-                if loss.name is 'log_likelihood':
+                if loss.name == 'log_likelihood':
                     loss_value = loss(y, beta, x_hat)
                 else:
                     loss_value = loss(y_pred, y)
@@ -643,7 +643,7 @@ class NewtonMethod(Optimizer):
             beta = self._update_parameters(beta, grad, hessian)
             # 以下的操作是为了更好可视化的, 不参与实际优化
             if self._progressbar or callbacks is not None:
-                if loss.name is 'log_likelihood':
+                if loss.name == 'log_likelihood':
                     loss_value = loss(y, beta, x_hat)
                 else:
                     loss_value = loss(y_pred, y)

@@ -92,7 +92,7 @@ double LogLikelihood::PyCall(const Eigen::MatrixXd &y_true,
                              const Eigen::MatrixXd &beta,
                              const Eigen::MatrixXd &x_hat) {
     Eigen::MatrixXd temp = x_hat.adjoint() * beta;
-    Eigen::MatrixXd loss = (-y_true * temp).array() + (1 + temp.array().exp()).log().value();
+    Eigen::MatrixXd loss = -y_true.array() * temp.array() + (1 + temp.array().exp()).log();
 
     return loss.sum();
 }
