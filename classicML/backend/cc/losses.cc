@@ -34,11 +34,11 @@ double BinaryCrossentropy::PyCall(const Eigen::MatrixXd &y_pred,
                                   const Eigen::MatrixXd &y_true) {
     int y_shape = y_true.rows();
 
-    Eigen::MatrixXd loss_l = ((-y_true.transpose()).adjoint().array() * y_pred.array().log());
+    Eigen::MatrixXd loss_l = ((y_true.transpose()).adjoint().array() * y_pred.array().log());
     Eigen::MatrixXd loss_r = (1 - y_true.array().transpose().array());
     loss_r = loss_r.adjoint().array() * (1 - y_pred.array()).log();
 
-    return (loss_l.sum() + loss_r.sum()) / y_shape;
+    return -(loss_l.sum() + loss_r.sum()) / y_shape;
 }
 
 CategoricalCrossentropy::CategoricalCrossentropy() {
@@ -53,8 +53,8 @@ CategoricalCrossentropy::CategoricalCrossentropy(std::string name) {
 double CategoricalCrossentropy::PyCall(const Eigen::MatrixXd &y_pred,
                                        const Eigen::MatrixXd &y_true) {
     int y_shape = y_true.rows();
-
-    Eigen::MatrixXd loss = y_true.array() * y_pred.array().log();
+    Eigen::MatrixXd temp = y_pred.array().log();
+    Eigen::MatrixXd loss = y_true * temp.transpose();
 
     return -loss.sum() / y_shape;
 }
@@ -91,7 +91,7 @@ LogLikelihood::LogLikelihood(std::string name) {
 double LogLikelihood::PyCall(const Eigen::MatrixXd &y_true,
                              const Eigen::MatrixXd &beta,
                              const Eigen::MatrixXd &x_hat) {
-    Eigen::MatrixXd temp = x_hat.adjoint() * beta;
+    Eigen::MatrixXd temp = x_hat * beta;
     Eigen::MatrixXd loss = -y_true.array() * temp.array() + (1 + temp.array().exp()).log();
 
     return loss.sum();
