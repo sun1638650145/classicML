@@ -241,7 +241,7 @@ PYBIND11_MODULE(losses, m) {
 )pbdoc")
         .def_readonly("name", &MSE::name);
 
-    m.attr("__version__") = "backend.cc.losses.0.4";
+    m.attr("__version__") = "backend.cc.losses.0.5";
 }
 
 #endif /* LOSSES_H */

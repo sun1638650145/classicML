@@ -54,7 +54,7 @@ double CategoricalCrossentropy::PyCall(const Eigen::MatrixXd &y_pred,
                                        const Eigen::MatrixXd &y_true) {
     int y_shape = y_true.rows();
     Eigen::MatrixXd temp = y_pred.array().log();
-    Eigen::MatrixXd loss = y_true * temp.transpose();
+    Eigen::MatrixXd loss = y_true.array() * temp.array();
 
     return -loss.sum() / y_shape;
 }
