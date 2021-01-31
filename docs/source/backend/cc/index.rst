@@ -8,6 +8,7 @@ cc
 .. toctree::
    :maxdepth: 2
 
-   activations
+   activation
+   losses
    metrics
    ops

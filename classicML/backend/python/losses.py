@@ -6,13 +6,13 @@ class Loss(object):
     """损失函数的基类.
 
     Attributes:
-        name: str, default=None,
+        name: str, default='loss',
             损失函数名称.
 
     Raises:
        NotImplementedError: __call__方法需要用户实现.
     """
-    def __init__(self, name=None):
+    def __init__(self, name='loss'):
         """
         Arguments:
             name: str, default=None,
