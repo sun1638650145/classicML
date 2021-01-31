@@ -22,7 +22,7 @@ class TestLoss(object):
         cc_loss = CcLoss()
         py_loss = PyLoss()
 
-        assert cc_loss.name != py_loss.name
+        assert cc_loss.name == py_loss.name
 
     def test_crossentropy(self):
         cc_ce = CcCrossentropy('cc_ce')
