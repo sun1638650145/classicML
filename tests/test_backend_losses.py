@@ -14,7 +14,7 @@ from classicML.backend.python.losses import Crossentropy as PyCrossentropy
 from classicML.backend.python.losses import LogLikelihood as PyLogLikelihood
 from classicML.backend.python.losses import MeanSquaredError as PyMeanSquaredError
 
-THRESHOLD = 1e-15
+THRESHOLD = 1e-14
 
 
 class TestLoss(object):
