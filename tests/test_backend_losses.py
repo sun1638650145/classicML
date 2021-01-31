@@ -29,7 +29,7 @@ class TestLoss(object):
         py_ce = PyCrossentropy('py_ce')
 
         binary_y_pred = np.random.random(size=[10, 1])
-        binary_y_true = np.random.randint(low=0, high=2, size=[10])
+        binary_y_true = np.random.random(size=[10, 1])
 
         cat_y_pred = np.random.random(size=[10, 5])
         cat_y_true = np.random.randint(low=0, high=5, size=10)
