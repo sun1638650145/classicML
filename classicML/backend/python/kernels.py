@@ -86,7 +86,7 @@ class Polynomial(Kernel):
     """多项式核函数.
 
     Attributes:
-        name: str, default='rbf',
+        name: str, default='poly',
             核函数名称.
         gamma: float, default=1.0,
             核函数系数.
