@@ -47,7 +47,6 @@ class Polynomial: public Kernel {
     Polynomial();
     explicit Polynomial(std::string name, double gamma, int degree);
 
-    // TODO(Steve R. Sun, tag:code): 增加overload函数.
     Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
                            const Eigen::MatrixXd &x_j) override;
 
@@ -55,6 +54,20 @@ class Polynomial: public Kernel {
     std::string name;
     double gamma;
     int degree;
+};
+
+// 径向基核函数.
+class RBF: public Kernel {
+  public:
+    RBF();
+    explicit RBF(std::string name, double gamma);
+
+    Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
+                           const Eigen::MatrixXd &x_j) override;
+
+  public:
+    std::string name;
+    double gamma;
 };
 
 PYBIND11_MODULE(kernels, m) {
@@ -130,13 +143,42 @@ PYBIND11_MODULE(kernels, m) {
                 核函数系数.
             degree: int, default=3,
                 多项式的次数.
-)pbdoc", pybind11::arg("name"), pybind11::arg("gamma"), pybind11::arg("degree"))
+)pbdoc",
+             pybind11::arg("name")="poly", pybind11::arg("gamma")=1.0, pybind11::arg("degree")=3)
         .def_readonly("name", &Polynomial::name)
         .def_readonly("gamma", &Polynomial::gamma)
         .def_readonly("degree", &Polynomial::degree)
         .def("__call__", &Polynomial::PyCall, pybind11::arg("x_i"), pybind11::arg("x_j"));
 
-    m.attr("__version__") = "backend.cc.kernels.0.1";
+    pybind11::class_<RBF, Kernel>(m, "RBF", pybind11::dynamic_attr(), R"pbdoc(
+径向基核函数.
+
+    Attributes:
+        name: str, default='rbf',
+            核函数名称.
+        gamma: float, default=1.0,
+            核函数系数.
+)pbdoc")
+        .def(pybind11::init(), R"pbdoc(
+        Arguments:
+            name: str, default='rbf',
+                核函数名称.
+            gamma: float, default=1.0,
+                核函数系数.
+)pbdoc")
+        .def(pybind11::init<std::string, double>(), R"pbdoc(
+        Arguments:
+            name: str, default='rbf',
+                核函数名称.
+            gamma: float, default=1.0,
+                核函数系数.
+)pbdoc",
+             pybind11::arg("name")="rbf", pybind11::arg("gamma")=1.0)
+        .def_readonly("name", &RBF::name)
+        .def_readonly("gamma", &RBF::gamma)
+        .def("__call__", &RBF::PyCall, pybind11::arg("x_i"), pybind11::arg("x_j"));
+
+    m.attr("__version__") = "backend.cc.kernels.0.2";
 }
 
 #endif /* KERNELS_H */
