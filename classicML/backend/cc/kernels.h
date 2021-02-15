@@ -255,7 +255,7 @@ Sigmoid核函数.
             theta: float, default=-1.0,
                 核函数参数.
 )pbdoc")
-        .def(pybind11::init<std::string, double, int, double>(), R"pbdoc(
+        .def(pybind11::init<std::string, double, double, double>(), R"pbdoc(
         Arguments:
             name: str, default='sigmoid',
                 核函数名称.

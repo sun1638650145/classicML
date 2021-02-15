@@ -2,33 +2,36 @@ import os
 
 from classicML import CLASSICML_LOGGER
 
+# python和cc多后端模块
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc import activations
-    from classicML.backend.cc.activations import __version__
-    CLASSICML_LOGGER.info('后端版本是: {}'.format(__version__))
+    from classicML.backend.cc import kernels
+    from classicML.backend.cc import losses
+    from classicML.backend.cc import metrics
+
+    from classicML.backend.cc.activations import activations__version__
+    from classicML.backend.cc.kernels import kernels__version__
+    from classicML.backend.cc.losses import losses__version__
+    from classicML.backend.cc.metrics import metrics__version__
+
+    CLASSICML_LOGGER.info('后端版本是: {}'.format(activations__version__))
+    CLASSICML_LOGGER.info('后端版本是: {}'.format(kernels__version__))
+    CLASSICML_LOGGER.info('后端版本是: {}'.format(losses__version__))
+    CLASSICML_LOGGER.info('后端版本是: {}'.format(metrics__version__))
 else:
     from classicML.backend.python import activations
-from classicML.backend.python import activations
+    from classicML.backend.python import kernels
+    from classicML.backend.python import losses
+    from classicML.backend.python import metrics
+
+# python后端模块
+from classicML.backend.python import optimizers
+from classicML.backend.python import tree
 from classicML.backend.python import callbacks
 from classicML.backend.python import initializers
 from classicML.backend.python import io
-from classicML.backend.python import kernels
-if os.environ['CLASSICML_ENGINE'] == 'CC':
-    from classicML.backend.cc import losses
-    from classicML.backend.cc.losses import __version__
-    CLASSICML_LOGGER.info('后端版本是: {}'.format(__version__))
-else:
-    from classicML.backend.python import losses
-if os.environ['CLASSICML_ENGINE'] == 'CC':
-    from classicML.backend.cc import metrics
-    from classicML.backend.cc.metrics import __version__
-    CLASSICML_LOGGER.info('后端版本是: {}'.format(__version__))
-else:
-    from classicML.backend.python import metrics
 
-from classicML.backend.python import optimizers
-from classicML.backend.python import tree
-
+# ops模块
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_calculate_error
     from classicML.backend.cc.ops import cc_clip_alpha
@@ -52,8 +55,8 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
     from classicML.backend.cc.ops import cc_type_of_target as type_of_target
 
-    from classicML.backend.cc.ops import __version__
-    CLASSICML_LOGGER.info('后端版本是: {}'.format(__version__))
+    from classicML.backend.cc.ops import ops__version__
+    CLASSICML_LOGGER.info('后端版本是: {}'.format(ops__version__))
 else:
     from classicML.backend.python.ops import calculate_error
     from classicML.backend.python.ops import clip_alpha
