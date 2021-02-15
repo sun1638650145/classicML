@@ -24,43 +24,6 @@ class Kernel(object):
         raise NotImplementedError
 
 
-class RBF(Kernel):
-    """径向基核函数.
-
-    Attributes:
-        name: str, default='rbf',
-            核函数名称.
-        gamma: float, default=1.0,
-            核函数系数.
-    """
-    def __init__(self, name='rbf', gamma=1.0):
-        super(RBF, self).__init__(name=name)
-
-        self.gamma = gamma
-
-    def __call__(self, x_i, x_j):
-        """函数实现.
-
-        Arguments:
-            x_i: numpy.ndarray, 第一组特征向量.
-            x_j: numpy.ndarray, 第二组特征向量.
-
-        Returns:
-            核函数映射后的特征向量.
-        """
-        kappa = np.exp(self.gamma * -np.sum(np.power(x_j - x_i, 2), axis=1))
-
-        return np.asmatrix(kappa)
-
-
-class Gaussian(RBF):
-    """高斯核函数.
-        具体实现参看径向基核函数.
-    """
-    def __init__(self, name='gaussian', gamma=1.0):
-        super(Gaussian, self).__init__(name=name, gamma=gamma)
-
-
 class Linear(Kernel):
     """线性核函数.
     """
@@ -114,11 +77,48 @@ class Polynomial(Kernel):
         return np.asmatrix(kappa)
 
 
+class RBF(Kernel):
+    """径向基核函数.
+
+    Attributes:
+        name: str, default='rbf',
+            核函数名称.
+        gamma: float, default=1.0,
+            核函数系数.
+    """
+    def __init__(self, name='rbf', gamma=1.0):
+        super(RBF, self).__init__(name=name)
+
+        self.gamma = gamma
+
+    def __call__(self, x_i, x_j):
+        """函数实现.
+
+        Arguments:
+            x_i: numpy.ndarray, 第一组特征向量.
+            x_j: numpy.ndarray, 第二组特征向量.
+
+        Returns:
+            核函数映射后的特征向量.
+        """
+        kappa = np.exp(self.gamma * -np.sum(np.power(x_j - x_i, 2), axis=1))
+
+        return np.asmatrix(kappa)
+
+
+class Gaussian(RBF):
+    """高斯核函数.
+        具体实现参看径向基核函数.
+    """
+    def __init__(self, name='gaussian', gamma=1.0):
+        super(Gaussian, self).__init__(name=name, gamma=gamma)
+
+
 class Sigmoid(Kernel):
     """Sigmoid核函数.
 
     Attributes:
-        name: str, default='rbf',
+        name: str, default='sigmoid',
             核函数名称.
         gamma: float, default=1.0,
             核函数系数.

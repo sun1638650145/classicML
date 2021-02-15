@@ -78,3 +78,47 @@ Eigen::MatrixXd RBF::PyCall(const Eigen::MatrixXd &x_i,
 
     return kappa;
 }
+
+Gaussian::Gaussian() {
+    this->name = "gaussian";
+    this->gamma = 1.0;
+}
+
+Gaussian::Gaussian(std::string name, double gamma) {
+    this->name = std::move(name);
+    this->gamma = gamma;
+}
+
+// 返回核函数映射后的特征向量, 输入为两组特征张量(两个张量的形状必须一致).
+Eigen::MatrixXd Gaussian::PyCall(const Eigen::MatrixXd &x_i,
+                            const Eigen::MatrixXd &x_j) {
+    Eigen::MatrixXd kappa = (x_j - x_i).array().pow(2);
+    kappa = -kappa.rowwise().sum();
+    kappa = (this->gamma * kappa).array().exp();
+
+    return kappa;
+}
+
+Sigmoid::Sigmoid() {
+    this->name = "sigmoid";
+    this->gamma = 1.0;
+    this->beta = 1.0;
+    this->theta = -1.0;
+}
+
+Sigmoid::Sigmoid(std::string name, double gamma, double beta, double theta) {
+    this->name = std::move(name);
+    this->gamma = gamma;
+    this->beta = beta;
+    this->theta = theta;
+}
+
+// 返回核函数映射后的特征向量, 输入为两组特征张量(两个张量的形状必须一致).
+Eigen::MatrixXd Sigmoid::PyCall(const Eigen::MatrixXd &x_i,
+                                const Eigen::MatrixXd &x_j) {
+    Eigen::MatrixXd kappa = this->beta * (x_j * x_i.transpose()).array() + this->theta;
+    kappa = kappa.array().tanh();
+    kappa = this->gamma * kappa;
+
+    return kappa;
+}
