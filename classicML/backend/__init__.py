@@ -5,9 +5,14 @@ from classicML import CLASSICML_LOGGER
 # python和cc多后端模块
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc import activations
+    from classicML.backend.python import callbacks
+    from classicML.backend.python import initializers
+    from classicML.backend.python import io
     from classicML.backend.cc import kernels
     from classicML.backend.cc import losses
     from classicML.backend.cc import metrics
+    from classicML.backend.python import optimizers
+    from classicML.backend.python import tree
 
     from classicML.backend.cc.activations import activations__version__
     from classicML.backend.cc.kernels import kernels__version__
@@ -20,16 +25,14 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     CLASSICML_LOGGER.info('后端版本是: {}'.format(metrics__version__))
 else:
     from classicML.backend.python import activations
+    from classicML.backend.python import callbacks
+    from classicML.backend.python import initializers
+    from classicML.backend.python import io
     from classicML.backend.python import kernels
     from classicML.backend.python import losses
     from classicML.backend.python import metrics
-
-# python后端模块
-from classicML.backend.python import optimizers
-from classicML.backend.python import tree
-from classicML.backend.python import callbacks
-from classicML.backend.python import initializers
-from classicML.backend.python import io
+    from classicML.backend.python import optimizers
+    from classicML.backend.python import tree
 
 # ops模块
 if os.environ['CLASSICML_ENGINE'] == 'CC':

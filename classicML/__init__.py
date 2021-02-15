@@ -1,80 +1,44 @@
+"""An easy-to-use ML framework."""
+__version__ = '0.6a2'
+
 import os
+import logging
 
-from classicML import CLASSICML_LOGGER
+# 配置默认环境变量
+os.environ.setdefault('CLASSICML_ENGINE', 'Python')
+os.environ.setdefault('CLASSICML_FONT', 'Arial Unicode MS')
+# 系统logger
+logging.basicConfig(level=logging.INFO)
+CLASSICML_LOGGER = logging.getLogger(name='classicML')
+CLASSICML_LOGGER.info('正在使用 {} 引擎'.format(os.environ['CLASSICML_ENGINE']))
 
-# python和cc多后端模块
-if os.environ['CLASSICML_ENGINE'] == 'CC':
-    from classicML.backend.cc import activations
-    from classicML.backend.python import callbacks
-    from classicML.backend.python import initializers
-    from classicML.backend.python import io
-    from classicML.backend.cc import kernels
-    from classicML.backend.cc import losses
-    from classicML.backend.cc import metrics
-    from classicML.backend.python import optimizers
-    from classicML.backend.python import tree
+from classicML.api import models
+from classicML.api import plots
 
-    from classicML.backend.cc.activations import activations__version__
-    from classicML.backend.cc.kernels import kernels__version__
-    from classicML.backend.cc.losses import losses__version__
-    from classicML.backend.cc.metrics import metrics__version__
+from classicML.api import AveragedOneDependentEstimator
+from classicML.api import AODE
+from classicML.api import BackPropagationNeuralNetwork
+from classicML.api import BPNN
+from classicML.api import DecisionTreeClassifier
+from classicML.api import LinearDiscriminantAnalysis
+from classicML.api import LDA
+from classicML.api import LogisticRegression
+from classicML.api import NaiveBayesClassifier
+from classicML.api import NB
+from classicML.api import RadialBasisFunctionNetwork
+from classicML.api import RBF
+from classicML.api import SuperParentOneDependentEstimator
+from classicML.api import SPODE
+from classicML.api import SupportVectorClassifier
+from classicML.api import SVC
 
-    CLASSICML_LOGGER.info('后端版本是: {}'.format(activations__version__))
-    CLASSICML_LOGGER.info('后端版本是: {}'.format(kernels__version__))
-    CLASSICML_LOGGER.info('后端版本是: {}'.format(losses__version__))
-    CLASSICML_LOGGER.info('后端版本是: {}'.format(metrics__version__))
-else:
-    from classicML.backend.python import activations
-    from classicML.backend.python import callbacks
-    from classicML.backend.python import initializers
-    from classicML.backend.python import io
-    from classicML.backend.python import kernels
-    from classicML.backend.python import losses
-    from classicML.backend.python import metrics
-    from classicML.backend.python import optimizers
-    from classicML.backend.python import tree
+from classicML.backend import activations
+from classicML.backend import callbacks
+from classicML.backend import initializers
+from classicML.backend import io
+from classicML.backend import kernels
+from classicML.backend import losses
+from classicML.backend import metrics
+from classicML.backend import optimizers
 
-# ops模块
-if os.environ['CLASSICML_ENGINE'] == 'CC':
-    from classicML.backend.cc.ops import cc_calculate_error
-    from classicML.backend.cc.ops import cc_clip_alpha
-    from classicML.backend.cc.ops import cc_get_conditional_probability
-    from classicML.backend.cc.ops import cc_get_dependent_prior_probability
-    from classicML.backend.cc.ops import cc_get_prior_probability
-    from classicML.backend.cc.ops import cc_get_probability_density
-    from classicML.backend.cc.ops import cc_get_w
-    from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
-    from classicML.backend.cc.ops import cc_select_second_alpha
-    from classicML.backend.cc.ops import cc_type_of_target
-
-    from classicML.backend.cc.ops import cc_calculate_error as calculate_error
-    from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
-    from classicML.backend.cc.ops import cc_get_conditional_probability as get_conditional_probability
-    from classicML.backend.cc.ops import cc_get_dependent_prior_probability as get_dependent_prior_probability
-    from classicML.backend.cc.ops import cc_get_prior_probability as get_prior_probability
-    from classicML.backend.cc.ops import cc_get_probability_density as get_probability_density
-    from classicML.backend.cc.ops import cc_get_w as get_w
-    from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix as get_within_class_scatter_matrix
-    from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
-    from classicML.backend.cc.ops import cc_type_of_target as type_of_target
-
-    from classicML.backend.cc.ops import ops__version__
-    CLASSICML_LOGGER.info('后端版本是: {}'.format(ops__version__))
-else:
-    from classicML.backend.python.ops import calculate_error
-    from classicML.backend.python.ops import clip_alpha
-    from classicML.backend.python.ops import get_conditional_probability
-    from classicML.backend.python.ops import get_dependent_prior_probability
-    from classicML.backend.python.ops import get_prior_probability
-    from classicML.backend.python.ops import get_probability_density
-    from classicML.backend.python.ops import get_w
-    from classicML.backend.python.ops import get_within_class_scatter_matrix
-    from classicML.backend.python.ops import select_second_alpha
-    from classicML.backend.python.ops import type_of_target
-
-from classicML.backend.training import get_initializer
-from classicML.backend.training import get_kernel
-from classicML.backend.training import get_loss
-from classicML.backend.training import get_metric
-from classicML.backend.training import get_optimizer
-from classicML.backend.training import get_pruner
+from classicML import benchmarks
