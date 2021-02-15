@@ -14,10 +14,10 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.python import optimizers
     from classicML.backend.python import tree
 
-    from classicML.backend.cc.activations import activations__version__
-    from classicML.backend.cc.kernels import kernels__version__
-    from classicML.backend.cc.losses import losses__version__
-    from classicML.backend.cc.metrics import metrics__version__
+    from classicML.backend.cc.activations import __version__ as activations__version__
+    from classicML.backend.cc.kernels import __version__ as kernels__version__
+    from classicML.backend.cc.losses import __version__ as losses__version__
+    from classicML.backend.cc.metrics import __version__ as metrics__version__
 
     CLASSICML_LOGGER.info('后端版本是: {}'.format(activations__version__))
     CLASSICML_LOGGER.info('后端版本是: {}'.format(kernels__version__))
@@ -58,7 +58,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
     from classicML.backend.cc.ops import cc_type_of_target as type_of_target
 
-    from classicML.backend.cc.ops import ops__version__
+    from classicML.backend.cc.ops import __version__ as ops__version__
     CLASSICML_LOGGER.info('后端版本是: {}'.format(ops__version__))
 else:
     from classicML.backend.python.ops import calculate_error
