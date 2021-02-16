@@ -7,6 +7,39 @@
 
 #include "matrix_op.h"
 
+// 返回广播减法的矩阵, 输入a矩阵和b矩阵.
+Eigen::MatrixXd BroadcastSub(const Eigen::MatrixXd &a,
+                             const Eigen::MatrixXd &b) {
+    if (a.rows() == b.rows() && a.cols() == b.cols()) {
+        // 执行普通减法.
+        return a - b;
+    } else {
+        // 执行广播减法.
+        if (a.rows() != 1 && b.rows() != 1) {
+            throw pybind11::value_error("张量无法广播");
+        }
+        if (a.cols() != b.cols()) {
+            throw pybind11::value_error("列数不同, 无法操作");
+        }
+
+        if (a.rows() > b.rows()) {
+            Eigen::MatrixXd result_matrix(a.rows(), a.cols());
+            for (int row = 0; row < a.rows(); row ++) {
+                result_matrix.row(row) = a.row(row) - b;
+            }
+
+            return result_matrix;
+        } else {
+            Eigen::MatrixXd result_matrix(b.rows(), b.cols());
+            for (int row = 0; row < b.rows(); row ++) {
+                result_matrix.row(row) = b.row(row) - a;
+            }
+
+            return -result_matrix;
+        }
+    }
+}
+
 // 获取非零元素组成的子矩阵, 输入父矩阵和非零标签.
 Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
                                     const Eigen::VectorXd &non_zero_mark) {

@@ -73,13 +73,12 @@ kernels::RBF::RBF(std::string name, double gamma) {
 Eigen::MatrixXd kernels::RBF::PyCall(const Eigen::MatrixXd &x_i,
                                      const Eigen::MatrixXd &x_j) {
     // 预处理x_i, 避免一维张量无法处理.
-    Eigen::MatrixXd _x_i = Reshape(x_i, 1, 2);
-    // 对应的行向量和向量相减后求幂次.
-    Eigen::MatrixXd temp = x_j;
-    for (int row = 0; row < x_j.rows(); row++) {
-        temp.row(row) = (x_j.row(row) - _x_i).array().pow(2);
+    Eigen::MatrixXd _x_i = x_i;
+    if (x_i.cols() == 1) {
+        _x_i = Reshape(x_i, 1, -1);
     }
 
+    Eigen::MatrixXd temp = BroadcastSub(x_j, _x_i).array().pow(2);
     Eigen::MatrixXd kappa = -temp.rowwise().sum();
     kappa = (this->gamma * kappa).array().exp();
 

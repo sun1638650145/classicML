@@ -13,6 +13,9 @@
 #include "Eigen/Dense"
 #include "pybind11/pybind11.h"
 
+Eigen::MatrixXd BroadcastSub(const Eigen::MatrixXd &a,
+                             const Eigen::MatrixXd &b);
+
 Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
                                     const Eigen::VectorXd &non_zero_mark);
 
