@@ -72,11 +72,18 @@ kernels::RBF::RBF(std::string name, double gamma) {
 // 返回核函数映射后的特征向量, 输入为两组特征张量(两个张量的形状必须一致).
 Eigen::MatrixXd kernels::RBF::PyCall(const Eigen::MatrixXd &x_i,
                                      const Eigen::MatrixXd &x_j) {
-    Eigen::MatrixXd kappa = (x_j - x_i).array().pow(2);
-    kappa = -kappa.rowwise().sum();
+    // 预处理x_i, 避免一维张量无法处理.
+    Eigen::MatrixXd _x_i = Reshape(x_i, 1, 2);
+    // 对应的行向量和向量相减后求幂次.
+    Eigen::MatrixXd temp = x_j;
+    for (int row = 0; row < x_j.rows(); row++) {
+        temp.row(row) = (x_j.row(row) - _x_i).array().pow(2);
+    }
+
+    Eigen::MatrixXd kappa = -temp.rowwise().sum();
     kappa = (this->gamma * kappa).array().exp();
 
-    return kappa;
+    return Reshape(kappa, 1, -1);
 }
 
 kernels::Gaussian::Gaussian() {

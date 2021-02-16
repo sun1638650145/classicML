@@ -18,7 +18,7 @@ extension_modules = [
     # backend.kernels模块
     Pybind11Extension(
         'classicML/backend/cc/kernels',
-        sorted(glob('classicML/backend/cc/kernels.cc')),
+        sorted(glob('classicML/backend/cc/*.cc')),
         include_dirs=[
             '/usr/local/include/eigen3',
         ],

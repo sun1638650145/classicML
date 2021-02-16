@@ -14,6 +14,7 @@
 #include "pybind11/pybind11.h"
 
 #include "exceptions.h"
+#include "matrix_op.h"
 
 namespace kernels {
 // 损失函数的基类.
@@ -282,7 +283,7 @@ Sigmoid核函数.
         .def("__call__", &kernels::Sigmoid::PyCall,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
-    m.attr("__version__") = "backend.cc.kernels.0.4";
+    m.attr("__version__") = "backend.cc.kernels.0.5";
 }
 
 #endif /* KERNELS_H */
