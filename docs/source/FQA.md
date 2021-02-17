@@ -6,12 +6,18 @@
 
 ## 2.如何在搭载Apple M1芯片的Mac上使用classicML?
 
-classicML的设计和构建依赖于Numpy，受限于现在 Numpy 没有原生支持Apple M1，Numpy支持后，classicML将在第一时间进行适配。但是，目前你可以使用如下的方式使用classicML
+目前，classicML提供了一个预览版(只支持Python 3.8版本)，您可以通过pip软件包管理器直接安装.
 
 ```shell
-arch -x86_64 $SHELL  # 使用Rosetta 2转译成x86_64
-arch  # 如果输出i386则表示转译成功
+# 安装python版
+pip install classicML-python==0.6b1
+# 或者直接安装标准版
+pip install classicML==0.6b1
 ```
 
-然后参照[安装页](https://classicml.readthedocs.io/zh_CN/latest/install.html)进行安装
+## 3.我如何才能联系到作者？
+
+首先，你可以只直接在[Github Issues](https://github.com/sun1638650145/classicML/issues)上进行提问；然后你也可以通过[作者邮箱](s1638650145@gmail.com)进行联系，作者看到后将会立即回复你的.
+
+
 
