@@ -101,7 +101,7 @@ class Sigmoid : public Kernel {
     double beta;
     double theta;
 };
-}; // kernels
+};  // namespace kernels
 
 PYBIND11_MODULE(kernels, m) {
     m.doc() = R"pbdoc(classicML的核函数, 以CC实现)pbdoc";

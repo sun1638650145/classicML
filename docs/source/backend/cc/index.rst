@@ -9,6 +9,7 @@ cc
    :maxdepth: 2
 
    activations
+   kernels
    losses
    metrics
    ops
