@@ -32,9 +32,15 @@ kernels::Linear::Linear(std::string name) {
 // 返回核函数映射后的特征向量, 输入为两组特征张量(两个张量的形状必须一致).
 Eigen::MatrixXd kernels::Linear::PyCall(const Eigen::MatrixXd &x_i,
                                         const Eigen::MatrixXd &x_j) {
-    Eigen::MatrixXd kappa = x_j * x_i.transpose();
+    // 预处理x_i, 避免一维张量无法处理.
+    Eigen::MatrixXd _x_i = x_i;
+    if (x_i.cols() == 1) {
+        _x_i = Reshape(x_i, 1, -1);
+    }
 
-    return kappa;
+    Eigen::MatrixXd kappa = x_j * _x_i.transpose();
+
+    return Reshape(kappa, 1, -1);
 }
 
 kernels::Polynomial::Polynomial() {
@@ -52,11 +58,17 @@ kernels::Polynomial::Polynomial(std::string name, double gamma, int degree) {
 // 返回核函数映射后的特征向量, 输入为两组特征张量(两个张量的形状必须一致).
 Eigen::MatrixXd kernels::Polynomial::PyCall(const Eigen::MatrixXd &x_i,
                                             const Eigen::MatrixXd &x_j) {
-    Eigen::MatrixXd kappa = x_j * x_i.transpose();
+    // 预处理x_i, 避免一维张量无法处理.
+    Eigen::MatrixXd _x_i = x_i;
+    if (x_i.cols() == 1) {
+        _x_i = Reshape(x_i, 1, -1);
+    }
+
+    Eigen::MatrixXd kappa = x_j * _x_i.transpose();
     kappa = kappa.array().pow(this->degree);
     kappa = this->gamma * kappa;
 
-    return kappa;
+    return Reshape(kappa, 1, -1);
 }
 
 kernels::RBF::RBF() {
@@ -98,11 +110,17 @@ kernels::Gaussian::Gaussian(std::string name, double gamma) {
 // 返回核函数映射后的特征向量, 输入为两组特征张量(两个张量的形状必须一致).
 Eigen::MatrixXd kernels::Gaussian::PyCall(const Eigen::MatrixXd &x_i,
                                           const Eigen::MatrixXd &x_j) {
-    Eigen::MatrixXd kappa = (x_j - x_i).array().pow(2);
-    kappa = -kappa.rowwise().sum();
+    // 预处理x_i, 避免一维张量无法处理.
+    Eigen::MatrixXd _x_i = x_i;
+    if (x_i.cols() == 1) {
+        _x_i = Reshape(x_i, 1, -1);
+    }
+
+    Eigen::MatrixXd temp = BroadcastSub(x_j, _x_i).array().pow(2);
+    Eigen::MatrixXd kappa = -temp.rowwise().sum();
     kappa = (this->gamma * kappa).array().exp();
 
-    return kappa;
+    return Reshape(kappa, 1, -1);
 }
 
 kernels::Sigmoid::Sigmoid() {
@@ -122,9 +140,15 @@ kernels::Sigmoid::Sigmoid(std::string name, double gamma, double beta, double th
 // 返回核函数映射后的特征向量, 输入为两组特征张量(两个张量的形状必须一致).
 Eigen::MatrixXd kernels::Sigmoid::PyCall(const Eigen::MatrixXd &x_i,
                                          const Eigen::MatrixXd &x_j) {
-    Eigen::MatrixXd kappa = this->beta * (x_j * x_i.transpose()).array() + this->theta;
+    // 预处理x_i, 避免一维张量无法处理.
+    Eigen::MatrixXd _x_i = x_i;
+    if (x_i.cols() == 1) {
+        _x_i = Reshape(x_i, 1, -1);
+    }
+
+    Eigen::MatrixXd kappa = this->beta * (x_j * _x_i.transpose()).array() + this->theta;
     kappa = kappa.array().tanh();
     kappa = this->gamma * kappa;
 
-    return kappa;
+    return Reshape(kappa, 1, -1);
 }

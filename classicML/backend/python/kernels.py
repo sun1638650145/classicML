@@ -6,16 +6,16 @@ class Kernel(object):
     """核函数的基类.
 
     Attributes:
-        name: str, default=None,
+        name: str, default='kernel',
             核函数名称.
 
     Raises:
        NotImplementedError: __call__方法需要用户实现.
     """
-    def __init__(self, name=None):
+    def __init__(self, name='kernel'):
         """
         Arguments:
-            name: str, default=None,
+            name: str, default='kernel',
                 核函数名称.
         """
         self.name = name

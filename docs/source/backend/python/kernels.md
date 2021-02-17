@@ -7,7 +7,7 @@ classicML的核函数.
 核函数的基类.
 
 ```python
-cml.kernels.Kernel(name=None)
+cml.kernels.Kernel(name='kernel')
 ```
 
 ### 参数
