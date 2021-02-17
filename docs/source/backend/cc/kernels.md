@@ -2,7 +2,7 @@
 
 classicML的核函数.
 
-## kernel
+## Kernel
 
 核函数的基类.
 

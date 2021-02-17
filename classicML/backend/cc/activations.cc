@@ -8,32 +8,32 @@
 
 #include "activations.h"
 
-Activation::Activation() {
+activations::Activation::Activation() {
     this->name = "activation";
 }
 
-Activation::Activation(std::string name) {
+activations::Activation::Activation(std::string name) {
     this->name = std::move(name);
 }
 
-Eigen::MatrixXd Activation::PyCall(const Eigen::MatrixXd &z) {
+Eigen::MatrixXd activations::Activation::PyCall(const Eigen::MatrixXd &z) {
     throw NotImplementedError();
 }
 
-Eigen::MatrixXd Activation::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
+Eigen::MatrixXd activations::Activation::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
     throw NotImplementedError();
 }
 
-Relu::Relu() {
+activations::Relu::Relu() {
     this->name = "relu";
 }
 
-Relu::Relu(std::string name) {
+activations::Relu::Relu(std::string name) {
     this->name = std::move(name);
 }
 
 // 经过激活后的张量, 输入为张量.
-Eigen::MatrixXd Relu::PyCall(const Eigen::MatrixXd &z) {
+Eigen::MatrixXd activations::Relu::PyCall(const Eigen::MatrixXd &z) {
     Eigen::MatrixXd result(z.rows(), z.cols());
 
     for (int row = 0; row < z.rows(); row ++) {
@@ -50,7 +50,7 @@ Eigen::MatrixXd Relu::PyCall(const Eigen::MatrixXd &z) {
 }
 
 // 计算函数的微分, 输入为前向传播输出的张量和输入的张量.
-Eigen::MatrixXd Relu::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
+Eigen::MatrixXd activations::Relu::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
     Eigen::MatrixXd da = output;
 
     for (int row = 0; row < a.rows(); row ++) {
@@ -64,16 +64,16 @@ Eigen::MatrixXd Relu::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd 
     return da;
 }
 
-Sigmoid::Sigmoid() {
+activations::Sigmoid::Sigmoid() {
     this->name = "sigmoid";
 }
 
-Sigmoid::Sigmoid(std::string name) {
+activations::Sigmoid::Sigmoid(std::string name) {
     this->name = std::move(name);
 }
 
 // 经过激活后的张量, 输入为张量.
-Eigen::MatrixXd Sigmoid::PyCall(const Eigen::MatrixXd &z) {
+Eigen::MatrixXd activations::Sigmoid::PyCall(const Eigen::MatrixXd &z) {
     Eigen::MatrixXd result(z.rows(), z.cols());
     result = 1 / (1 + (-z.array()).exp());
 
@@ -81,25 +81,25 @@ Eigen::MatrixXd Sigmoid::PyCall(const Eigen::MatrixXd &z) {
 }
 
 // 计算函数的微分, 输入为输出的张量, 输入的张量和真实的标签.
-Eigen::MatrixXd Sigmoid::Diff(const Eigen::MatrixXd &output,
-                              const Eigen::MatrixXd &a,
-                              const Eigen::MatrixXd &y_true) {
+Eigen::MatrixXd activations::Sigmoid::Diff(const Eigen::MatrixXd &output,
+                                           const Eigen::MatrixXd &a,
+                                           const Eigen::MatrixXd &y_true) {
     Eigen::MatrixXd error = y_true - output;
     Eigen::MatrixXd da = a.array() * (1 - a.array()) * error.array();
 
     return da;
 }
 
-Softmax::Softmax() {
+activations::Softmax::Softmax() {
     this->name = "softmax";
 }
 
-Softmax::Softmax(std::string name) {
+activations::Softmax::Softmax(std::string name) {
     this->name = std::move(name);
 }
 
 // 经过激活后的张量, 输入为张量.
-Eigen::MatrixXd Softmax::PyCall(const Eigen::MatrixXd &z) {
+Eigen::MatrixXd activations::Softmax::PyCall(const Eigen::MatrixXd &z) {
     Eigen::MatrixXd temp_z = z;
     Eigen::MatrixXd result = z;
 
@@ -117,7 +117,7 @@ Eigen::MatrixXd Softmax::PyCall(const Eigen::MatrixXd &z) {
 }
 
 // Softmax函数的微分, 输入为输出的张量, 输入的张量和真实的标签.
-Eigen::MatrixXd Softmax::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
+Eigen::MatrixXd activations::Softmax::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
     Eigen::MatrixXd da = a - output;
 
     return da;
