@@ -4,7 +4,7 @@ import pandas as pd
 import classicML as cml
 
 
-DATASET_PATH = '../datasets/西瓜数据集alpha.csv'
+DATASET_PATH = './datasets/西瓜数据集alpha.csv'
 
 # 读取数据
 dataframe = pd.read_csv(DATASET_PATH, index_col=0, header=0)
