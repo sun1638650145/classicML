@@ -53,7 +53,7 @@ def plot_linear_discriminant_analysis(lda, x, y, x_label=None, y_label=None):
     X_0, X_1 = _plot_sample_scatter(x, y)
 
     # 绘制投影向量
-    x_coord = np.linspace(0, 0.15)
+    x_coord = np.linspace(0, 1)
     y_coord = (lda.w[0, 1] / lda.w[0, 0]) * x_coord  # 直线经过向量w
     plt.plot(x_coord, y_coord, c='orange')
 
