@@ -34,7 +34,7 @@ jobs:
           # sudo apt install -y libeigen3-dev;
           # sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
 
-          # 下载仓库
+          # 下载源码
           wget https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz;
           tar -zxvf eigen-3.3.7.tar.gz;
           # 编译安装
@@ -53,11 +53,11 @@ jobs:
         pip install pytest;
     - name: Install
       run: |
-        python3 setup.py install
+        python3 setup.py install;
     - name: Test with pytest
       # 测试模块功能
       run: |
-        pytest
+        pytest;
     - name: Test examples
       # 测试全部的样例能否正常运行
       run: |

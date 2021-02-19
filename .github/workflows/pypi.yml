@@ -47,4 +47,4 @@ jobs:
           newfilename=${filename/"linux"/"manylinux2010"};
           mv $filename $newfilename;
         fi
-        python3 -m twine upload --repository pypi dist/* --skip-existing
+        python3 -m twine upload --repository pypi dist/* --skip-existing;
