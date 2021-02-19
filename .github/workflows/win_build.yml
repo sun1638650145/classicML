@@ -1,4 +1,4 @@
-name: build
+name: win_build
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-16.04, ubuntu-18.04, macos-10.15]
+        os: [windows-2019]
         python-version: [3.6, 3.7, 3.8]
       fail-fast: false
 
@@ -24,29 +24,18 @@ jobs:
     - name: Before install
       run: |
         # 安装 eigen3
-        if [ "${{ matrix.os }}" = "macos-10.15" ]; then
-          rm -rf /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core;
-          brew update;
-          brew install eigen;
-        else
-          # ubuntu-16.04下apt安装的最新版本是eigen3.3的beta版, 会导致结果异常, 因此需要手动安装eigen3.3.7+
-          # sudo apt update;
-          # sudo apt install -y libeigen3-dev;
-          # sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
+        Start-FileDownload "https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.zip";
+        7z x eigen-3.3.7.zip -y;
+        # 编译安装
+        cd eigen-3.3.7;
+        mkdir build;
+        cd build;
+        cmake ..;
+        sudo make;
+        sudo make install;
+        # 返回home目录
+        cd /Users/Administrator/;
 
-          # 下载仓库
-          wget https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz;
-          tar -zxvf eigen-3.3.7.tar.gz;
-          # 编译安装
-          cd eigen-3.3.7;
-          mkdir build;
-          cd build;
-          cmake ..;
-          sudo make;
-          sudo make install;
-          # 返回home目录
-          cd ~;
-        fi
         # 安装 pybind11和pytest
         python -m pip install --upgrade pip;
         pip install pybind11;
