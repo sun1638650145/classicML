@@ -1,6 +1,8 @@
 """classicML的底层核心操作."""
 import numpy as np
 
+from classicML import CLASSICML_LOGGER
+
 
 def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):
     """计算KKT条件的违背值.
@@ -175,6 +177,9 @@ def get_probability_density(sample, mean, var):
 def get_w(S_w, mu_0, mu_1):
     """获得投影向量.
 
+    DEPRECATED:
+      `ops.get_w` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.get_w_v2`.
+
     Arguments:
         S_w: numpy.ndarray, 类内散度矩阵.
         mu_0: numpy.ndarray, 反例的均值向量.
@@ -188,7 +193,34 @@ def get_w(S_w, mu_0, mu_1):
           你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
+    CLASSICML_LOGGER.warn('`ops.get_w` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.get_w_v2`.')
+
     S_w_i = np.linalg.inv(S_w)
+    w = np.matmul(S_w_i, (mu_0 - mu_1).T)
+
+    return w.reshape(1, -1)
+
+
+def get_w_v2(S_w, mu_0, mu_1):
+    """获得投影向量.
+
+    Arguments:
+        S_w: numpy.ndarray, 类内散度矩阵.
+        mu_0: numpy.ndarray, 反例的均值向量.
+        mu_1: numpy.ndarray, 正例的均值向量.
+
+    Returns:
+        投影向量.
+
+    Notes:
+        - 第二版使用奇异值分解来计算类内散度矩阵的逆矩阵.
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
+    """
+    U, Sigma, V_t = np.linalg.svd(S_w)
+    S_w_i = V_t.T * np.linalg.inv(np.diag(Sigma)) * U.T
+
     w = np.matmul(S_w_i, (mu_0 - mu_1).T)
 
     return w.reshape(1, -1)
