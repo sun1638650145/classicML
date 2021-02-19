@@ -12,7 +12,7 @@ from classicML.backend.cc.ops import cc_get_conditional_probability
 from classicML.backend.cc.ops import cc_get_dependent_prior_probability
 from classicML.backend.cc.ops import cc_get_prior_probability
 from classicML.backend.cc.ops import cc_get_probability_density
-from classicML.backend.cc.ops import cc_get_w
+from classicML.backend.cc.ops import cc_get_w_v2 as cc_get_w
 from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
 from classicML.backend.cc.ops import cc_select_second_alpha
 from classicML.backend.cc.ops import cc_type_of_target
@@ -23,7 +23,7 @@ from classicML.backend.python.ops import get_conditional_probability
 from classicML.backend.python.ops import get_dependent_prior_probability
 from classicML.backend.python.ops import get_prior_probability
 from classicML.backend.python.ops import get_probability_density
-from classicML.backend.python.ops import get_w
+from classicML.backend.python.ops import get_w_v2 as get_w
 from classicML.backend.python.ops import get_within_class_scatter_matrix
 from classicML.backend.python.ops import select_second_alpha
 from classicML.backend.python.ops import type_of_target

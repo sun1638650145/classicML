@@ -25,13 +25,13 @@ Eigen::MatrixXd Sub(const Eigen::MatrixXd &matrix, const Eigen::RowVectorXd &vec
 // 返回KKT条件的违背值;
 // 输入特征数据, 标签, 要计算的样本下标, 支持向量分类器使用的核函数, 全部拉格朗日乘子, 非零拉格朗日乘子和偏置项.
 // TODO(Steve R. Sun, tag:performance): 在CC中使用Python实现的核函数实际性能和Python没差别, 但是由于其他地方依旧使用的是CC代码, 还是会有明显的性能提高.
-Eigen::MatrixXd CalculateError(const Eigen::MatrixXd &x,
-                               const Eigen::MatrixXd &y, // 列向量
-                               const int &i,
-                               const pybind11::object &kernel,
-                               const Eigen::MatrixXd &alphas,  // 列向量
-                               const Eigen::VectorXd &non_zero_alphas,
-                               const Eigen::MatrixXd &b) {
+Eigen::MatrixXd ops::CalculateError(const Eigen::MatrixXd &x,
+                                    const Eigen::MatrixXd &y, // 列向量
+                                    const int &i,
+                                    const pybind11::object &kernel,
+                                    const Eigen::MatrixXd &alphas,  // 列向量
+                                    const Eigen::VectorXd &non_zero_alphas,
+                                    const Eigen::MatrixXd &b) {
     Eigen::MatrixXd x_i = x.row(i);
     Eigen::MatrixXd y_i = y.row(i);
 
@@ -61,7 +61,7 @@ Eigen::MatrixXd CalculateError(const Eigen::MatrixXd &x,
 }
 
 // 返回修剪后的拉格朗日乘子, 输入拉格朗日乘子的下界和上界.
-Eigen::ArrayXd ClipAlpha(const double &alpha, const double &low, const double &high) {
+Eigen::ArrayXd ops::ClipAlpha(const double &alpha, const double &low, const double &high) {
     Eigen::MatrixXd clipped_alpha(1, 1);
     clipped_alpha(0, 0) = alpha;
 
@@ -75,10 +75,10 @@ Eigen::ArrayXd ClipAlpha(const double &alpha, const double &low, const double &h
 }
 
 // 获取类条件概率, 输入某个属性值的样本总数, 某个类别的样本总数, 类别的数量和是否使用平滑.
-double GetConditionalProbability(const double &samples_on_attribute,
-                                 const int &samples_in_category,
-                                 const int &num_of_categories,
-                                 const bool &smoothing) {
+double ops::GetConditionalProbability(const double &samples_on_attribute,
+                                      const int &samples_in_category,
+                                      const int &num_of_categories,
+                                      const bool &smoothing) {
     if (smoothing) {
         return (samples_on_attribute + 1) / (samples_in_category + num_of_categories);
     } else {
@@ -87,10 +87,10 @@ double GetConditionalProbability(const double &samples_on_attribute,
 }
 
 // 获取有依赖的类先验概率, 输入类别为c的属性i上取值为xi的样本, 样本的总数, 特征数据和是否使用平滑.
-double GetDependentPriorProbability(const int &samples_on_attribute_in_category,
-                                    const int &number_of_sample,
-                                    const int &values_on_attribute,
-                                    const bool &smoothing) {
+double ops::GetDependentPriorProbability(const int &samples_on_attribute_in_category,
+                                         const int &number_of_sample,
+                                         const int &values_on_attribute,
+                                         const bool &smoothing) {
     double probability;
 
     if (smoothing) {
@@ -103,9 +103,9 @@ double GetDependentPriorProbability(const int &samples_on_attribute_in_category,
 }
 
 // 获取类先验概率, 输入特征数据, 标签和是否使用平滑.
-std::tuple<double, double> GetPriorProbability(const int &number_of_sample,
-                                               const Eigen::RowVectorXd &y,
-                                               const bool &smoothing) {
+std::tuple<double, double> ops::GetPriorProbability(const int &number_of_sample,
+                                                    const Eigen::RowVectorXd &y,
+                                                    const bool &smoothing) {
     // 遍历获得反例的个数.
     double num_of_negative_sample = 0.0;
     for (int i = 0; i < y.size(); i ++) {
@@ -129,9 +129,9 @@ std::tuple<double, double> GetPriorProbability(const int &number_of_sample,
 
 
 // 获取概率密度, 输入样本的取值, 样本在某个属性的上的均值和样本在某个属性上的方差.
-double GetProbabilityDensity(const double &sample,
-                             const double &mean,
-                             const double &var) {
+double ops::GetProbabilityDensity(const double &sample,
+                                  const double &mean,
+                                  const double &var) {
     double probability =  1 / (sqrt(2 * M_PI) * var) * exp(-(pow((sample - mean), 2) / (2 * pow(var, 2))));
 
     // probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
@@ -143,8 +143,8 @@ double GetProbabilityDensity(const double &sample,
 }
 
 // 返回投影向量, 输入为类内散度矩阵和反正例的均值向量.
-Eigen::MatrixXd GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1) {
-    // TODO(Steve R. Sun, tag:bug): 应该使用奇异值分解的方式求解S_w的逆矩阵.
+Eigen::MatrixXd ops::GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1) {
+
     // 公式(数学公式难以表示, 使用latex语法): w = (S_w)^{-1}(\mu_0 - \mu_1)
     Eigen::MatrixXd S_w_inv = S_w.inverse();
     Eigen::MatrixXd mu_t = (mu_0 - mu_1).transpose();
@@ -154,11 +154,30 @@ Eigen::MatrixXd GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, co
     return Reshape(w, 1, -1);
 }
 
+// 返回投影向量, 输入为类内散度矩阵和反正例的均值向量.
+Eigen::MatrixXd ops::GetW_V2(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1) {
+    // 分解奇异值.
+    Eigen::BDCSVD<Eigen::MatrixXd> svd(S_w, Eigen::ComputeFullU|Eigen::ComputeFullV);
+    const Eigen::MatrixXd &U = svd.matrixU();
+    const Eigen::MatrixXd &Sigma = svd.singularValues();
+    const Eigen::MatrixXd &V_t = svd.matrixV();
+    Eigen::MatrixXd Sigma_mat = Sigma.asDiagonal();
+
+    // 公式(数学公式难以表示, 使用latex语法): w = (S_w)^{-1}(\mu_0 - \mu_1)
+    Eigen::MatrixXd S_w_inv = V_t.transpose() * Sigma_mat * U.transpose();
+    Eigen::MatrixXd mu_t = (mu_0 - mu_1).transpose();
+
+    Eigen::MatrixXd w = S_w_inv * mu_t;
+
+    return Reshape(w, 1, -1);
+}
+
+
 // 返回类内散度矩阵, 输入为反正例的集合矩阵和反正例的均值向量.
-Eigen::MatrixXd GetWithinClassScatterMatrix(const Eigen::MatrixXd &X_0,
-                                            const Eigen::MatrixXd &X_1,
-                                            const Eigen::MatrixXd &mu_0,
-                                            const Eigen::MatrixXd &mu_1) {
+Eigen::MatrixXd ops::GetWithinClassScatterMatrix(const Eigen::MatrixXd &X_0,
+                                                 const Eigen::MatrixXd &X_1,
+                                                 const Eigen::MatrixXd &mu_0,
+                                                 const Eigen::MatrixXd &mu_1) {
     // 公式(数学公式难以表示, 使用latex语法):
     // S_w = \sum_0 + \sum_1
     // \sum_i = \sum_{x \in X_i}(x - \mu_0)(x - \mu_1)^T
@@ -171,9 +190,9 @@ Eigen::MatrixXd GetWithinClassScatterMatrix(const Eigen::MatrixXd &X_0,
 }
 
 // 返回第二个拉格朗日乘子的下标和违背值组成的元组, 输入KKT条件的违背值, KKT条件的违背值缓存和非边界拉格朗日乘子.
-std::tuple<int, double> SelectSecondAlpha(const double &error,
-                                          const Eigen::RowVectorXd &error_cache,
-                                          const Eigen::RowVectorXd &non_bound_alphas) {
+std::tuple<int, double> ops::SelectSecondAlpha(const double &error,
+                                               const Eigen::RowVectorXd &error_cache,
+                                               const Eigen::RowVectorXd &non_bound_alphas) {
     std::vector<int> non_bound_index = NonZero(non_bound_alphas);
 
     int index_alpha = 0;
@@ -197,7 +216,7 @@ std::tuple<int, double> SelectSecondAlpha(const double &error,
 
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.
 // 只处理float64的输入数据.
-std::string TypeOfTarget(const Eigen::MatrixXd &y) {
+std::string ops::TypeOfTarget(const Eigen::MatrixXd &y) {
     bool any = true;
     std::set<double> buffer;
 
@@ -233,7 +252,7 @@ std::string TypeOfTarget(const Eigen::MatrixXd &y) {
 
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.
 // 只处理int64的输入数据.
-std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &y) {
+std::string ops::TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &y) {
     // 取唯一值统计元素个数.
     std::set<double> buffer;
     for (int row = 0; row < y.rows(); row ++) {
@@ -260,6 +279,6 @@ std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.
 // 处理其他类型的输入数据.
 // TODO(Steve R. Sun, tag:code): Python版本的和CC版本在对于判断str类型的有差异, CC版本全部返回的是unknown.
-std::string TypeOfTarget(const pybind11::array &y) {
+std::string ops::TypeOfTarget(const pybind11::array &y) {
     return "unknown";
 }

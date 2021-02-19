@@ -42,7 +42,8 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_get_dependent_prior_probability
     from classicML.backend.cc.ops import cc_get_prior_probability
     from classicML.backend.cc.ops import cc_get_probability_density
-    from classicML.backend.cc.ops import cc_get_w
+    from classicML.backend.cc.ops import cc_get_w as cc_get_w_v1  # 正式版将移除.
+    from classicML.backend.cc.ops import cc_get_w_v2
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
     from classicML.backend.cc.ops import cc_select_second_alpha
     from classicML.backend.cc.ops import cc_type_of_target
@@ -53,7 +54,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_get_dependent_prior_probability as get_dependent_prior_probability
     from classicML.backend.cc.ops import cc_get_prior_probability as get_prior_probability
     from classicML.backend.cc.ops import cc_get_probability_density as get_probability_density
-    from classicML.backend.cc.ops import cc_get_w as get_w
+    from classicML.backend.cc.ops import cc_get_w_v2 as get_w
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix as get_within_class_scatter_matrix
     from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
     from classicML.backend.cc.ops import cc_type_of_target as type_of_target
