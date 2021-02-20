@@ -8,11 +8,13 @@ from classicML.backend.cc.losses import Loss as CcLoss
 from classicML.backend.cc.losses import Crossentropy as CcCrossentropy
 from classicML.backend.cc.losses import LogLikelihood as CcLogLikelihood
 from classicML.backend.cc.losses import MeanSquaredError as CcMeanSquaredError
+from classicML.backend.cc.losses import MSE as CcMSE
 
 from classicML.backend.python.losses import Loss as PyLoss
 from classicML.backend.python.losses import Crossentropy as PyCrossentropy
 from classicML.backend.python.losses import LogLikelihood as PyLogLikelihood
 from classicML.backend.python.losses import MeanSquaredError as PyMeanSquaredError
+from classicML.backend.python.losses import MSE as PyMSE
 
 THRESHOLD = 1e-14
 
@@ -50,12 +52,17 @@ class TestLoss(object):
         assert cc_ll.name != py_ll.name
         assert abs(cc_ll(y_true, beta, x_hat) - py_ll(y_true, beta, x_hat)) <= THRESHOLD
 
-    def test_mse(self):
-        cc_mse = CcMeanSquaredError('cc_mse')
-        py_mse = PyMeanSquaredError('py_mse')
+    def test_mean_squared_error_mse(self):
+        cc_mean_squared_error = CcMeanSquaredError('cc_mean_squared_error')
+        py_mean_squared_error = PyMeanSquaredError('py_mean_squared_error')
+        cc_mse = CcMSE('cc_mse')
+        py_mse = PyMSE('py_mse')
 
         y_pred = np.random.random(size=[10, 1])
         y_true = np.random.randint(low=0, high=2, size=[10, 1])
 
-        assert cc_mse != py_mse
+        assert cc_mean_squared_error.name != py_mean_squared_error.name
+        assert cc_mse.name != py_mse.name
+        assert abs(cc_mean_squared_error(y_pred, y_true) - py_mean_squared_error(y_pred, y_true)) <= THRESHOLD
         assert abs(cc_mse(y_pred, y_true) - py_mse(y_pred, y_true)) <= THRESHOLD
+        assert cc_mse(y_pred, y_true) == cc_mean_squared_error(y_pred, y_true)

@@ -219,7 +219,10 @@ PYBIND11_MODULE(losses, m) {
              pybind11::arg("y_pred"),
              pybind11::arg("y_true"));
 
-    m.attr("__version__") = "backend.cc.losses.0.6";
+    // Aliases.
+    m.attr("MSE") = m.attr("MeanSquaredError");
+
+    m.attr("__version__") = "backend.cc.losses.0.7";
 }
 
 #endif /* LOSSES_H */
