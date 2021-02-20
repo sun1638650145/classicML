@@ -147,7 +147,3 @@ class MeanSquaredError(Loss):
         loss = np.sum(y_pred - y_true) ** 2 / (2 * y_shape)
 
         return np.squeeze(loss)
-
-
-# Aliases.
-MSE = MeanSquaredError
