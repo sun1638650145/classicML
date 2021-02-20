@@ -8,20 +8,6 @@
 
 #include "ops.h"
 
-// 返回一个矩阵, 计算向量减法, 输入为矩阵和行向量(矩阵和行向量的列数必须相同).
-Eigen::MatrixXd Sub(const Eigen::MatrixXd &matrix, const Eigen::RowVectorXd &vector) {
-    if (matrix.cols() != vector.cols()) {
-        throw pybind11::value_error("列数不同, 无法操作");
-    }
-
-    Eigen::MatrixXd new_matrix(matrix.rows(), matrix.cols());
-    for (int row = 0; row < matrix.rows(); row ++) {
-        new_matrix.row(row) = matrix.row(row) - vector;
-    }
-
-    return new_matrix;
-}
-
 // 返回KKT条件的违背值;
 // 输入特征数据, 标签, 要计算的样本下标, 支持向量分类器使用的核函数, 全部拉格朗日乘子, 非零拉格朗日乘子和偏置项.
 // TODO(Steve R. Sun, tag:performance): 在CC中使用Python实现的核函数实际性能和Python没差别, 但是由于其他地方依旧使用的是CC代码, 还是会有明显的性能提高.
@@ -39,16 +25,16 @@ Eigen::MatrixXd ops::CalculateError(const Eigen::MatrixXd &x,
     Eigen::MatrixXd fx = b;
     // 如果有非零元素, 提取全部合格的标签和对应的拉格朗日乘子.
     if (non_zero_alphas.any()) {
-        Eigen::MatrixXd valid_x = GetNonZeroSubMatrix(x, non_zero_alphas);
-        Eigen::ArrayXd valid_y = GetNonZeroSubMatrix(y, non_zero_alphas);
-        Eigen::MatrixXd valid_alphas = GetNonZeroSubMatrix(alphas, non_zero_alphas);
+        Eigen::MatrixXd valid_x = matrix_op::GetNonZeroSubMatrix(x, non_zero_alphas);
+        Eigen::ArrayXd valid_y = matrix_op::GetNonZeroSubMatrix(y, non_zero_alphas);
+        Eigen::MatrixXd valid_alphas = matrix_op::GetNonZeroSubMatrix(alphas, non_zero_alphas);
 
         // 调用核函数的__call__方法.
         pybind11::object py_kappa = kernel(valid_x, x_i);
         Eigen::MatrixXd kappa = py_kappa.cast<Eigen::MatrixXd>();
 
         // 这里是Hadamard积, 故临时需要使用ArrayXd.
-        Eigen::ArrayXd temp = Reshape(valid_alphas, -1, 1);
+        Eigen::ArrayXd temp = matrix_op::Reshape(valid_alphas, -1, 1);
         temp = temp * valid_y;
         Eigen::MatrixXd matrix_temp = (Eigen::MatrixXd)temp.transpose();
 
@@ -151,7 +137,7 @@ Eigen::MatrixXd ops::GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_
 
     Eigen::MatrixXd w = S_w_inv * mu_t;
 
-    return Reshape(w, 1, -1);
+    return matrix_op::Reshape(w, 1, -1);
 }
 
 // 返回投影向量, 输入为类内散度矩阵和反正例的均值向量.
@@ -169,7 +155,7 @@ Eigen::MatrixXd ops::GetW_V2(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &
 
     Eigen::MatrixXd w = S_w_inv * mu_t;
 
-    return Reshape(w, 1, -1);
+    return matrix_op::Reshape(w, 1, -1);
 }
 
 
@@ -181,8 +167,8 @@ Eigen::MatrixXd ops::GetWithinClassScatterMatrix(const Eigen::MatrixXd &X_0,
     // 公式(数学公式难以表示, 使用latex语法):
     // S_w = \sum_0 + \sum_1
     // \sum_i = \sum_{x \in X_i}(x - \mu_0)(x - \mu_1)^T
-    Eigen::MatrixXd S_0 = (Sub(X_0, mu_0)).transpose() * (Sub(X_0, mu_0));
-    Eigen::MatrixXd S_1 = (Sub(X_1, mu_1)).transpose() * (Sub(X_1, mu_1));
+    Eigen::MatrixXd S_0 = (matrix_op::BroadcastSub(X_0, mu_0)).transpose() * (matrix_op::BroadcastSub(X_0, mu_0));
+    Eigen::MatrixXd S_1 = (matrix_op::BroadcastSub(X_1, mu_1)).transpose() * (matrix_op::BroadcastSub(X_1, mu_1));
 
     Eigen::MatrixXd S_w = S_0 + S_1;
 
@@ -193,7 +179,7 @@ Eigen::MatrixXd ops::GetWithinClassScatterMatrix(const Eigen::MatrixXd &X_0,
 std::tuple<int, double> ops::SelectSecondAlpha(const double &error,
                                                const Eigen::RowVectorXd &error_cache,
                                                const Eigen::RowVectorXd &non_bound_alphas) {
-    std::vector<int> non_bound_index = NonZero(non_bound_alphas);
+    std::vector<int> non_bound_index = matrix_op::NonZero(non_bound_alphas);
 
     int index_alpha = 0;
     double error_alpha = error_cache[index_alpha];

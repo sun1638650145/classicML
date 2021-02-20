@@ -8,8 +8,8 @@
 #include "matrix_op.h"
 
 // 返回广播减法的矩阵, 输入a矩阵和b矩阵.
-Eigen::MatrixXd BroadcastSub(const Eigen::MatrixXd &a,
-                             const Eigen::MatrixXd &b) {
+Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a,
+                                        const Eigen::MatrixXd &b) {
     if (a.rows() == b.rows() && a.cols() == b.cols()) {
         // 执行普通减法.
         return a - b;
@@ -41,8 +41,8 @@ Eigen::MatrixXd BroadcastSub(const Eigen::MatrixXd &a,
 }
 
 // 获取非零元素组成的子矩阵, 输入父矩阵和非零标签.
-Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
-                                    const Eigen::VectorXd &non_zero_mark) {
+Eigen::MatrixXd matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
+                                               const Eigen::VectorXd &non_zero_mark) {
     if (matrix.rows() != non_zero_mark.rows()) {
         throw pybind11::value_error("行数不同, 无法操作");
     }
@@ -69,7 +69,7 @@ Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
 }
 
 // 返回非零元素下标组成的数组, 输入为数组.
-std::vector<int> NonZero(const Eigen::RowVectorXd &array) {
+std::vector<int> matrix_op::NonZero(const Eigen::RowVectorXd &array) {
     std::vector<int> buffer;
 
     for (int i = 0; i < array.size(); i ++) {
@@ -82,7 +82,7 @@ std::vector<int> NonZero(const Eigen::RowVectorXd &array) {
 }
 
 // 返回一个有相同数据的值的新形状的矩阵, 输入为要改变形状的矩阵, 改变后的行数和列数.
-Eigen::MatrixXd Reshape(Eigen::MatrixXd matrix, const int &row, const int &column) {
+Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int &row, const int &column) {
     int new_row = row;
     int new_column = column;
 

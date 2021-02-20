@@ -35,12 +35,12 @@ Eigen::MatrixXd kernels::Linear::PyCall(const Eigen::MatrixXd &x_i,
     // 预处理x_i, 避免一维张量无法处理.
     Eigen::MatrixXd _x_i = x_i;
     if (x_i.cols() == 1) {
-        _x_i = Reshape(x_i, 1, -1);
+        _x_i = matrix_op::Reshape(x_i, 1, -1);
     }
 
     Eigen::MatrixXd kappa = x_j * _x_i.transpose();
 
-    return Reshape(kappa, 1, -1);
+    return matrix_op::Reshape(kappa, 1, -1);
 }
 
 kernels::Polynomial::Polynomial() {
@@ -61,14 +61,14 @@ Eigen::MatrixXd kernels::Polynomial::PyCall(const Eigen::MatrixXd &x_i,
     // 预处理x_i, 避免一维张量无法处理.
     Eigen::MatrixXd _x_i = x_i;
     if (x_i.cols() == 1) {
-        _x_i = Reshape(x_i, 1, -1);
+        _x_i = matrix_op::Reshape(x_i, 1, -1);
     }
 
     Eigen::MatrixXd kappa = x_j * _x_i.transpose();
     kappa = kappa.array().pow(this->degree);
     kappa = this->gamma * kappa;
 
-    return Reshape(kappa, 1, -1);
+    return matrix_op::Reshape(kappa, 1, -1);
 }
 
 kernels::RBF::RBF() {
@@ -87,14 +87,14 @@ Eigen::MatrixXd kernels::RBF::PyCall(const Eigen::MatrixXd &x_i,
     // 预处理x_i, 避免一维张量无法处理.
     Eigen::MatrixXd _x_i = x_i;
     if (x_i.cols() == 1) {
-        _x_i = Reshape(x_i, 1, -1);
+        _x_i = matrix_op::Reshape(x_i, 1, -1);
     }
 
-    Eigen::MatrixXd temp = BroadcastSub(x_j, _x_i).array().pow(2);
+    Eigen::MatrixXd temp = matrix_op::BroadcastSub(x_j, _x_i).array().pow(2);
     Eigen::MatrixXd kappa = -temp.rowwise().sum();
     kappa = (this->gamma * kappa).array().exp();
 
-    return Reshape(kappa, 1, -1);
+    return matrix_op::Reshape(kappa, 1, -1);
 }
 
 kernels::Gaussian::Gaussian() {
@@ -113,14 +113,14 @@ Eigen::MatrixXd kernels::Gaussian::PyCall(const Eigen::MatrixXd &x_i,
     // 预处理x_i, 避免一维张量无法处理.
     Eigen::MatrixXd _x_i = x_i;
     if (x_i.cols() == 1) {
-        _x_i = Reshape(x_i, 1, -1);
+        _x_i = matrix_op::Reshape(x_i, 1, -1);
     }
 
-    Eigen::MatrixXd temp = BroadcastSub(x_j, _x_i).array().pow(2);
+    Eigen::MatrixXd temp = matrix_op::BroadcastSub(x_j, _x_i).array().pow(2);
     Eigen::MatrixXd kappa = -temp.rowwise().sum();
     kappa = (this->gamma * kappa).array().exp();
 
-    return Reshape(kappa, 1, -1);
+    return matrix_op::Reshape(kappa, 1, -1);
 }
 
 kernels::Sigmoid::Sigmoid() {
@@ -143,12 +143,12 @@ Eigen::MatrixXd kernels::Sigmoid::PyCall(const Eigen::MatrixXd &x_i,
     // 预处理x_i, 避免一维张量无法处理.
     Eigen::MatrixXd _x_i = x_i;
     if (x_i.cols() == 1) {
-        _x_i = Reshape(x_i, 1, -1);
+        _x_i = matrix_op::Reshape(x_i, 1, -1);
     }
 
     Eigen::MatrixXd kappa = this->beta * (x_j * _x_i.transpose()).array() + this->theta;
     kappa = kappa.array().tanh();
     kappa = this->gamma * kappa;
 
-    return Reshape(kappa, 1, -1);
+    return matrix_op::Reshape(kappa, 1, -1);
 }

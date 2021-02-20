@@ -50,7 +50,7 @@ double GetProbabilityDensity(const double &sample,
                              const double &mean,
                              const double &var);
 
-// DEPRECATED(Steve R. Sun): `GetW` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `GetW_V2`.
+// DEPRECATED(Steve R. Sun): `ops.cc_get_w` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.cc_get_w_v2`.
 Eigen::MatrixXd GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1);
 
 Eigen::MatrixXd GetW_V2(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1);
@@ -266,7 +266,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.7";
+    m.attr("__version__") = "backend.cc.ops.0.8";
 }
 
 #endif /* OPS_H */
