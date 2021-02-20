@@ -152,13 +152,13 @@ class TestGetProbabilityDensity(object):
 class TestGetW(object):
     def test_answer(self):
         S_w = np.asmatrix([[1, 2], [3, 4]])
-        mu_0 = np.asarray([[1, 2]])
-        mu_1 = np.asarray([[3, 4]])
+        mu_0 = np.asarray([[1, 1]])
+        mu_1 = np.asarray([[1, 1]])
 
         cc_answer = cc_get_w(S_w, mu_0, mu_1)
         py_answer = get_w(S_w, mu_0, mu_1)
 
-        assert cc_answer.all() == py_answer.all()
+        assert (cc_answer == py_answer).all()
 
 
 class TestGetWithinClassScatterMatrix(object):

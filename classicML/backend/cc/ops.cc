@@ -130,7 +130,7 @@ double ops::GetProbabilityDensity(const double &sample,
 
 // 返回投影向量, 输入为类内散度矩阵和反正例的均值向量.
 Eigen::MatrixXd ops::GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1) {
-
+    pybind11::print("WARNING:classicML:`ops.cc_get_w` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.cc_get_w_v2`.");
     // 公式(数学公式难以表示, 使用latex语法): w = (S_w)^{-1}(\mu_0 - \mu_1)
     Eigen::MatrixXd S_w_inv = S_w.inverse();
     Eigen::MatrixXd mu_t = (mu_0 - mu_1).transpose();
@@ -157,7 +157,6 @@ Eigen::MatrixXd ops::GetW_V2(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &
 
     return matrix_op::Reshape(w, 1, -1);
 }
-
 
 // 返回类内散度矩阵, 输入为反正例的集合矩阵和反正例的均值向量.
 Eigen::MatrixXd ops::GetWithinClassScatterMatrix(const Eigen::MatrixXd &X_0,
