@@ -77,13 +77,6 @@ class Gaussian : public RBF {
   public:
     Gaussian();
     explicit Gaussian(std::string name, double gamma);
-
-    Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                           const Eigen::MatrixXd &x_j) override;
-
-  public:
-    std::string name;
-    double gamma;
 };
 
 // Sigmoid核函数.
@@ -215,7 +208,7 @@ PYBIND11_MODULE(kernels, m) {
         .def("__call__", &kernels::RBF::PyCall,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
-    pybind11::class_<kernels::Gaussian, kernels::Kernel>(m, "Gaussian", pybind11::dynamic_attr(), R"pbdoc(
+    pybind11::class_<kernels::Gaussian, kernels::RBF>(m, "Gaussian", pybind11::dynamic_attr(), R"pbdoc(
 高斯核函数.
     具体实现参看径向基核函数.
 )pbdoc")
@@ -283,7 +276,7 @@ Sigmoid核函数.
         .def("__call__", &kernels::Sigmoid::PyCall,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
-    m.attr("__version__") = "backend.cc.kernels.0.8";
+    m.attr("__version__") = "backend.cc.kernels.0.9";
 }
 
 #endif /* KERNELS_H */

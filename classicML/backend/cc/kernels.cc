@@ -107,22 +107,6 @@ kernels::Gaussian::Gaussian(std::string name, double gamma) {
     this->gamma = gamma;
 }
 
-// 返回核函数映射后的特征向量, 输入为两组特征张量(两个张量的形状必须一致).
-Eigen::MatrixXd kernels::Gaussian::PyCall(const Eigen::MatrixXd &x_i,
-                                          const Eigen::MatrixXd &x_j) {
-    // 预处理x_i, 避免一维张量无法处理.
-    Eigen::MatrixXd _x_i = x_i;
-    if (x_i.cols() == 1) {
-        _x_i = matrix_op::Reshape(x_i, 1, -1);
-    }
-
-    Eigen::MatrixXd temp = matrix_op::BroadcastSub(x_j, _x_i).array().pow(2);
-    Eigen::MatrixXd kappa = -temp.rowwise().sum();
-    kappa = (this->gamma * kappa).array().exp();
-
-    return matrix_op::Reshape(kappa, 1, -1);
-}
-
 kernels::Sigmoid::Sigmoid() {
     this->name = "sigmoid";
     this->gamma = 1.0;
