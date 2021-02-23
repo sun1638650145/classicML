@@ -8,29 +8,29 @@
 
 #include "metrics.h"
 
-Metric::Metric() {
+metrics::Metric::Metric() {
     this->name = "metric";
 }
 
-Metric::Metric(std::string name) {
+metrics::Metric::Metric(std::string name) {
     this->name = std::move(name);
 }
 
-double Metric::PyCall(const Eigen::MatrixXd &y_pred,
-                      const Eigen::MatrixXd &y_true) {
+double metrics::Metric::PyCall(const Eigen::MatrixXd &y_pred,
+                               const Eigen::MatrixXd &y_true) {
     throw NotImplementedError(); // 与Py后端实现相同, 主动抛出异常.
 }
 
-Accuracy::Accuracy() {
+metrics::Accuracy::Accuracy() {
     this->name = "accuracy";
 }
 
-Accuracy::Accuracy(std::string name) {
+metrics::Accuracy::Accuracy(std::string name) {
     this->name = std::move(name);
 }
 
 // 返回准确率, 输入为两个张量(两个向量必须形状一致).
-double Accuracy::PyCall(const Eigen::MatrixXd &y_pred, const Eigen::MatrixXd &y_true) {
+double metrics::Accuracy::PyCall(const Eigen::MatrixXd &y_pred, const Eigen::MatrixXd &y_true) {
     if (y_pred.cols() == 1) {
         BinaryAccuracy metric = BinaryAccuracy();
         return metric.PyCall(y_pred, y_true);
@@ -40,23 +40,23 @@ double Accuracy::PyCall(const Eigen::MatrixXd &y_pred, const Eigen::MatrixXd &y_
     }
 }
 
-BinaryAccuracy::BinaryAccuracy() {
+metrics::BinaryAccuracy::BinaryAccuracy() {
     this->name = "binary_accuracy";
 }
 
-BinaryAccuracy::BinaryAccuracy(std::string name) {
+metrics::BinaryAccuracy::BinaryAccuracy(std::string name) {
     this->name = std::move(name);
 }
 
 // 返回准确率, 输入为两个张量(两个向量必须形状一致).
-double BinaryAccuracy::PyCall(const Eigen::MatrixXd &y_pred, const Eigen::MatrixXd &y_true) {
+double metrics::BinaryAccuracy::PyCall(const Eigen::MatrixXd &y_pred, const Eigen::MatrixXd &y_true) {
     if (y_pred.cols() != y_true.cols() || y_pred.rows() != y_true.rows()) {
         throw pybind11::value_error("形状不一致");
     }
 
     double accuracy = y_pred.size();
 
-    for (int i = 0; i < y_pred.size(); i ++) {
+    for (int i = 0; i < y_pred.size(); i++) {
         if ((y_pred(i, 0) < 0.5 && y_true(i, 0) == 1) ||
             (y_pred(i, 0) >= 0.5 && y_true(i, 0) == 0)) {
             accuracy -= 1;
@@ -66,23 +66,23 @@ double BinaryAccuracy::PyCall(const Eigen::MatrixXd &y_pred, const Eigen::Matrix
     return accuracy / y_pred.size();
 }
 
-CategoricalAccuracy::CategoricalAccuracy() {
+metrics::CategoricalAccuracy::CategoricalAccuracy() {
     this->name = "categorical_accuracy";
 }
 
-CategoricalAccuracy::CategoricalAccuracy(std::string name) {
+metrics::CategoricalAccuracy::CategoricalAccuracy(std::string name) {
     this->name = std::move(name);
 }
 
 // 返回准确率, 输入为两个张量(两个向量必须形状一致).
-double CategoricalAccuracy::PyCall(const Eigen::MatrixXd &y_pred, const Eigen::MatrixXd &y_true) {
+double metrics::CategoricalAccuracy::PyCall(const Eigen::MatrixXd &y_pred, const Eigen::MatrixXd &y_true) {
     if (y_pred.cols() != y_true.cols() || y_pred.rows() != y_true.rows()) {
         throw pybind11::value_error("形状不一致");
     }
 
     double accuracy = y_pred.rows();
 
-    for (int row = 0; row < y_pred.rows(); row ++) {
+    for (int row = 0; row < y_pred.rows(); row++) {
         int y_pred_row, y_pred_col;
         int y_true_row, y_true_col;
 
