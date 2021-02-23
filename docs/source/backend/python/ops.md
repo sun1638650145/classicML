@@ -122,10 +122,30 @@ get_probability_density(sample, mean, var)
 
 概率密度.
 
-## get_w
+## <del>get_w</del>
 
 ```python
-cc_get_w(S_w, mu_0, mu_1)
+get_w(S_w, mu_0, mu_1)
+```
+
+`get_w`已经被弃用, 它将在未来的正式版本中被移除, 请使用 `get_w_v2`.
+
+获得投影向量.
+
+### 参数
+
+* <b>S_w</b>: 一个 Numpy数组，类内散度矩阵.
+* <b>mu_0</b>: 一个 Numpy数组，反例的均值向量.
+* <b>mu_1</b>: 一个 Numpy数组，正例的均值向量.
+
+### 返回
+
+投影向量.
+
+## get_w_v2
+
+```python
+get_w_v2(S_w, mu_0, mu_1)
 ```
 
 获得投影向量.
