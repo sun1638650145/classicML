@@ -46,12 +46,3 @@ cml.plots.plot_lda(model, x, y, '密度', '含糖率')
 ```
 
 * [更多示例代码点击](https://github.com/sun1638650145/classicML/tree/master/examples)
-
-## classicML 0.6 预览
-
-> 这个发行版将以性能优化和原生支持Apple Silicon为更新目标
->
-> 1. 原生支持(native support) Apple M1
-> 2. 增加大量```C++```后端函数，将主要的操作全部用```C++```重写，大幅提高性能
-> 3. 修复BUG，提高稳定性
-

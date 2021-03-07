@@ -10,7 +10,7 @@ CALLBACKS = [cml.callbacks.History(loss_name='mse',
 x = [[0, 0], [0, 1], [1, 0], [1, 1]]
 y = [[0], [1], [1], [0]]
 # 生成神经网络
-model = cml.models.RBF(seed=2020)
+model = cml.models.RBF(seed=2021)
 model.compile(hidden_units=16)
 # 训练神经网络
 model.fit(x, y, epochs=1000, verbose=True, callbacks=CALLBACKS)

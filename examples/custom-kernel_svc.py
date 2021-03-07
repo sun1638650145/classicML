@@ -24,7 +24,7 @@ y = dataframe.iloc[:, 2].values
 y[y == '是'] = 1
 y[y == '否'] = -1
 # 生成模型
-model = cml.models.SVC(seed=2020)
+model = cml.models.SVC(seed=2021)
 model.compile(C=10000.0, kernel=MyKernel('my_kernel'))
 # 训练模型
 model.fit(x, y, epochs=-1)

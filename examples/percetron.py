@@ -17,7 +17,7 @@ y = dataframe.iloc[:, 2].values
 y[y == '是'] = 1
 y[y == '否'] = 0
 # 生成神经网络
-model = cml.models.BPNN(seed=2020, initializer='glorot_normal')
+model = cml.models.BPNN(seed=2021, initializer='glorot_normal')
 model.compile(network_structure=[3, 1],
               optimizer='adam',
               loss='crossentropy',

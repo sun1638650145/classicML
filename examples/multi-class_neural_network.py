@@ -16,7 +16,7 @@ x = (x - np.mean(x, axis=0)) / np.var(x, axis=0)
 y = dataframe.iloc[:, -1]
 y = pd.get_dummies(y)
 # 生成神经网络
-model = cml.BPNN(seed=2020)
+model = cml.BPNN(seed=2021)
 model.compile(network_structure=[4, 2, 3],
               optimizer='sgd',
               loss='categorical_crossentropy',

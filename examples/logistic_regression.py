@@ -13,7 +13,7 @@ y = dataframe.iloc[:, 2].values
 y[y == '是'] = 1
 y[y == '否'] = 0
 # 生成模型
-model = cml.models.LogisticRegression(seed=1234)
+model = cml.models.LogisticRegression(seed=2021)
 model.compile(optimizer='newton',
               loss='log_likelihood',
               metric='accuracy')
