@@ -17,7 +17,7 @@
 #include "matrix_op.h"
 
 namespace kernels {
-// 损失函数的基类.
+// 核函数的基类.
 class Kernel {
   public:
     Kernel();
