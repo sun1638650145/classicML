@@ -46,3 +46,9 @@ cml.plots.plot_lda(model, x, y, '密度', '含糖率')
 ```
 
 * [更多示例代码点击](https://github.com/sun1638650145/classicML/tree/master/examples)
+
+## v0.6.1 版本预览
+
+* 增加数据读取的模块: 简化读取数据的流程
+* 增加数据预处理的模块: 自动处理缺失值、进行归一化和标准化、进行幂变换
+
