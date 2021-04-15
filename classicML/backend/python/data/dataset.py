@@ -76,9 +76,7 @@ class Dataset(object):
                 self._preprocessing_categorical_babels(data.iloc[:, -1].values)
             # 编码标签.
             if self.label_mode == 'one-hot':
-                _onehot = OneHotEncoder()
-                self.y = _onehot(self.y)
-                del _onehot
+                self.y = OneHotEncoder()(self.y)
 
         return self.x, self.y
 
@@ -89,9 +87,7 @@ class Dataset(object):
             features: numpy.ndarray, 特征数据.
         """
         if self.standardization:
-            scalar = StandardScalar(axis=0)
-            features = scalar(features)
-            del scalar
+            features = StandardScalar(axis=0)(features)
 
         self.x = features
 
