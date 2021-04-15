@@ -6,6 +6,7 @@ from classicML import CLASSICML_LOGGER
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc import activations
     from classicML.backend.python import callbacks
+    from classicML.backend.python import data
     from classicML.backend.python import initializers
     from classicML.backend.python import io
     from classicML.backend.cc import kernels
@@ -26,6 +27,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
 else:
     from classicML.backend.python import activations
     from classicML.backend.python import callbacks
+    from classicML.backend.python import data
     from classicML.backend.python import initializers
     from classicML.backend.python import io
     from classicML.backend.python import kernels

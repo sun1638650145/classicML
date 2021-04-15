@@ -1,5 +1,5 @@
 """An easy-to-use ML framework."""
-__version__ = '0.6'
+__version__ = '0.6.1a0'
 
 import os
 import logging
@@ -34,6 +34,7 @@ from classicML.api import SVC
 
 from classicML.backend import activations
 from classicML.backend import callbacks
+from classicML.backend import data
 from classicML.backend import initializers
 from classicML.backend import io
 from classicML.backend import kernels
