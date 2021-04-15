@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 
+from classicML.backend.python.data.preprocessing import OneHotEncoder
+from classicML.backend.python.data.preprocessing import StandardScalar
+
 
 class Dataset(object):
     """数据集,
@@ -9,6 +12,10 @@ class Dataset(object):
     Attributes:
         dataset_type: {'train', 'validation', 'test'}, default='train',
             数据集的类型, 如果声明为测试集, 将不会生成对应的标签.
+        label_mode: {'one-hot'}, default=None,
+            标签的编码格式.
+        standardization: bool, default=False,
+            是否使用标准化.
         name: str, default=None,
             数据集的名称.
         x: numpy.ndarray,
@@ -18,17 +25,27 @@ class Dataset(object):
         class_indices: dict,
             类标签和类索引的映射字典.
     """
-    def __init__(self, dataset_type='train', name=None):
+    def __init__(self,
+                 dataset_type='train',
+                 label_mode=None,
+                 standardization=False,
+                 name=None):
         """初始化数据集.
 
         Arguments:
             dataset_type: {'train', 'validation', 'test'}, default='train',
                 数据集的类型, 如果声明为测试集, 将不会生成对应的标签.
+            label_mode: {'one-hot'}, default=None,
+                标签的编码格式.
+            standardization: bool, default=False,
+                是否使用标准化.
             name: str, default=None,
                 数据集的名称.
         """
         super(Dataset, self).__init__()
         self.dataset_type = dataset_type.lower()
+        self.label_mode = label_mode
+        self.standardization = standardization
         self.name = name
 
         self.x = None
@@ -56,8 +73,12 @@ class Dataset(object):
             if len(np.unique(data.iloc[:, -1].values)) == 2:
                 self._preprocessing_binary_labels(data.iloc[:, -1].values)
             else:
-                pass
-            # TODO(Steve R. Sun tag:code): 增加生成one-hot编码的功能.
+                self._preprocessing_categorical_babels(data.iloc[:, -1].values)
+            # 编码标签.
+            if self.label_mode == 'one-hot':
+                _onehot = OneHotEncoder()
+                self.y = _onehot(self.y)
+                del _onehot
 
         return self.x, self.y
 
@@ -67,6 +88,11 @@ class Dataset(object):
         Arguments:
             features: numpy.ndarray, 特征数据.
         """
+        if self.standardization:
+            scalar = StandardScalar(axis=0)
+            features = scalar(features)
+            del scalar
+
         self.x = features
 
     def _preprocessing_binary_labels(self, labels):
@@ -76,6 +102,7 @@ class Dataset(object):
             labels: numpy.ndarray, 原始的标签.
         """
         _raw_labels = np.unique(labels)
+
         _positive_key_words = ('是', 'y', 'yes', 'Yes', 'YES', 'Y')
         _negative_key_words = ('否', 'n', 'no', 'No', 'NO', 'N')
 
@@ -85,5 +112,20 @@ class Dataset(object):
             for key_word in _negative_key_words:
                 labels[labels == key_word] = 0
 
-        self.y = labels
+        self.y = labels.astype(int)
         self.class_indices = {_raw_labels[0]: 0, _raw_labels[1]: 1}
+
+    def _preprocessing_categorical_babels(self, labels):
+        """预处理多分类标签, 将标签转换为数值化的稀疏向量.
+
+            Arguments:
+                labels: numpy.ndarray, 原始的标签.
+        """
+        _raw_labels = np.unique(labels)
+
+        if type(labels[0]) is not int:
+            for index, raw_label in enumerate(_raw_labels):
+                labels[labels == raw_label] = index
+                self.class_indices.update({raw_label: index})
+
+        self.y = labels.astype(int)
