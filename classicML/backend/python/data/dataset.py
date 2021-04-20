@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 
 from classicML.backend.python.data.preprocessing import OneHotEncoder
-from classicML.backend.python.data.preprocessing import StandardScalar
+from classicML.backend.python.data.preprocessing import StandardScaler
+from classicML.backend.python.data.preprocessing import MinMaxScaler
 
 
 class Dataset(object):
@@ -16,6 +17,8 @@ class Dataset(object):
             标签的编码格式.
         standardization: bool, default=False,
             是否使用标准化.
+        normalization: bool, default=False,
+            是否使用归一化.
         name: str, default=None,
             数据集的名称.
         x: numpy.ndarray,
@@ -25,10 +28,12 @@ class Dataset(object):
         class_indices: dict,
             类标签和类索引的映射字典.
     """
+
     def __init__(self,
                  dataset_type='train',
                  label_mode=None,
                  standardization=False,
+                 normalization=False,
                  name=None):
         """初始化数据集.
 
@@ -39,6 +44,8 @@ class Dataset(object):
                 标签的编码格式.
             standardization: bool, default=False,
                 是否使用标准化.
+            normalization: bool, default=False,
+                是否使用归一化.
             name: str, default=None,
                 数据集的名称.
         """
@@ -46,6 +53,7 @@ class Dataset(object):
         self.dataset_type = dataset_type.lower()
         self.label_mode = label_mode
         self.standardization = standardization
+        self.normalization = normalization
         self.name = name
 
         self.x = None
@@ -86,8 +94,16 @@ class Dataset(object):
         Arguments:
             features: numpy.ndarray, 特征数据.
         """
-        if self.standardization:
-            features = StandardScalar(axis=0)(features)
+        for column in range(features.shape[1]):
+            # 连续值处理.
+            if features[:, column].dtype in ('float32', 'float64', 'int32', 'int64'):
+                if self.standardization:
+                    features[:, column] = StandardScaler(axis=0)(features[:, column])
+                if self.normalization:
+                    features[:, column] = MinMaxScaler()(features[:, column])
+            # 离散值处理.
+            else:
+                pass
 
         self.x = features
 

@@ -85,7 +85,7 @@ class OneHotEncoder(PreProcessor):
         return onehot_label
 
 
-class StandardScalar(PreProcessor):
+class StandardScaler(PreProcessor):
     """标准化器.
 
     Attributes:
@@ -110,7 +110,7 @@ class StandardScalar(PreProcessor):
             axis: int, default=-1,
                 标准化所沿轴.
         """
-        super(StandardScalar, self).__init__(name=name)
+        super(StandardScaler, self).__init__(name=name)
         self.dtype = dtype
         self.axis = axis
 
@@ -145,5 +145,69 @@ class StandardScalar(PreProcessor):
         """
         preprocessed_data = np.asarray(preprocessed_data, dtype=self.dtype)
         data = preprocessed_data * self.var + self.mean
+
+        return data.astype(self.dtype)
+
+
+class MinMaxScaler(PreProcessor):
+    """归一化器.
+
+    Attributes:
+        name: str, default='minmax_scalar',
+            归一化器的名称.
+        dtype: str, default='float32',
+            归一化后数据元素的数据类型.
+        axis: int, default=-1,
+            归一化所沿轴.
+        min: float, default=None,
+            数据的最小值.
+        max: float, default=None,
+            数据的最大值.
+    """
+    def __init__(self, name='minmax_scalar', dtype='float32', axis=-1):
+        """
+        Arguments:
+            name: str, default='minmax_scalar',
+                归一化器的名称.
+            dtype: str, default='float32',
+                归一化后数据元素的数据类型.
+            axis: int, default=-1,
+                归一化所沿轴.
+        """
+        super(MinMaxScaler, self).__init__(name=name)
+        self.dtype = dtype
+        self.axis = axis
+
+        self.min = None
+        self.max = None
+
+    def __call__(self, data):
+        """进行归一化.
+
+        Arguments:
+            data: array-like, 输入的数据.
+
+        Returns:
+            归一化后的数据.
+        """
+        data = np.asarray(data, dtype=self.dtype)
+        self.min = np.min(data, axis=self.axis)
+        self.max = np.max(data, axis=self.axis)
+
+        preprocessed_data = (data - self.min) / (self.max - self.min)
+
+        return preprocessed_data.astype(self.dtype)
+
+    def inverse(self, preprocessed_data):
+        """进行反归一化.
+
+        Arguments:
+            preprocessed_data: array-like, 输入的归一化后数据.
+
+        Returns:
+            归一化前的数据.
+        """
+        preprocessed_data = np.asarray(preprocessed_data, dtype=self.dtype)
+        data = preprocessed_data * (self.max - self.min) + self.min
 
         return data.astype(self.dtype)
