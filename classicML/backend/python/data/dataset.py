@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
 
+from classicML.backend.python.data.preprocessing import Imputer
+from classicML.backend.python.data.preprocessing import MinMaxScaler
 from classicML.backend.python.data.preprocessing import OneHotEncoder
 from classicML.backend.python.data.preprocessing import StandardScaler
-from classicML.backend.python.data.preprocessing import MinMaxScaler
 
 
 class Dataset(object):
@@ -15,6 +16,8 @@ class Dataset(object):
             数据集的类型, 如果声明为测试集, 将不会生成对应的标签.
         label_mode: {'one-hot'}, default=None,
             标签的编码格式.
+        fillna: bool, default=True,
+            是否填充缺失值.
         standardization: bool, default=False,
             是否使用标准化.
         normalization: bool, default=False,
@@ -32,6 +35,7 @@ class Dataset(object):
     def __init__(self,
                  dataset_type='train',
                  label_mode=None,
+                 fillna=True,
                  standardization=False,
                  normalization=False,
                  name=None):
@@ -42,6 +46,8 @@ class Dataset(object):
                 数据集的类型, 如果声明为测试集, 将不会生成对应的标签.
             label_mode: {'one-hot'}, default=None,
                 标签的编码格式.
+            fillna: bool, default=True,
+                是否填充缺失值.
             standardization: bool, default=False,
                 是否使用标准化.
             normalization: bool, default=False,
@@ -52,6 +58,7 @@ class Dataset(object):
         super(Dataset, self).__init__()
         self.dataset_type = dataset_type.lower()
         self.label_mode = label_mode
+        self.fillna = fillna
         self.standardization = standardization
         self.normalization = normalization
         self.name = name
@@ -94,6 +101,10 @@ class Dataset(object):
         Arguments:
             features: numpy.ndarray, 特征数据.
         """
+        # 处理缺失值.
+        if self.fillna:
+            features = Imputer()(features)
+
         for column in range(features.shape[1]):
             # 连续值处理.
             if features[:, column].dtype in ('float32', 'float64', 'int32', 'int64'):

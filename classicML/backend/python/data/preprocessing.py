@@ -1,7 +1,9 @@
+import copy
 from abc import ABC
 from abc import abstractmethod
 
 import numpy as np
+import pandas as pd
 
 
 class PreProcessor(ABC):
@@ -32,6 +34,123 @@ class PreProcessor(ABC):
     def inverse(self, *args, **kwargs):
         """预处理逆操作."""
         raise NotImplemented
+
+
+class Imputer(PreProcessor):
+    """缺失值填充器,
+    连续值将填充均值, 离散值将填充众数.
+
+    Attributes:
+        name: str, default='imputer',
+            缺失值填充器名称.
+    """
+    def __init__(self, name='imputer'):
+        """
+        Arguments:
+            name: str, default='imputer',
+                缺失值填充器名称.
+        """
+        super(Imputer, self).__init__(name=name)
+
+    def __call__(self, data):
+        """进行缺失值填充.
+
+        Arguments:
+            data: array-like, 输入的数据.
+
+        Returns:
+            填充后的数据.
+        """
+        preprocessed_data = copy.deepcopy(data)
+        for column in range(data.shape[1]):
+            preprocessed_data[:, column] = self._fillna(data[:, column])
+
+        return preprocessed_data
+
+    @staticmethod
+    def _fillna(column):
+        """填充数据列中的缺失值.
+
+        Arguments:
+            column: array-like, 输入的数据列.
+
+        Returns:
+            填充后的数据列.
+        """
+        try:
+            new_column = pd.DataFrame(column, dtype='float32')
+            new_column.fillna(value=np.mean(new_column.dropna().values),
+                              inplace=True)
+        except ValueError:
+            new_column = pd.DataFrame(column)
+            new_column.fillna(value=new_column.value_counts().keys()[0][0],
+                              inplace=True)
+
+        return np.squeeze(new_column.values)
+
+
+class MinMaxScaler(PreProcessor):
+    """归一化器.
+
+    Attributes:
+        name: str, default='minmax_scalar',
+            归一化器的名称.
+        dtype: str, default='float32',
+            归一化后数据元素的数据类型.
+        axis: int, default=-1,
+            归一化所沿轴.
+        min: float, default=None,
+            数据的最小值.
+        max: float, default=None,
+            数据的最大值.
+    """
+    def __init__(self, name='minmax_scalar', dtype='float32', axis=-1):
+        """
+        Arguments:
+            name: str, default='minmax_scalar',
+                归一化器的名称.
+            dtype: str, default='float32',
+                归一化后数据元素的数据类型.
+            axis: int, default=-1,
+                归一化所沿轴.
+        """
+        super(MinMaxScaler, self).__init__(name=name)
+        self.dtype = dtype
+        self.axis = axis
+
+        self.min = None
+        self.max = None
+
+    def __call__(self, data):
+        """进行归一化.
+
+        Arguments:
+            data: array-like, 输入的数据.
+
+        Returns:
+            归一化后的数据.
+        """
+        data = np.asarray(data, dtype=self.dtype)
+        self.min = np.min(data, axis=self.axis)
+        self.max = np.max(data, axis=self.axis)
+
+        preprocessed_data = (data - self.min) / (self.max - self.min)
+
+        return preprocessed_data.astype(self.dtype)
+
+    def inverse(self, preprocessed_data):
+        """进行反归一化.
+
+        Arguments:
+            preprocessed_data: array-like, 输入的归一化后数据.
+
+        Returns:
+            归一化前的数据.
+        """
+        preprocessed_data = np.asarray(preprocessed_data, dtype=self.dtype)
+        data = preprocessed_data * (self.max - self.min) + self.min
+
+        return data.astype(self.dtype)
 
 
 class OneHotEncoder(PreProcessor):
@@ -145,69 +264,5 @@ class StandardScaler(PreProcessor):
         """
         preprocessed_data = np.asarray(preprocessed_data, dtype=self.dtype)
         data = preprocessed_data * self.var + self.mean
-
-        return data.astype(self.dtype)
-
-
-class MinMaxScaler(PreProcessor):
-    """归一化器.
-
-    Attributes:
-        name: str, default='minmax_scalar',
-            归一化器的名称.
-        dtype: str, default='float32',
-            归一化后数据元素的数据类型.
-        axis: int, default=-1,
-            归一化所沿轴.
-        min: float, default=None,
-            数据的最小值.
-        max: float, default=None,
-            数据的最大值.
-    """
-    def __init__(self, name='minmax_scalar', dtype='float32', axis=-1):
-        """
-        Arguments:
-            name: str, default='minmax_scalar',
-                归一化器的名称.
-            dtype: str, default='float32',
-                归一化后数据元素的数据类型.
-            axis: int, default=-1,
-                归一化所沿轴.
-        """
-        super(MinMaxScaler, self).__init__(name=name)
-        self.dtype = dtype
-        self.axis = axis
-
-        self.min = None
-        self.max = None
-
-    def __call__(self, data):
-        """进行归一化.
-
-        Arguments:
-            data: array-like, 输入的数据.
-
-        Returns:
-            归一化后的数据.
-        """
-        data = np.asarray(data, dtype=self.dtype)
-        self.min = np.min(data, axis=self.axis)
-        self.max = np.max(data, axis=self.axis)
-
-        preprocessed_data = (data - self.min) / (self.max - self.min)
-
-        return preprocessed_data.astype(self.dtype)
-
-    def inverse(self, preprocessed_data):
-        """进行反归一化.
-
-        Arguments:
-            preprocessed_data: array-like, 输入的归一化后数据.
-
-        Returns:
-            归一化前的数据.
-        """
-        preprocessed_data = np.asarray(preprocessed_data, dtype=self.dtype)
-        data = preprocessed_data * (self.max - self.min) + self.min
 
         return data.astype(self.dtype)
