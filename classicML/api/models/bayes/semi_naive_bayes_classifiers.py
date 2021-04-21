@@ -230,6 +230,10 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
+        # 为特征数据添加属性信息.
+        x = pd.DataFrame(x, columns=self.attribute_name)
+        x.reset_index(drop=True, inplace=True)
+
         y_pred = list()
 
         if len(x.shape) == 1:
@@ -488,6 +492,10 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
         if self.is_trained is False and self.is_loaded is False:
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
+
+        # 为特征数据添加属性信息.
+        x = pd.DataFrame(x, columns=self.attribute_name)
+        x.reset_index(drop=True, inplace=True)
 
         y_pred = list()
         if len(x.shape) == 1:

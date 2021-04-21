@@ -158,6 +158,10 @@ class NaiveBayesClassifier(object):
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
+        # 为特征数据添加属性信息.
+        x = pd.DataFrame(x, columns=self.attribute_name)
+        x.reset_index(drop=True, inplace=True)
+
         # 避免下溢进行对数处理.
         p_0 = np.log(self.p_0)
         p_1 = np.log(self.p_1)

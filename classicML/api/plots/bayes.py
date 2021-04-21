@@ -77,10 +77,13 @@ def plot_bayes(bayes, x, y):
     ax = plt.subplot()
     _set_bayes_axis(ax)
 
-    # 绘制背景分界图
+    # 转换数据类型.
+    x = pd.DataFrame(x, columns=bayes.attribute_name)
+
+    # 绘制背景分界图.
     _plot_background(bayes, x)
 
-    # 绘制样本点
+    # 绘制样本点.
     x_label, y_label = _plot_scatter(x, y)
 
     _bayes_plot_config(x_label, y_label)
