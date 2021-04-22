@@ -6,7 +6,7 @@ import tempfile
 
 import classicML as cml
 
-DATASET_PATH = '../datasets/西瓜数据集alpha.csv'
+DATASET_PATH = './datasets/西瓜数据集alpha.csv'
 
 # 读取数据
 ds = cml.data.Dataset()
