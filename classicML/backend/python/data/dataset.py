@@ -88,7 +88,7 @@ class Dataset(object):
             if len(np.unique(data.iloc[:, -1].values)) == 2:
                 self._preprocessing_binary_labels(data.iloc[:, -1].values)
             else:
-                self._preprocessing_categorical_babels(data.iloc[:, -1].values)
+                self._preprocessing_categorical_labels(data.iloc[:, -1].values)
             # 编码标签.
             if self.label_mode == 'one-hot':
                 self.y = OneHotEncoder()(self.y)
@@ -122,7 +122,7 @@ class Dataset(object):
         # 预处理标签.
         if self.dataset_type != 'test':
             if y.shape[1] > 2:
-                self._preprocessing_categorical_babels(y)
+                self._preprocessing_categorical_labels(y)
             else:
                 self._preprocessing_binary_labels(y)
             # 编码标签.
@@ -167,14 +167,14 @@ class Dataset(object):
 
         if type(labels[0]) is not int:
             for key_word in _positive_key_words:
-                labels[labels is key_word] = 1
+                labels[labels == key_word] = 1
             for key_word in _negative_key_words:
-                labels[labels is key_word] = 0
+                labels[labels == key_word] = 0
 
         self.y = labels.astype(int)
         self.class_indices = {_raw_labels[0]: 0, _raw_labels[1]: 1}
 
-    def _preprocessing_categorical_babels(self, labels):
+    def _preprocessing_categorical_labels(self, labels):
         """预处理多分类标签, 将标签转换为数值化的稀疏向量.
 
             Arguments:
