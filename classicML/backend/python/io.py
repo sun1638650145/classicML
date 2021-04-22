@@ -53,7 +53,7 @@ def initialize_weights_file(filepath, mode, model_name):
     """
     try:
         fp = h5py.File(filepath, mode)
-        if mode is 'w':
+        if mode == 'w':
             # 创建描述信息组.
             description_gp = fp.create_group(name='description')
             description_gp.attrs['version'] = cml_version + '.' + __version__

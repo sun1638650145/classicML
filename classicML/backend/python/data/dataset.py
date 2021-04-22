@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+from classicML import CLASSICML_LOGGER
 from classicML.backend.python.data.preprocessing import Imputer
 from classicML.backend.python.data.preprocessing import MinMaxScaler
 from classicML.backend.python.data.preprocessing import OneHotEncoder
@@ -31,7 +32,6 @@ class Dataset(object):
         class_indices: dict,
             类标签和类索引的映射字典.
     """
-
     def __init__(self,
                  dataset_type='train',
                  label_mode=None,
@@ -95,6 +95,42 @@ class Dataset(object):
 
         return self.x, self.y
 
+    def from_tensor_slices(self, x, y=None):
+        """从张量流加载数据集.
+
+        Arguments:
+            x: array-like,
+                处理后的特征数据.
+            y: array-like, default=None,
+                处理后的标签.
+
+        Returns:
+            经过预处理的特征数据和标签.
+        """
+        if y is None and self.dataset_type == 'train':
+            CLASSICML_LOGGER.warn('请检查您的数据集, 训练集似乎应该有标签数据.')
+
+        x = np.asarray(x)
+        if y is not None:
+            y = np.asarray(y)
+            if len(y.shape) == 1:
+                y = y.reshape(-1, 1)
+
+        # 预处理特征数据.
+        self._preprocessing_features(x)
+
+        # 预处理标签.
+        if self.dataset_type != 'test':
+            if y.shape[1] > 2:
+                self._preprocessing_categorical_babels(y)
+            else:
+                self._preprocessing_binary_labels(y)
+            # 编码标签.
+            if self.label_mode == 'one-hot':
+                self.y = OneHotEncoder()(self.y)
+
+        return self.x, self.y
+
     def _preprocessing_features(self, features):
         """预处理特征值.
 
@@ -131,9 +167,9 @@ class Dataset(object):
 
         if type(labels[0]) is not int:
             for key_word in _positive_key_words:
-                labels[labels == key_word] = 1
+                labels[labels is key_word] = 1
             for key_word in _negative_key_words:
-                labels[labels == key_word] = 0
+                labels[labels is key_word] = 0
 
         self.y = labels.astype(int)
         self.class_indices = {_raw_labels[0]: 0, _raw_labels[1]: 1}
