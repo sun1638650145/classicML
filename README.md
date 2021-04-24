@@ -49,5 +49,12 @@ cml.plots.plot_lda(model, x, y, '密度', '含糖率')
 
 ## v0.6.1 版本预览
 
-* 增加数据读取的模块: 简化读取数据的流程, 目前可以自动读取CSV文件
-* 增加数据预处理的模块: 可以进行归一化和标准化、对标签进行独热编码
+* 增加数据读取的模块, 简化读取数据的流程
+  * `from_csv` 自动读取CSV文件
+  * `from_dataframe` 自动加载pandas.DataFrame
+  * `from_tensor_slices` 自动加载numpy.ndarray
+* 增加数据预处理的模块
+  * `Imputer`自动填充缺失值
+  * `MinMaxScaler`进行归一化
+  * `OneHotEncoder`对标签进行独热编码
+  * `StandardScaler`进行标准化

@@ -88,8 +88,10 @@ class DecisionTreeClassifier(object):
         Raises:
             AttributeError: 没有验证集.
         """
-        if isinstance(x, np.ndarray) and self.attribute_name is None:
-            CLASSICML_LOGGER.warn("属性名称缺失, 请使用pandas.DataFrame; 或检查 self.attributes_name")
+        if isinstance(x, np.ndarray):
+            x = list(x)
+            if self.attribute_name is None:
+                CLASSICML_LOGGER.warn("属性名称缺失, 请使用pandas.DataFrame; 或检查 self.attributes_name")
         if (self.pruner is not None) and (x_validation is None or y_validation is None):
             CLASSICML_LOGGER.error("没有验证集, 无法对决策树进行剪枝")
             raise AttributeError('没有验证集')

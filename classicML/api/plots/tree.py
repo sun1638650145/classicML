@@ -93,4 +93,7 @@ def plot_tree(tree):
     _plot_decision_tree(decision_tree, (0.5, 1), '', ax)
 
     _tree_plot_config(tree.criterion, tree.pruner)
+
+    # 自动调整子图.
+    plt.tight_layout()
     plt.show()

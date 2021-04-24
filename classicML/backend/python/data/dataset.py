@@ -67,6 +67,29 @@ class Dataset(object):
         self.y = None
         self.class_indices = dict()
 
+    def from_dataframe(self, dataframe):
+        """从DataFrame中加载数据集.
+
+        Arguments:
+            dataframe: pandas.DataFrame, 原始的数据.
+
+        Returns:
+            经过预处理的特征数据和标签.
+        """
+        # 预处理特征数据.
+        self._preprocessing_features(dataframe.iloc[:, :-1].values)
+        # 预处理标签.
+        if self.dataset_type != 'test':
+            if len(np.unique(dataframe.iloc[:, -1].values)) == 2:
+                self._preprocessing_binary_labels(dataframe.iloc[:, -1].values)
+            else:
+                self._preprocessing_categorical_labels(dataframe.iloc[:, -1].values)
+            # 编码标签.
+            if self.label_mode == 'one-hot':
+                self.y = OneHotEncoder()(self.y)
+
+        return self.x, self.y
+
     def from_csv(self, filepath):
         """从CSV文件中加载数据集.
 
@@ -79,19 +102,7 @@ class Dataset(object):
         data = pd.read_csv(filepath_or_buffer=filepath,
                            index_col=0,
                            header=0)
-
-        # 预处理特征数据.
-        self._preprocessing_features(data.iloc[:, :-1].values)
-
-        # 预处理标签.
-        if self.dataset_type != 'test':
-            if len(np.unique(data.iloc[:, -1].values)) == 2:
-                self._preprocessing_binary_labels(data.iloc[:, -1].values)
-            else:
-                self._preprocessing_categorical_labels(data.iloc[:, -1].values)
-            # 编码标签.
-            if self.label_mode == 'one-hot':
-                self.y = OneHotEncoder()(self.y)
+        self.from_dataframe(data)
 
         return self.x, self.y
 
