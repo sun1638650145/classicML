@@ -89,7 +89,7 @@ class DecisionTreeClassifier(object):
             AttributeError: 没有验证集.
         """
         if isinstance(x, np.ndarray):
-            x = list(x)
+            x = x.tolist()
             if self.attribute_name is None:
                 CLASSICML_LOGGER.warn("属性名称缺失, 请使用pandas.DataFrame; 或检查 self.attributes_name")
         if (self.pruner is not None) and (x_validation is None or y_validation is None):
