@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 
 from classicML import CLASSICML_LOGGER
+from classicML.backend.python.data.preprocessing import DummyEncoder
 from classicML.backend.python.data.preprocessing import Imputer
 from classicML.backend.python.data.preprocessing import MinMaxScaler
 from classicML.backend.python.data.preprocessing import OneHotEncoder
@@ -19,10 +20,12 @@ class Dataset(object):
             标签的编码格式.
         fillna: bool, default=True,
             是否填充缺失值.
-        standardization: bool, default=False,
-            是否使用标准化.
+        digitization: bool, default=False,
+            是否使用数值化, 将离散标签转化成数值.
         normalization: bool, default=False,
             是否使用归一化.
+        standardization: bool, default=False,
+            是否使用标准化.
         name: str, default=None,
             数据集的名称.
         x: numpy.ndarray,
@@ -36,8 +39,9 @@ class Dataset(object):
                  dataset_type='train',
                  label_mode=None,
                  fillna=True,
-                 standardization=False,
+                 digitization=False,
                  normalization=False,
+                 standardization=False,
                  name=None):
         """初始化数据集.
 
@@ -48,10 +52,12 @@ class Dataset(object):
                 标签的编码格式.
             fillna: bool, default=True,
                 是否填充缺失值.
-            standardization: bool, default=False,
-                是否使用标准化.
+            digitization: bool, default=False,
+                是否使用数值化, 将离散标签转化成数值.
             normalization: bool, default=False,
                 是否使用归一化.
+            standardization: bool, default=False,
+                是否使用标准化.
             name: str, default=None,
                 数据集的名称.
         """
@@ -59,8 +65,9 @@ class Dataset(object):
         self.dataset_type = dataset_type.lower()
         self.label_mode = label_mode
         self.fillna = fillna
-        self.standardization = standardization
+        self.digitization = digitization
         self.normalization = normalization
+        self.standardization = standardization
         self.name = name
 
         self.x = None
@@ -152,16 +159,24 @@ class Dataset(object):
         if self.fillna:
             features = Imputer()(features)
 
+        _del_list = list()
         for column in range(features.shape[1]):
-            # 连续值处理.
-            if features[:, column].dtype in ('float32', 'float64', 'int32', 'int64'):
+            try:
+                # 连续值处理.
+                _current_feature = np.asarray(features[:, column], dtype='float32')
                 if self.standardization:
-                    features[:, column] = StandardScaler(axis=0)(features[:, column])
+                    features[:, column] = StandardScaler(axis=0)(_current_feature)
                 if self.normalization:
-                    features[:, column] = MinMaxScaler()(features[:, column])
-            # 离散值处理.
-            else:
-                pass
+                    features[:, column] = MinMaxScaler()(_current_feature)
+            except ValueError:
+                # 离散值处理.
+                if self.digitization:
+                    features = np.c_[features, DummyEncoder()(features[:, column])]
+                    _del_list.append(column)
+
+        # 删除被数值化的列.
+        if len(_del_list) > 0:
+            features = np.delete(features, _del_list, axis=1)
 
         self.x = features
 

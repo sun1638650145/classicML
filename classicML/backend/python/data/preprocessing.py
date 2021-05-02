@@ -36,6 +36,56 @@ class PreProcessor(ABC):
         raise NotImplemented
 
 
+class DummyEncoder(PreProcessor):
+    """Dummy编码器.
+
+    Attributes:
+        name: str, default='dummy_encoder',
+            Dummy编码器名称.
+        dtype: str, default='float32',
+            编码后的标签的数据类型.
+        class_indices: dict,
+            类标签和类索引的映射字典.
+    """
+    def __init__(self, name='dummy_encoder', dtype='float32'):
+        """
+        Arguments:
+            name: str, default='dummy_encoder',
+                Dummy编码器名称.
+            dtype: str, default='float32',
+                编码后的标签的数据类型.
+        """
+        super(DummyEncoder, self).__init__(name=name)
+        self.dtype = dtype
+
+        self.class_indices = dict()
+
+    def __call__(self, labels):
+        """进行Dummy编码.
+
+        Arguments:
+            labels: array-like, 原始的标签.
+
+        Returns:
+            Dummy编码后的标签.
+        """
+        labels = np.asarray(labels)
+
+        num_classes = np.unique(labels)
+        m = len(labels)  # 样本总数.
+        n = len(num_classes)  # 类别总数.
+
+        # 构建映射字典.
+        for index, value in enumerate(num_classes):
+            self.class_indices.update({value: index})
+
+        dummy_label = np.zeros(shape=[m, n], dtype=self.dtype)
+        for index, label in enumerate(labels):
+            dummy_label[index][self.class_indices[label]] = 1
+
+        return dummy_label
+
+
 class Imputer(PreProcessor):
     """缺失值填充器,
     连续值将填充均值, 离散值将填充众数.
