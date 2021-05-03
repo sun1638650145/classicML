@@ -93,10 +93,7 @@ class Dataset(object):
             else:
                 self._preprocessing_categorical_labels(dataframe.iloc[:, -1].values)
             # 编码标签.
-            if self.label_mode == 'one-hot':
-                self.y, self.class_indices = OneHotEncoder()(self.y)
-            elif self.label_mode == 'max-margin':
-                self.y, self.class_indices = MaxMarginEncoder()(self.y)
+            self._encoder_label()
 
         return self.x, self.y
 
@@ -146,9 +143,7 @@ class Dataset(object):
                 self._preprocessing_categorical_labels(y)
             else:
                 self._preprocessing_binary_labels(y)
-            # 编码标签.
-            if self.label_mode == 'one-hot':
-                self.y = OneHotEncoder()(self.y)
+            self._encoder_label()
 
         return self.x, self.y
 
@@ -217,3 +212,25 @@ class Dataset(object):
                 self.class_indices.update({raw_label: index})
 
         self.y = labels.astype(int)
+
+    def _encoder_label(self):
+        """编码标签."""
+        if self.label_mode == 'one-hot':
+            self.y, _class_indices = OneHotEncoder()(self.y)
+            self._set_real_class_indices(self.class_indices, _class_indices)
+        elif self.label_mode == 'max-margin':
+            self.y, _class_indices = MaxMarginEncoder()(self.y)
+            self._set_real_class_indices(self.class_indices, _class_indices)
+
+    def _set_real_class_indices(self, preprocessed_class_indices, encoder_class_indices):
+        """设置真实的类标签和类索引的映射字典.
+
+        Arguments:
+            preprocessed_class_indices: dict, 预处理后的类标签和类索引的映射字典.
+            encoder_class_indices: dict, 编码器的类标签和类索引的映射字典.
+        """
+        class_indices = dict()
+        for key, value in preprocessed_class_indices.items():
+            class_indices.update({key: encoder_class_indices[value]})
+
+        self.class_indices = class_indices

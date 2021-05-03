@@ -52,6 +52,7 @@ cml.plots.plot_lda(model, ds.x, ds.y, '密度', '含糖率')
 * 增加数据预处理的模块
   * `DummyEncoder`对标签进行Dummy编码
   * `Imputer`自动填充缺失值
+  * `MaxMarginEncoder`对标签进行最大间隔编码
   * `MinMaxScaler`进行归一化
   * `OneHotEncoder`对标签进行独热编码
   * `StandardScaler`进行标准化
