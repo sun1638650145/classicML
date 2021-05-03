@@ -139,6 +139,55 @@ class Imputer(PreProcessor):
         return np.squeeze(new_column.values)
 
 
+class MaxMarginEncoder(PreProcessor):
+    """最大化间隔编码器, 对于支持向量机的标签编码需要将编码转换为关于超平面的.
+
+    Attributes:
+        name: str, default='max_margin_encoder',
+            最大化间隔编码器名称.
+        dtype: str, default='float32',
+            编码后的标签的数据类型.
+        class_indices: dict,
+            类标签和类索引的映射字典.
+    """
+    def __init__(self, name='max_margin_encoder', dtype='float32'):
+        """
+        Arguments:
+            name: str, default='max_margin_encoder',
+                最大化间隔编码器名称.
+            dtype: str, default='float32',
+                编码后的标签的数据类型.
+        """
+        super(MaxMarginEncoder, self).__init__(name=name)
+        self.dtype = dtype
+
+        self.class_indices = dict()
+
+    def __call__(self, labels):
+        """进行最大化间隔编码器.
+
+        Arguments:
+            labels: array-like, 原始的标签.
+
+        Returns:
+            最大化间隔编码后的标签, 类标签和类索引的映射字典.
+        """
+        labels = np.asarray(labels)
+
+        num_classes = np.unique(labels)
+        m = len(labels)  # 样本总数.
+
+        # 构建映射字典.
+        for index, value in enumerate(num_classes):
+            self.class_indices.update({value: (-1 if index == 0 else 1)})
+
+        max_margin_label = np.zeros(m, dtype=self.dtype)
+        for i in range(m):
+            max_margin_label[i] = self.class_indices[labels[i]]
+
+        return max_margin_label, self.class_indices
+
+
 class MinMaxScaler(PreProcessor):
     """归一化器.
 
@@ -234,7 +283,7 @@ class OneHotEncoder(PreProcessor):
             labels: array-like, 原始的标签.
 
         Returns:
-            独热编码后的标签.
+            独热编码后的标签, 类标签和类索引的映射字典.
         """
         labels = np.asarray(labels)
 
@@ -251,7 +300,7 @@ class OneHotEncoder(PreProcessor):
             j = self.class_indices[labels[i]]
             onehot_label[i, j] = 1
 
-        return onehot_label
+        return onehot_label, self.class_indices
 
 
 class StandardScaler(PreProcessor):

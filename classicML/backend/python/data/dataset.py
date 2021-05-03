@@ -4,6 +4,7 @@ import pandas as pd
 from classicML import CLASSICML_LOGGER
 from classicML.backend.python.data.preprocessing import DummyEncoder
 from classicML.backend.python.data.preprocessing import Imputer
+from classicML.backend.python.data.preprocessing import MaxMarginEncoder
 from classicML.backend.python.data.preprocessing import MinMaxScaler
 from classicML.backend.python.data.preprocessing import OneHotEncoder
 from classicML.backend.python.data.preprocessing import StandardScaler
@@ -16,7 +17,7 @@ class Dataset(object):
     Attributes:
         dataset_type: {'train', 'validation', 'test'}, default='train',
             数据集的类型, 如果声明为测试集, 将不会生成对应的标签.
-        label_mode: {'one-hot'}, default=None,
+        label_mode: {'one-hot', 'max-margin'}, default=None,
             标签的编码格式.
         fillna: bool, default=True,
             是否填充缺失值.
@@ -48,7 +49,7 @@ class Dataset(object):
         Arguments:
             dataset_type: {'train', 'validation', 'test'}, default='train',
                 数据集的类型, 如果声明为测试集, 将不会生成对应的标签.
-            label_mode: {'one-hot'}, default=None,
+            label_mode: {'one-hot', 'max-margin'}, default=None,
                 标签的编码格式.
             fillna: bool, default=True,
                 是否填充缺失值.
@@ -93,7 +94,9 @@ class Dataset(object):
                 self._preprocessing_categorical_labels(dataframe.iloc[:, -1].values)
             # 编码标签.
             if self.label_mode == 'one-hot':
-                self.y = OneHotEncoder()(self.y)
+                self.y, self.class_indices = OneHotEncoder()(self.y)
+            elif self.label_mode == 'max-margin':
+                self.y, self.class_indices = MaxMarginEncoder()(self.y)
 
         return self.x, self.y
 
