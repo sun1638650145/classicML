@@ -290,14 +290,19 @@ class OneHotEncoder(PreProcessor):
         num_classes = np.unique(labels)
         m = len(labels)  # 样本总数.
         n = len(num_classes)  # 类别总数.
+        _class_indices = dict()
 
-        # 构建映射字典.
         for index, value in enumerate(num_classes):
-            self.class_indices.update({value: index})
+            _class_indices.update({value: index})
+            # 构建映射字典.
+            _label = np.zeros(n, dtype=self.dtype)
+            _label[index] = 1
+            self.class_indices.update({value: _label.tolist()})
 
+        # 进行逐元素编码操作.
         onehot_label = np.zeros([m, n], dtype=self.dtype)
         for i in np.arange(m):
-            j = self.class_indices[labels[i]]
+            j = _class_indices[labels[i]]
             onehot_label[i, j] = 1
 
         return onehot_label, self.class_indices

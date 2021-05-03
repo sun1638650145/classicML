@@ -1,7 +1,12 @@
 .DS_store
+.idea/**
+# 忽略运行缓存.
 *.pyc
 __pycache__/
-.idea/**
-*.so
+# 忽略测试.
 .pytest_cache/
+# 忽略打包.
+*.so
 build/
+dist/
+classicML.egg-info/
