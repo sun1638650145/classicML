@@ -2,8 +2,8 @@ from glob import glob
 from setuptools import setup, find_packages
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-with open('README.md', 'r') as fh:
-    long_description = fh.read()
+with open('README.md', 'r') as fp:
+    long_description = fp.read()
 
 extension_modules = [
     # backend.activations模块

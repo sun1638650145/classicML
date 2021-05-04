@@ -9,4 +9,4 @@ __pycache__/
 *.so
 build/
 dist/
-classicML.egg-info/
+*.egg-info/
