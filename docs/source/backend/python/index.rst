@@ -10,6 +10,7 @@ python
    
    activations
    callbacks
+   data/index
    initializers
    io
    kernels
