@@ -6,13 +6,13 @@
 
 ## 2.如何在搭载Apple M1芯片的Mac上使用classicML?
 
-目前，classicML提供了一个M1预览版(只支持Python 3.8版本)，您可以通过pip软件包管理器直接安装.
+目前，classicML提供了M1正式版(但只支持Python 3.8版本)，您可以通过pip软件包管理器直接安装.
 
 ```shell
 # 安装python版
-pip install classicML-python==0.6b2
+pip install classicML-python
 # 或者直接安装标准版
-pip install classicML==0.6b2
+pip install classicML
 ```
 
 ## 3.我如何才能联系到作者？

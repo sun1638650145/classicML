@@ -1,3 +1,4 @@
+"""classicML中的数据预处理模块."""
 import copy
 from abc import ABC
 from abc import abstractmethod
