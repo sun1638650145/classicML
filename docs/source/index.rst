@@ -61,7 +61,7 @@ v0.6.1 版本预览
 
       -  ``from_tensor_slices`` 自动加载numpy.ndarray
 
-   1. 增加数据预处理的模块
+   2. 增加数据预处理的模块
 
       -  ``DummyEncoder``\ 对标签进行Dummy编码
 
