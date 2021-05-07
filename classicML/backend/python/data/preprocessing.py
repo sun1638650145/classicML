@@ -165,7 +165,7 @@ class MaxMarginEncoder(PreProcessor):
         self.class_indices = dict()
 
     def __call__(self, labels):
-        """进行最大化间隔编码器.
+        """进行最大化间隔编码.
 
         Arguments:
             labels: array-like, 原始的标签.
