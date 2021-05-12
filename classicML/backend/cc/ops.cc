@@ -242,7 +242,7 @@ std::string ops::TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, 
     std::set<double> buffer;
     for (int row = 0; row < y.rows(); row ++) {
         for (int col = 0; col < y.cols(); col ++) {
-            buffer.insert(y(row, col));
+            buffer.insert((double)y(row, col));
         }
     }
     if (y.cols() == 1) {

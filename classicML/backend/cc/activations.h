@@ -20,13 +20,13 @@
 namespace activations {
 // 激活函数基类.
 class Activation {
-  public:
-    Activation();
-    explicit Activation(std::string name);
+    public:
+        Activation();
+        explicit Activation(std::string name);
 
-    virtual Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z);
-    virtual Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
-                                 const Eigen::MatrixXd &a);
+        virtual Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z);
+        virtual Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
+                                     const Eigen::MatrixXd &a);
 
     public:
         std::string name;
@@ -34,52 +34,52 @@ class Activation {
 
 // ReLU激活函数.
 class Relu : public Activation {
-  public:
-    Relu();
-    explicit Relu(std::string name);
+    public:
+        Relu();
+        explicit Relu(std::string name);
 
-    Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z) override;
-    Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
-                         const Eigen::MatrixXd &a) override;
+        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z) override;
+        Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
+                             const Eigen::MatrixXd &a) override;
 
-  public:
-    std::string name;
+    public:
+        std::string name;
 };
 
 // Sigmoid激活函数.
 class Sigmoid : public Activation {
-  public:
-    Sigmoid();
-    explicit Sigmoid(std::string name);
+    public:
+        Sigmoid();
+        explicit Sigmoid(std::string name);
 
-    Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z) override;
-    Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
-                         const Eigen::MatrixXd &a,
-                         const Eigen::MatrixXd &y_true);
-  public:
-    std::string name;
+        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z) override;
+        Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
+                             const Eigen::MatrixXd &a,
+                             const Eigen::MatrixXd &y_true);
+    public:
+        std::string name;
 };
 
 // Softmax激活函数.
 class Softmax : public Activation {
-  public:
-    Softmax();
-    explicit Softmax(std::string name);
+    public:
+        Softmax();
+        explicit Softmax(std::string name);
 
-    Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z) override;
-    Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
+        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z) override;
+        Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
                              const Eigen::MatrixXd &a) override;
 
-  public:
-    std::string name;
+    public:
+        std::string name;
 };
-}  // namespace activation
+}  // namespace activations
 
 PYBIND11_MODULE(activations, m) {
-    m.doc() = R"pbdoc(classicML的激活函数, 以CC实现)pbdoc";
+    m.doc() = R"pbdoc(classicML的激活函数, 以C++实现)pbdoc";
 
     // 注册自定义异常
-    pybind11::register_exception<NotImplementedError>(m, "NotImplementedError", PyExc_NotImplementedError);
+    pybind11::register_exception<exceptions::NotImplementedError>(m, "NotImplementedError", PyExc_NotImplementedError);
 
     pybind11::class_<activations::Activation>(m, "Activation", pybind11::dynamic_attr(), R"pbdoc(
 激活函数基类.
@@ -89,30 +89,30 @@ PYBIND11_MODULE(activations, m) {
             激活函数名称.
 
     Raises:
-       NotImplementedError: __call__, diff方法需要用户实现.
+        NotImplementedError: __call__, diff方法需要用户实现.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
     Arguments:
-            name: str, default='activations',
-                激活函数名称.
+        name: str, default='activations',
+            激活函数名称.
 )pbdoc")
         .def(pybind11::init<std::string>(), R"pbdoc(
     Arguments:
-            name: str, default='activations',
-                激活函数名称.
+        name: str, default='activations',
+            激活函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readonly("name", &activations::Activation::name)
         .def("__call__", &activations::Activation::PyCall, pybind11::arg("z"))
         .def("diff", &activations::Activation::Diff,
-             pybind11::arg("output"), pybind11::arg("a"));
+        pybind11::arg("output"), pybind11::arg("a"));
 
     pybind11::class_<activations::Relu, activations::Activation>(m, "Relu", pybind11::dynamic_attr(), R"pbdoc(
 ReLU激活函数.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
     Arguments:
-            name: str, default='activations',
-                激活函数名称.
+        name: str, default='activations',
+            激活函数名称.
 )pbdoc")
         .def(pybind11::init<std::string>(), R"pbdoc(
     Arguments:
@@ -145,8 +145,8 @@ Sigmoid激活函数.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
     Arguments:
-            name: str, default='sigmoid',
-                激活函数名称.
+        name: str, default='sigmoid',
+            激活函数名称.
 )pbdoc")
         .def(pybind11::init<std::string>(), R"pbdoc(
     Arguments:
@@ -183,13 +183,13 @@ Softmax激活函数.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
     Arguments:
-            name: str, default='softmax',
-                激活函数名称.
+        name: str, default='softmax',
+            激活函数名称.
 )pbdoc")
         .def(pybind11::init<std::string>(), R"pbdoc(
     Arguments:
-            name: str, default='softmax',
-                激活函数名称.
+        name: str, default='softmax',
+            激活函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readonly("name", &activations::Softmax::name)
         .def("__call__", &activations::Softmax::PyCall, R"pbdoc(
@@ -220,7 +220,7 @@ Sigmoid的导数(微分).
     m.attr("sigmoid") = activations::Sigmoid();
     m.attr("softmax") = activations::Softmax();
 
-    m.attr("__version__") = "backend.cc.activations.0.4";
+    m.attr("__version__") = "backend.cc.activations.0.4.1";
 }
 
 #endif /* ACTIVATIONS_H */

@@ -28,6 +28,8 @@ from classicML.backend.python.ops import get_within_class_scatter_matrix
 from classicML.backend.python.ops import select_second_alpha
 from classicML.backend.python.ops import type_of_target
 
+THRESHOLD = 1e-15
+
 
 class TestCalculateError(object):
     def test_answer(self):
@@ -42,7 +44,7 @@ class TestCalculateError(object):
 
         cc_answer = cc_calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b)
         py_answer = calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b)
-        assert cc_answer == py_answer
+        assert abs(cc_answer - py_answer) <= THRESHOLD
 
 
 class TestClipAlpha(object):
@@ -51,21 +53,21 @@ class TestClipAlpha(object):
 
         cc_answer = cc_clip_alpha(alpha, low, high)
         py_answer = clip_alpha(alpha, low, high)
-        assert (cc_answer == py_answer) and (py_answer == alpha)
+        assert abs(cc_answer - py_answer) <= THRESHOLD and (py_answer == alpha)
 
     def test_outside_left_interval(self):
         alpha, low, high = 3, 4, 5
 
         cc_answer = cc_clip_alpha(alpha, low, high)
         py_answer = clip_alpha(alpha, low, high)
-        assert (cc_answer == py_answer) and (py_answer == low)
+        assert abs(cc_answer - py_answer) <= THRESHOLD and (py_answer == low)
 
     def test_outside_right_interval(self):
         alpha, low, high = 6, 4, 5
 
         cc_answer = cc_clip_alpha(alpha, low, high)
         py_answer = clip_alpha(alpha, low, high)
-        assert (cc_answer == py_answer) and (py_answer == high)
+        assert abs(cc_answer - py_answer) <= THRESHOLD and (py_answer == high)
 
 
 class TestGetConditionalProbability(object):
@@ -87,8 +89,8 @@ class TestGetConditionalProbability(object):
         cc_answer = cc_get_conditional_probability(samples_on_attribute, samples_in_category, num_of_categories, False)
         py_answer = get_conditional_probability(samples_on_attribute, samples_in_category, num_of_categories, False)
 
-        assert cc_answer_smoothing == py_answer_smoothing
-        assert cc_answer == py_answer
+        assert abs(cc_answer_smoothing - py_answer_smoothing) <= THRESHOLD
+        assert abs(cc_answer - py_answer) <= THRESHOLD
 
 
 class TestGetDependentPriorProbability(object):
@@ -116,8 +118,8 @@ class TestGetDependentPriorProbability(object):
                                                 values_on_attribute,
                                                 False)
 
-        assert cc_answer_smoothing == py_answer_smoothing
-        assert cc_answer == py_answer
+        assert abs(cc_answer_smoothing - py_answer_smoothing) <= THRESHOLD
+        assert abs(cc_answer - py_answer) <= THRESHOLD
 
 
 class TestGetPriorProbability(object):
@@ -146,7 +148,7 @@ class TestGetProbabilityDensity(object):
         cc_answer = cc_get_probability_density(sample, mean, var)
         py_answer = get_probability_density(sample, mean, var)
 
-        assert cc_answer == py_answer
+        assert abs(cc_answer - py_answer) <= THRESHOLD
 
 
 class TestGetW(object):
@@ -158,7 +160,7 @@ class TestGetW(object):
         cc_answer = cc_get_w(S_w, mu_0, mu_1)
         py_answer = get_w(S_w, mu_0, mu_1)
 
-        assert (cc_answer == py_answer).all()
+        assert cc_answer.all() == py_answer.all()
 
 
 class TestGetWithinClassScatterMatrix(object):

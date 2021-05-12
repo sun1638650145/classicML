@@ -18,62 +18,62 @@
 namespace metrics {
 // 评估函数的基类.
 class Metric {
-  public:
-    Metric();
-    explicit Metric(std::string name);
+    public:
+        Metric();
+        explicit Metric(std::string name);
 
-    virtual double PyCall(const Eigen::MatrixXd &y_pred,
-                          const Eigen::MatrixXd &y_true);
+        virtual double PyCall(const Eigen::MatrixXd &y_pred,
+                              const Eigen::MatrixXd &y_true);
 
-  public:
-    std::string name;
+    public:
+        std::string name;
 };
 
 // 准确率评估函数.
 class Accuracy : public Metric {
-  public:
-    Accuracy();
-    explicit Accuracy(std::string name);
+    public:
+        Accuracy();
+        explicit Accuracy(std::string name);
 
-    double PyCall(const Eigen::MatrixXd &y_pred,
-                  const Eigen::MatrixXd &y_true) override;
+        double PyCall(const Eigen::MatrixXd &y_pred,
+                      const Eigen::MatrixXd &y_true) override;
 
-  public:
-    std::string name;
+    public:
+        std::string name;
 };
 
 // 二分类准确率评估函数.
 class BinaryAccuracy : public Metric {
-  public:
-    BinaryAccuracy();
-    explicit BinaryAccuracy(std::string name);
+    public:
+        BinaryAccuracy();
+        explicit BinaryAccuracy(std::string name);
 
-    double PyCall(const Eigen::MatrixXd &y_pred,
-                  const Eigen::MatrixXd &y_true) override;
+        double PyCall(const Eigen::MatrixXd &y_pred,
+                      const Eigen::MatrixXd &y_true) override;
 
-  public:
-    std::string name;
+    public:
+        std::string name;
 };
 
 // 多分类准确率评估函数.
 class CategoricalAccuracy : public Metric {
-  public:
-    CategoricalAccuracy();
-    explicit CategoricalAccuracy(std::string name);
+    public:
+        CategoricalAccuracy();
+        explicit CategoricalAccuracy(std::string name);
 
-    double PyCall(const Eigen::MatrixXd &y_pred,
-                  const Eigen::MatrixXd &y_true) override;
+        double PyCall(const Eigen::MatrixXd &y_pred,
+                      const Eigen::MatrixXd &y_true) override;
 
-  public:
-    std::string name;
+    public:
+        std::string name;
 };
 }  // namespace metrics
 
 PYBIND11_MODULE(metrics, m) {
-    m.doc() = R"pbdoc(classicML的评估函数, 以CC实现)pbdoc";
+    m.doc() = R"pbdoc(classicML的评估函数, 以C++实现)pbdoc";
 
     // 注册自定义异常
-    pybind11::register_exception<NotImplementedError>(m, "NotImplementedError", PyExc_NotImplementedError);
+    pybind11::register_exception<exceptions::NotImplementedError>(m, "NotImplementedError", PyExc_NotImplementedError);
 
     pybind11::class_<metrics::Metric>(m, "Metric", pybind11::dynamic_attr(), R"pbdoc(
 评估函数的基类.
@@ -158,7 +158,7 @@ PYBIND11_MODULE(metrics, m) {
 )pbdoc",
              pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
-    m.attr("__version__") = "backend.cc.metrics.0.3";
+    m.attr("__version__") = "backend.cc.metrics.0.3.1";
 }
 
 #endif /* METRICS_H */

@@ -71,7 +71,7 @@ std::string TypeOfTarget(const pybind11::array &y);
 }  // namespace ops
 
 PYBIND11_MODULE(ops, m) {
-    m.doc() = R"pbdoc(classicML的底层核心操作, 以CC实现)pbdoc";
+    m.doc() = R"pbdoc(classicML的底层核心操作, 以C++实现)pbdoc";
 
     m.def("cc_calculate_error", &ops::CalculateError, R"pbdoc(
 计算KKT条件的违背值.
@@ -266,7 +266,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.10";
+    m.attr("__version__") = "backend.cc.ops.0.10.1";
 }
 
 #endif /* OPS_H */

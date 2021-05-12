@@ -18,7 +18,7 @@ metrics::Metric::Metric(std::string name) {
 
 double metrics::Metric::PyCall(const Eigen::MatrixXd &y_pred,
                                const Eigen::MatrixXd &y_true) {
-    throw NotImplementedError(); // 与Py后端实现相同, 主动抛出异常.
+    throw exceptions::NotImplementedError(); // 与Py后端实现相同, 主动抛出异常.
 }
 
 metrics::Accuracy::Accuracy() {
@@ -54,7 +54,7 @@ double metrics::BinaryAccuracy::PyCall(const Eigen::MatrixXd &y_pred, const Eige
         throw pybind11::value_error("形状不一致");
     }
 
-    double accuracy = y_pred.size();
+    auto accuracy = (double)y_pred.size();
 
     for (int i = 0; i < y_pred.size(); i++) {
         if ((y_pred(i, 0) < 0.5 && y_true(i, 0) == 1) ||
@@ -63,7 +63,7 @@ double metrics::BinaryAccuracy::PyCall(const Eigen::MatrixXd &y_pred, const Eige
         }
     }
 
-    return accuracy / y_pred.size();
+    return accuracy / (double)y_pred.size();
 }
 
 metrics::CategoricalAccuracy::CategoricalAccuracy() {
@@ -80,7 +80,7 @@ double metrics::CategoricalAccuracy::PyCall(const Eigen::MatrixXd &y_pred, const
         throw pybind11::value_error("形状不一致");
     }
 
-    double accuracy = y_pred.rows();
+    auto accuracy = (double)y_pred.rows();
 
     for (int row = 0; row < y_pred.rows(); row++) {
         int y_pred_row, y_pred_col;
@@ -94,5 +94,5 @@ double metrics::CategoricalAccuracy::PyCall(const Eigen::MatrixXd &y_pred, const
         }
     }
 
-    return accuracy / y_pred.rows();
+    return accuracy / (double)y_pred.rows();
 }

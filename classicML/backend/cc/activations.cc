@@ -17,11 +17,11 @@ activations::Activation::Activation(std::string name) {
 }
 
 Eigen::MatrixXd activations::Activation::PyCall(const Eigen::MatrixXd &z) {
-    throw NotImplementedError();
+    throw exceptions::NotImplementedError();
 }
 
 Eigen::MatrixXd activations::Activation::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
-    throw NotImplementedError();
+    throw exceptions::NotImplementedError();
 }
 
 activations::Relu::Relu() {

@@ -1,3 +1,4 @@
+"""classicML的激活函数."""
 import numpy as np
 
 

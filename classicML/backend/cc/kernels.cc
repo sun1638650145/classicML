@@ -18,7 +18,7 @@ kernels::Kernel::Kernel(std::string name) {
 
 Eigen::MatrixXd kernels::Kernel::PyCall(const Eigen::MatrixXd &x_i,
                                         const Eigen::MatrixXd &x_j) {
-    throw NotImplementedError();  // 与Py后端实现相同, 主动抛出异常.
+    throw exceptions::NotImplementedError();  // 与Py后端实现相同, 主动抛出异常.
 }
 
 kernels::Linear::Linear() {

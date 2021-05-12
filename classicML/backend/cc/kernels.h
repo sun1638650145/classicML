@@ -17,90 +17,90 @@
 #include "matrix_op.h"
 
 namespace kernels {
-// 核函数的基类.
+// 损失函数的基类.
 class Kernel {
-  public:
-    Kernel();
-    explicit Kernel(std::string name);
+    public:
+        Kernel();
+        explicit Kernel(std::string name);
 
-    virtual Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                                   const Eigen::MatrixXd &x_j);
+        virtual Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
+                                       const Eigen::MatrixXd &x_j);
 
-  public:
-    std::string name;
+    public:
+        std::string name;
 };
 
 // 线性核函数.
 class Linear : public Kernel {
-  public:
-    Linear();
-    explicit Linear(std::string name);
+    public:
+        Linear();
+        explicit Linear(std::string name);
 
-    Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                           const Eigen::MatrixXd &x_j) override;
+        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
+                               const Eigen::MatrixXd &x_j) override;
 
-  public:
-    std::string name;
+    public:
+        std::string name;
 };
 
 // 多项式核函数.
 class Polynomial : public Kernel {
-  public:
-    Polynomial();
-    explicit Polynomial(std::string name, double gamma, int degree);
+    public:
+        Polynomial();
+        explicit Polynomial(std::string name, double gamma, int degree);
 
-    Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                           const Eigen::MatrixXd &x_j) override;
+        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
+                               const Eigen::MatrixXd &x_j) override;
 
-  public:
-    std::string name;
-    double gamma;
-    int degree;
+    public:
+        std::string name;
+        double gamma;
+        int degree;
 };
 
 // 径向基核函数.
 class RBF : public Kernel {
-  public:
-    RBF();
-    explicit RBF(std::string name, double gamma);
+    public:
+        RBF();
+        explicit RBF(std::string name, double gamma);
 
-    Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                           const Eigen::MatrixXd &x_j) override;
+        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
+                               const Eigen::MatrixXd &x_j) override;
 
-  public:
-    std::string name;
-    double gamma;
+    public:
+        std::string name;
+        double gamma;
 };
 
 // 高斯核函数.
 class Gaussian : public RBF {
-  public:
-    Gaussian();
-    explicit Gaussian(std::string name, double gamma);
+    public:
+        Gaussian();
+        explicit Gaussian(std::string name, double gamma);
 };
 
 // Sigmoid核函数.
 class Sigmoid : public Kernel {
-  public:
-    Sigmoid();
-    explicit Sigmoid(std::string name, double gamma, double beta, double theta);
+    public:
+        Sigmoid();
+        explicit Sigmoid(std::string name, double gamma, double beta, double theta);
 
-    Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                           const Eigen::MatrixXd &x_j) override;
+        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
+                               const Eigen::MatrixXd &x_j) override;
 
-  public:
-    std::string name;
-    double gamma;
-    double beta;
-    double theta;
+    public:
+        std::string name;
+        double gamma;
+        double beta;
+        double theta;
 };
-};  // namespace kernels
+}  // namespace kernels
 
 PYBIND11_MODULE(kernels, m) {
-    m.doc() = R"pbdoc(classicML的核函数, 以CC实现)pbdoc";
+    m.doc() = R"pbdoc(classicML的核函数, 以C++实现)pbdoc";
 
     // 注册自定义异常
-    pybind11::register_exception<NotImplementedError>(m, "NotImplementedError", PyExc_NotImplementedError);
+    pybind11::register_exception<exceptions::NotImplementedError>(m, "NotImplementedError", PyExc_NotImplementedError);
 
     pybind11::class_<kernels::Kernel>(m, "Kernel", pybind11::dynamic_attr(), R"pbdoc(
 核函数的基类.
@@ -276,7 +276,7 @@ Sigmoid核函数.
         .def("__call__", &kernels::Sigmoid::PyCall,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
-    m.attr("__version__") = "backend.cc.kernels.0.9";
+    m.attr("__version__") = "backend.cc.kernels.0.9.1";
 }
 
 #endif /* KERNELS_H */

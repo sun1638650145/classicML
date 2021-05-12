@@ -1,6 +1,6 @@
 //
 //  matrix_op.h
-//  ops
+//  matrix_op
 //
 //  Created by 孙瑞琦 on 2020/12/8.
 //

@@ -1,7 +1,7 @@
 """
     测试backend.io模块的写入和读取是否正常.
 """
-import os
+import tempfile
 
 import numpy as np
 
@@ -10,7 +10,7 @@ from classicML.backend import io
 
 class TestInitializeWeightsFile(object):
     def test_answer(self):
-        filepath = './test.h5'
+        filepath = tempfile.mkstemp()[1]
         # 数据为随机产生, 不具有任何实际意义.
         _temp_arr = np.random.rand(3, 4)
 
@@ -33,6 +33,3 @@ class TestInitializeWeightsFile(object):
         assert io.cml_version == r_compile_ds.attrs['cml_version']
         assert io.__version__ == r_compile_ds.attrs['__version__']
         assert _temp_arr.all() == r_weights_ds.attrs['weights'].all()
-
-        if os.path.exists(filepath):
-            os.remove(filepath)

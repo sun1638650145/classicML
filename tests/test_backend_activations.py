@@ -49,8 +49,8 @@ class TestActivation(object):
         py_diff = py_relu.diff(output, a)
 
         assert cc_relu.name != py_relu.name
-        assert (abs(cc_value - py_value) <= THRESHOLD).all()
-        assert (abs(cc_diff - py_diff) <= THRESHOLD).all()
+        assert abs(cc_value - py_value).all() <= THRESHOLD
+        assert abs(cc_diff - py_diff).all() <= THRESHOLD
 
     def test_sigmoid(self):
         z = np.random.random(size=[3, 2])
@@ -69,8 +69,8 @@ class TestActivation(object):
         py_diff = py_sigmoid.diff(output, a, y_true)
 
         assert cc_sigmoid.name != py_sigmoid.name
-        assert (abs(cc_value - py_value) <= THRESHOLD).all()
-        assert (abs(cc_diff - py_diff) <= THRESHOLD).all()
+        assert abs(cc_value - py_value).all() <= THRESHOLD
+        assert abs(cc_diff - py_diff).all() <= THRESHOLD
 
     def test_softmax(self):
         z = np.random.random(size=[3, 2])
@@ -88,8 +88,8 @@ class TestActivation(object):
         py_diff = py_softmax.diff(output, a)
 
         assert cc_softmax.name != py_softmax.name
-        assert (abs(cc_value - py_value) <= THRESHOLD).all()
-        assert (abs(cc_diff - py_diff) <= THRESHOLD).all()
+        assert abs(cc_value - py_value).all() <= THRESHOLD
+        assert abs(cc_diff - py_diff).all() <= THRESHOLD
 
     def test_instance(self):
         """测试实例化."""
