@@ -23,6 +23,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Before install
       run: |
+        # 更新gcc, ubuntu 16.04 使用stdc++17编译存在问题.
+        sudo apt install --update build-essential;
         # 安装 eigen3
         if [ "${{ matrix.os }}" = "macos-10.15" ]; then
           rm -rf /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core;
