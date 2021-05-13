@@ -85,7 +85,7 @@ PYBIND11_MODULE(activations, m) {
 激活函数基类.
 
     Attributes:
-        name: str, default='activations',
+        name: str, default='activation',
             激活函数名称.
 
     Raises:
@@ -93,12 +93,12 @@ PYBIND11_MODULE(activations, m) {
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
     Arguments:
-        name: str, default='activations',
+        name: str, default='activation',
             激活函数名称.
 )pbdoc")
         .def(pybind11::init<std::string>(), R"pbdoc(
     Arguments:
-        name: str, default='activations',
+        name: str, default='activation',
             激活函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readonly("name", &activations::Activation::name)
@@ -111,12 +111,12 @@ ReLU激活函数.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
     Arguments:
-        name: str, default='activations',
+        name: str, default='relu',
             激活函数名称.
 )pbdoc")
         .def(pybind11::init<std::string>(), R"pbdoc(
     Arguments:
-            name: str, default='activations',
+            name: str, default='relu',
                 激活函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readonly("name", &activations::Relu::name)
@@ -220,7 +220,7 @@ Sigmoid的导数(微分).
     m.attr("sigmoid") = activations::Sigmoid();
     m.attr("softmax") = activations::Softmax();
 
-    m.attr("__version__") = "backend.cc.activations.0.4.1";
+    m.attr("__version__") = "backend.cc.activations.0.4.2";
 }
 
 #endif /* ACTIVATIONS_H */

@@ -57,4 +57,5 @@ cml.plots.plot_lda(model, ds.x, ds.y, '密度', '含糖率')
    * `MinMaxScaler`进行归一化
    * `OneHotEncoder`对标签进行独热编码
    * `StandardScaler`进行标准化
+3. 增加全新`cml.backend.cc.initializers`后端
 
