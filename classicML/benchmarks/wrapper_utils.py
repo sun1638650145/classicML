@@ -16,7 +16,7 @@ def average_timer(repeat=5):
             重复运行的次数.
 
     Notes:
-        - 使用该函数统计平均计时会明显降低运行速度,
+        - 使用该装饰器统计平均计时会明显降低运行速度,
         请在开发时使用, 避免在训练模型时使用.
     """
     def decorator(function):
@@ -46,7 +46,7 @@ def memory_monitor(function):
     """内存监视装饰器.
 
     Notes:
-        - 使用该函数统计内存信息, 有潜在降低运行速度的可能性.
+        - 使用该装饰器统计内存信息, 有潜在降低运行速度的可能性.
         并且psutil针对的Python优化手段会导致在CC引擎的速度大幅降低.
     """
     def wrapper(*args, **kwargs):
