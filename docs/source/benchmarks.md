@@ -44,6 +44,22 @@ INFO:classicML:正在使用 Python 引擎
 INFO:classicML:占用内存 55.52734 MB
 ```
 
+## average_timer
+
+内存监视装饰器.
+
+```python
+@cml.benchmarks.average_timer(repeat=5)
+```
+
+### 参数
+
+* <b>repeat</b>: 整数，重复运行的次数.
+
+### 注意
+
+* 使用该函数统计平均计时会明显降低运行速度，请在开发时使用，避免在训练模型时使用.
+
 ## memory_monitor
 
 内存监视装饰器.

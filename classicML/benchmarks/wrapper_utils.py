@@ -1,9 +1,45 @@
 import os
 import time
 
+import numpy as np
 import psutil
 
 from classicML import CLASSICML_LOGGER
+
+
+# TODO(Steve R. Sun, tag:code): 将@timer和@average_timer()合并, 并且可以不使用括号.
+def average_timer(repeat=5):
+    """程序平均计时装饰器.
+
+    Arguments:
+        repeat: int, default=5,
+            重复运行的次数.
+
+    Notes:
+        - 使用该函数统计平均计时会明显降低运行速度,
+        请在开发时使用, 避免在训练模型时使用.
+    """
+    def decorator(function):
+        def wrapper(*args, **kwargs):
+            return_values = None
+            average_time = list()
+
+            for i in range(repeat):
+                start_time = time.perf_counter()
+                return_values = function(*args, **kwargs)
+                end_time = time.perf_counter()
+
+                average_time.append(end_time - start_time)
+
+            CLASSICML_LOGGER.info('平均耗时 {:.5f} ± {:.5f} s(mean ± std. 循环次数 {:d})'
+                                  .format(np.mean(average_time), np.std(average_time), repeat))
+
+            # 函数返回值为最后一次的返回值.
+            return return_values
+
+        return wrapper
+
+    return decorator
 
 
 def memory_monitor(function):

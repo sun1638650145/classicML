@@ -49,7 +49,6 @@ cml.plots.plot_lda(model, ds.x, ds.y, '密度', '含糖率')
    * `from_csv` 自动读取CSV文件
    * `from_dataframe` 自动加载pandas.DataFrame
    * `from_tensor_slices` 自动加载numpy.ndarray
-
 2. 增加数据预处理的模块
    * `DummyEncoder`对标签进行Dummy编码
    * `Imputer`自动填充缺失值
@@ -58,4 +57,5 @@ cml.plots.plot_lda(model, ds.x, ds.y, '密度', '含糖率')
    * `OneHotEncoder`对标签进行独热编码
    * `StandardScaler`进行标准化
 3. 增加全新`cml.backend.cc.initializers`后端
+4. 增加新的评估工具`average_timer`
 
