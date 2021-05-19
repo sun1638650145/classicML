@@ -7,7 +7,7 @@ classicML的初始化器.
 初始化函数基类.
 
 ```python
-cml.initializers.Initializer(name=None, seed=None)
+cml.initializers.Initializer(name='initializer', seed=None)
 ```
 
 ### 参数

@@ -8,6 +8,8 @@
 #ifndef MATRIX_OP_H
 #define MATRIX_OP_H
 
+#include <ctime>
+#include <random>
 #include <vector>
 
 #include "Eigen/Dense"
@@ -15,6 +17,10 @@
 
 namespace matrix_op {
 Eigen::MatrixXd BroadcastSub(const Eigen::MatrixXd &a, const Eigen::MatrixXd &b);
+
+Eigen::MatrixXd GenerateRandomStandardNormalDistributionMatrix(const int &rows,
+                                                               const int &columns,
+                                                               const std::optional<unsigned int> &seed);
 
 Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix, const Eigen::VectorXd &non_zero_mark);
 

@@ -6,7 +6,7 @@ class Initializer(object):
     """初始化器的基类.
 
     Attributes:
-        name: str, default=None,
+        name: str, default='initializer',
             初始化器的名称.
         seed: int, default=None,
             初始化器的随机种子.
@@ -14,10 +14,10 @@ class Initializer(object):
     Raises:
        NotImplementedError: __call__方法需要用户实现.
     """
-    def __init__(self, name=None, seed=None):
+    def __init__(self, name='initializer', seed=None):
         """
         Arguments:
-            name: str, default=None,
+            name: str, default='initializer',
                 初始化器的名称.
             seed: int, default=None,
                 初始化器的随机种子.

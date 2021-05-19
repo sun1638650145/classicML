@@ -40,6 +40,34 @@ Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a,
     }
 }
 
+// 生成标准随机正态分布矩阵, 输入为矩阵的行数, 列数和随机种子.
+Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int &rows,
+                                                                          const int &columns,
+                                                                          const std::optional<unsigned int> &seed) {
+    static std::normal_distribution<double> _distribution(0,1);
+    if (!seed.has_value()) {
+        static std::default_random_engine _engine(time(nullptr));
+
+        Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
+                [] (double element) {
+                    return _distribution(_engine);
+                }
+        );
+
+        return matrix;
+    } else {
+        static std::default_random_engine _engine(seed.value());
+
+        Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
+                [] (double element) {
+                    return _distribution(_engine);
+                }
+        );
+
+        return matrix;
+    }
+}
+
 // 获取非零元素组成的子矩阵, 输入父矩阵和非零标签.
 Eigen::MatrixXd matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
                                                const Eigen::VectorXd &non_zero_mark) {
@@ -48,7 +76,7 @@ Eigen::MatrixXd matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
     }
 
     // 初始化子矩阵.
-    int row = (non_zero_mark.array() == 1).count();  // 统计非零元素个数.
+    int row = (int)(non_zero_mark.array() == 1).count();  // 统计非零元素个数.
     Eigen::MatrixXd sub_matrix(row, matrix.cols());
 
     row = 0;
