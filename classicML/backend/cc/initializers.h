@@ -48,6 +48,22 @@ class RandomNormal: public Initializer {
         std::string name;
         std::optional<unsigned int> seed;
 };
+
+// He正态分布随机初始化器.
+class HeNormal: public Initializer {
+    public:
+        HeNormal();
+        explicit HeNormal(std::string name);
+        explicit HeNormal(std::string name, std::optional<unsigned int> seed);
+
+        // overload
+        Eigen::MatrixXd PyCall(const int &attributes_or_structure);
+        std::map<std::string, Eigen::MatrixXd> PyCall(const Eigen::RowVectorXi &attributes_or_structure);
+
+    public:
+        std::string name;
+        std::optional<unsigned int> seed;
+};
 }  // namespace initializers
 
 PYBIND11_MODULE(initializers, m) {
@@ -124,6 +140,40 @@ R"pbdoc(
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"));
 
-    m.attr("__version__") = "backend.cc.initializers.0.2";
+    pybind11::class_<initializers::HeNormal, initializers::Initializer>(m, "HeNormal", pybind11::dynamic_attr(),
+R"pbdoc(
+"He正态分布随机初始化器.
+
+    References:
+        - [He et al., 2015](https://www.cv-foundation.org/openaccess/content_iccv_2015/html/He_Delving_Deep_into_ICCV_2015_paper.html)
+          ([pdf](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/He_Delving_Deep_into_ICCV_2015_paper.pdf))
+)pbdoc")
+        .def(pybind11::init())
+        .def(pybind11::init<std::string>(), pybind11::arg("name"))
+        .def(pybind11::init<std::string, std::optional<unsigned int>>(),
+             pybind11::arg("name")="he_normal",
+             pybind11::arg("seed")=pybind11::none())
+        .def_readonly("name", &initializers::HeNormal::name)
+        .def_readonly("seed", &initializers::HeNormal::seed)
+        .def("__call__", pybind11::overload_cast<const int &>(&initializers::HeNormal::PyCall),
+R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", pybind11::overload_cast<const Eigen::RowVectorXi &>(&initializers::HeNormal::PyCall),
+R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"));
+
+    m.attr("__version__") = "backend.cc.initializers.0.3";
 }
 #endif /* INITIALIZERS_H */
