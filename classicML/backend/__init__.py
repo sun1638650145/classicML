@@ -7,7 +7,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc import activations
     from classicML.backend.python import callbacks
     from classicML.backend.python import data
-    from classicML.backend.python import initializers
+    from classicML.backend.cc import initializers
     from classicML.backend.python import io
     from classicML.backend.cc import kernels
     from classicML.backend.cc import losses
@@ -16,11 +16,13 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.python import tree
 
     from classicML.backend.cc.activations import __version__ as activations__version__
+    from classicML.backend.cc.initializers import __version__ as initializers__version__
     from classicML.backend.cc.kernels import __version__ as kernels__version__
     from classicML.backend.cc.losses import __version__ as losses__version__
     from classicML.backend.cc.metrics import __version__ as metrics__version__
 
     CLASSICML_LOGGER.info('后端版本是: {}'.format(activations__version__))
+    CLASSICML_LOGGER.info('后端版本是: {}'.format(initializers__version__))
     CLASSICML_LOGGER.info('后端版本是: {}'.format(kernels__version__))
     CLASSICML_LOGGER.info('后端版本是: {}'.format(losses__version__))
     CLASSICML_LOGGER.info('后端版本是: {}'.format(metrics__version__))

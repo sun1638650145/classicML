@@ -22,6 +22,10 @@ Eigen::MatrixXd GenerateRandomStandardNormalDistributionMatrix(const int &rows,
                                                                const int &columns,
                                                                const std::optional<unsigned int> &seed);
 
+Eigen::MatrixXd GenerateRandomUniformDistributionMatrix(const int &rows,
+                                                        const int &columns,
+                                                        const std::optional<unsigned int> &seed);
+
 Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix, const Eigen::VectorXd &non_zero_mark);
 
 std::vector<int> NonZero(const Eigen::RowVectorXd &array);

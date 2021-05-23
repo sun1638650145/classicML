@@ -40,6 +40,7 @@ Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a,
     }
 }
 
+// TODO(Steve R. Sun, tag:code): 简化随机矩阵生成函数.
 // 生成标准随机正态分布矩阵, 输入为矩阵的行数, 列数和随机种子.
 Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int &rows,
                                                                           const int &columns,
@@ -53,7 +54,6 @@ Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix(const 
                     return _distribution(_engine);
                 }
         );
-
         return matrix;
     } else {
         static std::default_random_engine _engine(seed.value());
@@ -63,7 +63,32 @@ Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix(const 
                     return _distribution(_engine);
                 }
         );
+        return matrix;
+    }
+}
 
+// 生成随机均匀分布矩阵, 输入为矩阵的行数, 列数和随机种子.
+Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix(const int &rows,
+                                                                   const int &columns,
+                                                                   const std::optional<unsigned int> &seed) {
+    static std::uniform_real_distribution<double> _distribution(0,1);
+    if (!seed.has_value()) {
+        static std::default_random_engine _engine(time(nullptr));
+
+        Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
+                [] (double element) {
+                    return _distribution(_engine);
+                }
+        );
+        return matrix;
+    } else {
+        static std::default_random_engine _engine(seed.value());
+
+        Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
+                [] (double element) {
+                    return _distribution(_engine);
+                }
+        );
         return matrix;
     }
 }

@@ -55,7 +55,7 @@ extension_modules = [
 
 setup(
     name='classicML',
-    version='0.6.1b1',
+    version='0.6.1b2',
     description='An easy-to-use ML framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -76,7 +76,7 @@ setup(
     cmdclass={'build_ext': build_ext},
     install_requires=[
         'h5py>=2.10.0, <=3.1.0',
-        'matplotlib>=3.3.2, <=3.3.4',
+        'matplotlib>=3.3.2, <=3.4.2',
         'numpy>=1.19.2, <=1.19.4',
         'pandas>=1.1.3, <=1.1.4',
         'psutil>=5.7.2',
