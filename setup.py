@@ -15,6 +15,15 @@ extension_modules = [
         ],
         language='c++',
     ),
+    # backend.initializers模块
+    Pybind11Extension(
+        'classicML/backend/cc/initializers',
+        sorted(glob('classicML/backend/cc/*.cc')),
+        include_dirs=[
+            '/usr/local/include/eigen3',
+        ],
+        language='c++',
+    ),
     # backend.kernels模块
     Pybind11Extension(
         'classicML/backend/cc/kernels',
