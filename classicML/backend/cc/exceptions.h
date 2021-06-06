@@ -5,8 +5,8 @@
 //  Created by 孙瑞琦 on 2021/1/21.
 //
 
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#ifndef CLASSICML_BACKEND_CC_EXCEPTIONS_H_
+#define CLASSICML_BACKEND_CC_EXCEPTIONS_H_
 
 namespace exceptions {
 class NotImplementedError : public std::exception {
@@ -17,4 +17,4 @@ class NotImplementedError : public std::exception {
 };
 }  // namespace exceptions
 
-#endif /* EXCEPTIONS_H */
+#endif /* CLASSICML_BACKEND_CC_EXCEPTIONS_H_ */

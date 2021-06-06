@@ -20,7 +20,10 @@ Eigen::MatrixXd activations::Activation::PyCall(const Eigen::MatrixXd &z) {
     throw exceptions::NotImplementedError();
 }
 
-Eigen::MatrixXd activations::Activation::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
+Eigen::MatrixXd activations::Activation::Diff(const Eigen::MatrixXd &output,
+                                              const Eigen::MatrixXd &a,
+                                              const pybind11::args &args,
+                                              const pybind11::kwargs &kwargs) {
     throw exceptions::NotImplementedError();
 }
 
@@ -50,7 +53,10 @@ Eigen::MatrixXd activations::Relu::PyCall(const Eigen::MatrixXd &z) {
 }
 
 // 计算函数的微分, 输入为前向传播输出的张量和输入的张量.
-Eigen::MatrixXd activations::Relu::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
+Eigen::MatrixXd activations::Relu::Diff(const Eigen::MatrixXd &output,
+                                        const Eigen::MatrixXd &a,
+                                        const pybind11::args &args,
+                                        const pybind11::kwargs &kwargs) {
     Eigen::MatrixXd da = output;
 
     for (int row = 0; row < a.rows(); row ++) {
@@ -83,7 +89,9 @@ Eigen::MatrixXd activations::Sigmoid::PyCall(const Eigen::MatrixXd &z) {
 // 计算函数的微分, 输入为输出的张量, 输入的张量和真实的标签.
 Eigen::MatrixXd activations::Sigmoid::Diff(const Eigen::MatrixXd &output,
                                            const Eigen::MatrixXd &a,
-                                           const Eigen::MatrixXd &y_true) {
+                                           const pybind11::args &args,
+                                           const pybind11::kwargs &kwargs) {
+    Eigen::MatrixXd y_true = pybind11::cast<Eigen::MatrixXd>(args[0]);
     Eigen::MatrixXd error = y_true - output;
     Eigen::MatrixXd da = a.array() * (1 - a.array()) * error.array();
 
@@ -117,7 +125,10 @@ Eigen::MatrixXd activations::Softmax::PyCall(const Eigen::MatrixXd &z) {
 }
 
 // Softmax函数的微分, 输入为输出的张量, 输入的张量和真实的标签.
-Eigen::MatrixXd activations::Softmax::Diff(const Eigen::MatrixXd &output, const Eigen::MatrixXd &a) {
+Eigen::MatrixXd activations::Softmax::Diff(const Eigen::MatrixXd &output,
+                                           const Eigen::MatrixXd &a,
+                                           const pybind11::args &args,
+                                           const pybind11::kwargs &kwargs) {
     Eigen::MatrixXd da = a - output;
 
     return da;

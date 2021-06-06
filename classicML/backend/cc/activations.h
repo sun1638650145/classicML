@@ -6,12 +6,10 @@
 //
 //
 
-#ifndef ACTIVATIONS_H
-#define ACTIVATIONS_H
+#ifndef CLASSICML_BACKEND_CC_ACTIVATIONS_H_
+#define CLASSICML_BACKEND_CC_ACTIVATIONS_H_
 
-#include <cmath>
-
-#include "Eigen/Dense"
+#include "Eigen/Core"
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
 
@@ -23,10 +21,13 @@ class Activation {
     public:
         Activation();
         explicit Activation(std::string name);
+        virtual ~Activation() = default;
 
         virtual Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z);
         virtual Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
-                                     const Eigen::MatrixXd &a);
+                                     const Eigen::MatrixXd &a,
+                                     const pybind11::args &args,
+                                     const pybind11::kwargs &kwargs);
 
     public:
         std::string name;
@@ -40,10 +41,9 @@ class Relu : public Activation {
 
         Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z) override;
         Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
-                             const Eigen::MatrixXd &a) override;
-
-    public:
-        std::string name;
+                             const Eigen::MatrixXd &a,
+                             const pybind11::args &args,
+                             const pybind11::kwargs &kwargs) override;
 };
 
 // Sigmoid激活函数.
@@ -55,9 +55,8 @@ class Sigmoid : public Activation {
         Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z) override;
         Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
                              const Eigen::MatrixXd &a,
-                             const Eigen::MatrixXd &y_true);
-    public:
-        std::string name;
+                             const pybind11::args &args,
+                             const pybind11::kwargs &kwargs) override;
 };
 
 // Softmax激活函数.
@@ -68,10 +67,9 @@ class Softmax : public Activation {
 
         Eigen::MatrixXd PyCall(const Eigen::MatrixXd &z) override;
         Eigen::MatrixXd Diff(const Eigen::MatrixXd &output,
-                             const Eigen::MatrixXd &a) override;
-
-    public:
-        std::string name;
+                             const Eigen::MatrixXd &a,
+                             const pybind11::args &args,
+                             const pybind11::kwargs &kwargs) override;
 };
 }  // namespace activations
 
@@ -81,7 +79,7 @@ PYBIND11_MODULE(activations, m) {
     // 注册自定义异常
     pybind11::register_exception<exceptions::NotImplementedError>(m, "NotImplementedError", PyExc_NotImplementedError);
 
-    pybind11::class_<activations::Activation>(m, "Activation", pybind11::dynamic_attr(), R"pbdoc(
+    pybind11::class_<activations::Activation>(m, "Activation", R"pbdoc(
 激活函数基类.
 
     Attributes:
@@ -89,7 +87,7 @@ PYBIND11_MODULE(activations, m) {
             激活函数名称.
 
     Raises:
-        NotImplementedError: __call__, diff方法需要用户实现.
+       NotImplementedError: __call__, diff方法需要用户实现.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
     Arguments:
@@ -101,12 +99,12 @@ PYBIND11_MODULE(activations, m) {
         name: str, default='activation',
             激活函数名称.
 )pbdoc", pybind11::arg("name"))
-        .def_readonly("name", &activations::Activation::name)
+        .def_readwrite("name", &activations::Activation::name)
         .def("__call__", &activations::Activation::PyCall, pybind11::arg("z"))
         .def("diff", &activations::Activation::Diff,
-        pybind11::arg("output"), pybind11::arg("a"));
+            pybind11::arg("output"), pybind11::arg("a"));
 
-    pybind11::class_<activations::Relu, activations::Activation>(m, "Relu", pybind11::dynamic_attr(), R"pbdoc(
+    pybind11::class_<activations::Relu, activations::Activation>(m, "Relu", R"pbdoc(
 ReLU激活函数.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
@@ -116,10 +114,10 @@ ReLU激活函数.
 )pbdoc")
         .def(pybind11::init<std::string>(), R"pbdoc(
     Arguments:
-            name: str, default='relu',
-                激活函数名称.
+        name: str, default='relu',
+            激活函数名称.
 )pbdoc", pybind11::arg("name"))
-        .def_readonly("name", &activations::Relu::name)
+        .def_readwrite("name", &activations::Relu::name)
         .def("__call__", &activations::Relu::PyCall, R"pbdoc(
     Arguments:
         z: numpy.ndarray, 输入的张量.
@@ -140,7 +138,7 @@ ReLU函数的微分.
         在实际应用中使用原值发现可以避免这种想象.
 )pbdoc",pybind11::arg("output"), pybind11::arg("a"));
 
-    pybind11::class_<activations::Sigmoid, activations::Activation>(m, "Sigmoid", pybind11::dynamic_attr(), R"pbdoc(
+    pybind11::class_<activations::Sigmoid, activations::Activation>(m, "Sigmoid", R"pbdoc(
 Sigmoid激活函数.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
@@ -153,7 +151,7 @@ Sigmoid激活函数.
             name: str, default='sigmoid',
                 激活函数名称.
 )pbdoc", pybind11::arg("name"))
-        .def_readonly("name", &activations::Sigmoid::name)
+        .def_readwrite("name", &activations::Sigmoid::name)
         .def("__call__", &activations::Sigmoid::PyCall, R"pbdoc(
     Arguments:
         z: numpy.ndarray, 输入的张量.
@@ -176,9 +174,9 @@ ReLU函数的微分.
     Notes:
         Sigmoid的导数f' = a * (1 - a),
         但是作为输出层就需要乘上误差.
-)pbdoc",pybind11::arg("output"), pybind11::arg("a"), pybind11::arg("y_pred"));
+)pbdoc",pybind11::arg("output"), pybind11::arg("a"));
 
-    pybind11::class_<activations::Softmax, activations::Activation>(m, "Softmax", pybind11::dynamic_attr(), R"pbdoc(
+    pybind11::class_<activations::Softmax, activations::Activation>(m, "Softmax", R"pbdoc(
 Softmax激活函数.
 )pbdoc")
         .def(pybind11::init(), R"pbdoc(
@@ -191,7 +189,7 @@ Softmax激活函数.
         name: str, default='softmax',
             激活函数名称.
 )pbdoc", pybind11::arg("name"))
-        .def_readonly("name", &activations::Softmax::name)
+        .def_readwrite("name", &activations::Softmax::name)
         .def("__call__", &activations::Softmax::PyCall, R"pbdoc(
     Arguments:
         z: numpy.ndarray, 输入的张量.
@@ -220,7 +218,7 @@ Sigmoid的导数(微分).
     m.attr("sigmoid") = activations::Sigmoid();
     m.attr("softmax") = activations::Softmax();
 
-    m.attr("__version__") = "backend.cc.activations.0.4.2";
+    m.attr("__version__") = "backend.cc.activations.0.5";
 }
 
-#endif /* ACTIVATIONS_H */
+#endif /* CLASSICML_BACKEND_CC_ACTIVATIONS_H_ */
