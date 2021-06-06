@@ -99,8 +99,8 @@ class XavierNormal(Initializer):
         也叫做Glorot正态分布随机初始化器.
 
     References:
-        - [Glorot et al., 2010](http://proceedings.mlr.press/v9/glorot10a.html)
-          ([pdf](http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf))
+        - [Glorot et al., 2010](https://proceedings.mlr.press/v9/glorot10a.html)
+          ([pdf](https://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf))
     """
     def __init__(self, name='xavier_normal', seed=None):
         super(XavierNormal, self).__init__(name=name, seed=seed)

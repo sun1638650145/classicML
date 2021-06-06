@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef INITIALIZERS_H
-#define INITIALIZERS_H
+#ifndef CLASSICML_BACKEND_CC_INITIALIZERS_H_
+#define CLASSICML_BACKEND_CC_INITIALIZERS_H_
 
 #include "Eigen/Core"
 #include "pybind11/eigen.h"
@@ -24,6 +24,7 @@ class Initializer {
         Initializer();
         explicit Initializer(std::string name);
         explicit Initializer(std::string name, std::optional<unsigned int> seed);
+        virtual ~Initializer() = default;
 
         virtual Eigen::MatrixXd PyCall(const pybind11::args &args,
                                        const pybind11::kwargs &kwargs);
@@ -43,10 +44,6 @@ class RandomNormal: public Initializer {
         // overload
         Eigen::MatrixXd PyCall(const int &attributes_or_structure);
         std::map<std::string, Eigen::MatrixXd> PyCall(const Eigen::RowVectorXi &attributes_or_structure);
-
-    public:
-        std::string name;
-        std::optional<unsigned int> seed;
 };
 
 // He正态分布随机初始化器.
@@ -59,10 +56,6 @@ class HeNormal: public Initializer {
         // overload
         Eigen::MatrixXd PyCall(const int &attributes_or_structure);
         std::map<std::string, Eigen::MatrixXd> PyCall(const Eigen::RowVectorXi &attributes_or_structure);
-
-    public:
-        std::string name;
-        std::optional<unsigned int> seed;
 };
 
 // Xavier正态分布随机初始化器.
@@ -75,10 +68,6 @@ class XavierNormal: public Initializer {
         // overload
         Eigen::MatrixXd PyCall(const int &attributes_or_structure);
         std::map<std::string, Eigen::MatrixXd> PyCall(const Eigen::RowVectorXi &attributes_or_structure);
-
-    public:
-        std::string name;
-        std::optional<unsigned int> seed;
 };
 
 // Glorot正态分布随机初始化器.
@@ -98,10 +87,6 @@ class RBFNormal: public Initializer {
 
         // overload
         std::map<std::string, Eigen::MatrixXd> PyCall(const int &hidden_units);
-
-    public:
-        std::string name;
-        std::optional<unsigned int> seed;
 };
 }  // namespace initializers
 
@@ -111,7 +96,7 @@ PYBIND11_MODULE(initializers, m) {
     // 注册自定义异常.
     pybind11::register_exception<exceptions::NotImplementedError>(m, "NotImplementedError", PyExc_NotImplementedError);
 
-    pybind11::class_<initializers::Initializer>(m, "Initializer", pybind11::dynamic_attr(), R"pbdoc(
+    pybind11::class_<initializers::Initializer>(m, "Initializer", R"pbdoc(
 初始化器的基类.
 
     Attributes:
@@ -147,12 +132,11 @@ Arguments:
 )pbdoc",
              pybind11::arg("name")="initializer",
              pybind11::arg("seed")=pybind11::none())
-        .def_readonly("name", &initializers::Initializer::name)
-        .def_readonly("seed", &initializers::Initializer::seed)
+        .def_readwrite("name", &initializers::Initializer::name)
+        .def_readwrite("seed", &initializers::Initializer::seed)
         .def("__call__", &initializers::Initializer::PyCall);
 
-    pybind11::class_<initializers::RandomNormal, initializers::Initializer>(m, "RandomNormal", pybind11::dynamic_attr(),
-R"pbdoc(
+    pybind11::class_<initializers::RandomNormal, initializers::Initializer>(m, "RandomNormal", R"pbdoc(
 正态分布随机初始化器.
 )pbdoc")
         .def(pybind11::init())
@@ -160,8 +144,8 @@ R"pbdoc(
         .def(pybind11::init<std::string, std::optional<unsigned int>>(),
              pybind11::arg("name")="random_normal",
              pybind11::arg("seed")=pybind11::none())
-        .def_readonly("name", &initializers::RandomNormal::name)
-        .def_readonly("seed", &initializers::RandomNormal::seed)
+        .def_readwrite("name", &initializers::RandomNormal::name)
+        .def_readwrite("seed", &initializers::RandomNormal::seed)
         .def("__call__", pybind11::overload_cast<const int &>(&initializers::RandomNormal::PyCall),
 R"pbdoc(
 函数实现.
@@ -179,8 +163,7 @@ R"pbdoc(
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"));
 
-    pybind11::class_<initializers::HeNormal, initializers::Initializer>(m, "HeNormal", pybind11::dynamic_attr(),
-R"pbdoc(
+    pybind11::class_<initializers::HeNormal, initializers::Initializer>(m, "HeNormal", R"pbdoc(
 He正态分布随机初始化器.
 
     References:
@@ -192,8 +175,8 @@ He正态分布随机初始化器.
         .def(pybind11::init<std::string, std::optional<unsigned int>>(),
              pybind11::arg("name")="he_normal",
              pybind11::arg("seed")=pybind11::none())
-        .def_readonly("name", &initializers::HeNormal::name)
-        .def_readonly("seed", &initializers::HeNormal::seed)
+        .def_readwrite("name", &initializers::HeNormal::name)
+        .def_readwrite("seed", &initializers::HeNormal::seed)
         .def("__call__", pybind11::overload_cast<const int &>(&initializers::HeNormal::PyCall),
 R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
@@ -213,22 +196,21 @@ R"pbdoc(
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"));
 
-    pybind11::class_<initializers::XavierNormal, initializers::Initializer>(m, "XavierNormal", pybind11::dynamic_attr(),
-R"pbdoc(
+    pybind11::class_<initializers::XavierNormal, initializers::Initializer>(m, "XavierNormal", R"pbdoc(
 Xavier正态分布随机初始化器,
         也叫做Glorot正态分布随机初始化器.
 
     References:
-        - [Glorot et al., 2010](http://proceedings.mlr.press/v9/glorot10a.html)
-          ([pdf](http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf))
+        - [Glorot et al., 2010](https://proceedings.mlr.press/v9/glorot10a.html)
+          ([pdf](https://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf))
 )pbdoc")
         .def(pybind11::init())
         .def(pybind11::init<std::string>(), pybind11::arg("name"))
         .def(pybind11::init<std::string, std::optional<unsigned int>>(),
              pybind11::arg("name")="xavier_normal",
              pybind11::arg("seed")=pybind11::none())
-        .def_readonly("name", &initializers::XavierNormal::name)
-        .def_readonly("seed", &initializers::XavierNormal::seed)
+        .def_readwrite("name", &initializers::XavierNormal::name)
+        .def_readwrite("seed", &initializers::XavierNormal::seed)
         .def("__call__", pybind11::overload_cast<const int &>(&initializers::XavierNormal::PyCall),
 R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in+N_out)),
@@ -250,8 +232,7 @@ R"pbdoc(
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"));
 
-    pybind11::class_<initializers::GlorotNormal, initializers::XavierNormal>(m, "GlorotNormal", pybind11::dynamic_attr(),
-R"pbdoc(
+    pybind11::class_<initializers::GlorotNormal, initializers::XavierNormal>(m, "GlorotNormal", R"pbdoc(
 Glorot正态分布随机初始化器.
  具体实现参看XavierNormal.
 )pbdoc")
@@ -260,15 +241,14 @@ Glorot正态分布随机初始化器.
         .def(pybind11::init<std::string, std::optional<unsigned int>>(),
              pybind11::arg("name")="glorot_normal",
              pybind11::arg("seed")=pybind11::none())
-        .def_readonly("name", &initializers::GlorotNormal::name)
-        .def_readonly("seed", &initializers::GlorotNormal::seed)
+        .def_readwrite("name", &initializers::GlorotNormal::name)
+        .def_readwrite("seed", &initializers::GlorotNormal::seed)
         .def("__call__", pybind11::overload_cast<const int &>(&initializers::GlorotNormal::PyCall),
              pybind11::arg("attributes_or_structure"))
         .def("__call__", pybind11::overload_cast<const Eigen::RowVectorXi &>(&initializers::GlorotNormal::PyCall),
              pybind11::arg("attributes_or_structure"));
 
-    pybind11::class_<initializers::RBFNormal, initializers::Initializer>(m, "RBFNormal", pybind11::dynamic_attr(),
-R"pbdoc(
+    pybind11::class_<initializers::RBFNormal, initializers::Initializer>(m, "RBFNormal", R"pbdoc(
 RBF网络的初始化器.
 )pbdoc")
         .def(pybind11::init())
@@ -276,8 +256,8 @@ RBF网络的初始化器.
         .def(pybind11::init<std::string, std::optional<unsigned int>>(),
              pybind11::arg("name")="rbf_normal",
              pybind11::arg("seed")=pybind11::none())
-        .def_readonly("name", &initializers::RBFNormal::name)
-        .def_readonly("seed", &initializers::RBFNormal::seed)
+        .def_readwrite("name", &initializers::RBFNormal::name)
+        .def_readwrite("seed", &initializers::RBFNormal::seed)
         .def("__call__", pybind11::overload_cast<const int &>(&initializers::RBFNormal::PyCall),
 R"pbdoc(
 Arguments:
@@ -289,6 +269,6 @@ Notes:
       因此, 全部初始化为正数.
 )pbdoc", pybind11::arg("hidden_units"));
 
-    m.attr("__version__") = "backend.cc.initializers.0.4.beta";
+    m.attr("__version__") = "backend.cc.initializers.0.4.1.beta";
 }
-#endif /* INITIALIZERS_H */
+#endif /* CLASSICML_BACKEND_CC_INITIALIZERS_H_ */

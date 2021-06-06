@@ -138,7 +138,7 @@ cml.initializers.XavierNormal(name='xavier_normal', seed=None)
 
 ###  参考文献
 
-* [Understanding the difficulty of training deep feedforward neural networks](http://proceedings.mlr.press/v9/glorot10a.html)
+* [Understanding the difficulty of training deep feedforward neural networks](https://proceedings.mlr.press/v9/glorot10a.html)
 
 ### \__call__
 

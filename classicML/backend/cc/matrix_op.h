@@ -5,12 +5,11 @@
 //  Created by 孙瑞琦 on 2020/12/8.
 //
 
-#ifndef MATRIX_OP_H
-#define MATRIX_OP_H
+#ifndef CLASSICML_BACKEND_CC_MATRIX_OP_H_
+#define CLASSICML_BACKEND_CC_MATRIX_OP_H_
 
 #include <ctime>
 #include <random>
-#include <vector>
 
 #include "Eigen/Dense"
 #include "pybind11/pybind11.h"
@@ -33,4 +32,4 @@ std::vector<int> NonZero(const Eigen::RowVectorXd &array);
 Eigen::MatrixXd Reshape(Eigen::MatrixXd matrix, const int &row, const int &column);
 }  // namespace matrix_op
 
-#endif /* MATRIX_OP_H */
+#endif /* CLASSICML_BACKEND_CC_MATRIX_OP_H_ */
