@@ -12,7 +12,7 @@ class History(object):
         metric: list, 评估值组成的列表
 
     Notes:
-        - 使用该函数记录数据, 会导致运行速度的降低.
+        - 使用历史记录数据, 会导致运行速度的降低.
     """
     def __init__(self, name=None, loss_name='loss', metric_name='metric'):
         """
