@@ -5,16 +5,10 @@
 //  Created by 孙瑞琦 on 2020/10/10.
 //
 
-#ifndef OPS_H
-#define OPS_H
+#ifndef CLASSICML_BACKEND_CC_OPS_H_
+#define CLASSICML_BACKEND_CC_OPS_H_
 
-#include <cmath>
-#include <cstring>
-#include <set>
-#include <tuple>
-#include <vector>
-
-#include "Eigen/Dense"
+#include "Eigen/Core"
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
 #include "pybind11/stl.h"
@@ -266,7 +260,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.10.1";
+    m.attr("__version__") = "backend.cc.ops.0.10.2";
 }
 
-#endif /* OPS_H */
+#endif /* CLASSICML_BACKEND_CC_OPS_H_ */

@@ -6,10 +6,10 @@
 //
 //
 
-#ifndef METRICS_H
-#define METRICS_H
+#ifndef CLASSICML_BACKEND_CC_METRICS_H_
+#define CLASSICML_BACKEND_CC_METRICS_H_
 
-#include "Eigen/Dense"
+#include "Eigen/Core"
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
 
@@ -21,6 +21,7 @@ class Metric {
     public:
         Metric();
         explicit Metric(std::string name);
+        virtual ~Metric() = default;
 
         virtual double PyCall(const Eigen::MatrixXd &y_pred,
                               const Eigen::MatrixXd &y_true);
@@ -37,9 +38,6 @@ class Accuracy : public Metric {
 
         double PyCall(const Eigen::MatrixXd &y_pred,
                       const Eigen::MatrixXd &y_true) override;
-
-    public:
-        std::string name;
 };
 
 // 二分类准确率评估函数.
@@ -50,9 +48,6 @@ class BinaryAccuracy : public Metric {
 
         double PyCall(const Eigen::MatrixXd &y_pred,
                       const Eigen::MatrixXd &y_true) override;
-
-    public:
-        std::string name;
 };
 
 // 多分类准确率评估函数.
@@ -63,9 +58,6 @@ class CategoricalAccuracy : public Metric {
 
         double PyCall(const Eigen::MatrixXd &y_pred,
                       const Eigen::MatrixXd &y_true) override;
-
-    public:
-        std::string name;
 };
 }  // namespace metrics
 
@@ -75,7 +67,7 @@ PYBIND11_MODULE(metrics, m) {
     // 注册自定义异常
     pybind11::register_exception<exceptions::NotImplementedError>(m, "NotImplementedError", PyExc_NotImplementedError);
 
-    pybind11::class_<metrics::Metric>(m, "Metric", pybind11::dynamic_attr(), R"pbdoc(
+    pybind11::class_<metrics::Metric>(m, "Metric", R"pbdoc(
 评估函数的基类.
 
     Attributes:
@@ -96,11 +88,11 @@ PYBIND11_MODULE(metrics, m) {
                 评估函数名称.
 )pbdoc",
              pybind11::arg("name"))
-        .def_readonly("name", &metrics::Metric::name)
+        .def_readwrite("name", &metrics::Metric::name)
         .def("__call__", &metrics::Metric::PyCall,
              pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
-    pybind11::class_<metrics::Accuracy, metrics::Metric>(m, "Accuracy", pybind11::dynamic_attr(), R"pbdoc(
+    pybind11::class_<metrics::Accuracy, metrics::Metric>(m, "Accuracy", R"pbdoc(
 准确率评估函数,
     将根据标签的实际形状自动使用二分类或者多分类评估函数.
 )pbdoc")
@@ -115,7 +107,7 @@ PYBIND11_MODULE(metrics, m) {
                 评估函数名称.
 )pbdoc",
              pybind11::arg("name"))
-        .def_readonly("name", &metrics::Accuracy::name)
+        .def_readwrite("name", &metrics::Accuracy::name)
         .def("__call__", &metrics::Accuracy::PyCall, R"pbdoc(
     Arguments:
         y_pred: numpy.ndarray, 预测的标签.
@@ -126,12 +118,12 @@ PYBIND11_MODULE(metrics, m) {
 )pbdoc",
              pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
-    pybind11::class_<metrics::BinaryAccuracy, metrics::Metric>(m, "BinaryAccuracy", pybind11::dynamic_attr(), R"pbdoc(
+    pybind11::class_<metrics::BinaryAccuracy, metrics::Metric>(m, "BinaryAccuracy", R"pbdoc(
 二分类准确率评估函数.
 )pbdoc")
         .def(pybind11::init())
         .def(pybind11::init<std::string>(), pybind11::arg("name"))
-        .def_readonly("name", &metrics::BinaryAccuracy::name)
+        .def_readwrite("name", &metrics::BinaryAccuracy::name)
         .def("__call__", &metrics::BinaryAccuracy::PyCall, R"pbdoc(
     Arguments:
         y_pred: numpy.ndarray, 预测的标签.
@@ -142,12 +134,12 @@ PYBIND11_MODULE(metrics, m) {
 )pbdoc",
              pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
-    pybind11::class_<metrics::CategoricalAccuracy, metrics::Metric>(m, "CategoricalAccuracy", pybind11::dynamic_attr(), R"pbdoc(
+    pybind11::class_<metrics::CategoricalAccuracy, metrics::Metric>(m, "CategoricalAccuracy", R"pbdoc(
 多分类准确率评估函数.
 )pbdoc")
         .def(pybind11::init())
         .def(pybind11::init<std::string>(), pybind11::arg("name"))
-        .def_readonly("name", &metrics::CategoricalAccuracy::name)
+        .def_readwrite("name", &metrics::CategoricalAccuracy::name)
         .def("__call__", &metrics::CategoricalAccuracy::PyCall, R"pbdoc(
     Arguments:
         y_pred: numpy.ndarray, 预测的标签.
@@ -158,7 +150,7 @@ PYBIND11_MODULE(metrics, m) {
 )pbdoc",
              pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
-    m.attr("__version__") = "backend.cc.metrics.0.3.1";
+    m.attr("__version__") = "backend.cc.metrics.0.3.2";
 }
 
-#endif /* METRICS_H */
+#endif /* CLASSICML_BACKEND_CC_METRICS_H_ */
