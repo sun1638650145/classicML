@@ -8,13 +8,17 @@ from classicML import CLASSICML_LOGGER
 
 
 def _format_and_display_the_time_spent(start_time=None, end_time=None, time_spent_list=None, repeat=None):
-    """格式化并显示花费的时间.
+    """格式化并显示运行时间.
 
     Arguments:
         start_time: float, default=None,
             函数开始运行的时间.
         end_time: float, default=None,
             函数结束的时间.
+        time_spent_list: numpy.ndarray, default=None,
+            记录多次运行时间的列表.
+        repeat: int, default=None,
+            重复运行的次数.
     """
     if start_time is not None:
         time_spent = (end_time - start_time) * 1000 * 1000  # 返回时间的单位是s, s -> us.
