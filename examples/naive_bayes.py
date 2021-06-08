@@ -1,10 +1,10 @@
 """
-这个例子需要 classicML 0.6.1 或以上版本.
 这个例子将展示如何使用朴素贝叶斯分类器.
 """
 import sys
 
 import classicML as cml
+
 
 DATASET_PATH = './datasets/西瓜数据集alpha.csv'
 ATTRIBUTE_NAME = ['密度', '含糖率']

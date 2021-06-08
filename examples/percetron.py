@@ -1,5 +1,4 @@
 """
-这个例子需要 classicML 0.6.1 或以上版本.
 这个例子将展示如何使用BP神经网络构建简单的感知机.
 """
 import sys
@@ -7,13 +6,13 @@ import sys
 import classicML as cml
 
 
-DATASET_PATH = './datasets/西瓜数据集.csv'
+DATASET_PATH = './datasets/西瓜数据集.tsv'
 CALLBACKS = [cml.callbacks.History(loss_name='crossentropy',
                                    metric_name='accuracy')]
 
 # 读取数据
 ds = cml.data.Dataset(digitization=True)
-ds.from_csv(DATASET_PATH)
+ds.from_csv(DATASET_PATH, sep='\t')
 # 生成神经网络
 model = cml.models.BPNN(seed=2021, initializer='glorot_normal')
 model.compile(network_structure=[3, 1],

@@ -2,11 +2,11 @@
 
 ## 1.我需要同时安装Python后端和CC后端吗?
 
-不需要，Python后端和CC后端的API调用完全一致。Python后端的兼容性更佳但是性能不如CC后端，如果只是简单的使用那么你并不需要使用CC后端.
+不需要，Python后端和CC后端的API调用完全一致。Python后端的兼容性更佳但是性能不如CC后端，如果只是简单的入门学习那么你并不需要使用CC后端.
 
 ## 2.如何在搭载Apple M1芯片的Mac上使用classicML?
 
-目前，classicML提供了M1正式版(但只支持Python 3.8版本)，您可以通过pip软件包管理器直接安装.
+目前，classicML已经提供了支持Apple M1的正式版，您可以通过pip软件包管理器直接安装.
 
 ```shell
 # 安装python版
@@ -29,7 +29,7 @@ classicML 拥有一个控制可视化工具字体的环境变量`CLASSICML_FONT`
 
 ### 方案2
 
-您可以通过安装 classicML 的默认字体，以此实现显示中文信息. 字体的下载链接在[资源](https://classicml.readthedocs.io/zh_CN/latest/resources.html)页面提供. 您需要按照以下三步操作即可
+您可以通过安装 classicML 的默认字体，以此实现显示中文信息. 字体的下载链接在[资源](https://classicml.readthedocs.io/zh_CN/latest/resources.html)页面提供. 您需要按照以下三步操作即可(以类Unix为例)
 
 ```shell
 # 步骤1(添加字库)

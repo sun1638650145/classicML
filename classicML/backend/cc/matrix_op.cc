@@ -46,25 +46,20 @@ Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix(const 
                                                                           const int &columns,
                                                                           const std::optional<unsigned int> &seed) {
     static std::normal_distribution<double> _distribution(0,1);
+    static std::default_random_engine _engine;
     if (!seed.has_value()) {
-        static std::default_random_engine _engine(time(nullptr));
-
-        Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
-                [] (double element) {
-                    return _distribution(_engine);
-                }
-        );
-        return matrix;
+        _engine.seed(time(nullptr));
     } else {
-        static std::default_random_engine _engine(seed.value());
-
-        Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
-                [] (double element) {
-                    return _distribution(_engine);
-                }
-        );
-        return matrix;
+        _engine.seed(seed.value());
     }
+
+    Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
+            [] (double element) {
+                return _distribution(_engine);
+            }
+    );
+
+    return matrix;
 }
 
 // 生成随机均匀分布矩阵, 输入为矩阵的行数, 列数和随机种子.
@@ -72,25 +67,20 @@ Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix(const int &ro
                                                                    const int &columns,
                                                                    const std::optional<unsigned int> &seed) {
     static std::uniform_real_distribution<double> _distribution(0,1);
+    static std::default_random_engine _engine;
     if (!seed.has_value()) {
-        static std::default_random_engine _engine(time(nullptr));
-
-        Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
-                [] (double element) {
-                    return _distribution(_engine);
-                }
-        );
-        return matrix;
+        _engine.seed(time(nullptr));
     } else {
-        static std::default_random_engine _engine(seed.value());
-
-        Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
-                [] (double element) {
-                    return _distribution(_engine);
-                }
-        );
-        return matrix;
+        _engine.seed(seed.value());
     }
+
+    Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
+            [] (double element) {
+                return _distribution(_engine);
+            }
+    );
+
+    return matrix;
 }
 
 // 获取非零元素组成的子矩阵, 输入父矩阵和非零标签.

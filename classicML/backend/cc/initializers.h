@@ -26,8 +26,9 @@ class Initializer {
         explicit Initializer(std::string name, std::optional<unsigned int> seed);
         virtual ~Initializer() = default;
 
-        virtual Eigen::MatrixXd PyCall(const pybind11::args &args,
-                                       const pybind11::kwargs &kwargs);
+        // TODO(Steve R. Sun tag:code): 在C++侧不能使用virtual关键字标记, 编译器会有警告, 但是需要声明此方法子类必须实现.
+        Eigen::MatrixXd PyCall(const pybind11::args &args,
+                               const pybind11::kwargs &kwargs);
 
     public:
         std::string name;
@@ -269,6 +270,6 @@ Notes:
       因此, 全部初始化为正数.
 )pbdoc", pybind11::arg("hidden_units"));
 
-    m.attr("__version__") = "backend.cc.initializers.0.4.1.beta";
+    m.attr("__version__") = "backend.cc.initializers.0.4.2";
 }
 #endif /* CLASSICML_BACKEND_CC_INITIALIZERS_H_ */

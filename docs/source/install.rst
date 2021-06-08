@@ -5,9 +5,9 @@
 
 .. warning::
 
-    1. classicML 兼容的Python版本: Python 3.6-3.8
+    1. classicML 兼容的Python版本: Python 3.7-3.9
     2. classicML 仅支持64位的系统，强行使用32位系统可能会导致精度异常
-    3. classicML 现已支持在Apple M1上原生运行, 但受到依赖软件支持的原因必须使用 Python 3.8
+    3. classicML 现已支持在Apple M1上原生运行, 但您需要使用 Python 3.8 以上版本的
 
 .. _header-n67:
 
@@ -75,7 +75,7 @@ Python 虚拟环境用于将软件包和系统隔离，避免你的误操作导�
 .. note::
     1. Eigen 3 的版本不得低于 3.3.7
     2. pybind11 的版本不得低于 2.6
-    3. C++ 的版本不得低于 c++14
+    3. C++ 的版本不得低于 c++17
 
 .. _header-n99:
 

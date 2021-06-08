@@ -20,7 +20,12 @@ classicML
 .. code:: shell
 
    INFO:classicML:正在使用 CC 引擎
-   INFO:classicML:后端版本是: backend.cc.ops.0.6
+   INFO:classicML:后端版本是: backend.cc.activations.0.5
+   INFO:classicML:后端版本是: backend.cc.initializers.0.4.2
+   INFO:classicML:后端版本是: backend.cc.kernels.0.9.2
+   INFO:classicML:后端版本是: backend.cc.losses.0.7.2
+   INFO:classicML:后端版本是: backend.cc.metrics.0.3.2
+   INFO:classicML:后端版本是: backend.cc.ops.0.10.2
 
 2.直接使用后端的算子
 --------------------
@@ -35,7 +40,7 @@ classicML
 3.后端函数
 ----------
 
-针对专业用户，你可以查看下面所列的全部函数和接口
+针对专业用户，您可以查看目前全部开放的接口，助您实现天马行空的想法.
 
 .. toctree::
    :maxdepth: 1

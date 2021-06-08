@@ -48,33 +48,6 @@ classicML
 
 -  `更多示例代码点击 <https://github.com/sun1638650145/classicML/tree/master/examples>`__
 
-.. _v061-版本预览:
-
-v0.6.1 版本预览
----------------
-
-1. 增加数据读取的模块, 简化读取数据的流程
-
-   -  ``from_csv`` 自动读取CSV文件
-
-   -  ``from_dataframe`` 自动加载pandas.DataFrame
-
-   -  ``from_tensor_slices`` 自动加载numpy.ndarray
-
-2. 增加数据预处理的模块
-
-   -  ``DummyEncoder``\ 对标签进行Dummy编码
-
-   -  ``Imputer``\ 自动填充缺失值
-
-   -  ``MaxMarginEncoder``\ 对标签进行最大间隔编码
-
-   -  ``MinMaxScaler``\ 进行归一化
-
-   -  ``OneHotEncoder``\ 对标签进行独热编码
-
-   -  ``StandardScaler``\ 进行标准化
-
 .. |image1| image:: https://github.com/sun1638650145/classicML/workflows/build/badge.svg
 .. |image2| image:: https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg
 .. |image3| image:: https://readthedocs.org/projects/classicml/badge/?version=latest

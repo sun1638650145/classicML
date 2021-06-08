@@ -1,5 +1,4 @@
 """
-这个例子需要 classicML 0.6.1 或以上版本.
 这个例子将展示如何使用决策树进行分类.
 """
 import sys
@@ -8,11 +7,11 @@ import pandas as pd
 import classicML as cml
 
 
-DATASET_PATH = './datasets/西瓜数据集.csv'
+DATASET_PATH = './datasets/西瓜数据集.tsv'
 ATTRIBUTE_NAME = ['脐部', '色泽', '根蒂', '敲声', '纹理', '触感', '密度', '含糖率']
 
 # 读取数据
-dataframe = pd.read_csv(DATASET_PATH, index_col=0, header=0)
+dataframe = pd.read_csv(DATASET_PATH, sep='\t', index_col=0, header=0)
 train_index = np.asarray([1, 2, 3, 6, 7, 10, 14, 15, 16, 17]) - 1
 validation_index = np.asarray([4, 5, 8, 9, 11, 12, 13]) - 1
 

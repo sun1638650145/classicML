@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
 ```shell
 INFO:classicML:正在使用 Python 引擎
-INFO:classicML:耗时 0.00001 s
+INFO:classicML:耗时 434.707 ms
 ```
 
 第二个例子可以查看，整个进程所占用的内存，以此，找到优化的策略.

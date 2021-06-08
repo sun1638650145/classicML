@@ -1,10 +1,10 @@
 """
-这个例子需要 classicML 0.6.1 或以上版本.
 这个例子将展示如何保存(加载)权重.
 """
 import tempfile
 
 import classicML as cml
+
 
 DATASET_PATH = './datasets/西瓜数据集alpha.csv'
 

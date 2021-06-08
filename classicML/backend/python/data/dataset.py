@@ -98,16 +98,20 @@ class Dataset(object):
 
         return self.x, self.y
 
-    def from_csv(self, filepath):
-        """从CSV文件中加载数据集.
+    def from_csv(self, filepath, sep=','):
+        """从CSV文件中加载数据集,
+         也可以从其他的结构化文本读入数据, 例如TSV等.
 
         Arguments:
             filepath: str, CSV文件的路径.
+            sep: str, default=',',
+                使用的文本分隔符.
 
         Returns:
             经过预处理的特征数据和标签.
         """
         data = pd.read_csv(filepath_or_buffer=filepath,
+                           sep=sep,
                            index_col=0,
                            header=0)
         self.from_dataframe(data)

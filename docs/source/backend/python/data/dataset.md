@@ -45,14 +45,15 @@ from_dataframe(dataframe)
 ### from_csv
 
 ```python
-from_csv(filepath)
+from_csv(filepath, sep=',')
 ```
 
-从CSV文件中加载数据集.
+从CSV文件中加载数据集, 也可以从其他的结构化文本读入数据, 例如TSV等.
 
 #### 参数
 
 * <b>filepath</b>: 字符串，CSV文件的路径.
+* <b>sep</b>: 字符串, 使用的文本分隔符.
 
 #### 返回
 
