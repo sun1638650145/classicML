@@ -1,3 +1,5 @@
+from classicML.api.models.base_model import BaseModel
+
 from classicML.api.models.bayes.naive_bayes_classifier import NaiveBayesClassifier
 from classicML.api.models.bayes.naive_bayes_classifier import NaiveBayesClassifier as NB
 from classicML.api.models.bayes.semi_naive_bayes_classifiers import AveragedOneDependentEstimator

@@ -1,6 +1,7 @@
 import numpy as np
 
 from classicML import CLASSICML_LOGGER
+from classicML.api.models import BaseModel
 from classicML.backend import get_initializer
 from classicML.backend import get_optimizer
 from classicML.backend import get_loss
@@ -8,7 +9,7 @@ from classicML.backend import get_metric
 from classicML.backend import io
 
 
-class RadialBasisFunctionNetwork(object):
+class RadialBasisFunctionNetwork(BaseModel):
     """径向基函数网络.
 
     Attributes:
@@ -100,7 +101,7 @@ class RadialBasisFunctionNetwork(object):
 
         return self
 
-    def predict(self, x):
+    def predict(self, x, **kwargs):
         """使用径向基函数网络进行预测.
 
         Arguments:

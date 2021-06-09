@@ -1,12 +1,13 @@
 import numpy as np
 
 from classicML import CLASSICML_LOGGER
+from classicML.api.models import BaseModel
 from classicML.backend import get_kernel
 from classicML.backend import get_optimizer
 from classicML.backend import io
 
 
-class SupportVectorClassifier(object):
+class SupportVectorClassifier(BaseModel):
     """支持向量分类器.
 
     Attributes:
@@ -87,7 +88,7 @@ class SupportVectorClassifier(object):
         self.gamma = gamma
         self.tol = tol
 
-    def fit(self, x, y, epochs=1000):
+    def fit(self, x, y, epochs=1000, **kwargs):
         """训练分类器.
 
         Arguments:
@@ -123,7 +124,7 @@ class SupportVectorClassifier(object):
 
         return self
 
-    def predict(self, x):
+    def predict(self, x, **kwargs):
         """使用分类器进行预测.
 
         Arguments:

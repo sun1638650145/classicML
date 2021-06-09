@@ -1,5 +1,5 @@
 """An easy-to-use ML framework."""
-__version__ = '0.6.1'
+__version__ = '0.6.2a0'
 
 import os
 import logging
@@ -15,6 +15,7 @@ CLASSICML_LOGGER.info('正在使用 {} 引擎'.format(os.environ['CLASSICML_ENGI
 from classicML.api import models
 from classicML.api import plots
 
+from classicML.api import BaseModel
 from classicML.api import AveragedOneDependentEstimator
 from classicML.api import AODE
 from classicML.api import BackPropagationNeuralNetwork

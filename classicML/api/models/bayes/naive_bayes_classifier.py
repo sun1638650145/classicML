@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from classicML import CLASSICML_LOGGER
+from classicML.api.models import BaseModel
 from classicML.backend import type_of_target
 from classicML.backend import get_conditional_probability
 from classicML.backend import get_prior_probability
@@ -11,7 +12,7 @@ from classicML.backend import get_probability_density
 from classicML.backend import io
 
 
-class NaiveBayesClassifier(object):
+class NaiveBayesClassifier(BaseModel):
     """朴素贝叶斯分类器.
 
     Attributes:
@@ -55,7 +56,7 @@ class NaiveBayesClassifier(object):
         """
         self.smoothing = smoothing
 
-    def fit(self, x, y):
+    def fit(self, x, y, **kwargs):
         """训练朴素贝叶斯分类器.
 
         Arguments:
@@ -139,7 +140,7 @@ class NaiveBayesClassifier(object):
 
         return self
 
-    def predict(self, x, probability=False):
+    def predict(self, x, probability=False, **kwargs):
         """使用朴素贝叶斯分类器进行预测.
 
         Arguments:

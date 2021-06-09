@@ -1,6 +1,7 @@
 import numpy as np
 
 from classicML import CLASSICML_LOGGER
+from classicML.api.models import BaseModel
 from classicML.backend import get_initializer
 from classicML.backend import get_optimizer
 from classicML.backend import get_loss
@@ -8,7 +9,7 @@ from classicML.backend import get_metric
 from classicML.backend import io
 
 
-class LogisticRegression(object):
+class LogisticRegression(BaseModel):
     """逻辑回归.
 
     Attributes:
@@ -95,7 +96,7 @@ class LogisticRegression(object):
 
         return self
 
-    def predict(self, x):
+    def predict(self, x, **kwargs):
         """模型进行预测.
 
         Arguments:

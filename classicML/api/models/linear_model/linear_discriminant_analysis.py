@@ -1,12 +1,13 @@
 import numpy as np
 
 from classicML import CLASSICML_LOGGER
+from classicML.api.models import BaseModel
 from classicML.backend import get_within_class_scatter_matrix
 from classicML.backend import get_w
 from classicML.backend import io
 
 
-class LinearDiscriminantAnalysis(object):
+class LinearDiscriminantAnalysis(BaseModel):
     """线性判别分析.
 
     Attributes:
@@ -26,7 +27,7 @@ class LinearDiscriminantAnalysis(object):
         self.is_trained = False
         self.is_loaded = False
 
-    def fit(self, x, y):
+    def fit(self, x, y, **kwargs):
         """训练模型.
 
         Arguments:
@@ -54,7 +55,7 @@ class LinearDiscriminantAnalysis(object):
 
         return self
 
-    def predict(self, x):
+    def predict(self, x, **kwargs):
         """模型进行预测.
 
         Arguments:

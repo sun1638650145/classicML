@@ -4,12 +4,13 @@ import numpy as np
 import pandas as pd
 
 from classicML import CLASSICML_LOGGER
+from classicML.api.models import BaseModel
 from classicML.backend import get_pruner
 from classicML.backend import io
 from classicML.backend import tree
 
 
-class DecisionTreeClassifier(object):
+class DecisionTreeClassifier(BaseModel):
     """决策树分类器.
 
     Attributes:
@@ -125,7 +126,7 @@ class DecisionTreeClassifier(object):
 
         return self
 
-    def predict(self, x):
+    def predict(self, x, **kwargs):
         """使用决策树分类器进行预测.
 
         Arguments:

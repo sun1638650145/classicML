@@ -75,4 +75,7 @@ def plot_support_vector_classifier(svc, x, y, x_label=None, y_label=None):
     CS = _plot_decision_boundary(svc)
 
     _svc_plot_config(CS, svc.kernel.name, svc.C, x_label, y_label)
+
+    # 自动调整子图.
+    plt.tight_layout()
     plt.show()

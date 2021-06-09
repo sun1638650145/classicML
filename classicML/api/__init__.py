@@ -1,3 +1,4 @@
+from classicML.api.models import BaseModel
 from classicML.api.models import AveragedOneDependentEstimator
 from classicML.api.models import AODE
 from classicML.api.models import BackPropagationNeuralNetwork

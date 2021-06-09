@@ -78,6 +78,9 @@ def plot_linear_discriminant_analysis(lda, x, y, x_label=None, y_label=None):
     plt.scatter(X_1_center[:, 0], X_1_center[:, 1], s=60, c='mediumblue', marker='h', label='正例样本中心')
 
     _lda_plot_config(x_label, y_label)
+
+    # 自动调整子图.
+    plt.tight_layout()
     plt.show()
 
 
@@ -116,4 +119,7 @@ def plot_logistic_regression(logistic_regression, x, y, x_label=None, y_label=No
     plt.plot(x_coord, y_coord, c='orange', label='回归方程-logistic regression')
 
     _logistic_regression_plot_config(x_label, y_label)
+
+    # 自动调整子图.
+    plt.tight_layout()
     plt.show()

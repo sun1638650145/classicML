@@ -194,7 +194,7 @@ class Dataset(object):
         _positive_key_words = ('是', 'y', 'yes', 'Yes', 'YES', 'Y')
         _negative_key_words = ('否', 'n', 'no', 'No', 'NO', 'N')
 
-        if type(labels[0]) is not int:
+        if type(labels[0]) not in (int, np.ndarray):
             for key_word in _positive_key_words:
                 labels[labels == key_word] = 1
             for key_word in _negative_key_words:

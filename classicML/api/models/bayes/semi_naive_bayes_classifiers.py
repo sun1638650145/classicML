@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from classicML import CLASSICML_LOGGER
+from classicML.api.models import BaseModel
 from classicML.backend import get_conditional_probability
 from classicML.backend import get_dependent_prior_probability
 from classicML.backend import get_probability_density
@@ -11,7 +12,7 @@ from classicML.backend import type_of_target
 from classicML.backend import io
 
 
-class OneDependentEstimator(object):
+class OneDependentEstimator(BaseModel):
     """独依赖估计器的基类.
 
     Attributes:
@@ -43,7 +44,7 @@ class OneDependentEstimator(object):
         """
         raise NotImplementedError
 
-    def fit(self, x, y):
+    def fit(self, x, y, **kwargs):
         """训练独依赖估计器.
 
         Arguments:
@@ -52,7 +53,7 @@ class OneDependentEstimator(object):
         """
         raise NotImplementedError
 
-    def predict(self, x):
+    def predict(self, x, **kwargs):
         """使用独依赖估计器进行预测.
 
         Arguments:
@@ -131,7 +132,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
         self.super_parent_name = super_parent_name
         self.smoothing = smoothing
 
-    def fit(self, x, y):
+    def fit(self, x, y, **kwargs):
         """训练超父独依赖估计器.
 
         Arguments:
@@ -434,7 +435,7 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
         self.smoothing = smoothing
         self.m = m
 
-    def fit(self, x, y):
+    def fit(self, x, y, **kwargs):
         """训练平均独依赖估计器.
 
         Arguments:
