@@ -42,3 +42,10 @@ cml.plots.plot_lda(model, ds.x, ds.y, '密度', '含糖率')
 ```
 
 * [更多示例代码点击](https://github.com/sun1638650145/classicML/tree/master/examples)
+
+## v0.6.2 预览
+
+这是一个小版本更新，重点是提高稳定性，修复BUG和编译器警告.
+
+1. 通过引入`BaseModel`，用户可以自定义自己的模型
+2. 增加`cml.backend.cc.io`后端
