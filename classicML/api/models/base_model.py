@@ -42,7 +42,8 @@ class BaseModel(ABC):
 
     def load_weights(self, filepath):
         """加载模型参数,
-        使用parameters_gp加载保存的参数.
+        使用parameters_gp加载参数, parameters_gp提供两个hdf5_dataset用来存放模型参数,
+        compile_ds和weights_ds分别保存模型的超参数和权重参数.
 
         Arguments:
             filepath: str, 权重文件加载的路径.
@@ -53,11 +54,15 @@ class BaseModel(ABC):
         parameters_gp = io.initialize_weights_file(filepath,
                                                    mode='r',
                                                    model_name='BaseModel')
+        compile_ds = parameters_gp['compile']
+        weights_ds = parameters_gp['weights']
+
         raise NotImplemented
 
     def save_weights(self, filepath):
         """将模型权重保存为一个HDF5文件,
-        使用parameters_gp保存的参数.
+        使用parameters_gp保存的参数, parameters_gp提供两个hdf5_dataset用来存放模型参数,
+        compile_ds和weights_ds分别保存模型的超参数和权重参数.
 
         Arguments:
             filepath: str, 权重文件保存的路径.
@@ -68,5 +73,7 @@ class BaseModel(ABC):
         parameters_gp = io.initialize_weights_file(filepath,
                                                    mode='w',
                                                    model_name='BaseModel')
+        compile_ds = parameters_gp['compile']
+        weights_ds = parameters_gp['weights']
 
         raise NotImplemented

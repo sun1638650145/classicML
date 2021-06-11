@@ -15,7 +15,7 @@ else:
 
 from classicML.backend.python.callbacks import History
 
-from classicML.backend.python.utils import ProgressBar
+from classicML.backend.python._utils import ProgressBar
 
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error

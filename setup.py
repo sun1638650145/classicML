@@ -15,6 +15,12 @@ extension_modules = [
         ],
         language='c++',
     ),
+    # backend.callbacks模块
+    Pybind11Extension(
+        'classicML/backend/cc/callbacks',
+        sorted(glob('classicML/backend/cc/callbacks.cc')),
+        language='c++',
+    ),
     # backend.initializers模块
     Pybind11Extension(
         'classicML/backend/cc/initializers',
@@ -64,7 +70,7 @@ extension_modules = [
 
 setup(
     name='classicML',
-    version='0.6.2a0',
+    version='0.6.2a1',
     description='An easy-to-use ML framework',
     long_description=long_description,
     long_description_content_type='text/markdown',

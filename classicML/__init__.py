@@ -1,5 +1,5 @@
 """An easy-to-use ML framework."""
-__version__ = '0.6.2a0'
+__version__ = '0.6.2a1'
 
 import os
 import logging
@@ -42,5 +42,6 @@ from classicML.backend import kernels
 from classicML.backend import losses
 from classicML.backend import metrics
 from classicML.backend import optimizers
+from classicML.backend import tree
 
 from classicML import benchmarks

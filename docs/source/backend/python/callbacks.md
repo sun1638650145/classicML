@@ -7,7 +7,7 @@ classicML的回调函数，可以使用回调函数来查看训练的历史记�
 保存训练的历史记录.
 
 ```python
-cml.callbacks.History(name=None, loss_name='loss', metric_name='metric')
+cml.callbacks.History(name='history', loss_name='loss', metric_name='metric')
 ```
 
 ### 参数

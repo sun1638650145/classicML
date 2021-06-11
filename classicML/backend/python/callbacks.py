@@ -1,8 +1,11 @@
+"""classicML的回调函数."""
+
+
 class History(object):
     """保存训练的历史记录.
 
     Attributes:
-        name: str, default=None,
+        name: str, default='history',
             历史记录的名称.
         loss_name: str, default='loss'
             使用损失函数的名称.
@@ -14,10 +17,10 @@ class History(object):
     Notes:
         - 使用历史记录数据, 会导致运行速度的降低.
     """
-    def __init__(self, name=None, loss_name='loss', metric_name='metric'):
+    def __init__(self, name='history', loss_name='loss', metric_name='metric'):
         """
         Arguments:
-            name: str, default=None,
+            name: str, default='history',
                 历史记录的名称.
             loss_name: str, default='loss'
                 使用损失函数的名称.
