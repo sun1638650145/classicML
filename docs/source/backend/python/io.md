@@ -6,6 +6,8 @@ classicML的I/O函数，用于模型保存等操作.
 
 初始化权重文件, 以创建或者解析模式运行.
 
+`cml.backend.io`的HDF5文件标准化协议包括: 两个信息 `description`和`parameters`, `description`用来存放cml兼容性和开发时间等信息; `parameters`用以保存模型本身的参数.`parameters`分成两个数据集: `compile`保存模型的训练的超参数; `weights`保存模型的权重信息. 开发符合标准化协议的自定义模型, 需将固化的参数保存在`compile`和`weights`中.
+
 ```python
 cml.io.initialize_weights_file(filepath, mode, model_name)
 ```

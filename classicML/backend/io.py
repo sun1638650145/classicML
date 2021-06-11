@@ -8,7 +8,7 @@ import numpy as np
 from classicML import CLASSICML_LOGGER
 from classicML import __version__ as cml_version
 
-__version__ = 'backend.io.0.5'
+__version__ = 'backend.io.0.5.1'
 
 min_cml_version = '0.5'
 min__version__ = 'backend.io.0.3'
@@ -37,6 +37,23 @@ def _parse(model_name, fp):
 
 def initialize_weights_file(filepath, mode, model_name):
     """初始化权重文件, 以创建或者解析模式运行.
+
+    cml.backend.io的HDF5文件标准化协议包括:
+      两个信息组description和parameters,
+      description用来存放cml兼容性和开发时间等信息; parameters用以保存模型本身的参数.
+      parameters分成两个数据集:
+        compile保存模型的训练的超参数; weights保存模型的权重信息.
+    开发符合标准化协议的自定义模型, 需将固化的参数保存在compile和weights中.
+
+    具体结构如下:
+      /
+      ｜-- description
+          |-- version 版本信息
+          |-- model_name 模型名称
+          |__ saved_time 时间戳
+      ｜__ parameters
+          ｜-- compile 训练相关超参数
+          ｜__ weights 模型的权重
 
     Arguments:
         filepath: str, 权重文件加载的路径.

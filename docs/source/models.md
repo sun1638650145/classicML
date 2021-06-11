@@ -29,6 +29,91 @@ y_pred = model.predict(x_test)
 model.save_weights('./weights.h5')
 ```
 
+## BaseModel
+
+classicML的模型抽象基类, classicML的模型全部继承于此. 通过继承BaseModel, 至少实现fit和predict方法就可以构建自己的模型.
+
+```python
+cml.models.BaseModel()
+```
+
+### compile
+
+```python
+compile(**kwargs)
+```
+
+编译模型.
+
+### fit
+
+```python
+fit(x, y, **kwargs)
+```
+
+训练模型.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+
+#### 异常
+
+* <b>NotImplementedError</b>: 需要用户自行实现.
+
+### predict
+
+```python
+predict(x)
+```
+
+使用模型进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+
+#### 返回
+
+预测的Numpy数组.
+
+#### 异常
+
+* <b>NotImplementedError</b>: 需要用户自行实现.
+
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>NotImplemented</b>: 需要用户自行实现.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件. 如果您希望您的模型参数收到保护, 可自行实现模型的保存方式; 如果您希望您的模型开源, 请参照`cml.backend.io`的协议方式实现参数的保存.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>NotImplemented</b>: 需要用户自行实现.
+
 ## AveragedOneDependentEstimator
 
 平均独依赖估计器，一种半朴素贝叶斯分类器.

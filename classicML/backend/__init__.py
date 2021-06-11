@@ -8,7 +8,6 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc import callbacks
     from classicML.backend.python import data
     from classicML.backend.cc import initializers
-    from classicML.backend.python import io
     from classicML.backend.cc import kernels
     from classicML.backend.cc import losses
     from classicML.backend.cc import metrics
@@ -33,7 +32,6 @@ else:
     from classicML.backend.python import callbacks
     from classicML.backend.python import data
     from classicML.backend.python import initializers
-    from classicML.backend.python import io
     from classicML.backend.python import kernels
     from classicML.backend.python import losses
     from classicML.backend.python import metrics
@@ -82,6 +80,7 @@ else:
     from classicML.backend.python.ops import select_second_alpha
     from classicML.backend.python.ops import type_of_target
 
+from classicML.backend import io
 from classicML.backend.training import get_initializer
 from classicML.backend.training import get_kernel
 from classicML.backend.training import get_loss

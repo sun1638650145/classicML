@@ -12,6 +12,7 @@ cc
    :maxdepth: 2
 
    activations
+   callbacks
    initializers
    kernels
    losses
