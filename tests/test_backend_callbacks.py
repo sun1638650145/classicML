@@ -20,7 +20,7 @@ class TestCallback(object):
             cc_history(loss_value, metric_value)
             py_history(loss_value, metric_value)
 
-        assert cc_history.name != py_history.name
+        assert cc_history.name == py_history.name
         assert cc_history.loss_name == py_history.loss_name
         assert cc_history.metric_name == py_history.metric_name
         assert cc_history.loss == py_history.loss
