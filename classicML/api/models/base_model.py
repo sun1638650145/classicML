@@ -50,7 +50,7 @@ class BaseModel(ABC):
         raise NotImplemented
 
     def save_weights(self, filepath):
-        """将模型权重保存为一个HDF5文件,
+        """将模型权重保存,
          如果您希望您的模型参数收到保护, 可自行实现模型的保存方式;
          如果您希望您的模型开源, 请参照cml.backend.io的协议方式实现参数的保存.
 

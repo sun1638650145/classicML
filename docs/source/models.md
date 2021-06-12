@@ -31,7 +31,7 @@ model.save_weights('./weights.h5')
 
 ## BaseModel
 
-classicML的模型抽象基类, classicML的模型全部继承于此. 通过继承BaseModel, 至少实现fit和predict方法就可以构建自己的模型.
+classicML的模型抽象基类, classicML的模型全部继承于此. 通过继承`BaseModel`, 至少实现`fit`和`predict`方法就可以构建自己的模型.
 
 ```python
 cml.models.BaseModel()
@@ -104,7 +104,7 @@ load_weights(filepath)
 save_weights(filepath)
 ```
 
-将模型权重保存为一个HDF5文件. 如果您希望您的模型参数收到保护, 可自行实现模型的保存方式; 如果您希望您的模型开源, 请参照`cml.backend.io`的协议方式实现参数的保存.
+将模型权重保存. 如果您希望您的模型参数收到保护, 可自行实现模型的保存方式; 如果您希望您的模型开源, 请参照`cml.backend.io`的协议方式实现参数的保存.
 
 #### 参数
 

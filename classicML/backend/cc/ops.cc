@@ -10,7 +10,7 @@
 
 // 返回KKT条件的违背值;
 // 输入特征数据, 标签, 要计算的样本下标, 支持向量分类器使用的核函数, 全部拉格朗日乘子, 非零拉格朗日乘子和偏置项.
-// TODO(Steve R. Sun, tag:performance): 在CC中使用Python实现的核函数实际性能和Python没差别, 但是由于其他地方依旧使用的是CC代码, 还是会有明显的性能提高.
+// TODO(Steve R. Sun, tag:performance): 在CC中使用Python实现的核函数实际性能和Python没差别, 但是由于其他地方依旧使用的是C++代码, 还是会有明显的性能提高.
 Eigen::MatrixXd ops::CalculateError(const Eigen::MatrixXd &x,
                                     const Eigen::MatrixXd &y, // 列向量
                                     const int &i,

@@ -40,7 +40,6 @@ Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a,
     }
 }
 
-// TODO(Steve R. Sun, tag:code): 简化随机矩阵生成函数.
 // 生成标准随机正态分布矩阵, 输入为矩阵的行数, 列数和随机种子.
 Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int &rows,
                                                                           const int &columns,

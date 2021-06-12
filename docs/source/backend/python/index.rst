@@ -12,7 +12,6 @@ python
    callbacks
    data/index
    initializers
-   io
    kernels
    losses
    metrics

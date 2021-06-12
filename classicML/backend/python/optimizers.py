@@ -13,7 +13,10 @@ else:
     from classicML.backend.python.activations import sigmoid
     from classicML.backend.python.activations import softmax
 
-from classicML.backend.python.callbacks import History
+if os.environ['CLASSICML_ENGINE'] == 'CC':
+    from classicML.backend.cc.callbacks import History
+else:
+    from classicML.backend.python.callbacks import History
 
 from classicML.backend.python._utils import ProgressBar
 
