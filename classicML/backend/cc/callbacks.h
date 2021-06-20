@@ -61,14 +61,16 @@ Arguments:
 )pbdoc")
         .def(pybind11::init<std::string, std::string, std::string>(), R"pbdoc(
 Arguments:
-    name: str, default=None,
+    name: str, default='history',
         历史记录的名称.
     loss_name: str, default='loss'
         使用损失函数的名称.
     metric_name: str, default='metric'
         使用评估函数的名称.
 )pbdoc",
-             pybind11::arg("name"), pybind11::arg("loss_name"), pybind11::arg("metric_name"))
+             pybind11::arg("name")="history",
+             pybind11::arg("loss_name")="loss",
+             pybind11::arg("metric_name")="metric")
         .def_readwrite("name", &callbacks::History::name)
         .def_readwrite("loss_name", &callbacks::History::loss_name)
         .def_readwrite("metric_name", &callbacks::History::metric_name)
@@ -82,7 +84,7 @@ Arguments:
 )pbdoc",
             pybind11::arg("loss_value"), pybind11::arg("metric_name"));
 
-    m.attr("__version__") = "backend.cc.callbacks.0.1.1.beta";
+    m.attr("__version__") = "backend.cc.callbacks.0.1.2";
 }
 
 #endif /* CLASSICML_BACKEND_CC_CALLBACKS_H_ */
