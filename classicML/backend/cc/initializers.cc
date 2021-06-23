@@ -85,7 +85,7 @@ Eigen::MatrixXd initializers::HeNormal::PyCall(const int &attributes_or_structur
     Eigen::MatrixXd parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix(attributes_or_structure + 1,
                                                                                            1,
                                                                                            this->seed);
-    parameters = parameters * sqrt(2 / attributes_or_structure);
+    parameters = parameters * sqrt(2.0 / attributes_or_structure);
 
     return parameters;
 }
@@ -100,7 +100,7 @@ std::map<std::string, Eigen::MatrixXd> initializers::HeNormal::PyCall(const Eige
         w = matrix_op::GenerateRandomStandardNormalDistributionMatrix(attributes_or_structure[layer + 1],
                                                                       attributes_or_structure[layer],
                                                                       this->seed);
-        w = w * sqrt(2 / attributes_or_structure[layer]);
+        w = w * sqrt(2.0 / attributes_or_structure[layer]);
 
         b = Eigen::MatrixXd::Zero(1, attributes_or_structure[layer + 1]);
 
@@ -129,7 +129,7 @@ Eigen::MatrixXd initializers::XavierNormal::PyCall(const int &attributes_or_stru
     Eigen::MatrixXd parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix(attributes_or_structure + 1,
                                                                                            1,
                                                                                            this->seed);
-    parameters = parameters * sqrt(attributes_or_structure);
+    parameters = parameters * sqrt((double)attributes_or_structure);
 
     return parameters;
 }
@@ -144,7 +144,7 @@ std::map<std::string, Eigen::MatrixXd> initializers::XavierNormal::PyCall(const 
         w = matrix_op::GenerateRandomStandardNormalDistributionMatrix(attributes_or_structure[layer + 1],
                                                                       attributes_or_structure[layer],
                                                                       this->seed);
-        w = w * sqrt(2 / (attributes_or_structure[layer] + attributes_or_structure[layer + 1]));
+        w = w * sqrt(2.0 / (attributes_or_structure[layer] + attributes_or_structure[layer + 1]));
 
         b = Eigen::MatrixXd::Zero(1, attributes_or_structure[layer + 1]);
 
