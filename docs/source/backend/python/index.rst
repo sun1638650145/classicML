@@ -7,7 +7,8 @@ python
 
 .. toctree::
    :maxdepth: 2
-   
+
+   _utils
    activations
    callbacks
    data/index
@@ -17,5 +18,4 @@ python
    metrics
    ops
    optimizers
-   utils
    tree/index
