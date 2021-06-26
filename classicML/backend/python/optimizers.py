@@ -8,23 +8,23 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.activations import relu
     from classicML.backend.cc.activations import sigmoid
     from classicML.backend.cc.activations import softmax
+
+    from classicML.backend.cc.callbacks import History
+
+    from classicML.backend.cc._utils import ProgressBar
+
+    from classicML.backend.cc.ops import cc_calculate_error as calculate_error
+    from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
+    from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
 else:
     from classicML.backend.python.activations import relu
     from classicML.backend.python.activations import sigmoid
     from classicML.backend.python.activations import softmax
 
-if os.environ['CLASSICML_ENGINE'] == 'CC':
-    from classicML.backend.cc.callbacks import History
-else:
     from classicML.backend.python.callbacks import History
 
-from classicML.backend.python._utils import ProgressBar
+    from classicML.backend.python._utils import ProgressBar
 
-if os.environ['CLASSICML_ENGINE'] == 'CC':
-    from classicML.backend.cc.ops import cc_calculate_error as calculate_error
-    from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
-    from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
-else:
     from classicML.backend.python.ops import calculate_error
     from classicML.backend.python.ops import clip_alpha
     from classicML.backend.python.ops import select_second_alpha

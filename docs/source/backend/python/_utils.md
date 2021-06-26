@@ -1,4 +1,4 @@
-# utils
+# _utils
 
 classicML的工具类.
 
@@ -7,7 +7,7 @@ classicML的工具类.
 训练进度条.
 
 ```python
-cml.backend.python.utils.ProgressBar(epochs, loss, metric)
+cml.backend.python._utils.ProgressBar(epochs, loss, metric)
 ```
 
 ### 参数

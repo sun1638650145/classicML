@@ -6,6 +6,12 @@ with open('README.md', 'r') as fp:
     long_description = fp.read()
 
 extension_modules = [
+    # backend._utils模块
+    Pybind11Extension(
+        'classicML/backend/cc/_utils',
+        sorted(glob('classicML/backend/cc/_utils.cc')),
+        language='c++',
+    ),
     # backend.activations模块
     Pybind11Extension(
         'classicML/backend/cc/activations',
@@ -70,7 +76,7 @@ extension_modules = [
 
 setup(
     name='classicML',
-    version='0.6.2b1',
+    version='0.6.2b2',
     description='An easy-to-use ML framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
