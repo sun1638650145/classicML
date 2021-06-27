@@ -10,7 +10,8 @@ cc
 
 .. toctree::
    :maxdepth: 2
-
+	
+   _utils
    activations
    callbacks
    initializers

@@ -89,7 +89,7 @@ Arguments:
              pybind11::arg("loss"),
              pybind11::arg("metric"));
 
-    m.attr("__version__") = "backend.cc._utils.0.1";
+    m.attr("__version__") = "backend.cc._utils.0.1.1";
 }
 
 #endif /* CLASSICML_BACKEND_CC__UTILS_H_ */

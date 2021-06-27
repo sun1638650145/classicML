@@ -49,3 +49,4 @@ cml.plots.plot_lda(model, ds.x, ds.y, '密度', '含糖率')
 
 1. 通过引入`BaseModel`，用户可以自定义自己的模型
 2. 增加`cml.backend.cc.callbacks`后端
+3. 使用C++重写了`cml.backend._utils`,  工具类不推荐直接调用

@@ -37,7 +37,6 @@ void _utils::ProgressBar::_update_info(const unsigned int &epoch,
 // 在终端显示.
 void _utils::ProgressBar::_dynamic_display() {
     std::cout << "\r" << this->info;
-//    fflush(stdout);
 }
 
 // 绘制进度条(无论总的训练轮数是多少, 显示条的总更新步数是25次), 输入当前的训练轮数.
