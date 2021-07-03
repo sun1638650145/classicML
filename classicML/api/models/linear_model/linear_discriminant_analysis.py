@@ -1,5 +1,6 @@
 import numpy as np
 
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.backend import get_within_class_scatter_matrix
@@ -37,8 +38,8 @@ class LinearDiscriminantAnalysis(BaseModel):
         Returns:
             LDA实例.
         """
-        x = np.asarray(x)
-        y = np.asarray(y)
+        x = np.asarray(x, dtype=_cml_precision.float)
+        y = np.asarray(y, dtype=_cml_precision.int)
 
         X_0 = x[y == 0]
         X_1 = x[y == 1]
@@ -71,14 +72,14 @@ class LinearDiscriminantAnalysis(BaseModel):
             CLASSICML_LOGGER.error('模型没有权重')
             raise ValueError('你必须先进行训练')
 
-        coord = np.dot(x, self.w.T)
+        coord = np.dot(x, self.w.T).astype(_cml_precision.float)
 
         center_0 = np.dot(self.w, self.mu_0.T)
         center_1 = np.dot(self.w, self.mu_1.T)
 
         y_pred = np.abs(coord - center_0) > np.abs(coord - center_1)
         y_pred = np.squeeze(y_pred)
-        y_pred = y_pred.astype(int)
+        y_pred = y_pred.astype(_cml_precision.int)
 
         return y_pred
 

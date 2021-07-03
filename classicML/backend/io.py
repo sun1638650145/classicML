@@ -3,12 +3,12 @@ import re
 from time import time
 
 import h5py
-import numpy as np
 
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML import __version__ as cml_version
 
-__version__ = 'backend.io.0.5.1'
+__version__ = 'backend.io.0.6'
 
 min_cml_version = '0.5'
 min__version__ = 'backend.io.0.3'
@@ -75,12 +75,12 @@ def initialize_weights_file(filepath, mode, model_name):
             description_gp = fp.create_group(name='description')
             description_gp.attrs['version'] = cml_version + '.' + __version__
             description_gp.attrs['model_name'] = model_name
-            description_gp.attrs['saved_time'] = time()
+            description_gp.attrs['saved_time'] = _cml_precision.float(time())
 
             # 创建参数信息组(包括两个数据集, 分别记录超参数和模型权重).
             parameters_gp = fp.create_group(name='parameters')
-            parameters_gp.create_dataset(name='compile', dtype=np.float64)
-            parameters_gp.create_dataset(name='weights', dtype=np.float64)
+            parameters_gp.create_dataset(name='compile', dtype=_cml_precision.float)
+            parameters_gp.create_dataset(name='weights', dtype=_cml_precision.float)
         else:
             # 解析描述信息组.
             _parse(model_name, fp)

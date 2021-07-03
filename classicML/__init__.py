@@ -1,5 +1,5 @@
 """An easy-to-use ML framework."""
-__version__ = '0.6.2'
+__version__ = '0.7a0'
 
 import os
 import logging
@@ -7,10 +7,19 @@ import logging
 # 配置默认环境变量
 os.environ.setdefault('CLASSICML_ENGINE', 'Python')
 os.environ.setdefault('CLASSICML_FONT', 'Arial Unicode MS')
+os.environ.setdefault('CLASSICML_PRECISION', '32-bit')
 # 系统logger
 logging.basicConfig(level=logging.INFO)
 CLASSICML_LOGGER = logging.getLogger(name='classicML')
 CLASSICML_LOGGER.info('正在使用 {} 引擎'.format(os.environ['CLASSICML_ENGINE']))
+
+from classicML.framework.dtypes import float32
+from classicML.framework.dtypes import float64
+from classicML.framework.dtypes import int32
+from classicML.framework.dtypes import int64
+from classicML.framework.dtypes import set_precision
+# 全局精度.
+_cml_precision = set_precision()
 
 from classicML.api import models
 from classicML.api import plots
