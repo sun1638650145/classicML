@@ -122,7 +122,7 @@ std::vector<int> matrix_op::NonZero(const Eigen::RowVectorXd &array) {
 // 返回一个有相同数据的值的新形状的矩阵, 输入为要改变形状的矩阵, 改变后的行数和列数.
 // `Matrix` 兼容的32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位整型.
 template <typename Matrix, typename Dtype>
-Matrix matrix_op::Reshape(Matrix &matrix, const Dtype &row, const Dtype &column) {
+Matrix matrix_op::Reshape(Matrix matrix, const Dtype &row, const Dtype &column) {
     Dtype new_row = row;
     Dtype new_column = column;
 
@@ -148,9 +148,9 @@ Matrix matrix_op::Reshape(Matrix &matrix, const Dtype &row, const Dtype &column)
 template Eigen::MatrixXf matrix_op::BroadcastSub(const Eigen::MatrixXf &a, const Eigen::MatrixXf &b);
 template Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a, const Eigen::MatrixXd &b);
 
-template Eigen::MatrixXf matrix_op::Reshape(Eigen::MatrixXf &matrix, const int &row, const int &column);
-template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd &matrix,
+template Eigen::MatrixXf matrix_op::Reshape(Eigen::MatrixXf matrix, const int &row, const int &column);
+template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix,
                                             const std::int64_t &row,
                                             const std::int64_t &column);
-// TODO(Steve Sun tag:code): 临时具体化形式, 正式版移除.
-template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd &matrix, const int &row, const int &column);
+// TODO(Steve Sun tag:code): 临时具体化形式, 用以兼容未升级的后段模块, 正式版移除.
+template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int &row, const int &column);
