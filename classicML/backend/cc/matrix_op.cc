@@ -8,8 +8,9 @@
 #include "matrix_op.h"
 
 // 返回广播减法的矩阵, 输入a矩阵和b矩阵.
-Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a,
-                                        const Eigen::MatrixXd &b) {
+// `Matrix` 兼容的32位和64位浮点型Eigen::Matrix矩阵.
+template <typename Matrix>
+Matrix matrix_op::BroadcastSub(const Matrix &a, const Matrix &b) {
     if (a.rows() == b.rows() && a.cols() == b.cols()) {
         // 执行普通减法.
         return a - b;
@@ -23,14 +24,14 @@ Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a,
         }
 
         if (a.rows() > b.rows()) {
-            Eigen::MatrixXd result_matrix(a.rows(), a.cols());
+            Matrix result_matrix(a.rows(), a.cols());
             for (int row = 0; row < a.rows(); row ++) {
                 result_matrix.row(row) = a.row(row) - b;
             }
 
             return result_matrix;
         } else {
-            Eigen::MatrixXd result_matrix(b.rows(), b.cols());
+            Matrix result_matrix(b.rows(), b.cols());
             for (int row = 0; row < b.rows(); row ++) {
                 result_matrix.row(row) = b.row(row) - a;
             }
@@ -40,6 +41,7 @@ Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a,
     }
 }
 
+// TODO(Steve R. Sun, tag:code): 简化随机矩阵生成函数.
 // 生成标准随机正态分布矩阵, 输入为矩阵的行数, 列数和随机种子.
 Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int &rows,
                                                                           const int &columns,
@@ -118,24 +120,37 @@ std::vector<int> matrix_op::NonZero(const Eigen::RowVectorXd &array) {
 }
 
 // 返回一个有相同数据的值的新形状的矩阵, 输入为要改变形状的矩阵, 改变后的行数和列数.
-Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int &row, const int &column) {
-    int new_row = row;
-    int new_column = column;
+// `Matrix` 兼容的32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位整型.
+template <typename Matrix, typename Dtype>
+Matrix matrix_op::Reshape(Matrix &matrix, const Dtype &row, const Dtype &column) {
+    Dtype new_row = row;
+    Dtype new_column = column;
 
     // 可以将一个维度指定为-1, 函数将自动推理.
     if (row == -1 && column == -1) {
         throw pybind11::value_error("只能指定维度为一个未知维度");
     } else {
         if (row == -1) {
-            new_row = (int)matrix.size() / column;
+            new_row = (Dtype)matrix.size() / column;
         } else if (column == -1) {
-            new_column = (int)matrix.size() / row;
+            new_column = (Dtype)matrix.size() / row;
         }
     }
 
     // 在官方API中Eigen没有提供reshape方法, 这里是参照官方文档实现的一种代替方式.
-    Eigen::Map<Eigen::MatrixXd> map(matrix.data(), new_row, new_column);
-    Eigen::MatrixXd reshaped_matrix = map;
+    Eigen::Map<Matrix> map(matrix.data(), new_row, new_column);
+    Matrix reshaped_matrix = map;
 
     return reshaped_matrix;
 }
+
+// 显式具体化.
+template Eigen::MatrixXf matrix_op::BroadcastSub(const Eigen::MatrixXf &a, const Eigen::MatrixXf &b);
+template Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a, const Eigen::MatrixXd &b);
+
+template Eigen::MatrixXf matrix_op::Reshape(Eigen::MatrixXf &matrix, const int &row, const int &column);
+template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd &matrix,
+                                            const std::int64_t &row,
+                                            const std::int64_t &column);
+// TODO(Steve Sun tag:code): 临时具体化形式, 正式版移除.
+template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd &matrix, const int &row, const int &column);

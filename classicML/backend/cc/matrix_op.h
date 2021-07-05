@@ -15,7 +15,8 @@
 #include "pybind11/pybind11.h"
 
 namespace matrix_op {
-Eigen::MatrixXd BroadcastSub(const Eigen::MatrixXd &a, const Eigen::MatrixXd &b);
+template <typename Matrix>
+Matrix BroadcastSub(const Matrix &a, const Matrix &b);
 
 Eigen::MatrixXd GenerateRandomStandardNormalDistributionMatrix(const int &rows,
                                                                const int &columns,
@@ -29,7 +30,8 @@ Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix, const Eigen::
 
 std::vector<int> NonZero(const Eigen::RowVectorXd &array);
 
-Eigen::MatrixXd Reshape(Eigen::MatrixXd matrix, const int &row, const int &column);
+template <typename Matrix, typename Dtype>
+Matrix Reshape(Matrix &matrix, const Dtype &row, const Dtype &column);
 }  // namespace matrix_op
 
 #endif /* CLASSICML_BACKEND_CC_MATRIX_OP_H_ */

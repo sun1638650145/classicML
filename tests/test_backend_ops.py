@@ -4,6 +4,7 @@
 """
 import numpy as np
 
+from classicML import _cml_precision
 from classicML.backend import kernels
 
 from classicML.backend.cc.ops import cc_calculate_error
@@ -153,9 +154,9 @@ class TestGetProbabilityDensity(object):
 
 class TestGetW(object):
     def test_answer(self):
-        S_w = np.asmatrix([[1, 2], [3, 4]])
-        mu_0 = np.asarray([[1, 1]])
-        mu_1 = np.asarray([[1, 1]])
+        S_w = np.asmatrix([[1, 2], [3, 4]], dtype=_cml_precision.float)
+        mu_0 = np.asarray([[1, 1]], dtype=_cml_precision.float)
+        mu_1 = np.asarray([[1, 1]], dtype=_cml_precision.float)
 
         cc_answer = cc_get_w(S_w, mu_0, mu_1)
         py_answer = get_w(S_w, mu_0, mu_1)
@@ -165,10 +166,10 @@ class TestGetW(object):
 
 class TestGetWithinClassScatterMatrix(object):
     def test_answer(self):
-        X_0 = np.asarray([[1, 2], [3, 4]])
-        X_1 = np.asarray([[3, 4], [1, 2]])
-        mu_0 = np.asarray([[1, 2]])
-        mu_1 = np.asarray([[3, 4]])
+        X_0 = np.asarray([[1, 2], [3, 4]], dtype=_cml_precision.float)
+        X_1 = np.asarray([[3, 4], [1, 2]], dtype=_cml_precision.float)
+        mu_0 = np.asarray([[1, 2]], dtype=_cml_precision.float)
+        mu_1 = np.asarray([[3, 4]], dtype=_cml_precision.float)
 
         cc_answer = cc_get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1)
         py_answer = get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1)

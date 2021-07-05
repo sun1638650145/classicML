@@ -141,35 +141,39 @@ Eigen::MatrixXd ops::GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_
 }
 
 // 返回投影向量, 输入为类内散度矩阵和反正例的均值向量.
-Eigen::MatrixXd ops::GetW_V2(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1) {
+// `Matrix` 兼容的32位和64位浮点型Eigen::Matrix矩阵.
+template <typename Matrix>
+Matrix ops::GetW_V2(const Matrix &S_w, const Matrix &mu_0, const Matrix &mu_1) {
     // 分解奇异值.
-    Eigen::BDCSVD<Eigen::MatrixXd> svd(S_w, Eigen::ComputeFullU|Eigen::ComputeFullV);
-    const Eigen::MatrixXd &U = svd.matrixU();
-    const Eigen::MatrixXd &Sigma = svd.singularValues();
-    const Eigen::MatrixXd &V_t = svd.matrixV();
-    Eigen::MatrixXd Sigma_mat = Sigma.asDiagonal();
+    Eigen::BDCSVD<Matrix> svd(S_w, Eigen::ComputeFullU|Eigen::ComputeFullV);
+    const Matrix &U = svd.matrixU();
+    const Matrix &Sigma = svd.singularValues();
+    const Matrix &V_t = svd.matrixV();
+    Matrix Sigma_mat = Sigma.asDiagonal();
 
-    // 公式(数学公式难以表示, 使用latex语法): w = (S_w)^{-1}(\mu_0 - \mu_1)
-    Eigen::MatrixXd S_w_inv = V_t.transpose() * Sigma_mat * U.transpose();
-    Eigen::MatrixXd mu_t = (mu_0 - mu_1).transpose();
+    // 公式(使用latex语法): w = (S_w)^{-1}(\mu_0 - \mu_1)
+    Matrix S_w_inv = V_t.transpose() * Sigma_mat * U.transpose();
+    Matrix mu_t = (mu_0 - mu_1).transpose();
 
-    Eigen::MatrixXd w = S_w_inv * mu_t;
+    Matrix w = S_w_inv * mu_t;
 
     return matrix_op::Reshape(w, 1, -1);
 }
 
 // 返回类内散度矩阵, 输入为反正例的集合矩阵和反正例的均值向量.
-Eigen::MatrixXd ops::GetWithinClassScatterMatrix(const Eigen::MatrixXd &X_0,
-                                                 const Eigen::MatrixXd &X_1,
-                                                 const Eigen::MatrixXd &mu_0,
-                                                 const Eigen::MatrixXd &mu_1) {
-    // 公式(数学公式难以表示, 使用latex语法):
+// `Matrix` 兼容的32位和64位浮点型Eigen::Matrix矩阵.
+template <typename Matrix>
+Matrix ops::GetWithinClassScatterMatrix(const Matrix &X_0,
+                                        const Matrix &X_1,
+                                        const Matrix &mu_0,
+                                        const Matrix &mu_1) {
+    // 公式(使用latex语法):
     // S_w = \sum_0 + \sum_1
     // \sum_i = \sum_{x \in X_i}(x - \mu_0)(x - \mu_1)^T
-    Eigen::MatrixXd S_0 = (matrix_op::BroadcastSub(X_0, mu_0)).transpose() * (matrix_op::BroadcastSub(X_0, mu_0));
-    Eigen::MatrixXd S_1 = (matrix_op::BroadcastSub(X_1, mu_1)).transpose() * (matrix_op::BroadcastSub(X_1, mu_1));
+    Matrix S_0 = (matrix_op::BroadcastSub(X_0, mu_0)).transpose() * (matrix_op::BroadcastSub(X_0, mu_0));
+    Matrix S_1 = (matrix_op::BroadcastSub(X_1, mu_1)).transpose() * (matrix_op::BroadcastSub(X_1, mu_1));
 
-    Eigen::MatrixXd S_w = S_0 + S_1;
+    Matrix S_w = S_0 + S_1;
 
     return S_w;
 }

@@ -47,18 +47,20 @@ double GetProbabilityDensity(const double &sample,
 // DEPRECATED(Steve R. Sun): `ops.cc_get_w` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.cc_get_w_v2`.
 Eigen::MatrixXd GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1);
 
-Eigen::MatrixXd GetW_V2(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1);
+template <typename Matrix>
+Matrix GetW_V2(const Matrix &S_w, const Matrix &mu_0, const Matrix &mu_1);
 
-Eigen::MatrixXd GetWithinClassScatterMatrix(const Eigen::MatrixXd &X_0,
-                                            const Eigen::MatrixXd &X_1,
-                                            const Eigen::MatrixXd &mu_0,
-                                            const Eigen::MatrixXd &mu_1);
+template <typename Matrix>
+Matrix GetWithinClassScatterMatrix(const Matrix &X_0,
+                                   const Matrix &X_1,
+                                   const Matrix &mu_0,
+                                   const Matrix &mu_1);
 
 std::tuple<int, double> SelectSecondAlpha(const double &error,
                                           const Eigen::RowVectorXd &error_cache,
                                           const Eigen::RowVectorXd &non_bound_alphas);
 
-// overload
+// Overloaded function.
 std::string TypeOfTarget(const Eigen::MatrixXd &y);
 std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &y);
 std::string TypeOfTarget(const pybind11::array &y);
@@ -164,7 +166,19 @@ PYBIND11_MODULE(ops, m) {
         投影向量.)pbdoc",
           pybind11::arg("S_w"), pybind11::arg("mu_0"), pybind11::arg("mu_1"));
 
-    m.def("cc_get_w_v2", &ops::GetW_V2, R"pbdoc(
+    // Overloaded function.
+    m.def("cc_get_w_v2", &ops::GetW_V2<Eigen::MatrixXf>, R"pbdoc(
+获得投影向量.
+
+    Arguments:
+        S_w: numpy.ndarray, 类内散度矩阵.
+        mu_0: numpy.ndarray, 反例的均值向量.
+        mu_1: numpy.ndarray, 正例的均值向量.
+
+    Returns:
+        投影向量.)pbdoc",
+          pybind11::arg("S_w"), pybind11::arg("mu_0"), pybind11::arg("mu_1"));
+    m.def("cc_get_w_v2", &ops::GetW_V2<Eigen::MatrixXd>, R"pbdoc(
 获得投影向量.
 
     Arguments:
@@ -176,7 +190,21 @@ PYBIND11_MODULE(ops, m) {
         投影向量.)pbdoc",
           pybind11::arg("S_w"), pybind11::arg("mu_0"), pybind11::arg("mu_1"));
 
-    m.def("cc_get_within_class_scatter_matrix", &ops::GetWithinClassScatterMatrix, R"pbdoc(
+    // Overloaded function.
+    m.def("cc_get_within_class_scatter_matrix", &ops::GetWithinClassScatterMatrix<Eigen::MatrixXf>, R"pbdoc(
+获得类内散度矩阵.
+
+    Arguments:
+        X_0: numpy.ndarray, 反例集合.
+        X_1: numpy.ndarray, 正例集合.
+        mu_0: numpy.ndarray, 反例的均值向量.
+        mu_1: numpy.ndarray, 正例的均值向量.
+
+    Returns:
+        类内散度矩阵.)pbdoc",
+          pybind11::arg("X_0"), pybind11::arg("X_1"),
+          pybind11::arg("mu_0"), pybind11::arg("mu_1"));
+    m.def("cc_get_within_class_scatter_matrix", &ops::GetWithinClassScatterMatrix<Eigen::MatrixXd>, R"pbdoc(
 获得类内散度矩阵.
 
     Arguments:
@@ -260,7 +288,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.10.2";
+    m.attr("__version__") = "backend.cc.ops.0.11.a0";
 }
 
 #endif /* CLASSICML_BACKEND_CC_OPS_H_ */
