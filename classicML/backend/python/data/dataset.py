@@ -115,7 +115,7 @@ class Dataset(object):
                            sep=sep,
                            index_col=0,
                            header=0)
-        self.from_dataframe(data)
+        self.from_dataframe(self._convert_dtype(data))
 
         return self.x, self.y
 
@@ -152,6 +152,25 @@ class Dataset(object):
             self._encoder_label()
 
         return self.x, self.y
+
+    @staticmethod
+    def _convert_dtype(dataframe):
+        """转换数据元素类型.
+
+        Arguments:
+            dataframe: pandas.DataFrame, 原始的数据.
+
+        Returns:
+            转换数据元素类型后的数据.
+        """
+        dataframe = dataframe.convert_dtypes()
+
+        float_columns = dataframe.select_dtypes(include='float').columns
+        int_columns = dataframe.select_dtypes(include='int').columns
+        dataframe[float_columns] = dataframe[float_columns].astype(_cml_precision.float)
+        dataframe[int_columns] = dataframe[int_columns].astype(_cml_precision.int)
+
+        return dataframe
 
     def _preprocessing_features(self, features):
         """预处理特征值.
@@ -197,9 +216,9 @@ class Dataset(object):
 
         if type(labels[0]) not in (int, np.ndarray):
             for key_word in _positive_key_words:
-                labels[labels == key_word] = 1
+                labels[labels == key_word] = '1'
             for key_word in _negative_key_words:
-                labels[labels == key_word] = 0
+                labels[labels == key_word] = '0'
 
         self.y = labels.astype(_cml_precision.int)
         self.class_indices = {_raw_labels[0]: 0, _raw_labels[1]: 1}
@@ -214,7 +233,7 @@ class Dataset(object):
 
         if type(labels[0]) is not int:
             for index, raw_label in enumerate(_raw_labels):
-                labels[labels == raw_label] = index
+                labels[labels == raw_label] = str(index)
                 self.class_indices.update({raw_label: index})
 
         self.y = labels.astype(_cml_precision.int)

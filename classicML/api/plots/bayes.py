@@ -4,6 +4,7 @@ import pandas as pd
 from classicML.api.plots import _plt as plt
 from classicML.api.plots.utils import _set_bayes_axis
 from classicML.api.plots.utils import _bayes_plot_config
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
 
@@ -44,7 +45,7 @@ def _plot_scatter(x, y):
     # 去除离散值的数据.
     discrete_list = list()
     for i, datatype in enumerate(x.dtypes):
-        if datatype != ('float' or 'int'):
+        if datatype not in (_cml_precision.float, _cml_precision.int, 'int', 'float'):
             discrete_list.append(x.columns[i])
     x = x.drop(labels=discrete_list, axis=1)
     x = x.iloc[:, :2]  # 由于暂时只能可视化二维空间, 就只保留两个属性.

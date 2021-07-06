@@ -50,7 +50,7 @@ class DummyEncoder(PreProcessor):
         class_indices: dict,
             类标签和类索引的映射字典.
     """
-    def __init__(self, name='dummy_encoder', dtype='float32'):
+    def __init__(self, name='dummy_encoder', dtype=_cml_precision.float):
         """
         Arguments:
             name: str, default='dummy_encoder',
@@ -114,7 +114,7 @@ class Imputer(PreProcessor):
         Returns:
             填充后的数据.
         """
-        preprocessed_data = _cml_precision.float(copy.deepcopy(data))
+        preprocessed_data = copy.deepcopy(data)
         for column in range(data.shape[1]):
             preprocessed_data[:, column] = self._fillna(data[:, column])
 
@@ -135,7 +135,7 @@ class Imputer(PreProcessor):
             new_column.fillna(value=np.mean(new_column.dropna().values),
                               inplace=True)
         except ValueError:
-            new_column = pd.DataFrame(column, dtype=_cml_precision.float)
+            new_column = pd.DataFrame(column)
             new_column.fillna(value=new_column.value_counts().keys()[0][0],
                               inplace=True)
 
@@ -153,7 +153,7 @@ class MaxMarginEncoder(PreProcessor):
         class_indices: dict,
             类标签和类索引的映射字典.
     """
-    def __init__(self, name='max_margin_encoder', dtype='float32'):
+    def __init__(self, name='max_margin_encoder', dtype=_cml_precision.float):
         """
         Arguments:
             name: str, default='max_margin_encoder',
@@ -266,7 +266,7 @@ class OneHotEncoder(PreProcessor):
         class_indices: dict,
             类标签和类索引的映射字典.
     """
-    def __init__(self, name='one-hot_encoder', dtype='float32'):
+    def __init__(self, name='one-hot_encoder', dtype=_cml_precision.float):
         """
         Arguments:
             name: str, default='one-hot_encoder',
