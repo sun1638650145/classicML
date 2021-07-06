@@ -3,6 +3,8 @@ import numpy as np
 
 from classicML import CLASSICML_LOGGER
 
+__version__ = 'backend.python.ops.0.11.a0'
+
 
 def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):
     """计算KKT条件的违背值.

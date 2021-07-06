@@ -5,3 +5,5 @@ data是classicML中关于数据操作的模块,
 """
 from classicML.backend.python.data import preprocessing
 from classicML.backend.python.data.dataset import Dataset
+
+__version__ = 'backend.python.data.0.2'

@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML.backend.python.data.preprocessing import DummyEncoder
 from classicML.backend.python.data.preprocessing import Imputer
@@ -166,7 +167,7 @@ class Dataset(object):
         for column in range(features.shape[1]):
             try:
                 # 连续值处理.
-                _current_feature = np.asarray(features[:, column], dtype='float32')
+                _current_feature = np.asarray(features[:, column], dtype=_cml_precision.float)
                 if self.standardization:
                     features[:, column] = StandardScaler(axis=0)(_current_feature)
                 if self.normalization:
@@ -200,7 +201,7 @@ class Dataset(object):
             for key_word in _negative_key_words:
                 labels[labels == key_word] = 0
 
-        self.y = labels.astype(int)
+        self.y = labels.astype(_cml_precision.int)
         self.class_indices = {_raw_labels[0]: 0, _raw_labels[1]: 1}
 
     def _preprocessing_categorical_labels(self, labels):
@@ -216,7 +217,7 @@ class Dataset(object):
                 labels[labels == raw_label] = index
                 self.class_indices.update({raw_label: index})
 
-        self.y = labels.astype(int)
+        self.y = labels.astype(_cml_precision.int)
 
     def _encoder_label(self):
         """编码标签."""

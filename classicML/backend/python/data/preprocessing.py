@@ -6,6 +6,8 @@ from abc import abstractmethod
 import numpy as np
 import pandas as pd
 
+from classicML import _cml_precision
+
 
 class PreProcessor(ABC):
     """预处理器基类,
@@ -112,7 +114,7 @@ class Imputer(PreProcessor):
         Returns:
             填充后的数据.
         """
-        preprocessed_data = copy.deepcopy(data)
+        preprocessed_data = _cml_precision.float(copy.deepcopy(data))
         for column in range(data.shape[1]):
             preprocessed_data[:, column] = self._fillna(data[:, column])
 
@@ -129,11 +131,11 @@ class Imputer(PreProcessor):
             填充后的数据列.
         """
         try:
-            new_column = pd.DataFrame(column, dtype='float32')
+            new_column = pd.DataFrame(column, dtype=_cml_precision.float)
             new_column.fillna(value=np.mean(new_column.dropna().values),
                               inplace=True)
         except ValueError:
-            new_column = pd.DataFrame(column)
+            new_column = pd.DataFrame(column, dtype=_cml_precision.float)
             new_column.fillna(value=new_column.value_counts().keys()[0][0],
                               inplace=True)
 
@@ -204,7 +206,7 @@ class MinMaxScaler(PreProcessor):
         max: float, default=None,
             数据的最大值.
     """
-    def __init__(self, name='minmax_scalar', dtype='float32', axis=-1):
+    def __init__(self, name='minmax_scalar', dtype=_cml_precision.float, axis=-1):
         """
         Arguments:
             name: str, default='minmax_scalar',
@@ -324,7 +326,7 @@ class StandardScaler(PreProcessor):
         var: float, default=None,
             数据的方差.
     """
-    def __init__(self, name='standard_scalar', dtype='float32', axis=-1):
+    def __init__(self, name='standard_scalar', dtype=_cml_precision.float, axis=-1):
         """
         Arguments:
             name: str, default='standard_scalar',

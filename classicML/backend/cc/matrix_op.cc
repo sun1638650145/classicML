@@ -152,5 +152,5 @@ template Eigen::MatrixXf matrix_op::Reshape(Eigen::MatrixXf matrix, const int &r
 template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix,
                                             const std::int64_t &row,
                                             const std::int64_t &column);
-// TODO(Steve Sun tag:code): 临时具体化形式, 用以兼容未升级的后段模块, 正式版移除.
+// TODO(Steve Sun tag:code): 临时具体化形式, 用以兼容未升级的后端模块, 正式版移除.
 template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int &row, const int &column);
