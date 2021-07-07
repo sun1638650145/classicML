@@ -1,5 +1,6 @@
 import numpy as np
 
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.backend import get_initializer
@@ -81,8 +82,8 @@ class LogisticRegression(BaseModel):
         Returns:
             LogisticRegression实例.
         """
-        x = np.asarray(x).astype(float)
-        y = np.asarray(y).astype(int)
+        x = np.asarray(x).astype(_cml_precision.float)
+        y = np.asarray(y).astype(_cml_precision.int)
 
         _attributes_of_feature = x.shape[1]
 

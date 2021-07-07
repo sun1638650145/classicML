@@ -1,6 +1,10 @@
 """classicML的初始化器."""
 import numpy as np
 
+from classicML import _cml_precision
+
+__version__ = 'backend.python.initializers.0.5.a0'
+
 
 class Initializer(object):
     """初始化器的基类.
@@ -45,7 +49,7 @@ class RandomNormal(Initializer):
                 如果是神经网络, 就是定义神经网络的网络结构.
         """
         if isinstance(attributes_or_structure, int):
-            parameters = np.random.randn(attributes_or_structure + 1, 1)  # 初始化属性数+1(偏置项b)
+            parameters = np.random.randn(attributes_or_structure + 1, 1).astype(_cml_precision.float)  # 初始化属性数+1(偏置项b)
         else:
             parameters = {}
             num_of_layers = len(attributes_or_structure)
@@ -79,7 +83,7 @@ class HeNormal(Initializer):
         """
         if isinstance(attributes_or_structure, int):
             parameters = (np.random.randn(attributes_or_structure + 1, 1)
-                          * np.sqrt(2 / attributes_or_structure))  # 初始化属性数+1(偏置项b)
+                          * np.sqrt(2 / attributes_or_structure)).astype(_cml_precision.float)  # 初始化属性数+1(偏置项b)
         else:
             parameters = {}
             num_of_layers = len(attributes_or_structure)
@@ -118,7 +122,7 @@ class XavierNormal(Initializer):
             # 逻辑回归没有多层结构
             # 令 2 / (N_in + N_out) = 2 / N_in * 2, 即 N_in
             parameters = (np.random.randn(attributes_or_structure + 1, 1)
-                          * np.sqrt(attributes_or_structure))
+                          * np.sqrt(attributes_or_structure)).astype(_cml_precision.float)
         else:
             parameters = {}
             num_of_layers = len(attributes_or_structure)

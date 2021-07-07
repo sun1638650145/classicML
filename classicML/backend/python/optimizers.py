@@ -4,6 +4,7 @@ from time import time
 
 import numpy as np
 
+from classicML import _cml_precision
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.activations import relu
     from classicML.backend.cc.activations import sigmoid
@@ -28,6 +29,8 @@ else:
     from classicML.backend.python.ops import calculate_error
     from classicML.backend.python.ops import clip_alpha
     from classicML.backend.python.ops import select_second_alpha
+
+__version__ = 'backend.python.optimizers.0.1.a0'
 
 
 def _get_optimizer_parameters(args, kwargs):
@@ -329,7 +332,7 @@ class Adam(StochasticGradientDescent):
     """自适应矩估计优化器.
 
     References:
-        - [Kingma et al., 2014](http://arxiv.org/abs/1412.6980)
+        - [Kingma et al., 2014](https://arxiv.org/abs/1412.6980)
             参照算法1具体实现.
 
     Notes:
@@ -574,7 +577,7 @@ class GradientDescent(Optimizer):
         number_of_sample = x.shape[0]
         parameters = parameters.reshape(-1, 1)
 
-        x_hat = np.c_[x, np.ones((number_of_sample, 1))]
+        x_hat = np.c_[x, np.ones((number_of_sample, 1))].astype(_cml_precision.float)
         cache = np.matmul(x_hat, parameters)
         y_pred = sigmoid(cache)
 
@@ -593,7 +596,7 @@ class GradientDescent(Optimizer):
             优化器的实时梯度矩阵.
         """
         y_true = y_true.reshape(-1, 1)
-        error = y_true - y_pred
+        error = _cml_precision.float(y_true - y_pred)
         grad = np.sum((-x_hat * error), axis=0)
         grad = grad.reshape(-1, 1)
 
@@ -689,7 +692,7 @@ class NewtonMethod(Optimizer):
         number_of_sample = x.shape[0]
         parameters = parameters.reshape(-1, 1)
 
-        x_hat = np.c_[x, np.ones((number_of_sample, 1))]
+        x_hat = np.c_[x, np.ones((number_of_sample, 1))].astype(_cml_precision.float)
         cache = np.matmul(x_hat, parameters)
         y_pred = sigmoid(cache)
 
@@ -708,7 +711,7 @@ class NewtonMethod(Optimizer):
             优化器的实时梯度矩阵.
         """
         y_true = y_true.reshape(-1, 1)
-        error = y_true - y_pred
+        error = _cml_precision.float(y_true - y_pred)
         grad = np.sum((-x_hat * error), axis=0)
         grad = grad.reshape(-1, 1)
 
