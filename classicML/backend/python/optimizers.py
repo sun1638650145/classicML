@@ -577,7 +577,7 @@ class GradientDescent(Optimizer):
         number_of_sample = x.shape[0]
         parameters = parameters.reshape(-1, 1)
 
-        x_hat = np.c_[x, np.ones((number_of_sample, 1))].astype(_cml_precision.float)
+        x_hat = np.c_[x, np.ones((number_of_sample, 1), dtype=_cml_precision.float)]
         cache = np.matmul(x_hat, parameters)
         y_pred = sigmoid(cache)
 
@@ -692,7 +692,7 @@ class NewtonMethod(Optimizer):
         number_of_sample = x.shape[0]
         parameters = parameters.reshape(-1, 1)
 
-        x_hat = np.c_[x, np.ones((number_of_sample, 1))].astype(_cml_precision.float)
+        x_hat = np.c_[x, np.ones((number_of_sample, 1), dtype=_cml_precision.float)]
         cache = np.matmul(x_hat, parameters)
         y_pred = sigmoid(cache)
 
