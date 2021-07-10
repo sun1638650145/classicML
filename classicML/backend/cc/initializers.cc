@@ -21,8 +21,9 @@ initializers::Initializer::Initializer(std::string name, std::optional<unsigned 
     this->seed = seed;
 }
 
-Eigen::MatrixXd initializers::Initializer::PyCall(const pybind11::args &args,
-                                                  const pybind11::kwargs &kwargs) {
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
+template<typename Matrix>
+Matrix initializers::Initializer::PyCall(const pybind11::args &args, const pybind11::kwargs &kwargs) {
     throw exceptions::NotImplementedError();
 }
 
@@ -41,9 +42,8 @@ initializers::RandomNormal::RandomNormal(std::string name, std::optional<unsigne
 
 // 初始化的参数矩阵, 输入为一个整数.
 Eigen::MatrixXd initializers::RandomNormal::PyCall(const int &attributes_or_structure) {
-    Eigen::MatrixXd parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix(attributes_or_structure + 1,
-                                                                                           1,
-                                                                                           this->seed);
+    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+            (attributes_or_structure + 1, 1, this->seed);
 
     return parameters;
 }
@@ -55,9 +55,8 @@ std::map<std::string, Eigen::MatrixXd> initializers::RandomNormal::PyCall(const 
 
     int num_of_layers = (int)attributes_or_structure.size();
     for (int layer = 0; layer < num_of_layers - 1; layer ++) {
-        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix(attributes_or_structure[layer + 1],
-                                                                      attributes_or_structure[layer],
-                                                                      this->seed);
+        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+                (attributes_or_structure[layer + 1], attributes_or_structure[layer], this->seed);
         b = Eigen::MatrixXd::Zero(1, attributes_or_structure[layer + 1]);
 
         parameters["w" + std::to_string(layer + 1)] = w;
@@ -82,9 +81,8 @@ initializers::HeNormal::HeNormal(std::string name, std::optional<unsigned int> s
 
 // 初始化的参数矩阵, 输入为一个整数.
 Eigen::MatrixXd initializers::HeNormal::PyCall(const int &attributes_or_structure) {
-    Eigen::MatrixXd parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix(attributes_or_structure + 1,
-                                                                                           1,
-                                                                                           this->seed);
+    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+            (attributes_or_structure + 1, 1, this->seed);
     parameters = parameters * sqrt(2.0 / attributes_or_structure);
 
     return parameters;
@@ -97,9 +95,8 @@ std::map<std::string, Eigen::MatrixXd> initializers::HeNormal::PyCall(const Eige
 
     int num_of_layers = (int)attributes_or_structure.size();
     for (int layer = 0; layer < num_of_layers - 1; layer ++) {
-        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix(attributes_or_structure[layer + 1],
-                                                                      attributes_or_structure[layer],
-                                                                      this->seed);
+        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+                (attributes_or_structure[layer + 1], attributes_or_structure[layer], this->seed);
         w = w * sqrt(2.0 / attributes_or_structure[layer]);
 
         b = Eigen::MatrixXd::Zero(1, attributes_or_structure[layer + 1]);
@@ -126,9 +123,8 @@ initializers::XavierNormal::XavierNormal(std::string name, std::optional<unsigne
 
 // 初始化的参数矩阵, 输入为一个整数.
 Eigen::MatrixXd initializers::XavierNormal::PyCall(const int &attributes_or_structure) {
-    Eigen::MatrixXd parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix(attributes_or_structure + 1,
-                                                                                           1,
-                                                                                           this->seed);
+    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+            (attributes_or_structure + 1, 1, this->seed);
     parameters = parameters * sqrt((double)attributes_or_structure);
 
     return parameters;
@@ -141,9 +137,8 @@ std::map<std::string, Eigen::MatrixXd> initializers::XavierNormal::PyCall(const 
 
     int num_of_layers = (int)attributes_or_structure.size();
     for (int layer = 0; layer < num_of_layers - 1; layer ++) {
-        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix(attributes_or_structure[layer + 1],
-                                                                      attributes_or_structure[layer],
-                                                                      this->seed);
+        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+                (attributes_or_structure[layer + 1], attributes_or_structure[layer], this->seed);
         w = w * sqrt(2.0 / (attributes_or_structure[layer] + attributes_or_structure[layer + 1]));
 
         b = Eigen::MatrixXd::Zero(1, attributes_or_structure[layer + 1]);
@@ -188,7 +183,8 @@ std::map<std::string, Eigen::MatrixXd> initializers::RBFNormal::PyCall(const int
     parameters["w"] = Eigen::MatrixXd::Zero(1, hidden_units);
     parameters["b"] = Eigen::MatrixXd::Zero(1, 1);
     parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix(hidden_units, 2, seed);
-    parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix(1, hidden_units, seed);
+    parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+                             (1, hidden_units, seed);
 
     return parameters;
 }

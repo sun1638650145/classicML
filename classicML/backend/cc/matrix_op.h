@@ -18,9 +18,10 @@ namespace matrix_op {
 template <typename Matrix>
 Matrix BroadcastSub(const Matrix &a, const Matrix &b);
 
-Eigen::MatrixXd GenerateRandomStandardNormalDistributionMatrix(const int &rows,
-                                                               const int &columns,
-                                                               const std::optional<unsigned int> &seed);
+template<typename Matrix, typename Dtype>
+Matrix GenerateRandomStandardNormalDistributionMatrix(const int &rows,
+                                                      const int &columns,
+                                                      const std::optional<unsigned int> &seed);
 
 Eigen::MatrixXd GenerateRandomUniformDistributionMatrix(const int &rows,
                                                         const int &columns,

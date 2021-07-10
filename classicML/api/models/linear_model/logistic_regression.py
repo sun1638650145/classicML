@@ -82,8 +82,8 @@ class LogisticRegression(BaseModel):
         Returns:
             LogisticRegression实例.
         """
-        x = np.asarray(x).astype(_cml_precision.float)
-        y = np.asarray(y).astype(_cml_precision.int)
+        x = np.asarray(x, dtype=_cml_precision.float)
+        y = np.asarray(y, dtype=_cml_precision.int)
 
         _attributes_of_feature = x.shape[1]
 

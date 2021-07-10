@@ -8,7 +8,7 @@
 #include "matrix_op.h"
 
 // 返回广播减法的矩阵, 输入a矩阵和b矩阵.
-// `Matrix` 兼容的32位和64位浮点型Eigen::Matrix矩阵.
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 template <typename Matrix>
 Matrix matrix_op::BroadcastSub(const Matrix &a, const Matrix &b) {
     if (a.rows() == b.rows() && a.cols() == b.cols()) {
@@ -41,12 +41,13 @@ Matrix matrix_op::BroadcastSub(const Matrix &a, const Matrix &b) {
     }
 }
 
-// TODO(Steve R. Sun, tag:code): 简化随机矩阵生成函数.
 // 生成标准随机正态分布矩阵, 输入为矩阵的行数, 列数和随机种子.
-Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int &rows,
-                                                                          const int &columns,
-                                                                          const std::optional<unsigned int> &seed) {
-    static std::normal_distribution<double> _distribution(0,1);
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位浮点数.
+template<typename Matrix, typename Dtype>
+Matrix matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int &rows,
+                                                                 const int &columns,
+                                                                 const std::optional<unsigned int> &seed) {
+    static std::normal_distribution<Dtype> _distribution(0,1);
     static std::default_random_engine _engine;
     if (!seed.has_value()) {
         _engine.seed(time(nullptr));
@@ -54,10 +55,10 @@ Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix(const 
         _engine.seed(seed.value());
     }
 
-    Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
-            [] (double element) {
-                return _distribution(_engine);
-            }
+    Matrix matrix = Matrix::Zero(rows, columns).unaryExpr(
+        [](Dtype element) {
+            return _distribution(_engine);
+        }
     );
 
     return matrix;
@@ -76,9 +77,9 @@ Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix(const int &ro
     }
 
     Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
-            [] (double element) {
-                return _distribution(_engine);
-            }
+        [](double element) {
+            return _distribution(_engine);
+        }
     );
 
     return matrix;
@@ -120,7 +121,8 @@ std::vector<int> matrix_op::NonZero(const Eigen::RowVectorXd &array) {
 }
 
 // 返回一个有相同数据的值的新形状的矩阵, 输入为要改变形状的矩阵, 改变后的行数和列数.
-// `Matrix` 兼容的32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位整型.
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位整型.
+// tips: `matrix_op::Reshape` 的内部实现依赖于Eigen::Map, 所以不要惊讶为什么此处的第一个参数不是常引用.
 template <typename Matrix, typename Dtype>
 Matrix matrix_op::Reshape(Matrix matrix, const Dtype &row, const Dtype &column) {
     Dtype new_row = row;
@@ -144,7 +146,7 @@ Matrix matrix_op::Reshape(Matrix matrix, const Dtype &row, const Dtype &column) 
     return reshaped_matrix;
 }
 
-// 显式具体化.
+// 显式实例化.
 template Eigen::MatrixXf matrix_op::BroadcastSub(const Eigen::MatrixXf &a, const Eigen::MatrixXf &b);
 template Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a, const Eigen::MatrixXd &b);
 
@@ -152,5 +154,11 @@ template Eigen::MatrixXf matrix_op::Reshape(Eigen::MatrixXf matrix, const int &r
 template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix,
                                             const std::int64_t &row,
                                             const std::int64_t &column);
-// TODO(Steve Sun tag:code): 临时具体化形式, 用以兼容未升级的后端模块, 正式版移除.
+
+template Eigen::MatrixXf matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
+        (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
+template Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+        (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
+
+// TODO(Steve Sun, tag:code): 临时具体化形式, 用以兼容未升级的后端模块, 正式版移除.
 template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int &row, const int &column);
