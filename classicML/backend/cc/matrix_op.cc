@@ -160,5 +160,5 @@ template Eigen::MatrixXf matrix_op::GenerateRandomStandardNormalDistributionMatr
 template Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
         (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
 
-// TODO(Steve Sun, tag:code): 临时具体化形式, 用以兼容未升级的后端模块, 正式版移除.
+// TODO(Steve Sun, tag:code): 临时实例化形式, 用以兼容未升级的后端模块, 正式版移除.
 template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int &row, const int &column);
