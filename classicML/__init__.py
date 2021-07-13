@@ -1,5 +1,5 @@
 """An easy-to-use ML framework."""
-__version__ = '0.7a0'
+__version__ = '0.7a1'
 
 import os
 import logging

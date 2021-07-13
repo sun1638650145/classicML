@@ -40,36 +40,19 @@ initializers::RandomNormal::RandomNormal(std::string name, std::optional<unsigne
     this->seed = seed;
 }
 
-// 初始化参数矩阵(32位), 输入为一个列表(元素是int32).
-std::map<std::string, Eigen::MatrixXf>
-initializers::RandomNormal::PyCall(const Eigen::RowVectorXi &attributes_or_structure) {
-    std::map<std::string, Eigen::MatrixXf> parameters;
-    Eigen::MatrixXf w, b;
+// 初始化参数矩阵(32/64位), 输入为一个列表(元素是int32/int64).
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位整数行向量, `Dtype` 兼容32位和64位浮点数;
+// 不支持不同位数模板兼容.
+template<typename Matrix, typename Vector, typename Dtype>
+std::map<std::string, Matrix> initializers::RandomNormal::PyCall(const Vector &attributes_or_structure) {
+    std::map<std::string, Matrix> parameters;
+    Matrix w, b;
 
     int num_of_layers = (int)attributes_or_structure.size();
     for (int layer = 0; layer < num_of_layers - 1; layer ++) {
-        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
+        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Matrix, Dtype>
                 (attributes_or_structure[layer + 1], attributes_or_structure[layer], this->seed);
-        b = Eigen::MatrixXf::Zero(1, attributes_or_structure[layer + 1]);
-
-        parameters["w" + std::to_string(layer + 1)] = w;
-        parameters["b" + std::to_string(layer + 1)] = b;
-    }
-
-    return parameters;
-}
-
-// 初始化参数矩阵(64位), 输入为一个列表(元素是int64).
-std::map<std::string, Eigen::MatrixXd>
-initializers::RandomNormal::PyCall(const Eigen::Matrix<std::int64_t, 1, -1> &attributes_or_structure) {
-    std::map<std::string, Eigen::MatrixXd> parameters;
-    Eigen::MatrixXd w, b;
-
-    int num_of_layers = (int)attributes_or_structure.size();
-    for (int layer = 0; layer < num_of_layers - 1; layer ++) {
-        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
-                ((int)attributes_or_structure[layer + 1], (int)attributes_or_structure[layer], this->seed);
-        b = Eigen::MatrixXd::Zero(1, attributes_or_structure[layer + 1]);
+        b = Matrix::Zero(1, attributes_or_structure[layer + 1]);
 
         parameters["w" + std::to_string(layer + 1)] = w;
         parameters["b" + std::to_string(layer + 1)] = b;
@@ -117,31 +100,55 @@ initializers::HeNormal::HeNormal(std::string name, std::optional<unsigned int> s
     this->seed = seed;
 }
 
-// 初始化的参数矩阵, 输入为一个整数.
-Eigen::MatrixXd initializers::HeNormal::PyCall(const int &attributes_or_structure) {
-    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
-            (attributes_or_structure + 1, 1, this->seed);
-    parameters = parameters * sqrt(2.0 / attributes_or_structure);
-
-    return parameters;
-}
-
-// 初始化的参数矩阵, 输入为一个列表.
-std::map<std::string, Eigen::MatrixXd> initializers::HeNormal::PyCall(const Eigen::RowVectorXi &attributes_or_structure) {
-    std::map<std::string, Eigen::MatrixXd> parameters;
-    Eigen::MatrixXd w, b;
+// 初始化参数矩阵(32/64位), 输入为一个列表(元素是int32/int64).
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位整数行向量, `Dtype` 兼容32位和64位浮点数;
+// 不支持不同位数模板兼容.
+template<typename Matrix, typename Vector, typename Dtype>
+std::map<std::string, Matrix> initializers::HeNormal::PyCall(const Vector &attributes_or_structure) {
+    std::map<std::string, Matrix> parameters;
+    Matrix w, b;
 
     int num_of_layers = (int)attributes_or_structure.size();
     for (int layer = 0; layer < num_of_layers - 1; layer ++) {
-        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Matrix, Dtype>
                 (attributes_or_structure[layer + 1], attributes_or_structure[layer], this->seed);
         w = w * sqrt(2.0 / attributes_or_structure[layer]);
 
-        b = Eigen::MatrixXd::Zero(1, attributes_or_structure[layer + 1]);
+        b = Matrix::Zero(1, attributes_or_structure[layer + 1]);
 
         parameters["w" + std::to_string(layer + 1)] = w;
         parameters["b" + std::to_string(layer + 1)] = b;
     }
+
+    return parameters;
+}
+
+// 初始化参数矩阵(32/64位), 输入为一个整数(int32/int64).
+std::variant<Eigen::MatrixXf, Eigen::MatrixXd>
+initializers::HeNormal::PyCall(const pybind11::buffer &attributes_or_structure) {
+    std::string type_code = attributes_or_structure.request().format;
+    if (type_code == "i") {
+        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
+                (pybind11::cast<int>(attributes_or_structure) + 1, 1, this->seed);
+        parameters = parameters * sqrt(2.0 / pybind11::cast<int>(attributes_or_structure));
+
+        return parameters;
+    } else if (type_code == "l") {
+        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+                (pybind11::cast<int>(attributes_or_structure) + 1, 1, this->seed);
+        parameters = parameters * sqrt(2.0 / pybind11::cast<int>(attributes_or_structure));
+
+        return parameters;
+    }
+
+    return std::variant<Eigen::MatrixXf, Eigen::MatrixXd>();
+}
+
+// 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).
+Eigen::MatrixXf initializers::HeNormal::PyCall(const int &attributes_or_structure) {
+    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
+            (attributes_or_structure + 1, 1, this->seed);
+    parameters = parameters * sqrt(2.0 / attributes_or_structure);
 
     return parameters;
 }
@@ -159,31 +166,55 @@ initializers::XavierNormal::XavierNormal(std::string name, std::optional<unsigne
     this->seed = seed;
 }
 
-// 初始化的参数矩阵, 输入为一个整数.
-Eigen::MatrixXd initializers::XavierNormal::PyCall(const int &attributes_or_structure) {
-    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
-            (attributes_or_structure + 1, 1, this->seed);
-    parameters = parameters * sqrt((double)attributes_or_structure);
-
-    return parameters;
-}
-
-// 初始化的参数矩阵, 输入为一个列表.
-std::map<std::string, Eigen::MatrixXd> initializers::XavierNormal::PyCall(const Eigen::RowVectorXi &attributes_or_structure) {
-    std::map<std::string, Eigen::MatrixXd> parameters;
-    Eigen::MatrixXd w, b;
+// 初始化参数矩阵(32/64位), 输入为一个列表(元素是int32/int64).
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位整数行向量, `Dtype` 兼容32位和64位浮点数;
+// 不支持不同位数模板兼容.
+template<typename Matrix, typename Vector, typename Dtype>
+std::map<std::string, Matrix> initializers::XavierNormal::PyCall(const Vector &attributes_or_structure) {
+    std::map<std::string, Matrix> parameters;
+    Matrix w, b;
 
     int num_of_layers = (int)attributes_or_structure.size();
     for (int layer = 0; layer < num_of_layers - 1; layer ++) {
-        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+        w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Matrix, Dtype>
                 (attributes_or_structure[layer + 1], attributes_or_structure[layer], this->seed);
         w = w * sqrt(2.0 / (attributes_or_structure[layer] + attributes_or_structure[layer + 1]));
 
-        b = Eigen::MatrixXd::Zero(1, attributes_or_structure[layer + 1]);
+        b = Matrix::Zero(1, attributes_or_structure[layer + 1]);
 
         parameters["w" + std::to_string(layer + 1)] = w;
         parameters["b" + std::to_string(layer + 1)] = b;
     }
+
+    return parameters;
+}
+
+// 初始化参数矩阵(32/64位), 输入为一个整数(int32/int64).
+std::variant<Eigen::MatrixXf, Eigen::MatrixXd>
+initializers::XavierNormal::PyCall(const pybind11::buffer &attributes_or_structure) {
+    std::string type_code = attributes_or_structure.request().format;
+    if (type_code == "i") {
+        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
+                (pybind11::cast<int>(attributes_or_structure), 1, this->seed);
+        parameters = parameters * sqrt(pybind11::cast<float>(attributes_or_structure));
+
+        return parameters;
+    } else if (type_code == "l") {
+        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+                (pybind11::cast<int>(attributes_or_structure), 1, this->seed);
+        parameters = parameters * sqrt(pybind11::cast<double>(attributes_or_structure));
+
+        return parameters;
+    }
+
+    return std::variant<Eigen::MatrixXf, Eigen::MatrixXd>();
+}
+
+// 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).
+Eigen::MatrixXf initializers::XavierNormal::PyCall(const int &attributes_or_structure) {
+    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
+            (attributes_or_structure + 1, 1, this->seed);
+    parameters = parameters * sqrt((float)attributes_or_structure);
 
     return parameters;
 }

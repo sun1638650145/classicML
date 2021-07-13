@@ -42,7 +42,7 @@ class RandomNormal: public Initializer {
         explicit RandomNormal(std::string name);
         explicit RandomNormal(std::string name, std::optional<unsigned int> seed);
 
-        /* 总结(Steve Sun, 2021-07-12, 受限于作者的思想和技术局限性, 在当前时空观下,
+        /* 总结(Steve Sun, 2021-07-13, 受限于作者的思想和技术局限性, 在当前时空观下,
          结合《设计心理学第二卷》和《Google开源代码风格指南》的设计理念, 这似乎是最优解,
          记录下面这些在方便理解源码的同时希望来自未来的我本人或者其他开发者能找到更优解):
 
@@ -66,8 +66,9 @@ class RandomNormal: public Initializer {
          Clang: Apple clang version 12.0.5 (clang-1205.0.22.11)
          Target: arm64-apple-darwin20.5.0
 
-        3.关于没有使用template的问题: 使用template后极大的降低代码的可阅读性,
-            同时即使引入template在函数体内仍旧需要使用4个分支, 不能减少代码量, 故pass.
+        3.关于使用template的问题: 使用template后极大的降低代码的可阅读性,
+            全局引入template在函数体内仍旧需要使用4个分支, 不能减少代码量, 故pass;
+            折衷方案仅在返回字典上使用了template.
 
             问题参考: [I have two overloaded functions, one of which uses a template,
             how should I convert to the Python side?](https://github.com/pybind/pybind11/issues/3085)
@@ -99,8 +100,8 @@ class RandomNormal: public Initializer {
          */
 
         // overload
-        std::map<std::string, Eigen::MatrixXf> PyCall(const Eigen::RowVectorXi &attributes_or_structure);
-        std::map<std::string, Eigen::MatrixXd> PyCall(const Eigen::Matrix<std::int64_t, 1, -1> &attributes_or_structure);
+        template<typename Matrix, typename Vector, typename Dtype>
+        std::map<std::string, Matrix> PyCall(const Vector &attributes_or_structure);
 
         std::variant<Eigen::MatrixXf, Eigen::MatrixXd> PyCall(const pybind11::buffer &attributes_or_structure);
         Eigen::MatrixXf PyCall(const int &attributes_or_structure);
@@ -114,8 +115,11 @@ class HeNormal: public Initializer {
         explicit HeNormal(std::string name, std::optional<unsigned int> seed);
 
         // overload
-        Eigen::MatrixXd PyCall(const int &attributes_or_structure);
-        std::map<std::string, Eigen::MatrixXd> PyCall(const Eigen::RowVectorXi &attributes_or_structure);
+        template<typename Matrix, typename Vector, typename Dtype>
+        std::map<std::string, Matrix> PyCall(const Vector &attributes_or_structure);
+
+        std::variant<Eigen::MatrixXf, Eigen::MatrixXd> PyCall(const pybind11::buffer &attributes_or_structure);
+        Eigen::MatrixXf PyCall(const int &attributes_or_structure);
 };
 
 // Xavier正态分布随机初始化器.
@@ -126,8 +130,11 @@ class XavierNormal: public Initializer {
         explicit XavierNormal(std::string name, std::optional<unsigned int> seed);
 
         // overload
-        Eigen::MatrixXd PyCall(const int &attributes_or_structure);
-        std::map<std::string, Eigen::MatrixXd> PyCall(const Eigen::RowVectorXi &attributes_or_structure);
+        template<typename Matrix, typename Vector, typename Dtype>
+        std::map<std::string, Matrix> PyCall(const Vector &attributes_or_structure);
+
+        std::variant<Eigen::MatrixXf, Eigen::MatrixXd> PyCall(const pybind11::buffer &attributes_or_structure);
+        Eigen::MatrixXf PyCall(const int &attributes_or_structure);
 };
 
 // Glorot正态分布随机初始化器.
@@ -207,34 +214,36 @@ Arguments:
              pybind11::arg("seed")=pybind11::none())
         .def_readwrite("name", &initializers::RandomNormal::name)
         .def_readwrite("seed", &initializers::RandomNormal::seed)
-        .def("__call__", pybind11::overload_cast<const Eigen::RowVectorXi &>(&initializers::RandomNormal::PyCall),
-R"pbdoc(
+        .def("__call__", [](initializers::RandomNormal &self, const Eigen::RowVectorXi &attributes_or_structure) {
+            return self.PyCall<Eigen::MatrixXf, Eigen::RowVectorXi, float>(attributes_or_structure);
+        }, R"pbdoc(
 函数实现.
     Arguments:
         attributes_or_structure: int or list,
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", pybind11::overload_cast<const Eigen::Matrix<std::int64_t, 1, -1> &>(&initializers::RandomNormal::PyCall),
-R"pbdoc(
+        .def("__call__", [](initializers::RandomNormal &self, const Eigen::Matrix<std::int64_t, 1, -1> &attributes_or_structure) {
+            return self.PyCall<Eigen::MatrixXd, Eigen::Matrix<std::int64_t, 1, -1>, double>(attributes_or_structure);
+        }, R"pbdoc(
 函数实现.
     Arguments:
         attributes_or_structure: int or list,
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::RandomNormal &self, const pybind11::buffer &attributes_or_structure){
+        .def("__call__", [](initializers::RandomNormal &self, const pybind11::buffer &attributes_or_structure) {
             return self.PyCall(attributes_or_structure);
-        },
-R"pbdoc(
+        }, R"pbdoc(
 函数实现.
     Arguments:
         attributes_or_structure: int or list,
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", pybind11::overload_cast<const int &>(&initializers::RandomNormal::PyCall),
-R"pbdoc(
+        .def("__call__", [](initializers::RandomNormal &self, const int &attributes_or_structure) {
+            return self.PyCall(attributes_or_structure);
+        }, R"pbdoc(
 函数实现.
     Arguments:
         attributes_or_structure: int or list,
@@ -256,8 +265,9 @@ He正态分布随机初始化器.
              pybind11::arg("seed")=pybind11::none())
         .def_readwrite("name", &initializers::HeNormal::name)
         .def_readwrite("seed", &initializers::HeNormal::seed)
-        .def("__call__", pybind11::overload_cast<const int &>(&initializers::HeNormal::PyCall),
-R"pbdoc(
+        .def("__call__", [](initializers::HeNormal &self, const Eigen::RowVectorXi &attributes_or_structure) {
+            return self.PyCall<Eigen::MatrixXf, const Eigen::RowVectorXi, float>(attributes_or_structure);
+        }, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
 
     Arguments:
@@ -265,8 +275,29 @@ R"pbdoc(
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", pybind11::overload_cast<const Eigen::RowVectorXi &>(&initializers::HeNormal::PyCall),
-R"pbdoc(
+        .def("__call__", [](initializers::HeNormal &self, const Eigen::Matrix<std::int64_t, 1, -1> &attributes_or_structure) {
+            return self.PyCall<Eigen::MatrixXd, const Eigen::Matrix<std::int64_t, 1, -1>, double>(attributes_or_structure);
+        }, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", [](initializers::HeNormal &self, const pybind11::buffer &attributes_or_structure) {
+            return self.PyCall(attributes_or_structure);
+        }, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", [](initializers::HeNormal &self, const int &attributes_or_structure) {
+            return self.PyCall(attributes_or_structure);
+        }, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
 
     Arguments:
@@ -290,8 +321,9 @@ Xavier正态分布随机初始化器,
              pybind11::arg("seed")=pybind11::none())
         .def_readwrite("name", &initializers::XavierNormal::name)
         .def_readwrite("seed", &initializers::XavierNormal::seed)
-        .def("__call__", pybind11::overload_cast<const int &>(&initializers::XavierNormal::PyCall),
-R"pbdoc(
+        .def("__call__", [](initializers::XavierNormal &self, const Eigen::RowVectorXi &attributes_or_structure) {
+            return self.PyCall<Eigen::MatrixXf, const Eigen::RowVectorXi, float>(attributes_or_structure);
+        }, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in+N_out)),
 其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
 
@@ -300,8 +332,31 @@ R"pbdoc(
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", pybind11::overload_cast<const Eigen::RowVectorXi &>(&initializers::XavierNormal::PyCall),
-R"pbdoc(
+        .def("__call__", [](initializers::XavierNormal &self, const Eigen::Matrix<std::int64_t, 1, -1> &attributes_or_structure) {
+            return self.PyCall<Eigen::MatrixXd, const Eigen::Matrix<std::int64_t, 1, -1>, double>(attributes_or_structure);
+        }, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in+N_out)),
+其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", [](initializers::XavierNormal &self, const pybind11::buffer &attributes_or_structure) {
+            return self.PyCall(attributes_or_structure);
+        }, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in+N_out)),
+其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", [](initializers::XavierNormal &self, const int &attributes_or_structure) {
+            return self.PyCall(attributes_or_structure);
+        }, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in+N_out)),
 其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
 
@@ -322,10 +377,18 @@ Glorot正态分布随机初始化器.
              pybind11::arg("seed")=pybind11::none())
         .def_readwrite("name", &initializers::GlorotNormal::name)
         .def_readwrite("seed", &initializers::GlorotNormal::seed)
-        .def("__call__", pybind11::overload_cast<const int &>(&initializers::GlorotNormal::PyCall),
-             pybind11::arg("attributes_or_structure"))
-        .def("__call__", pybind11::overload_cast<const Eigen::RowVectorXi &>(&initializers::GlorotNormal::PyCall),
-             pybind11::arg("attributes_or_structure"));
+        .def("__call__", [](initializers::GlorotNormal &self, const Eigen::RowVectorXi &attributes_or_structure) {
+            return self.PyCall<Eigen::MatrixXf, const Eigen::RowVectorXi, float>(attributes_or_structure);
+        }, pybind11::arg("attributes_or_structure"))
+        .def("__call__", [](initializers::GlorotNormal &self, const Eigen::Matrix<std::int64_t, 1, -1> &attributes_or_structure) {
+            return self.PyCall<Eigen::MatrixXd, const Eigen::Matrix<std::int64_t, 1, -1>, double>(attributes_or_structure);
+        }, pybind11::arg("attributes_or_structure"))
+        .def("__call__", [](initializers::GlorotNormal &self, const pybind11::buffer &attributes_or_structure) {
+            return self.PyCall(attributes_or_structure);
+        }, pybind11::arg("attributes_or_structure"))
+        .def("__call__", [](initializers::GlorotNormal &self, const int &attributes_or_structure) {
+            return self.PyCall(attributes_or_structure);
+        }, pybind11::arg("attributes_or_structure"));
 
     pybind11::class_<initializers::RBFNormal, initializers::Initializer>(m, "RBFNormal", R"pbdoc(
 RBF网络的初始化器.
@@ -348,6 +411,6 @@ Notes:
       因此, 全部初始化为正数.
 )pbdoc", pybind11::arg("hidden_units"));
 
-    m.attr("__version__") = "backend.cc.initializers.0.5.a1";
+    m.attr("__version__") = "backend.cc.initializers.0.5.a2";
 }
 #endif /* CLASSICML_BACKEND_CC_INITIALIZERS_H_ */
