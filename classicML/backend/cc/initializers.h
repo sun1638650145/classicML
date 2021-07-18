@@ -153,7 +153,10 @@ class RBFNormal: public Initializer {
         explicit RBFNormal(std::string name, std::optional<unsigned int> seed);
 
         // overload
-        std::map<std::string, Eigen::MatrixXd> PyCall(const int &hidden_units);
+        std::variant<std::map<std::string, Eigen::MatrixXf>, std::map<std::string, Eigen::MatrixXd>>
+        PyCall(const pybind11::buffer &hidden_units);
+
+        std::map<std::string, Eigen::MatrixXf> PyCall(const int &hidden_units);
 };
 }  // namespace initializers
 
@@ -266,7 +269,7 @@ He正态分布随机初始化器.
         .def_readwrite("name", &initializers::HeNormal::name)
         .def_readwrite("seed", &initializers::HeNormal::seed)
         .def("__call__", [](initializers::HeNormal &self, const Eigen::RowVectorXi &attributes_or_structure) {
-            return self.PyCall<Eigen::MatrixXf, const Eigen::RowVectorXi, float>(attributes_or_structure);
+            return self.PyCall<Eigen::MatrixXf, Eigen::RowVectorXi, float>(attributes_or_structure);
         }, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
 
@@ -276,7 +279,7 @@ He正态分布随机初始化器.
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
         .def("__call__", [](initializers::HeNormal &self, const Eigen::Matrix<std::int64_t, 1, -1> &attributes_or_structure) {
-            return self.PyCall<Eigen::MatrixXd, const Eigen::Matrix<std::int64_t, 1, -1>, double>(attributes_or_structure);
+            return self.PyCall<Eigen::MatrixXd, Eigen::Matrix<std::int64_t, 1, -1>, double>(attributes_or_structure);
         }, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
 
@@ -322,7 +325,7 @@ Xavier正态分布随机初始化器,
         .def_readwrite("name", &initializers::XavierNormal::name)
         .def_readwrite("seed", &initializers::XavierNormal::seed)
         .def("__call__", [](initializers::XavierNormal &self, const Eigen::RowVectorXi &attributes_or_structure) {
-            return self.PyCall<Eigen::MatrixXf, const Eigen::RowVectorXi, float>(attributes_or_structure);
+            return self.PyCall<Eigen::MatrixXf, Eigen::RowVectorXi, float>(attributes_or_structure);
         }, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in+N_out)),
 其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
@@ -333,7 +336,7 @@ Xavier正态分布随机初始化器,
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
         .def("__call__", [](initializers::XavierNormal &self, const Eigen::Matrix<std::int64_t, 1, -1> &attributes_or_structure) {
-            return self.PyCall<Eigen::MatrixXd, const Eigen::Matrix<std::int64_t, 1, -1>, double>(attributes_or_structure);
+            return self.PyCall<Eigen::MatrixXd, Eigen::Matrix<std::int64_t, 1, -1>, double>(attributes_or_structure);
         }, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in+N_out)),
 其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
@@ -378,10 +381,10 @@ Glorot正态分布随机初始化器.
         .def_readwrite("name", &initializers::GlorotNormal::name)
         .def_readwrite("seed", &initializers::GlorotNormal::seed)
         .def("__call__", [](initializers::GlorotNormal &self, const Eigen::RowVectorXi &attributes_or_structure) {
-            return self.PyCall<Eigen::MatrixXf, const Eigen::RowVectorXi, float>(attributes_or_structure);
+            return self.PyCall<Eigen::MatrixXf, Eigen::RowVectorXi, float>(attributes_or_structure);
         }, pybind11::arg("attributes_or_structure"))
         .def("__call__", [](initializers::GlorotNormal &self, const Eigen::Matrix<std::int64_t, 1, -1> &attributes_or_structure) {
-            return self.PyCall<Eigen::MatrixXd, const Eigen::Matrix<std::int64_t, 1, -1>, double>(attributes_or_structure);
+            return self.PyCall<Eigen::MatrixXd, Eigen::Matrix<std::int64_t, 1, -1>, double>(attributes_or_structure);
         }, pybind11::arg("attributes_or_structure"))
         .def("__call__", [](initializers::GlorotNormal &self, const pybind11::buffer &attributes_or_structure) {
             return self.PyCall(attributes_or_structure);
@@ -400,8 +403,16 @@ RBF网络的初始化器.
              pybind11::arg("seed")=pybind11::none())
         .def_readwrite("name", &initializers::RBFNormal::name)
         .def_readwrite("seed", &initializers::RBFNormal::seed)
-        .def("__call__", pybind11::overload_cast<const int &>(&initializers::RBFNormal::PyCall),
-R"pbdoc(
+        .def("__call__", pybind11::overload_cast<const pybind11::buffer &>(&initializers::RBFNormal::PyCall), R"pbdoc(
+Arguments:
+    hidden_units: int, 径向基函数网络的隐含层神经元数量.
+
+Notes:
+    - 这里隐含层神经元中心本应初始化为标准随机正态分布矩阵,
+      但是实际工程发现, 有负值的时候可能会导致求高斯函数的时候增加损失不收敛,
+      因此, 全部初始化为正数.
+)pbdoc", pybind11::arg("hidden_units"))
+        .def("__call__", pybind11::overload_cast<const int &>(&initializers::RBFNormal::PyCall), R"pbdoc(
 Arguments:
     hidden_units: int, 径向基函数网络的隐含层神经元数量.
 
@@ -411,6 +422,6 @@ Notes:
       因此, 全部初始化为正数.
 )pbdoc", pybind11::arg("hidden_units"));
 
-    m.attr("__version__") = "backend.cc.initializers.0.5.a2";
+    m.attr("__version__") = "backend.cc.initializers.0.5.a3";
 }
 #endif /* CLASSICML_BACKEND_CC_INITIALIZERS_H_ */

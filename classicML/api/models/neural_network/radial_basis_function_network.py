@@ -1,5 +1,6 @@
 import numpy as np
 
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.backend import get_initializer
@@ -88,8 +89,8 @@ class RadialBasisFunctionNetwork(BaseModel):
         Returns:
             RadialBasisFunctionNetwork实例.
         """
-        x = np.asarray(x).astype(float)
-        y = np.asarray(y).astype(int)
+        x = np.asarray(x, dtype=_cml_precision.float)
+        y = np.asarray(y, dtype=_cml_precision.int)
 
         # 没有使用权重文件, 则使用初始化器初始化参数.
         if self.is_loaded is False:

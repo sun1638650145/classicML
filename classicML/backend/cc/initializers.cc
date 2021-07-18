@@ -245,14 +245,45 @@ initializers::RBFNormal::RBFNormal(std::string name, std::optional<unsigned int>
     this->seed = seed;
 }
 
-// 初始化的参数矩阵, 输入为一个整数.
-std::map<std::string, Eigen::MatrixXd> initializers::RBFNormal::PyCall(const int &hidden_units) {
-    std::map<std::string, Eigen::MatrixXd> parameters;
+// 初始化参数矩阵(32/64位), 输入为一个整数(int32/int64).
+std::variant<std::map<std::string, Eigen::MatrixXf>, std::map<std::string, Eigen::MatrixXd>>
+initializers::RBFNormal::PyCall(const pybind11::buffer &hidden_units) {
+    std::string type_code = hidden_units.request().format;
+    if (type_code == "i") {
+        std::map<std::string, Eigen::MatrixXf> parameters;
 
-    parameters["w"] = Eigen::MatrixXd::Zero(1, hidden_units);
-    parameters["b"] = Eigen::MatrixXd::Zero(1, 1);
-    parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix(hidden_units, 2, seed);
-    parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+        parameters["w"] = Eigen::MatrixXf::Zero(1, pybind11::cast<int>(hidden_units));
+        parameters["b"] = Eigen::MatrixXf::Zero(1, 1);
+        parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXf, float>
+                (pybind11::cast<int>(hidden_units), 2, seed);
+        parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
+                (1, pybind11::cast<int>(hidden_units), seed);
+
+        return parameters;
+    } else if (type_code == "l") {
+        std::map<std::string, Eigen::MatrixXd> parameters;
+
+        parameters["w"] = Eigen::MatrixXd::Zero(1, pybind11::cast<int>(hidden_units));
+        parameters["b"] = Eigen::MatrixXd::Zero(1, 1);
+        parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXd, double>
+                (pybind11::cast<int>(hidden_units), 2, seed);
+        parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+                (1, pybind11::cast<int>(hidden_units), seed);
+
+        return parameters;
+    }
+
+    return std::variant<std::map<std::string, Eigen::MatrixXf>, std::map<std::string, Eigen::MatrixXd>>();
+}
+
+// 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).
+std::map<std::string, Eigen::MatrixXf> initializers::RBFNormal::PyCall(const int &hidden_units) {
+    std::map<std::string, Eigen::MatrixXf> parameters;
+
+    parameters["w"] = Eigen::MatrixXf::Zero(1, hidden_units);
+    parameters["b"] = Eigen::MatrixXf::Zero(1, 1);
+    parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXf, float>(hidden_units, 2, seed);
+    parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
                              (1, hidden_units, seed);
 
     return parameters;

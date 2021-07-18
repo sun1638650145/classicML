@@ -65,10 +65,12 @@ Matrix matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int &rows
 }
 
 // 生成随机均匀分布矩阵, 输入为矩阵的行数, 列数和随机种子.
-Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix(const int &rows,
-                                                                   const int &columns,
-                                                                   const std::optional<unsigned int> &seed) {
-    static std::uniform_real_distribution<double> _distribution(0,1);
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位浮点数.
+template<typename Matrix, typename Dtype>
+Matrix matrix_op::GenerateRandomUniformDistributionMatrix(const int &rows,
+                                                          const int &columns,
+                                                          const std::optional<unsigned int> &seed) {
+    static std::uniform_real_distribution<Dtype> _distribution(0,1);
     static std::default_random_engine _engine;
     if (!seed.has_value()) {
         _engine.seed(time(nullptr));
@@ -76,8 +78,8 @@ Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix(const int &ro
         _engine.seed(seed.value());
     }
 
-    Eigen::MatrixXd matrix = Eigen::MatrixXd::Zero(rows, columns).unaryExpr(
-        [](double element) {
+    Matrix matrix = Matrix::Zero(rows, columns).unaryExpr(
+        [](Dtype element) {
             return _distribution(_engine);
         }
     );
@@ -158,6 +160,11 @@ template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix,
 template Eigen::MatrixXf matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
         (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
 template Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
+        (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
+
+template Eigen::MatrixXf matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXf, float>
+        (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
+template Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXd, double>
         (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
 
 // TODO(Steve Sun, tag:code): 临时实例化形式, 用以兼容未升级的后端模块, 正式版移除.
