@@ -12,6 +12,8 @@
 #include <random>
 
 #include "Eigen/Core"
+#include "Eigen/Eigenvalues"
+#include "Eigen/SVD"
 #include "pybind11/pybind11.h"
 
 #include "dtypes.h"
@@ -32,7 +34,7 @@ Matrix GenerateRandomUniformDistributionMatrix(const int32 &rows,
 
 Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix, const Eigen::VectorXd &non_zero_mark);
 
-std::vector<int32> NonZero(const Eigen::RowVectorXd &array);
+std::vector<int> NonZero(const Eigen::RowVectorXd &array);
 
 template <typename Matrix, typename Dtype>
 Matrix Reshape(Matrix matrix, const Dtype &row, const Dtype &column);
