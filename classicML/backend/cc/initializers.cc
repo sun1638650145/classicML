@@ -16,7 +16,7 @@ initializers::Initializer::Initializer(std::string name) {
     this->name = std::move(name);
 }
 
-initializers::Initializer::Initializer(std::string name, std::optional<unsigned int> seed) {
+initializers::Initializer::Initializer(std::string name, std::optional<uint32> seed) {
     this->name = std::move(name);
     this->seed = seed;
 }
@@ -35,7 +35,7 @@ initializers::RandomNormal::RandomNormal(std::string name) {
     this->name = std::move(name);
 }
 
-initializers::RandomNormal::RandomNormal(std::string name, std::optional<unsigned int> seed) {
+initializers::RandomNormal::RandomNormal(std::string name, std::optional<uint32> seed) {
     this->name = std::move(name);
     this->seed = seed;
 }
@@ -48,8 +48,8 @@ std::map<std::string, Matrix> initializers::RandomNormal::PyCall(const Vector &a
     std::map<std::string, Matrix> parameters;
     Matrix w, b;
 
-    int num_of_layers = (int)attributes_or_structure.size();
-    for (int layer = 0; layer < num_of_layers - 1; layer ++) {
+    auto num_of_layers = (int32)attributes_or_structure.size();
+    for (int32 layer = 0; layer < num_of_layers - 1; layer ++) {
         w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Matrix, Dtype>
                 (attributes_or_structure[layer + 1], attributes_or_structure[layer], this->seed);
         b = Matrix::Zero(1, attributes_or_structure[layer + 1]);
@@ -67,12 +67,12 @@ std::variant<Eigen::MatrixXf, Eigen::MatrixXd>
 initializers::RandomNormal::PyCall(const pybind11::buffer &attributes_or_structure) {
     std::string type_code = attributes_or_structure.request().format;
     if (type_code == "i") {
-        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
-                (pybind11::cast<int>(attributes_or_structure) + 1, 1, this->seed);
+        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
+                (pybind11::cast<int32>(attributes_or_structure) + 1, 1, this->seed);
         return parameters;
     } else if (type_code == "l") {
-        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
-                (pybind11::cast<int>(attributes_or_structure) + 1, 1, this->seed);
+        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, float64>
+                (pybind11::cast<int32>(attributes_or_structure) + 1, 1, this->seed);
         return parameters;
     }
 
@@ -80,9 +80,9 @@ initializers::RandomNormal::PyCall(const pybind11::buffer &attributes_or_structu
 }
 
 // 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).
-Eigen::MatrixXf initializers::RandomNormal::PyCall(const int &attributes_or_structure) {
-    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
-            ((int)attributes_or_structure + 1, 1, this->seed);
+Eigen::MatrixXf initializers::RandomNormal::PyCall(const int32 &attributes_or_structure) {
+    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
+            ((int32)attributes_or_structure + 1, 1, this->seed);
 
     return parameters;
 }
@@ -95,7 +95,7 @@ initializers::HeNormal::HeNormal(std::string name) {
     this->name = std::move(name);
 }
 
-initializers::HeNormal::HeNormal(std::string name, std::optional<unsigned int> seed) {
+initializers::HeNormal::HeNormal(std::string name, std::optional<uint32> seed) {
     this->name = std::move(name);
     this->seed = seed;
 }
@@ -108,8 +108,8 @@ std::map<std::string, Matrix> initializers::HeNormal::PyCall(const Vector &attri
     std::map<std::string, Matrix> parameters;
     Matrix w, b;
 
-    int num_of_layers = (int)attributes_or_structure.size();
-    for (int layer = 0; layer < num_of_layers - 1; layer ++) {
+    auto num_of_layers = (int32)attributes_or_structure.size();
+    for (int32 layer = 0; layer < num_of_layers - 1; layer ++) {
         w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Matrix, Dtype>
                 (attributes_or_structure[layer + 1], attributes_or_structure[layer], this->seed);
         w = w * sqrt(2.0 / attributes_or_structure[layer]);
@@ -128,15 +128,15 @@ std::variant<Eigen::MatrixXf, Eigen::MatrixXd>
 initializers::HeNormal::PyCall(const pybind11::buffer &attributes_or_structure) {
     std::string type_code = attributes_or_structure.request().format;
     if (type_code == "i") {
-        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
-                (pybind11::cast<int>(attributes_or_structure) + 1, 1, this->seed);
-        parameters = parameters * sqrt(2.0 / pybind11::cast<int>(attributes_or_structure));
+        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
+                (pybind11::cast<int32>(attributes_or_structure) + 1, 1, this->seed);
+        parameters = parameters * sqrt(2.0 / pybind11::cast<int32>(attributes_or_structure));
 
         return parameters;
     } else if (type_code == "l") {
-        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
-                (pybind11::cast<int>(attributes_or_structure) + 1, 1, this->seed);
-        parameters = parameters * sqrt(2.0 / pybind11::cast<int>(attributes_or_structure));
+        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, float64>
+                (pybind11::cast<int32>(attributes_or_structure) + 1, 1, this->seed);
+        parameters = parameters * sqrt(2.0 / pybind11::cast<int32>(attributes_or_structure));
 
         return parameters;
     }
@@ -145,8 +145,8 @@ initializers::HeNormal::PyCall(const pybind11::buffer &attributes_or_structure) 
 }
 
 // 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).
-Eigen::MatrixXf initializers::HeNormal::PyCall(const int &attributes_or_structure) {
-    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
+Eigen::MatrixXf initializers::HeNormal::PyCall(const int32 &attributes_or_structure) {
+    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
             (attributes_or_structure + 1, 1, this->seed);
     parameters = parameters * sqrt(2.0 / attributes_or_structure);
 
@@ -161,7 +161,7 @@ initializers::XavierNormal::XavierNormal(std::string name) {
     this->name = std::move(name);
 }
 
-initializers::XavierNormal::XavierNormal(std::string name, std::optional<unsigned int> seed) {
+initializers::XavierNormal::XavierNormal(std::string name, std::optional<uint32> seed) {
     this->name = std::move(name);
     this->seed = seed;
 }
@@ -174,8 +174,8 @@ std::map<std::string, Matrix> initializers::XavierNormal::PyCall(const Vector &a
     std::map<std::string, Matrix> parameters;
     Matrix w, b;
 
-    int num_of_layers = (int)attributes_or_structure.size();
-    for (int layer = 0; layer < num_of_layers - 1; layer ++) {
+    auto num_of_layers = (int32)attributes_or_structure.size();
+    for (int32 layer = 0; layer < num_of_layers - 1; layer ++) {
         w = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Matrix, Dtype>
                 (attributes_or_structure[layer + 1], attributes_or_structure[layer], this->seed);
         w = w * sqrt(2.0 / (attributes_or_structure[layer] + attributes_or_structure[layer + 1]));
@@ -194,15 +194,15 @@ std::variant<Eigen::MatrixXf, Eigen::MatrixXd>
 initializers::XavierNormal::PyCall(const pybind11::buffer &attributes_or_structure) {
     std::string type_code = attributes_or_structure.request().format;
     if (type_code == "i") {
-        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
-                (pybind11::cast<int>(attributes_or_structure), 1, this->seed);
-        parameters = parameters * sqrt(pybind11::cast<float>(attributes_or_structure));
+        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
+                (pybind11::cast<int32>(attributes_or_structure), 1, this->seed);
+        parameters = parameters * sqrt(pybind11::cast<float32>(attributes_or_structure));
 
         return parameters;
     } else if (type_code == "l") {
-        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
-                (pybind11::cast<int>(attributes_or_structure), 1, this->seed);
-        parameters = parameters * sqrt(pybind11::cast<double>(attributes_or_structure));
+        auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, float64>
+                (pybind11::cast<int32>(attributes_or_structure), 1, this->seed);
+        parameters = parameters * sqrt(pybind11::cast<float64>(attributes_or_structure));
 
         return parameters;
     }
@@ -211,10 +211,10 @@ initializers::XavierNormal::PyCall(const pybind11::buffer &attributes_or_structu
 }
 
 // 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).
-Eigen::MatrixXf initializers::XavierNormal::PyCall(const int &attributes_or_structure) {
-    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
+Eigen::MatrixXf initializers::XavierNormal::PyCall(const int32 &attributes_or_structure) {
+    auto parameters = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
             (attributes_or_structure + 1, 1, this->seed);
-    parameters = parameters * sqrt((float)attributes_or_structure);
+    parameters = parameters * sqrt((float32)attributes_or_structure);
 
     return parameters;
 }
@@ -227,7 +227,7 @@ initializers::GlorotNormal::GlorotNormal(std::string name) {
     this->name = std::move(name);
 }
 
-initializers::GlorotNormal::GlorotNormal(std::string name, std::optional<unsigned int> seed) {
+initializers::GlorotNormal::GlorotNormal(std::string name, std::optional<uint32> seed) {
     this->name = std::move(name);
     this->seed = seed;
 }
@@ -240,7 +240,7 @@ initializers::RBFNormal::RBFNormal(std::string name) {
     this->name = std::move(name);
 }
 
-initializers::RBFNormal::RBFNormal(std::string name, std::optional<unsigned int> seed) {
+initializers::RBFNormal::RBFNormal(std::string name, std::optional<uint32> seed) {
     this->name = std::move(name);
     this->seed = seed;
 }
@@ -252,23 +252,23 @@ initializers::RBFNormal::PyCall(const pybind11::buffer &hidden_units) {
     if (type_code == "i") {
         std::map<std::string, Eigen::MatrixXf> parameters;
 
-        parameters["w"] = Eigen::MatrixXf::Zero(1, pybind11::cast<int>(hidden_units));
+        parameters["w"] = Eigen::MatrixXf::Zero(1, pybind11::cast<int32>(hidden_units));
         parameters["b"] = Eigen::MatrixXf::Zero(1, 1);
-        parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXf, float>
-                (pybind11::cast<int>(hidden_units), 2, seed);
-        parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
-                (1, pybind11::cast<int>(hidden_units), seed);
+        parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXf, float32>
+                (pybind11::cast<int32>(hidden_units), 2, seed);
+        parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
+                (1, pybind11::cast<int32>(hidden_units), seed);
 
         return parameters;
     } else if (type_code == "l") {
         std::map<std::string, Eigen::MatrixXd> parameters;
 
-        parameters["w"] = Eigen::MatrixXd::Zero(1, pybind11::cast<int>(hidden_units));
+        parameters["w"] = Eigen::MatrixXd::Zero(1, pybind11::cast<int32>(hidden_units));
         parameters["b"] = Eigen::MatrixXd::Zero(1, 1);
-        parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXd, double>
-                (pybind11::cast<int>(hidden_units), 2, seed);
-        parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
-                (1, pybind11::cast<int>(hidden_units), seed);
+        parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXd, float64>
+                (pybind11::cast<int32>(hidden_units), 2, seed);
+        parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, float64>
+                (1, pybind11::cast<int32>(hidden_units), seed);
 
         return parameters;
     }
@@ -277,13 +277,13 @@ initializers::RBFNormal::PyCall(const pybind11::buffer &hidden_units) {
 }
 
 // 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).
-std::map<std::string, Eigen::MatrixXf> initializers::RBFNormal::PyCall(const int &hidden_units) {
+std::map<std::string, Eigen::MatrixXf> initializers::RBFNormal::PyCall(const int32 &hidden_units) {
     std::map<std::string, Eigen::MatrixXf> parameters;
 
     parameters["w"] = Eigen::MatrixXf::Zero(1, hidden_units);
     parameters["b"] = Eigen::MatrixXf::Zero(1, 1);
-    parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXf, float>(hidden_units, 2, seed);
-    parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
+    parameters["c"] = matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXf, float32>(hidden_units, 2, seed);
+    parameters["beta"] = matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
                              (1, hidden_units, seed);
 
     return parameters;

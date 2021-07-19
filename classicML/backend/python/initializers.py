@@ -3,7 +3,7 @@ import numpy as np
 
 from classicML import _cml_precision
 
-__version__ = 'backend.python.initializers.0.5.a0'
+__version__ = 'backend.python.initializers.0.5.b0'
 
 
 class Initializer(object):

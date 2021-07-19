@@ -44,9 +44,9 @@ Matrix matrix_op::BroadcastSub(const Matrix &a, const Matrix &b) {
 // 生成标准随机正态分布矩阵, 输入为矩阵的行数, 列数和随机种子.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位浮点数.
 template<typename Matrix, typename Dtype>
-Matrix matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int &rows,
-                                                                 const int &columns,
-                                                                 const std::optional<unsigned int> &seed) {
+Matrix matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int32 &rows,
+                                                                 const int32 &columns,
+                                                                 const std::optional<uint32> &seed) {
     static std::normal_distribution<Dtype> _distribution(0,1);
     static std::default_random_engine _engine;
     if (!seed.has_value()) {
@@ -67,9 +67,9 @@ Matrix matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int &rows
 // 生成随机均匀分布矩阵, 输入为矩阵的行数, 列数和随机种子.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位浮点数.
 template<typename Matrix, typename Dtype>
-Matrix matrix_op::GenerateRandomUniformDistributionMatrix(const int &rows,
-                                                          const int &columns,
-                                                          const std::optional<unsigned int> &seed) {
+Matrix matrix_op::GenerateRandomUniformDistributionMatrix(const int32 &rows,
+                                                          const int32 &columns,
+                                                          const std::optional<uint32> &seed) {
     static std::uniform_real_distribution<Dtype> _distribution(0,1);
     static std::default_random_engine _engine;
     if (!seed.has_value()) {
@@ -152,20 +152,18 @@ Matrix matrix_op::Reshape(Matrix matrix, const Dtype &row, const Dtype &column) 
 template Eigen::MatrixXf matrix_op::BroadcastSub(const Eigen::MatrixXf &a, const Eigen::MatrixXf &b);
 template Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a, const Eigen::MatrixXd &b);
 
-template Eigen::MatrixXf matrix_op::Reshape(Eigen::MatrixXf matrix, const int &row, const int &column);
-template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix,
-                                            const std::int64_t &row,
-                                            const std::int64_t &column);
+template Eigen::MatrixXf matrix_op::Reshape(Eigen::MatrixXf matrix, const int32 &row, const int32 &column);
+template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int64 &row, const int64 &column);
 
-template Eigen::MatrixXf matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float>
-        (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
-template Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, double>
-        (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
+template Eigen::MatrixXf matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
+        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
+template Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, float64>
+        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
 
-template Eigen::MatrixXf matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXf, float>
-        (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
-template Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXd, double>
-        (const int &rows, const int &columns, const std::optional<unsigned int> &seed);
+template Eigen::MatrixXf matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXf, float32>
+        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
+template Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXd, float64>
+        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
 
 // TODO(Steve Sun, tag:code): 临时实例化形式, 用以兼容未升级的后端模块, 正式版移除.
 template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int &row, const int &column);

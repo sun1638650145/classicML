@@ -11,26 +11,28 @@
 #include <ctime>
 #include <random>
 
-#include "Eigen/Dense"
+#include "Eigen/Core"
 #include "pybind11/pybind11.h"
+
+#include "dtypes.h"
 
 namespace matrix_op {
 template <typename Matrix>
 Matrix BroadcastSub(const Matrix &a, const Matrix &b);
 
 template<typename Matrix, typename Dtype>
-Matrix GenerateRandomStandardNormalDistributionMatrix(const int &rows,
-                                                      const int &columns,
-                                                      const std::optional<unsigned int> &seed);
+Matrix GenerateRandomStandardNormalDistributionMatrix(const int32 &rows,
+                                                      const int32 &columns,
+                                                      const std::optional<uint32> &seed);
 
 template<typename Matrix, typename Dtype>
-Matrix GenerateRandomUniformDistributionMatrix(const int &rows,
-                                               const int &columns,
-                                               const std::optional<unsigned int> &seed);
+Matrix GenerateRandomUniformDistributionMatrix(const int32 &rows,
+                                               const int32 &columns,
+                                               const std::optional<uint32> &seed);
 
 Eigen::MatrixXd GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix, const Eigen::VectorXd &non_zero_mark);
 
-std::vector<int> NonZero(const Eigen::RowVectorXd &array);
+std::vector<int32> NonZero(const Eigen::RowVectorXd &array);
 
 template <typename Matrix, typename Dtype>
 Matrix Reshape(Matrix matrix, const Dtype &row, const Dtype &column);
