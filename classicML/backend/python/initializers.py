@@ -161,9 +161,9 @@ class RBFNormal(Initializer):
               但是实际工程发现, 有负值的时候可能会导致求高斯函数的时候增加损失不收敛,
               因此, 全部初始化为正数.
         """
-        parameters = {'w': np.zeros([1, hidden_units]),
-                      'b': np.zeros([1, 1]),
-                      'c': np.random.rand(hidden_units, 2),  # 隐含层神经元的中心
-                      'beta': np.random.randn(1, hidden_units)}  # 高斯径向基函数的系数
+        parameters = {'w': np.zeros([1, hidden_units], dtype=_cml_precision.float),
+                      'b': np.zeros([1, 1], dtype=_cml_precision.float),
+                      'c': np.random.rand(hidden_units, 2).astype(_cml_precision.float),  # 隐含层神经元的中心
+                      'beta': np.random.randn(1, hidden_units).astype(_cml_precision.float)}  # 高斯径向基函数的系数
 
         return parameters

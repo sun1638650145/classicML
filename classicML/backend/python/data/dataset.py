@@ -134,9 +134,9 @@ class Dataset(object):
         if y is None and self.dataset_type == 'train':
             CLASSICML_LOGGER.warn('请检查您的数据集, 训练集似乎应该有标签数据.')
 
-        x = np.asarray(x)
+        x = np.asarray(x, dtype=_cml_precision.float)
         if y is not None:
-            y = np.asarray(y)
+            y = np.asarray(y, dtype=_cml_precision.int)
             if len(y.shape) == 1:
                 y = y.reshape(-1, 1)
 

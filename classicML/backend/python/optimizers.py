@@ -827,8 +827,8 @@ class RadialBasisFunctionOptimizer(Optimizer):
         # 获取隐含层神经元的数量
         units = c.shape[0]
         # 初始化高斯径向基函数
-        rho = np.zeros((number_of_sample, units))
-        x_ci = np.zeros((number_of_sample, units))
+        rho = np.zeros([number_of_sample, units], dtype=_cml_precision.float)
+        x_ci = np.zeros([number_of_sample, units], dtype=_cml_precision.float)
         for unit in range(units):
             x_ci[:, unit] = np.linalg.norm(x - c[[unit], ], axis=1) ** 2
             rho[:, unit] = np.exp(-beta[0, unit] * x_ci[:, unit])
