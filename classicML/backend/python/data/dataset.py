@@ -200,6 +200,8 @@ class Dataset(object):
         # 删除被数值化的列.
         if len(_del_list) > 0:
             features = np.delete(features, _del_list, axis=1)
+            # 数值化过程, 原有的字符型特征会导致`features`数据类型转换成object
+            features = features.astype(_cml_precision.float)
 
         self.x = features
 

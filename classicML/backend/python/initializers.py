@@ -3,7 +3,7 @@ import numpy as np
 
 from classicML import _cml_precision
 
-__version__ = 'backend.python.initializers.0.5.b0'
+__version__ = 'backend.python.initializers.0.5.b1'
 
 
 class Initializer(object):
@@ -55,8 +55,9 @@ class RandomNormal(Initializer):
             num_of_layers = len(attributes_or_structure)
 
             for layer in range(num_of_layers - 1):
-                w = np.random.randn(attributes_or_structure[layer + 1], attributes_or_structure[layer])
-                b = np.zeros((1, attributes_or_structure[layer + 1]))
+                w = np.random.randn(attributes_or_structure[layer + 1],
+                                    attributes_or_structure[layer]).astype(_cml_precision.float)
+                b = np.zeros([1, attributes_or_structure[layer + 1]], dtype=_cml_precision.float)
                 parameters['w' + str(layer + 1)] = w
                 parameters['b' + str(layer + 1)] = b
 
@@ -90,8 +91,8 @@ class HeNormal(Initializer):
 
             for layer in range(num_of_layers - 1):
                 w = (np.random.randn(attributes_or_structure[layer + 1], attributes_or_structure[layer])
-                     * np.sqrt(2 / attributes_or_structure[layer]))
-                b = np.zeros((1, attributes_or_structure[layer + 1]))
+                     * np.sqrt(2 / attributes_or_structure[layer])).astype(_cml_precision.float)
+                b = np.zeros([1, attributes_or_structure[layer + 1]], dtype=_cml_precision.float)
                 parameters['w' + str(layer + 1)] = w
                 parameters['b' + str(layer + 1)] = b
 
@@ -129,8 +130,8 @@ class XavierNormal(Initializer):
 
             for layer in range(num_of_layers - 1):
                 w = (np.random.randn(attributes_or_structure[layer + 1], attributes_or_structure[layer])
-                     * np.sqrt(2 / (attributes_or_structure[layer] + attributes_or_structure[layer + 1])))
-                b = np.zeros((1, attributes_or_structure[layer + 1]))
+                     * np.sqrt(2 / (attributes_or_structure[layer] + attributes_or_structure[layer + 1]))).astype(_cml_precision.float)
+                b = np.zeros([1, attributes_or_structure[layer + 1]], dtype=_cml_precision.float)
                 parameters['w' + str(layer + 1)] = w
                 parameters['b' + str(layer + 1)] = b
 
