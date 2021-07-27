@@ -148,5 +148,6 @@ class MeanSquaredError(Loss):
 
         return np.squeeze(loss)
 
+
 # Aliases.
 MSE = MeanSquaredError

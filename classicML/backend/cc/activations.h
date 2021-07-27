@@ -281,7 +281,7 @@ Sigmoid的导数(微分).
     m.attr("sigmoid") = activations::Sigmoid();
     m.attr("softmax") = activations::Softmax();
 
-    m.attr("__version__") = "backend.cc.activations.0.6.a0";
+    m.attr("__version__") = "backend.cc.activations.0.6.b0";
 }
 
 #endif /* CLASSICML_BACKEND_CC_ACTIVATIONS_H_ */
