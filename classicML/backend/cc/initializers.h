@@ -422,6 +422,6 @@ Notes:
       因此, 全部初始化为正数.
 )pbdoc", pybind11::arg("hidden_units"));
 
-    m.attr("__version__") = "backend.cc.initializers.0.5.b0";
+    m.attr("__version__") = "backend.cc.initializers.0.5.b1";
 }
 #endif /* CLASSICML_BACKEND_CC_INITIALIZERS_H_ */

@@ -76,7 +76,7 @@ initializers::RandomNormal::PyCall(const pybind11::buffer &attributes_or_structu
         return parameters;
     }
 
-    return std::variant<Eigen::MatrixXf, Eigen::MatrixXd>();
+    return {};
 }
 
 // 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).
@@ -141,7 +141,7 @@ initializers::HeNormal::PyCall(const pybind11::buffer &attributes_or_structure) 
         return parameters;
     }
 
-    return std::variant<Eigen::MatrixXf, Eigen::MatrixXd>();
+    return {};
 }
 
 // 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).
@@ -207,7 +207,7 @@ initializers::XavierNormal::PyCall(const pybind11::buffer &attributes_or_structu
         return parameters;
     }
 
-    return std::variant<Eigen::MatrixXf, Eigen::MatrixXd>();
+    return {};
 }
 
 // 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).
@@ -273,7 +273,7 @@ initializers::RBFNormal::PyCall(const pybind11::buffer &hidden_units) {
         return parameters;
     }
 
-    return std::variant<std::map<std::string, Eigen::MatrixXf>, std::map<std::string, Eigen::MatrixXd>>();
+    return {};
 }
 
 // 初始化参数矩阵(32位), 输入为一个整数(Pure Python int).

@@ -11,7 +11,7 @@
 namespace exceptions {
 class NotImplementedError : public std::exception {
     public:
-        const char *what() const noexcept override {
+        [[nodiscard]] const char *what() const noexcept override {
             return "函数没有实现";
         }
 };
