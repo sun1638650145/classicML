@@ -1,9 +1,10 @@
 """classicML的底层核心操作."""
 import numpy as np
 
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.11.a0'
+__version__ = 'backend.python.ops.0.11.a1'
 
 
 def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):
@@ -37,7 +38,7 @@ def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):
 
         kappa = kernel(valid_x, x_i)
 
-        fx = np.matmul((valid_alphas.reshape(-1, 1) * valid_y).T, kappa.T) + b
+        fx = (np.matmul((valid_alphas.reshape(-1, 1) * valid_y).T, kappa.T) + b).astype(_cml_precision.float)
     else:
         # 拉格朗日乘子全是零的时候, 每个样本都不会对结果产生影响.
         fx = b

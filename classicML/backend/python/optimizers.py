@@ -30,7 +30,7 @@ else:
     from classicML.backend.python.ops import clip_alpha
     from classicML.backend.python.ops import select_second_alpha
 
-__version__ = 'backend.python.optimizers.0.1.a0'
+__version__ = 'backend.python.optimizers.0.1.a1'
 
 
 def _get_optimizer_parameters(args, kwargs):
@@ -935,12 +935,12 @@ class SequentialMinimalOptimization(Optimizer):
         entire_flag = True
 
         # 初始化为numpy.ndarray数组, 在Python下更新后会自动转换数据类型为numpy.ndarray,
-        # 但是, CC在第一次输入的时候为int, 这里强制为numpy.ndarray用以解决CC下不能动态类型输入.
-        self.b = np.asarray([0])
+        # 但是, CC在第一次输入的时候为float, 这里强制为numpy.ndarray用以解决CC下不能动态类型输入.
+        self.b = np.asarray([0.0], dtype=_cml_precision.float)
         # 初始化返回参数, 在未知样本的数量时无法初始化.
-        self.alphas = np.zeros((number_of_sample, ))
-        self.non_bound_alphas = np.zeros((number_of_sample, ))
-        self.error_cache = np.zeros((number_of_sample, ))
+        self.alphas = np.zeros((number_of_sample, ), dtype=_cml_precision.float)
+        self.non_bound_alphas = np.zeros((number_of_sample, ), dtype=_cml_precision.float)
+        self.error_cache = np.zeros((number_of_sample, ), dtype=_cml_precision.float)
         self.non_zero_alphas = np.zeros((number_of_sample, ), dtype=bool)
 
         while (self.epochs == -1) or (epoch < self.epochs):
@@ -968,7 +968,8 @@ class SequentialMinimalOptimization(Optimizer):
             elif pair_of_alpha_changed == 0:
                 entire_flag = True
 
-        support = self.non_zero_alphas.nonzero()[0]
+        # `numpy.nonzero`获取索引产生的新数组, 类型默认为pure int(参与numpy自动转换为np.int64),
+        support = _cml_precision.int(self.non_zero_alphas.nonzero()[0])
         support_vector = x[support]
         support_alpha = self.alphas[self.non_zero_alphas]
         support_y = y[support]
@@ -1038,11 +1039,11 @@ class SequentialMinimalOptimization(Optimizer):
         y_j = y[j, 0]
 
         if y_i != y_j:
-            low = max(0.0, alpha_j_old - alpha_i_old)
-            high = min(self.C, self.C + alpha_j_old - alpha_i_old)
+            low = _cml_precision.float(max(0.0, alpha_j_old - alpha_i_old))
+            high = _cml_precision.float(min(self.C, self.C + alpha_j_old - alpha_i_old))
         else:
-            low = max(0.0, alpha_i_old + alpha_j_old - self.C)
-            high = min(self.C, alpha_i_old + alpha_j_old)
+            low = _cml_precision.float(max(0.0, alpha_i_old + alpha_j_old - self.C))
+            high = _cml_precision.float(min(self.C, alpha_i_old + alpha_j_old))
 
         if low == high:  # 二维空间对角线重合.
             return False
@@ -1055,7 +1056,7 @@ class SequentialMinimalOptimization(Optimizer):
         kappa_ji = self.kernel(x_j, x_i)
         kappa_jj = self.kernel(x_j, x_j)
 
-        eta = kappa_ii + kappa_jj - 2 * kappa_ij
+        eta = _cml_precision.float(kappa_ii + kappa_jj - 2 * kappa_ij)
         if eta <= 0:  # 2-范数小于零.
             return False
 
@@ -1065,7 +1066,7 @@ class SequentialMinimalOptimization(Optimizer):
         if np.abs(alpha_j_new - alpha_j_old) < 1e-5:  # 更新幅度过小.
             return False
 
-        alpha_i_new = alpha_i_old + y_i * y_j * (alpha_j_old - alpha_j_new)
+        alpha_i_new = _cml_precision.float(alpha_i_old + y_i * y_j * (alpha_j_old - alpha_j_new))
 
         # 两个变量优化后要重新计算偏置.
         b_i = (-error_i - y_i * kappa_ii * (alpha_i_new - alpha_i_old)

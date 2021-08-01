@@ -1,5 +1,6 @@
 import numpy as np
 
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.backend import get_kernel
@@ -101,8 +102,8 @@ class SupportVectorClassifier(BaseModel):
         Returns:
             SupportVectorClassifier实例.
         """
-        x = np.asarray(x)
-        y = np.asarray(y)
+        x = np.asarray(x, dtype=_cml_precision.float)
+        y = np.asarray(y, dtype=_cml_precision.int)
         if y.ndim == 1:
             y = y.reshape(-1, 1)
 
@@ -141,7 +142,7 @@ class SupportVectorClassifier(BaseModel):
             raise ValueError('你必须先进行训练')
 
         number_of_sample = x.shape[0]
-        y_pred = np.ones((number_of_sample, ), dtype=int)
+        y_pred = np.ones((number_of_sample, ), dtype=_cml_precision.int)
 
         for sample in range(number_of_sample):
             kappa = self.kernel(x[sample], self.support_vector)
