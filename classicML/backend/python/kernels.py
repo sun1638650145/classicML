@@ -1,6 +1,8 @@
 """classicML的核函数."""
 import numpy as np
 
+__version__ = 'backend.python.kernels.0.10.a0'
+
 
 class Kernel(object):
     """核函数的基类.

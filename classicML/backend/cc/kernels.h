@@ -9,10 +9,10 @@
 #ifndef CLASSICML_BACKEND_CC_KERNELS_H_
 #define CLASSICML_BACKEND_CC_KERNELS_H_
 
-#include "Eigen/Core"
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
 
+#include "dtypes.h"
 #include "exceptions.h"
 #include "matrix_op.h"
 
@@ -24,8 +24,7 @@ class Kernel {
         explicit Kernel(std::string name);
         virtual ~Kernel() = default;
 
-        virtual Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                                       const Eigen::MatrixXd &x_j);
+        template<typename Matrix> Matrix PyCall(const Matrix &x_i, const Matrix &x_j);
 
     public:
         std::string name;
@@ -37,57 +36,54 @@ class Linear : public Kernel {
         Linear();
         explicit Linear(std::string name);
 
-        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                               const Eigen::MatrixXd &x_j) override;
+        template<typename Matrix> Matrix PyCall(const Matrix &x_i, const Matrix &x_j);
 };
 
 // 多项式核函数.
 class Polynomial : public Kernel {
     public:
         Polynomial();
-        explicit Polynomial(std::string name, double gamma, int degree);
+        explicit Polynomial(std::string name, float32 gamma, int32 degree);
 
-        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                               const Eigen::MatrixXd &x_j) override;
+        template<typename Matrix> Matrix PyCall(const Matrix &x_i, const Matrix &x_j);
 
     public:
-        double gamma;
-        int degree;
+        float32 gamma;
+        int32 degree;
 };
 
 // 径向基核函数.
 class RBF : public Kernel {
     public:
         RBF();
-        explicit RBF(std::string name, double gamma);
+        explicit RBF(std::string name, float32 gamma);
 
-        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                               const Eigen::MatrixXd &x_j) override;
+        template<typename Matrix> Matrix PyCall(const Matrix &x_i, const Matrix &x_j);
 
     public:
-        double gamma;
+        float32 gamma;
 };
 
 // 高斯核函数.
 class Gaussian : public RBF {
     public:
         Gaussian();
-        explicit Gaussian(std::string name, double gamma);
+        explicit Gaussian(std::string name, float32 gamma);
 };
 
 // Sigmoid核函数.
 class Sigmoid : public Kernel {
     public:
         Sigmoid();
-        explicit Sigmoid(std::string name, double gamma, double beta, double theta);
+        explicit Sigmoid(std::string name, float32 gamma, float32 beta, float64 theta);
 
-        Eigen::MatrixXd PyCall(const Eigen::MatrixXd &x_i,
-                               const Eigen::MatrixXd &x_j) override;
+        template<typename Matrix> Matrix PyCall(const Matrix &x_i, const Matrix &x_j);
 
     public:
-        double gamma;
-        double beta;
-        double theta;
+        float32 gamma;
+        float32 beta;
+        //TODO(Steve R. Sun tag:code): `theta`是浮点数被调用的时候在64位状态下会导致精度不够.
+        float64 theta;
 };
 }  // namespace kernels
 
@@ -118,7 +114,9 @@ PYBIND11_MODULE(kernels, m) {
                 核函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readwrite("name", &kernels::Kernel::name)
-        .def("__call__", &kernels::Kernel::PyCall,
+        .def("__call__", &kernels::Kernel::PyCall<Eigen::MatrixXf>,
+             pybind11::arg("x_i"), pybind11::arg("x_j"))
+        .def("__call__", &kernels::Kernel::PyCall<Eigen::MatrixXd>,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
     pybind11::class_<kernels::Linear, kernels::Kernel>(m, "Linear", R"pbdoc(
@@ -135,7 +133,9 @@ PYBIND11_MODULE(kernels, m) {
                 核函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readwrite("name", &kernels::Linear::name)
-        .def("__call__", &kernels::Linear::PyCall,
+        .def("__call__", &kernels::Linear::PyCall<Eigen::MatrixXf>,
+             pybind11::arg("x_i"), pybind11::arg("x_j"))
+        .def("__call__", &kernels::Linear::PyCall<Eigen::MatrixXd>,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
     pybind11::class_<kernels::Polynomial, kernels::Kernel>(m, "Polynomial", R"pbdoc(
@@ -158,7 +158,7 @@ PYBIND11_MODULE(kernels, m) {
             degree: int, default=3,
                 多项式的次数.
 )pbdoc")
-        .def(pybind11::init<std::string, double, int>(), R"pbdoc(
+        .def(pybind11::init<std::string, float32, int32>(), R"pbdoc(
         Arguments:
             name: str, default='poly',
                 核函数名称.
@@ -171,7 +171,9 @@ PYBIND11_MODULE(kernels, m) {
         .def_readwrite("name", &kernels::Polynomial::name)
         .def_readwrite("gamma", &kernels::Polynomial::gamma)
         .def_readwrite("degree", &kernels::Polynomial::degree)
-        .def("__call__", &kernels::Polynomial::PyCall,
+        .def("__call__", &kernels::Polynomial::PyCall<Eigen::MatrixXf>,
+             pybind11::arg("x_i"), pybind11::arg("x_j"))
+        .def("__call__", &kernels::Polynomial::PyCall<Eigen::MatrixXd>,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
     pybind11::class_<kernels::RBF, kernels::Kernel>(m, "RBF", R"pbdoc(
@@ -190,7 +192,7 @@ PYBIND11_MODULE(kernels, m) {
             gamma: float, default=1.0,
                 核函数系数.
 )pbdoc")
-        .def(pybind11::init<std::string, double>(), R"pbdoc(
+        .def(pybind11::init<std::string, float32>(), R"pbdoc(
         Arguments:
             name: str, default='rbf',
                 核函数名称.
@@ -200,7 +202,9 @@ PYBIND11_MODULE(kernels, m) {
              pybind11::arg("name")="rbf", pybind11::arg("gamma")=1.0)
         .def_readwrite("name", &kernels::RBF::name)
         .def_readwrite("gamma", &kernels::RBF::gamma)
-        .def("__call__", &kernels::RBF::PyCall,
+        .def("__call__", &kernels::RBF::PyCall<Eigen::MatrixXf>,
+             pybind11::arg("x_i"), pybind11::arg("x_j"))
+        .def("__call__", &kernels::RBF::PyCall<Eigen::MatrixXd>,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
     pybind11::class_<kernels::Gaussian, kernels::RBF>(m, "Gaussian", R"pbdoc(
@@ -214,7 +218,7 @@ PYBIND11_MODULE(kernels, m) {
             gamma: float, default=1.0,
                 核函数系数.
 )pbdoc")
-        .def(pybind11::init<std::string, double>(), R"pbdoc(
+        .def(pybind11::init<std::string, float32>(), R"pbdoc(
         Arguments:
             name: str, default='gaussian',
                 核函数名称.
@@ -224,7 +228,9 @@ PYBIND11_MODULE(kernels, m) {
              pybind11::arg("name")="gaussian", pybind11::arg("gamma")=1.0)
         .def_readwrite("name", &kernels::Gaussian::name)
         .def_readwrite("gamma", &kernels::Gaussian::gamma)
-        .def("__call__", &kernels::Gaussian::PyCall,
+        .def("__call__", &kernels::Gaussian::PyCall<Eigen::MatrixXf>,
+             pybind11::arg("x_i"), pybind11::arg("x_j"))
+        .def("__call__", &kernels::Gaussian::PyCall<Eigen::MatrixXd>,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
     pybind11::class_<kernels::Sigmoid, kernels::Kernel>(m, "Sigmoid", R"pbdoc(
@@ -251,7 +257,7 @@ Sigmoid核函数.
             theta: float, default=-1.0,
                 核函数参数.
 )pbdoc")
-        .def(pybind11::init<std::string, double, double, double>(), R"pbdoc(
+        .def(pybind11::init<std::string, float32, float32, float64>(), R"pbdoc(
         Arguments:
             name: str, default='sigmoid',
                 核函数名称.
@@ -268,10 +274,12 @@ Sigmoid核函数.
         .def_readwrite("gamma", &kernels::Sigmoid::gamma)
         .def_readwrite("beta", &kernels::Sigmoid::beta)
         .def_readwrite("theta", &kernels::Sigmoid::theta)
-        .def("__call__", &kernels::Sigmoid::PyCall,
+        .def("__call__", &kernels::Sigmoid::PyCall<Eigen::MatrixXf>,
+             pybind11::arg("x_i"), pybind11::arg("x_j"))
+        .def("__call__", &kernels::Sigmoid::PyCall<Eigen::MatrixXd>,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
-    m.attr("__version__") = "backend.cc.kernels.0.9.2";
+    m.attr("__version__") = "backend.cc.kernels.0.10.a0";
 }
 
 #endif /* CLASSICML_BACKEND_CC_KERNELS_H_ */
