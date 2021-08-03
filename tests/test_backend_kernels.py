@@ -1,10 +1,6 @@
 """
     测试cc后端和默认python后端的运行结果是否一致.
     使用的随机数据采取了一些限制以更好满足测试, 但仍不具有实际意义.
-
-    Notes:
-        - 在Python中print(0.1+0.2)输出不为0.3, kernels后端引擎涉及到大量的数值计算,
-        当阈值为1e-15, 其精度是64位的浮点数, 可以满足工程需要.
 """
 import numpy as np
 
@@ -58,8 +54,8 @@ class TestKernel(object):
         assert (abs(cc_linear(x_i, x_j) - py_linear(x_i, x_j)) <= THRESHOLD).all()
 
     def test_poly(self):
-        cc_poly = CcPolynomial('cc_poly', gamma=2.0, degree=2)
-        py_poly = PyPolynomial('py_poly', gamma=2.0, degree=2)
+        cc_poly = CcPolynomial('cc_poly', gamma=2.1, degree=2)
+        py_poly = PyPolynomial('py_poly', gamma=2.1, degree=2)
 
         x_i = np.random.random(size=[10, 2])
         x_j = np.random.random(size=[1, 2])
@@ -68,8 +64,8 @@ class TestKernel(object):
         assert (abs(cc_poly(x_i, x_j) - py_poly(x_i, x_j)) <= THRESHOLD).all()
 
     def test_sigmoid(self):
-        cc_sigmoid = CcSigmoid('cc_sigmoid', gamma=2.0, beta=1.5, theta=-1.1)
-        py_sigmoid = PySigmoid('py_sigmoid', gamma=2.0, beta=1.5, theta=-1.1)
+        cc_sigmoid = CcSigmoid('cc_sigmoid', gamma=2.1, beta=1.5, theta=-1.1)
+        py_sigmoid = PySigmoid('py_sigmoid', gamma=2.1, beta=1.5, theta=-1.1)
 
         x_i = np.random.random(size=[10, 2])
         x_j = np.random.random(size=[1, 2])

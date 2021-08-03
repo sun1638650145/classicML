@@ -153,6 +153,8 @@ template Eigen::MatrixXf matrix_op::BroadcastSub(const Eigen::MatrixXf &a, const
 template Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a, const Eigen::MatrixXd &b);
 
 template Eigen::MatrixXf matrix_op::Reshape(Eigen::MatrixXf matrix, const int32 &row, const int32 &column);
+// reshape的row, column 提供的是单精度的情况.
+template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int32 &row, const int32 &column);
 template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int64 &row, const int64 &column);
 
 template Eigen::MatrixXf matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
@@ -164,6 +166,3 @@ template Eigen::MatrixXf matrix_op::GenerateRandomUniformDistributionMatrix<Eige
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
 template Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXd, float64>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
-
-// TODO(Steve Sun, tag:code): 临时实例化形式, 用以兼容未升级的后端模块, 正式版移除.
-template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int32 &row, const int32 &column);

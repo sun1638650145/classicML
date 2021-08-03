@@ -51,7 +51,7 @@ kernels::Polynomial::Polynomial() {
     this->degree = 3;
 }
 
-kernels::Polynomial::Polynomial(std::string name, float32 gamma, int32 degree) {
+kernels::Polynomial::Polynomial(std::string name, float64 gamma, int32 degree) {
     this->name = std::move(name);
     this->gamma = gamma;
     this->degree = degree;
@@ -79,7 +79,7 @@ kernels::RBF::RBF() {
     this->gamma = 1.0;
 }
 
-kernels::RBF::RBF(std::string name, float32 gamma) {
+kernels::RBF::RBF(std::string name, float64 gamma) {
     this->name = std::move(name);
     this->gamma = gamma;
 }
@@ -105,7 +105,7 @@ kernels::Gaussian::Gaussian() {
     this->gamma = 1.0;
 }
 
-kernels::Gaussian::Gaussian(std::string name, float32 gamma) {
+kernels::Gaussian::Gaussian(std::string name, float64 gamma) {
     this->name = std::move(name);
     this->gamma = gamma;
 }
@@ -117,7 +117,7 @@ kernels::Sigmoid::Sigmoid() {
     this->theta = -1.0;
 }
 
-kernels::Sigmoid::Sigmoid(std::string name, float32 gamma, float32 beta, float64 theta) {
+kernels::Sigmoid::Sigmoid(std::string name, float64 gamma, float64 beta, float64 theta) {
     this->name = std::move(name);
     this->gamma = gamma;
     this->beta = beta;

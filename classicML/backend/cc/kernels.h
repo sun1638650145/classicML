@@ -43,46 +43,49 @@ class Linear : public Kernel {
 class Polynomial : public Kernel {
     public:
         Polynomial();
-        explicit Polynomial(std::string name, float32 gamma, int32 degree);
+        explicit Polynomial(std::string name, float64 gamma, int32 degree);
 
         template<typename Matrix> Matrix PyCall(const Matrix &x_i, const Matrix &x_j);
 
     public:
-        float32 gamma;
-        int32 degree;
+        // TODO(Steve R. Sun, tag:trick): 首先说明, 在保证 64-bit 模式下精度的同时, 32-bit 模式下速度还是有10%的提高.
+        //  在Python侧声明参数数据类型都是float, 但C++侧设置为float64可以使得精度得以保证; 你可能想问为什么构造函数没有使用float32,
+        //  因为C++侧声明float32, 解释器会按float32接收, 自动转换float64类型时精度损失; int32和int64没有浮点数部分就没有这个问题,
+        //  在满足性能的情况下选一个内存占用小的.
+        float64 gamma;
+        int64 degree;
 };
 
 // 径向基核函数.
 class RBF : public Kernel {
     public:
         RBF();
-        explicit RBF(std::string name, float32 gamma);
+        explicit RBF(std::string name, float64 gamma);
 
         template<typename Matrix> Matrix PyCall(const Matrix &x_i, const Matrix &x_j);
 
     public:
-        float32 gamma;
+        float64 gamma;
 };
 
 // 高斯核函数.
 class Gaussian : public RBF {
     public:
         Gaussian();
-        explicit Gaussian(std::string name, float32 gamma);
+        explicit Gaussian(std::string name, float64 gamma);
 };
 
 // Sigmoid核函数.
 class Sigmoid : public Kernel {
     public:
         Sigmoid();
-        explicit Sigmoid(std::string name, float32 gamma, float32 beta, float64 theta);
+        explicit Sigmoid(std::string name, float64 gamma, float64 beta, float64 theta);
 
         template<typename Matrix> Matrix PyCall(const Matrix &x_i, const Matrix &x_j);
 
     public:
-        float32 gamma;
-        float32 beta;
-        //TODO(Steve R. Sun tag:code): `theta`是浮点数被调用的时候在64位状态下会导致精度不够.
+        float64 gamma;
+        float64 beta;
         float64 theta;
 };
 }  // namespace kernels
@@ -158,7 +161,7 @@ PYBIND11_MODULE(kernels, m) {
             degree: int, default=3,
                 多项式的次数.
 )pbdoc")
-        .def(pybind11::init<std::string, float32, int32>(), R"pbdoc(
+        .def(pybind11::init<std::string, float64, int32>(), R"pbdoc(
         Arguments:
             name: str, default='poly',
                 核函数名称.
@@ -192,7 +195,7 @@ PYBIND11_MODULE(kernels, m) {
             gamma: float, default=1.0,
                 核函数系数.
 )pbdoc")
-        .def(pybind11::init<std::string, float32>(), R"pbdoc(
+        .def(pybind11::init<std::string, float64>(), R"pbdoc(
         Arguments:
             name: str, default='rbf',
                 核函数名称.
@@ -218,7 +221,7 @@ PYBIND11_MODULE(kernels, m) {
             gamma: float, default=1.0,
                 核函数系数.
 )pbdoc")
-        .def(pybind11::init<std::string, float32>(), R"pbdoc(
+        .def(pybind11::init<std::string, float64>(), R"pbdoc(
         Arguments:
             name: str, default='gaussian',
                 核函数名称.
@@ -257,7 +260,7 @@ Sigmoid核函数.
             theta: float, default=-1.0,
                 核函数参数.
 )pbdoc")
-        .def(pybind11::init<std::string, float32, float32, float64>(), R"pbdoc(
+        .def(pybind11::init<std::string, float64, float64, float64>(), R"pbdoc(
         Arguments:
             name: str, default='sigmoid',
                 核函数名称.
@@ -279,7 +282,7 @@ Sigmoid核函数.
         .def("__call__", &kernels::Sigmoid::PyCall<Eigen::MatrixXd>,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
-    m.attr("__version__") = "backend.cc.kernels.0.10.a0";
+    m.attr("__version__") = "backend.cc.kernels.0.10.a1";
 }
 
 #endif /* CLASSICML_BACKEND_CC_KERNELS_H_ */
