@@ -164,6 +164,3 @@ template Eigen::MatrixXf matrix_op::GenerateRandomUniformDistributionMatrix<Eige
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
 template Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXd, float64>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
-
-// TODO(Steve Sun, tag:code): 临时实例化形式, 用以兼容未升级的后端模块, 正式版移除.
-template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int &row, const int &column);

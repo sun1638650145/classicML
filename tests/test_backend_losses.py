@@ -3,9 +3,8 @@
     使用的随机数据采取了一些限制以更好满足测试, 但仍不具有实际意义.
 
     Notes:
-        - 在Python中print(0.1+0.2)输出不为0.3, activations后端引擎涉及到大量的计算梯度,
-        导致这种差异尤为明显, 但实际调试发现差异小于1e-15, 对实际结果影响在工程上可以忽略,
-        因此设置阈值为1e-14.
+        - 在Python中print(0.1+0.2)输出不为0.3, losses后端引擎涉及到大量的数值计算,
+        当阈值为1e-15, 其精度是64位的浮点数, 可以满足工程需要.
 """
 import numpy as np
 
@@ -21,7 +20,7 @@ from classicML.backend.python.losses import LogLikelihood as PyLogLikelihood
 from classicML.backend.python.losses import MeanSquaredError as PyMeanSquaredError
 from classicML.backend.python.losses import MSE as PyMSE
 
-THRESHOLD = 1e-14
+THRESHOLD = 1e-15
 
 
 class TestLoss(object):
