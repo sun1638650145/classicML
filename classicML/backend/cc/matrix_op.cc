@@ -88,18 +88,19 @@ Matrix matrix_op::GenerateRandomUniformDistributionMatrix(const int32 &rows,
 }
 
 // 获取非零元素组成的子矩阵, 输入父矩阵和非零标签.
-Eigen::MatrixXd matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
-                                               const Eigen::VectorXd &non_zero_mark) {
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位浮点型向量, 不支持不同位数模板兼容.
+template<typename Matrix, typename Vector>
+Matrix matrix_op::GetNonZeroSubMatrix(const Matrix &matrix, const Vector &non_zero_mark) {
     if (matrix.rows() != non_zero_mark.rows()) {
         throw pybind11::value_error("行数不同, 无法操作");
     }
 
     // 初始化子矩阵.
-    int row = (int)(non_zero_mark.array() == 1).count();  // 统计非零元素个数.
-    Eigen::MatrixXd sub_matrix(row, matrix.cols());
+    auto row = (int32)(non_zero_mark.array() == 1).count();  // 统计非零元素个数.
+    Matrix sub_matrix(row, matrix.cols());
 
     row = 0;
-    for (int i = 0; i < non_zero_mark.rows(); i ++) {
+    for (int32 i = 0; i < non_zero_mark.rows(); i ++) {
         if (non_zero_mark[i] == 1) {
             sub_matrix.row(row) = matrix.row(i);
             row ++;
@@ -110,8 +111,10 @@ Eigen::MatrixXd matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
 }
 
 // 返回非零元素下标组成的数组, 输入为数组.
-std::vector<int> matrix_op::NonZero(const Eigen::RowVectorXd &array) {
-    std::vector<int> buffer;
+// `RowVector` 兼容32位和64位浮点型行向量.
+template<typename RowVector>
+std::vector<int32> matrix_op::NonZero(const RowVector &array) {
+    std::vector<int32> buffer;
 
     for (int i = 0; i < array.size(); i ++) {
         if (array[i] != 0.0) {
@@ -166,3 +169,11 @@ template Eigen::MatrixXf matrix_op::GenerateRandomUniformDistributionMatrix<Eige
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
 template Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXd, float64>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
+
+template Eigen::MatrixXf matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXf &matrix,
+                                                        const Eigen::VectorXf &non_zero_mark);
+template Eigen::MatrixXd matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
+                                                        const Eigen::VectorXd &non_zero_mark);
+
+template std::vector<int32> matrix_op::NonZero(const Eigen::RowVectorXf &array);
+template std::vector<int32> matrix_op::NonZero(const Eigen::RowVectorXd &array);
