@@ -100,8 +100,8 @@ class RandomNormal: public Initializer {
          */
 
         // overload
-        template<typename Matrix, typename Vector, typename Dtype>
-        std::map<std::string, Matrix> PyCall(const Vector &attributes_or_structure);
+        template<typename Matrix, typename RowVector, typename Dtype>
+        std::map<std::string, Matrix> PyCall(const RowVector &attributes_or_structure);
 
         std::variant<Eigen::MatrixXf, Eigen::MatrixXd> PyCall(const pybind11::buffer &attributes_or_structure);
         Eigen::MatrixXf PyCall(const int32 &attributes_or_structure);
@@ -115,8 +115,8 @@ class HeNormal: public Initializer {
         explicit HeNormal(std::string name, std::optional<uint32> seed);
 
         // overload
-        template<typename Matrix, typename Vector, typename Dtype>
-        std::map<std::string, Matrix> PyCall(const Vector &attributes_or_structure);
+        template<typename Matrix, typename RowVector, typename Dtype>
+        std::map<std::string, Matrix> PyCall(const RowVector &attributes_or_structure);
 
         std::variant<Eigen::MatrixXf, Eigen::MatrixXd> PyCall(const pybind11::buffer &attributes_or_structure);
         Eigen::MatrixXf PyCall(const int32 &attributes_or_structure);
@@ -130,8 +130,8 @@ class XavierNormal: public Initializer {
         explicit XavierNormal(std::string name, std::optional<uint32> seed);
 
         // overload
-        template<typename Matrix, typename Vector, typename Dtype>
-        std::map<std::string, Matrix> PyCall(const Vector &attributes_or_structure);
+        template<typename Matrix, typename RowVector, typename Dtype>
+        std::map<std::string, Matrix> PyCall(const RowVector &attributes_or_structure);
 
         std::variant<Eigen::MatrixXf, Eigen::MatrixXd> PyCall(const pybind11::buffer &attributes_or_structure);
         Eigen::MatrixXf PyCall(const int32 &attributes_or_structure);
@@ -422,6 +422,6 @@ Notes:
       因此, 全部初始化为正数.
 )pbdoc", pybind11::arg("hidden_units"));
 
-    m.attr("__version__") = "backend.cc.initializers.0.5.b1";
+    m.attr("__version__") = "backend.cc.initializers.0.5.b2";
 }
 #endif /* CLASSICML_BACKEND_CC_INITIALIZERS_H_ */

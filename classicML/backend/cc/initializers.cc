@@ -41,10 +41,10 @@ initializers::RandomNormal::RandomNormal(std::string name, std::optional<uint32>
 }
 
 // 初始化参数矩阵(32/64位), 输入为一个列表(元素是int32/int64).
-// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位整数行向量, `Dtype` 兼容32位和64位浮点数;
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `RowVector` 兼容32位和64位整数行向量, `Dtype` 兼容32位和64位浮点数;
 // 不支持不同位数模板兼容.
-template<typename Matrix, typename Vector, typename Dtype>
-std::map<std::string, Matrix> initializers::RandomNormal::PyCall(const Vector &attributes_or_structure) {
+template<typename Matrix, typename RowVector, typename Dtype>
+std::map<std::string, Matrix> initializers::RandomNormal::PyCall(const RowVector &attributes_or_structure) {
     std::map<std::string, Matrix> parameters;
     Matrix w, b;
 
@@ -101,10 +101,10 @@ initializers::HeNormal::HeNormal(std::string name, std::optional<uint32> seed) {
 }
 
 // 初始化参数矩阵(32/64位), 输入为一个列表(元素是int32/int64).
-// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位整数行向量, `Dtype` 兼容32位和64位浮点数;
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `RowVector` 兼容32位和64位整数行向量, `Dtype` 兼容32位和64位浮点数;
 // 不支持不同位数模板兼容.
-template<typename Matrix, typename Vector, typename Dtype>
-std::map<std::string, Matrix> initializers::HeNormal::PyCall(const Vector &attributes_or_structure) {
+template<typename Matrix, typename RowVector, typename Dtype>
+std::map<std::string, Matrix> initializers::HeNormal::PyCall(const RowVector &attributes_or_structure) {
     std::map<std::string, Matrix> parameters;
     Matrix w, b;
 
@@ -167,10 +167,10 @@ initializers::XavierNormal::XavierNormal(std::string name, std::optional<uint32>
 }
 
 // 初始化参数矩阵(32/64位), 输入为一个列表(元素是int32/int64).
-// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位整数行向量, `Dtype` 兼容32位和64位浮点数;
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `RowVector` 兼容32位和64位整数行向量, `Dtype` 兼容32位和64位浮点数;
 // 不支持不同位数模板兼容.
-template<typename Matrix, typename Vector, typename Dtype>
-std::map<std::string, Matrix> initializers::XavierNormal::PyCall(const Vector &attributes_or_structure) {
+template<typename Matrix, typename RowVector, typename Dtype>
+std::map<std::string, Matrix> initializers::XavierNormal::PyCall(const RowVector &attributes_or_structure) {
     std::map<std::string, Matrix> parameters;
     Matrix w, b;
 
