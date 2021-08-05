@@ -10,51 +10,92 @@
 
 // 返回KKT条件的违背值;
 // 输入特征数据, 标签, 要计算的样本下标, 支持向量分类器使用的核函数, 全部拉格朗日乘子, 非零拉格朗日乘子和偏置项.
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Array` 兼容32位和64位浮点型Eigen::Array数组, `Vector` 兼容32位和64位浮点型向量,
+// 不支持不同位数模板兼容.
 // TODO(Steve R. Sun, tag:performance): 在CC中使用Python实现的核函数实际性能和Python没差别, 但是由于其他地方依旧使用的是C++代码, 还是会有明显的性能提高.
-Eigen::MatrixXd ops::CalculateError(const Eigen::MatrixXd &x,
-                                    const Eigen::MatrixXd &y, // 列向量
-                                    const int &i,
-                                    const pybind11::object &kernel,
-                                    const Eigen::MatrixXd &alphas,  // 列向量
-                                    const Eigen::VectorXd &non_zero_alphas,
-                                    const Eigen::MatrixXd &b) {
-    Eigen::MatrixXd x_i = x.row(i);
-    Eigen::MatrixXd y_i = y.row(i);
+template<typename Matrix, typename Vector, typename Array>
+Matrix ops::CalculateError(const Matrix &x,
+                           const Matrix &y, // 列向量
+                           const int32 &i,
+                           const pybind11::object &kernel,
+                           const Matrix &alphas,  // 列向量
+                           const Vector &non_zero_alphas,
+                           const Matrix &b) {
+    Matrix x_i = x.row(i);
+    Matrix y_i = y.row(i);
 
     // 拉格朗日乘子全是零的时候, 每个样本都不会对结果产生影响.
-    Eigen::MatrixXd fx = b;
+    Matrix fx = b;
     // 如果有非零元素, 提取全部合格的标签和对应的拉格朗日乘子.
     if (non_zero_alphas.any()) {
-        Eigen::MatrixXd valid_x = matrix_op::GetNonZeroSubMatrix(x, non_zero_alphas);
-        Eigen::ArrayXd valid_y = matrix_op::GetNonZeroSubMatrix(y, non_zero_alphas);
-        Eigen::MatrixXd valid_alphas = matrix_op::GetNonZeroSubMatrix(alphas, non_zero_alphas);
+        Matrix valid_x = matrix_op::GetNonZeroSubMatrix(x, non_zero_alphas);
+        Array valid_y = matrix_op::GetNonZeroSubMatrix(y, non_zero_alphas);
+        Matrix valid_alphas = matrix_op::GetNonZeroSubMatrix(alphas, non_zero_alphas);
 
         // 调用核函数的__call__方法.
         pybind11::object py_kappa = kernel(valid_x, x_i);
-        Eigen::MatrixXd kappa = py_kappa.cast<Eigen::MatrixXd>();
+        auto kappa = py_kappa.cast<Matrix>();
 
         // 这里是Hadamard积, 故临时需要使用ArrayXd.
-        Eigen::ArrayXd temp = matrix_op::Reshape(valid_alphas, -1, 1);
+        Array temp = matrix_op::Reshape(valid_alphas, -1, 1);
         temp = temp * valid_y;
-        Eigen::MatrixXd matrix_temp = (Eigen::MatrixXd)temp.transpose();
+        auto matrix_temp = (Matrix)temp.transpose();
 
         fx = matrix_temp * kappa.transpose() + b;
     }
 
-    Eigen::MatrixXd error = fx - y_i;
+    Matrix error = fx - y_i;
 
     return error;
 }
 
-// 返回修剪后的拉格朗日乘子, 输入拉格朗日乘子的下界和上界.
-Eigen::ArrayXd ops::ClipAlpha(const double &alpha, const double &low, const double &high) {
-    Eigen::MatrixXd clipped_alpha(1, 1);
-    clipped_alpha(0, 0) = alpha;
+// 返回修剪后的拉格朗日乘子(32/64位), 输入拉格朗日乘子的下界和上界(float32/float64).
+std::variant<Eigen::Array<float32, 1, 1>, Eigen::Array<float64, 1, 1>>
+ops::ClipAlpha(const pybind11::buffer &alpha, const pybind11::buffer &low, const pybind11::buffer &high) {
+    std::string type_code = alpha.request().format;
+    if (type_code == "f") {
+        auto _alpha = pybind11::cast<float32>(alpha);
+        auto _low = pybind11::cast<float32>(low);
+        auto _high = pybind11::cast<float32>(high);
+
+        Eigen::Array<float32, 1, 1> clipped_alpha;
+        clipped_alpha = _alpha;
+
+        if (_alpha > _high) {
+            clipped_alpha = _high;
+        } else if (_alpha < _low) {
+            clipped_alpha = _low;
+        }
+
+        return clipped_alpha;
+    } else if (type_code == "d") {
+        auto _alpha = pybind11::cast<float64>(alpha);
+        auto _low = pybind11::cast<float64>(low);
+        auto _high = pybind11::cast<float64>(high);
+
+        Eigen::Array<float64, 1, 1> clipped_alpha;
+        clipped_alpha = _alpha;
+
+        if (_alpha > _high) {
+            clipped_alpha = _high;
+        } else if (_alpha < _low) {
+            clipped_alpha = _low;
+        }
+
+        return clipped_alpha;
+    }
+    return {};
+}
+
+// 返回修剪后的拉格朗日乘子(32位), 输入拉格朗日乘子的下界和上界(Pure Python float).
+Eigen::Array<float32, 1, 1> ops::ClipAlpha(const float32 &alpha, const float32 &low, const float32 &high) {
+    Eigen::Array<float32, 1, 1> clipped_alpha;
+    clipped_alpha = alpha;
 
     if (alpha > high) {
-        clipped_alpha(0, 0) = high;
+        clipped_alpha = high;
     } else if (alpha < low) {
-        clipped_alpha(0, 0) = low;
+        clipped_alpha = low;
     }
 
     return clipped_alpha;

@@ -12,18 +12,23 @@
 #include "pybind11/pybind11.h"
 #include "pybind11/stl.h"
 
+#include "dtypes.h"
 #include "matrix_op.h"
 
 namespace ops {
-Eigen::MatrixXd CalculateError(const Eigen::MatrixXd &x,
-                               const Eigen::MatrixXd &y,
-                               const int &i,
-                               const pybind11::object &kernel,
-                               const Eigen::MatrixXd &alphas,
-                               const Eigen::VectorXd &non_zero_mark,
-                               const Eigen::MatrixXd &b);
+template<typename Matrix, typename Vector, typename Array>
+Matrix CalculateError(const Matrix &x,
+                      const Matrix &y,
+                      const int32 &i,
+                      const pybind11::object &kernel,
+                      const Matrix &alphas,
+                      const Vector &non_zero_mark,
+                      const Matrix &b);
 
-Eigen::ArrayXd ClipAlpha(const double &alpha, const double &low, const double &high);
+// Overloaded function.
+std::variant<Eigen::Array<float32, 1, 1>, Eigen::Array<float64, 1, 1>>
+ClipAlpha(const pybind11::buffer &alpha, const pybind11::buffer &low, const pybind11::buffer &high);
+Eigen::Array<float32, 1, 1> ClipAlpha(const float32 &alpha, const float32 &low, const float32 &high);
 
 double GetConditionalProbability(const double &samples_on_attribute,
                                  const int &samples_in_category,
@@ -68,7 +73,8 @@ std::string TypeOfTarget(const pybind11::array &y);
 PYBIND11_MODULE(ops, m) {
     m.doc() = R"pbdoc(classicML的底层核心操作, 以C++实现)pbdoc";
 
-    m.def("cc_calculate_error", &ops::CalculateError, R"pbdoc(
+    // Overloaded function.
+    m.def("cc_calculate_error", &ops::CalculateError<Eigen::MatrixXf, Eigen::VectorXf, Eigen::ArrayXf>, R"pbdoc(
 计算KKT条件的违背值.
 
     Arguments:
@@ -85,8 +91,28 @@ PYBIND11_MODULE(ops, m) {
           pybind11::arg("x"), pybind11::arg("y"), pybind11::arg("i"),
           pybind11::arg("kernel"), pybind11::arg("alphas"), pybind11::arg("non_zero_alphas"),
           pybind11::arg("b"));
+    m.def("cc_calculate_error", &ops::CalculateError<Eigen::MatrixXd, Eigen::VectorXd, Eigen::ArrayXd>, R"pbdoc(
+计算KKT条件的违背值.
 
-    m.def("cc_clip_alpha", &ops::ClipAlpha, R"pbdoc(
+    Arguments:
+        x: numpy.ndarray, array-like, 特征数据.
+        y: numpy.ndarray, array-like, 标签.
+        i: int, 第i个样本.
+        kernel: classicML.kernel.Kernels 实例, 分类器使用的核函数.
+        alphas: numpy.ndarray, 拉格朗日乘子.
+        non_zero_alphas: numpy.ndarray, 非零拉格朗日乘子.
+        b: float, 偏置项.
+
+    Returns:
+    KKT条件的违背值.)pbdoc",
+          pybind11::arg("x"), pybind11::arg("y"), pybind11::arg("i"),
+          pybind11::arg("kernel"), pybind11::arg("alphas"), pybind11::arg("non_zero_alphas"),
+          pybind11::arg("b"));
+
+    // Overloaded function.
+    m.def("cc_clip_alpha", [](const pybind11::buffer &alpha, const pybind11::buffer &low, const pybind11::buffer &high) {
+        return ops::ClipAlpha(alpha, low, high);
+    }, R"pbdoc(
 修剪拉格朗日乘子.
 
     Arguments:
@@ -96,6 +122,19 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         修剪后的拉格朗日乘子.)pbdoc",
+          pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
+    m.def("cc_clip_alpha", [](const float32 &alpha, const float32 &low, const float32 &high) {
+        return ops::ClipAlpha(alpha, low, high);
+    }, R"pbdoc(
+修剪拉格朗日乘子.
+
+    Arguments:
+        alpha: numpy.ndarray, 拉格朗日乘子.
+        low: float, 正则化系数的下界.
+        high: float, 正则化系数的上界.
+
+    Returns:
+    修剪后的拉格朗日乘子.)pbdoc",
           pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
 
     m.def("cc_get_conditional_probability", &ops::GetConditionalProbability, R"pbdoc(
@@ -287,7 +326,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.11.a1";
+    m.attr("__version__") = "backend.cc.ops.0.11.a2";
 }
 
 #endif /* CLASSICML_BACKEND_CC_OPS_H_ */
