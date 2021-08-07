@@ -60,9 +60,10 @@ Matrix GetWithinClassScatterMatrix(const Matrix &X_0,
                                    const Matrix &mu_0,
                                    const Matrix &mu_1);
 
-std::tuple<int, double> SelectSecondAlpha(const double &error,
-                                          const Eigen::RowVectorXd &error_cache,
-                                          const Eigen::RowVectorXd &non_bound_alphas);
+template<typename Dtype, typename RowVector>
+std::tuple<int32, Dtype> SelectSecondAlpha(const Dtype &error,
+                                           const RowVector &error_cache,
+                                           const RowVector &non_bound_alphas);
 
 // Overloaded function.
 std::string TypeOfTarget(const Eigen::MatrixXd &y);
@@ -256,7 +257,24 @@ PYBIND11_MODULE(ops, m) {
           pybind11::arg("X_0"), pybind11::arg("X_1"),
           pybind11::arg("mu_0"), pybind11::arg("mu_1"));
 
-    m.def("cc_select_second_alpha", &ops::SelectSecondAlpha, R"pbdoc(
+    // Overloaded function.
+    m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<float, Eigen::RowVectorXf>, R"pbdoc(
+选择第二个拉格朗日乘子, SMO采用的是启发式寻找的思想,
+找到目标函数变化量足够大, 即选取变量样本间隔最大.
+
+    Arguments:
+        error: float,
+            KKT条件的违背值.
+        error_cache: numpy.ndarray,
+            KKT条件的违背值缓存.
+        non_bound_alphas: numpy.ndarray,
+            非边界拉格朗日乘子.
+
+    Returns:
+        拉格朗日乘子的下标和违背值.)pbdoc",
+          pybind11::arg("error"), pybind11::arg("error_cache"),
+          pybind11::arg("non_bound_alphas"));
+    m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<double, Eigen::RowVectorXd>, R"pbdoc(
 选择第二个拉格朗日乘子, SMO采用的是启发式寻找的思想,
 找到目标函数变化量足够大, 即选取变量样本间隔最大.
 
@@ -326,7 +344,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.11.a2";
+    m.attr("__version__") = "backend.cc.ops.0.11.a3";
 }
 
 #endif /* CLASSICML_BACKEND_CC_OPS_H_ */

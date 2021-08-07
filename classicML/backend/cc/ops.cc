@@ -220,18 +220,24 @@ Matrix ops::GetWithinClassScatterMatrix(const Matrix &X_0,
 }
 
 // 返回第二个拉格朗日乘子的下标和违背值组成的元组, 输入KKT条件的违背值, KKT条件的违背值缓存和非边界拉格朗日乘子.
-std::tuple<int, double> ops::SelectSecondAlpha(const double &error,
-                                               const Eigen::RowVectorXd &error_cache,
-                                               const Eigen::RowVectorXd &non_bound_alphas) {
-    std::vector<int> non_bound_index = matrix_op::NonZero(non_bound_alphas);
+// `Dtype` 兼容32位和64位浮点数, `RowVector` 兼容32位和64位浮点型行向量,
+// 不支持不同位数模板兼容.
+// Python的内置类型只有`float`, 这里和使用`pybind11::buffer`最大的区别是在于, Python侧`float`和`double`无法区分, 但是此处重载时
+// 会根据行向量精准匹配, C++侧会按照`float`计算, `float`自动类型转换`double`使得Python侧`pure float`返回值恰巧结果为8-15位随机值.
+// [内置类型](https://docs.python.org/zh-cn/3.8/library/stdtypes.html)
+template <typename Dtype, typename RowVector>
+std::tuple<int32, Dtype> ops::SelectSecondAlpha(const Dtype &error,
+                                                const RowVector &error_cache,
+                                                const RowVector &non_bound_alphas) {
+    std::vector<int32> non_bound_index = matrix_op::NonZero(non_bound_alphas);
 
-    int index_alpha = 0;
-    double error_alpha = error_cache[index_alpha];
-    double delta_e = abs(error - error_cache[non_bound_index[0]]);
+    int32 index_alpha = 0;
+    Dtype error_alpha = error_cache[index_alpha];
+    Dtype delta_e = abs(error - error_cache[non_bound_index[0]]);
 
     // 选取最大间隔的拉格朗日乘子对应的下标和违背值.
-    for (int i : non_bound_index) {
-        double temp = abs(error - error_cache[i]);
+    for (int32 i : non_bound_index) {
+        Dtype temp = abs(error - error_cache[i]);
         if (temp > delta_e) {
             delta_e = temp;
             index_alpha = i;
@@ -239,7 +245,7 @@ std::tuple<int, double> ops::SelectSecondAlpha(const double &error,
         }
     }
 
-    std::tuple<int, double> alpha_tuple(index_alpha, error_alpha);
+    std::tuple<int32, Dtype> alpha_tuple(index_alpha, error_alpha);
 
     return alpha_tuple;
 }
