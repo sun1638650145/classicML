@@ -3,6 +3,7 @@ from pickle import dumps, loads
 import numpy as np
 import pandas as pd
 
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.backend import get_pruner
@@ -102,7 +103,7 @@ class DecisionTreeClassifier(BaseModel):
         x.reset_index(drop=True, inplace=True)
         self.generator._x = x
 
-        y = pd.Series(y)
+        y = pd.Series(y, dtype=_cml_precision.int)
         y.reset_index(drop=True, inplace=True)
 
         # 为验证数据添加属性信息.
@@ -110,7 +111,7 @@ class DecisionTreeClassifier(BaseModel):
             x_validation = pd.DataFrame(x_validation, columns=self.attribute_name)
             x_validation.reset_index(drop=True, inplace=True)
 
-            y_validation = pd.Series(y_validation)
+            y_validation = pd.Series(y_validation, dtype=_cml_precision.int)
             y_validation.reset_index(drop=True, inplace=True)
 
         # 没有使用权重文件, 则生成决策树分类器.
@@ -151,9 +152,9 @@ class DecisionTreeClassifier(BaseModel):
         elif isinstance(x, pd.Series):
             x = np.expand_dims(x.values, axis=0)
 
-        y_pred = list()
-        for feature in x:
-            y_pred.append(self._predict(feature, self.tree))
+        y_pred = np.zeros(shape=len(x), dtype=_cml_precision.int)
+        for i, feature in enumerate(x):
+            y_pred[i] = self._predict(feature, self.tree)
 
         return y_pred
 

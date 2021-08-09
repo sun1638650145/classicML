@@ -1,6 +1,7 @@
 """classicML中树结构的生成器."""
 import pandas as pd
 
+from classicML import _cml_precision
 from classicML.backend.training import get_criterion
 
 
@@ -130,8 +131,8 @@ class DecisionTreeGenerator(TreeGenerator):
             decision_tree.leaf = True
             decision_tree.height = 0
             # TODO(Steve R. Sun, tag:code): 函数value_counts在两类元素值相同时, 不会按照某种顺序排序.
-            # 而是随机返回, 因此可能遇到决策树生成不一样的情况. 应该重写此函数.
-            decision_tree.category = pd.value_counts(y).index[0]
+            #  而是随机返回, 因此可能遇到决策树生成不一样的情况. 应该重写此函数.
+            decision_tree.category = pd.value_counts(y).index[0].astype(_cml_precision.int)
 
             return decision_tree
 
@@ -141,11 +142,11 @@ class DecisionTreeGenerator(TreeGenerator):
         decision_tree.feature_name = feature_name
         decision_tree.feature_index = list(self._x.columns).index(decision_tree.feature_name)
         current_feature_values = self._x.loc[:, decision_tree.feature_name]
-        decision_tree.purity = list_of_purity[0]
+        decision_tree.purity = _cml_precision.float(list_of_purity[0])
 
         if len(list_of_purity) != 1:
             decision_tree.continuous = True
-            decision_tree.dividing_point = list_of_purity[1]
+            decision_tree.dividing_point = _cml_precision.float(list_of_purity[1])
 
             # 使用二分法对连续值进行处理.
             greater_part = '>= {:.3f}'.format(decision_tree.dividing_point)

@@ -282,7 +282,7 @@ Sigmoid核函数.
         .def("__call__", &kernels::Sigmoid::PyCall<Eigen::MatrixXd>,
              pybind11::arg("x_i"), pybind11::arg("x_j"));
 
-    m.attr("__version__") = "backend.cc.kernels.0.10.a1";
+    m.attr("__version__") = "backend.cc.kernels.0.10.b0";
 }
 
 #endif /* CLASSICML_BACKEND_CC_KERNELS_H_ */
