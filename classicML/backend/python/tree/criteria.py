@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 if os.environ['CLASSICML_ENGINE'] == 'CC':
-    from classicML.backend.cc.ops import cc_type_of_target as type_of_target
+    from classicML.backend.cc.ops import cc_type_of_target_v2 as type_of_target
 else:
     from classicML.backend.python.ops import type_of_target
 

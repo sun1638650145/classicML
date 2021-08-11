@@ -7,6 +7,22 @@
 
 #include "matrix_op.h"
 
+// 返回全部元素是否为离散整数的布尔值, 输入为`numpy.ndarray`.
+bool matrix_op::AnyDiscreteInteger(const pybind11::array &array) {
+    auto array_ = pybind11::cast<Eigen::MatrixXf>(array);
+
+    // 任一元素取整不等于它本身的就是连续值.
+    for (int32 row = 0; row < array_.rows(); row ++) {
+        for (int32 col = 0; col < array_.cols(); col ++) {
+            if (array_(row, col) != (int32)array_(row, col)) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 // 返回广播减法的矩阵, 输入a矩阵和b矩阵.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 template <typename Matrix>
@@ -149,6 +165,39 @@ Matrix matrix_op::Reshape(Matrix matrix, const Dtype &row, const Dtype &column) 
     Matrix reshaped_matrix = map;
 
     return reshaped_matrix;
+}
+
+// 返回变体(唯一值组成的集合), 输入为`numpy.ndarray`.
+std::variant<std::set<float32>, std::set<uint8>> matrix_op::Unique(const pybind11::array &array) {
+    if (array.dtype().kind() == 'f' or array.dtype().kind() == 'i') {
+        std::set<float32> buffer;
+        auto array_ = pybind11::cast<Eigen::MatrixXf>(array);
+
+        for (int row = 0; row < array_.rows(); row ++) {
+            for (int col = 0; col < array_.cols(); col ++) {
+                buffer.insert(array_(row, col));
+            }
+        }
+
+        return buffer;
+    } else if (array.dtype().kind() == 'U') {
+        std::set<uint8> buffer;
+        if (array.ndim() == 1) {
+            for (int32 i = 0; i != array.size(); i ++) {
+                buffer.insert(*(uint8*)array.data(i));
+            }
+        } else {
+            for (int32 i = 0; i != array.shape(0); i ++) {
+                for (int32 j = 0; j != array.shape(1); j ++) {
+                    buffer.insert(*(uint8*)array.data(i, j));
+                }
+            }
+        }
+
+        return buffer;
+    }
+
+    return {};
 }
 
 // 显式实例化.

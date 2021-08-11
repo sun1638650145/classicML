@@ -253,6 +253,8 @@ std::tuple<int32, Dtype> ops::SelectSecondAlpha(const Dtype &error,
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.
 // 只处理float64的输入数据.
 std::string ops::TypeOfTarget(const Eigen::MatrixXd &y) {
+    pybind11::print("WARNING:classicML: `ops.cc_type_of_target` 已经被弃用,"
+                    " 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.");
     bool any = true;
     std::set<double> buffer;
 
@@ -289,6 +291,8 @@ std::string ops::TypeOfTarget(const Eigen::MatrixXd &y) {
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.
 // 只处理int64的输入数据.
 std::string ops::TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &y) {
+    pybind11::print("WARNING:classicML: `ops.cc_type_of_target` 已经被弃用,"
+                    " 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.");
     // 取唯一值统计元素个数.
     std::set<double> buffer;
     for (int row = 0; row < y.rows(); row ++) {
@@ -316,5 +320,41 @@ std::string ops::TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, 
 // 处理其他类型的输入数据.
 // TODO(Steve R. Sun, tag:code): Python版本的和CC版本在对于判断str类型的有差异, CC版本全部返回的是unknown.
 std::string ops::TypeOfTarget(const pybind11::array &y) {
+    pybind11::print("WARNING:classicML: `ops.cc_type_of_target` 已经被弃用,"
+                    " 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.");
+    return "unknown";
+}
+
+// 返回输入数据的数据类型的字符串, 输入为待测试数据.
+// 相比于`ops::TypeOfTarget`可以处理单字符的输入数据.
+std::string ops::TypeOfTarget_V2(const pybind11::array &y) {
+    if ((std::string)pybind11::str(y.dtype()) == "object" or y.ndim() > 2) {
+        return "unknown";
+    }
+
+    if (y.dtype().kind() == 'f' and !matrix_op::AnyDiscreteInteger(y)) {
+        return "continuous";
+    }
+
+    // `matrix_op::Unique`返回是一个`std::variant`, 需要使用`std::get`处理.
+    int32 num_unique;
+    try {
+        num_unique = std::get<std::set<float32>>(matrix_op::Unique(y)).size();
+    } catch (const std::bad_variant_access&) {
+        num_unique = std::get<std::set<uint8>>(matrix_op::Unique(y)).size();
+    }
+
+    if (y.ndim() == 1 or y.request().shape[1] == 1) {
+        if (num_unique == 2) {
+            return "binary";
+        } else if (num_unique > 2) {
+            return "multiclass";
+        }
+    }
+
+    if (y.ndim() == 2 and num_unique >= 2) {
+        return "multilabel";
+    }
+
     return "unknown";
 }

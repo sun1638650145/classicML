@@ -65,10 +65,13 @@ std::tuple<int32, Dtype> SelectSecondAlpha(const Dtype &error,
                                            const RowVector &error_cache,
                                            const RowVector &non_bound_alphas);
 
+// DEPRECATED(Steve R. Sun): `ops.cc_type_of_target`已经被弃用, 它将在未来的正式版本中被移除, 请使用`ops.cc_type_of_target_v2`.
 // Overloaded function.
 std::string TypeOfTarget(const Eigen::MatrixXd &y);
 std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &y);
 std::string TypeOfTarget(const pybind11::array &y);
+
+std::string TypeOfTarget_V2(const pybind11::array &y);
 }  // namespace ops
 
 PYBIND11_MODULE(ops, m) {
@@ -294,6 +297,9 @@ PYBIND11_MODULE(ops, m) {
     m.def("cc_type_of_target", pybind11::overload_cast<const Eigen::MatrixXd &>(&ops::TypeOfTarget), R"pbdoc(
 判断输入数据的类型.
 
+    DEPRECATED:
+        `ops.cc_type_of_target` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.
+
     Arguments:
         y: numpy.ndarray,
             待判断类型的数据.
@@ -312,6 +318,9 @@ PYBIND11_MODULE(ops, m) {
           pybind11::overload_cast<const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &>(&ops::TypeOfTarget), R"pbdoc(
 判断输入数据的类型.
 
+    DEPRECATED:
+        `ops.cc_type_of_target` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.
+
     Arguments:
         y: numpy.ndarray,
             待判断类型的数据.
@@ -329,6 +338,9 @@ PYBIND11_MODULE(ops, m) {
     m.def("cc_type_of_target", pybind11::overload_cast<const pybind11::array &>(&ops::TypeOfTarget), R"pbdoc(
 判断输入数据的类型.
 
+    DEPRECATED:
+        `ops.cc_type_of_target` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.
+
     Arguments:
         y: numpy.ndarray,
             待判断类型的数据.
@@ -344,7 +356,25 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.11.a3";
+    m.def("cc_type_of_target_v2", &ops::TypeOfTarget_V2, R"pbdoc(
+判断输入数据的类型.
+
+    Arguments:
+        y: numpy.ndarray,
+            待判断类型的数据.
+
+    Returns:
+        'binary': 元素只有两个离散值, 类型不限.
+        'continuous': 元素都是浮点数, 且不是对应整数的浮点数.
+        'multiclass': 元素不只有两个离散值, 类型不限.
+        'multilabel': 元素标签不为一, 类型不限.
+        'unknown': 类型未知.
+
+    Notes:
+        - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.)pbdoc",
+          pybind11::arg("y"));
+
+    m.attr("__version__") = "backend.cc.ops.0.11.a4";
 }
 
 #endif /* CLASSICML_BACKEND_CC_OPS_H_ */

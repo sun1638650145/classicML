@@ -14,11 +14,15 @@
 #include "Eigen/Core"
 #include "Eigen/Eigenvalues"
 #include "Eigen/SVD"
+#include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
+#include "pybind11/stl.h"
 
 #include "dtypes.h"
 
 namespace matrix_op {
+bool AnyDiscreteInteger(const pybind11::array &array);
+
 template <typename Matrix>
 Matrix BroadcastSub(const Matrix &a, const Matrix &b);
 
@@ -40,6 +44,8 @@ std::vector<int32> NonZero(const RowVector &array);
 
 template <typename Matrix, typename Dtype>
 Matrix Reshape(Matrix matrix, const Dtype &row, const Dtype &column);
+
+std::variant<std::set<float32>, std::set<uint8>> Unique(const pybind11::array &array);
 }  // namespace matrix_op
 
 #endif /* CLASSICML_BACKEND_CC_MATRIX_OP_H_ */

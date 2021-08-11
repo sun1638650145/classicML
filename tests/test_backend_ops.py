@@ -16,7 +16,7 @@ from classicML.backend.cc.ops import cc_get_probability_density
 from classicML.backend.cc.ops import cc_get_w_v2 as cc_get_w
 from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
 from classicML.backend.cc.ops import cc_select_second_alpha
-from classicML.backend.cc.ops import cc_type_of_target
+from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
 from classicML.backend.python.ops import calculate_error
 from classicML.backend.python.ops import clip_alpha
@@ -223,9 +223,33 @@ class TestTypeOfTarget(object):
         assert (cc_answer == py_answer) and (py_answer == 'multilabel')
 
     def test_unknown(self):
-        y = np.asarray(['a', 1, [2, 'b']])
+        y = np.asarray(['a', 1, [2, 'b']], dtype='object')
 
         cc_answer = cc_type_of_target(y)
         py_answer = type_of_target(y)
 
         assert (cc_answer == py_answer) and (py_answer == 'unknown')
+
+    def test_char_binary(self):
+        y = np.asarray(['a', 'b', 'a'])
+
+        cc_answer = cc_type_of_target(y)
+        py_answer = type_of_target(y)
+
+        assert (cc_answer == py_answer) and (py_answer == 'binary')
+
+    def test_char_multiclass(self):
+        y = np.asarray([['a'], ['b'], ['c']])
+
+        cc_answer = cc_type_of_target(y)
+        py_answer = type_of_target(y)
+
+        assert (cc_answer == py_answer) and (py_answer == 'multiclass')
+
+    def test_char_multilabel(self):
+        y = np.asarray([['a', 'b'], ['a', 'c'], ['b', 'c'], ['a', 'b']])
+
+        cc_answer = cc_type_of_target(y)
+        py_answer = type_of_target(y)
+
+        assert (cc_answer == py_answer) and (py_answer == 'multilabel')

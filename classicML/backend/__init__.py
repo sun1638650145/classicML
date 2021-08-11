@@ -51,7 +51,9 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_get_w_v2 as cc_get_w
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
     from classicML.backend.cc.ops import cc_select_second_alpha
-    from classicML.backend.cc.ops import cc_type_of_target
+    from classicML.backend.cc.ops import cc_type_of_target as cc_type_of_target_v1  # 正式版将移除.
+    from classicML.backend.cc.ops import cc_type_of_target_v2
+    from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
     from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
@@ -62,7 +64,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_get_w_v2 as get_w
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix as get_within_class_scatter_matrix
     from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
-    from classicML.backend.cc.ops import cc_type_of_target as type_of_target
+    from classicML.backend.cc.ops import cc_type_of_target_v2 as type_of_target
 
     from classicML.backend.cc.ops import __version__ as ops__version__
     CLASSICML_LOGGER.info('后端版本是: {}'.format(ops__version__))
