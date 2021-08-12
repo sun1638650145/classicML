@@ -68,7 +68,7 @@ std::tuple<int32, Dtype> SelectSecondAlpha(const Dtype &error,
 // DEPRECATED(Steve R. Sun): `ops.cc_type_of_target`已经被弃用, 它将在未来的正式版本中被移除, 请使用`ops.cc_type_of_target_v2`.
 // Overloaded function.
 std::string TypeOfTarget(const Eigen::MatrixXd &y);
-std::string TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &y);
+std::string TypeOfTarget(const Eigen::Matrix<int64, Eigen::Dynamic, Eigen::Dynamic> &y);
 std::string TypeOfTarget(const pybind11::array &y);
 
 std::string TypeOfTarget_V2(const pybind11::array &y);
@@ -108,7 +108,7 @@ PYBIND11_MODULE(ops, m) {
         b: float, 偏置项.
 
     Returns:
-    KKT条件的违背值.)pbdoc",
+        KKT条件的违背值.)pbdoc",
           pybind11::arg("x"), pybind11::arg("y"), pybind11::arg("i"),
           pybind11::arg("kernel"), pybind11::arg("alphas"), pybind11::arg("non_zero_alphas"),
           pybind11::arg("b"));
@@ -138,7 +138,7 @@ PYBIND11_MODULE(ops, m) {
         high: float, 正则化系数的上界.
 
     Returns:
-    修剪后的拉格朗日乘子.)pbdoc",
+        修剪后的拉格朗日乘子.)pbdoc",
           pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
 
     m.def("cc_get_conditional_probability", &ops::GetConditionalProbability, R"pbdoc(
@@ -315,7 +315,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理str类型的数据.)pbdoc",
           pybind11::arg("y"));
     m.def("cc_type_of_target",
-          pybind11::overload_cast<const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &>(&ops::TypeOfTarget), R"pbdoc(
+          pybind11::overload_cast<const Eigen::Matrix<int64, Eigen::Dynamic, Eigen::Dynamic> &>(&ops::TypeOfTarget), R"pbdoc(
 判断输入数据的类型.
 
     DEPRECATED:
@@ -374,7 +374,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.11.a4";
+    m.attr("__version__") = "backend.cc.ops.0.11.a5";
 }
 
 #endif /* CLASSICML_BACKEND_CC_OPS_H_ */

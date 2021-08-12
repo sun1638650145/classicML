@@ -256,13 +256,13 @@ std::string ops::TypeOfTarget(const Eigen::MatrixXd &y) {
     pybind11::print("WARNING:classicML: `ops.cc_type_of_target` 已经被弃用,"
                     " 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.");
     bool any = true;
-    std::set<double> buffer;
+    std::set<float64> buffer;
 
     // 任何一个元素取整不等于它本身的就是连续值.
-    for (int row = 0; row < y.rows(); row ++) {
-        for (int col = 0; col < y.cols(); col ++) {
+    for (int32 row = 0; row < y.rows(); row ++) {
+        for (int32 col = 0; col < y.cols(); col ++) {
             buffer.insert(y(row, col));
-            if (y(row, col) != (int)y(row, col)) {
+            if (y(row, col) != (int32)y(row, col)) {
                 any = false;
             }
         }
@@ -290,14 +290,14 @@ std::string ops::TypeOfTarget(const Eigen::MatrixXd &y) {
 
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.
 // 只处理int64的输入数据.
-std::string ops::TypeOfTarget(const Eigen::Matrix<std::int64_t, Eigen::Dynamic, Eigen::Dynamic> &y) {
+std::string ops::TypeOfTarget(const Eigen::Matrix<int64, Eigen::Dynamic, Eigen::Dynamic> &y) {
     pybind11::print("WARNING:classicML: `ops.cc_type_of_target` 已经被弃用,"
                     " 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.");
     // 取唯一值统计元素个数.
-    std::set<double> buffer;
-    for (int row = 0; row < y.rows(); row ++) {
-        for (int col = 0; col < y.cols(); col ++) {
-            buffer.insert((double)y(row, col));
+    std::set<int64> buffer;
+    for (int32 row = 0; row < y.rows(); row ++) {
+        for (int32 col = 0; col < y.cols(); col ++) {
+            buffer.insert(y(row, col));
         }
     }
     if (y.cols() == 1) {

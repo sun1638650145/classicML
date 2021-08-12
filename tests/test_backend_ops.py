@@ -154,7 +154,7 @@ class TestGetProbabilityDensity(object):
 
 class TestGetW(object):
     def test_answer(self):
-        S_w = np.asmatrix([[1, 2], [3, 4]], dtype=_cml_precision.float)
+        S_w = np.asarray([[1, 2], [3, 4]], dtype=_cml_precision.float)
         mu_0 = np.asarray([[1, 1]], dtype=_cml_precision.float)
         mu_1 = np.asarray([[1, 1]], dtype=_cml_precision.float)
 
