@@ -193,10 +193,32 @@ cc_select_second_alpha(error, error_cache, non_bound_alphas)
 
 拉格朗日乘子的下标和违背值.
 
-## cc_type_of_target
+## <del>cc_type_of_target</del>
 
 ```python
 cc_type_of_target(y)
+```
+
+`cc_type_of_target`已经被弃用, 它将在未来的正式版本中被移除, 请使用 `cc_type_of_target_v2`.
+
+判断输入数据的类型.
+
+### 参数
+
+* <b>y</b>: 一个 Numpy数组，待判断类型的数据.
+
+### 返回
+
+* ```'binary'```: 元素只有两个离散值，类型不限.
+* ```'continuous'```: 元素都是浮点数，且不是对应整数的浮点数.
+* ```'multiclass'```: 元素不只有两个离散值，类型不限.
+* ```'multilabel'```: 元素标签不为一，类型不限.
+* ```'unknown'```: 类型未知.
+
+## cc_type_of_target_v2
+
+```python
+cc_type_of_target_v2(y)
 ```
 
 判断输入数据的类型.
