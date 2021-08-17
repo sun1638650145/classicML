@@ -290,7 +290,7 @@ PYBIND11_MODULE(ops, m) {
             非边界拉格朗日乘子.
 
     Returns:
-        拉格朗日乘子的下标和违背值.)pbdoc",
+    拉格朗日乘子的下标和违背值.)pbdoc",
           pybind11::arg("error"), pybind11::arg("error_cache"),
           pybind11::arg("non_bound_alphas"));
 
@@ -374,7 +374,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.11.a5";
+    m.attr("__version__") = "backend.cc.ops.0.11.a6";
 }
 
 #endif /* CLASSICML_BACKEND_CC_OPS_H_ */

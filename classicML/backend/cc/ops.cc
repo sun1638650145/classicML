@@ -338,9 +338,9 @@ std::string ops::TypeOfTarget_V2(const pybind11::array &y) {
 
     // `matrix_op::Unique`返回是一个`std::variant`, 需要使用`std::get`处理.
     int32 num_unique;
-    try {
+    if (y.dtype().kind() == 'f' or y.dtype().kind() == 'i') {
         num_unique = std::get<std::set<float32>>(matrix_op::Unique(y)).size();
-    } catch (const std::bad_variant_access&) {
+    } else if (y.dtype().kind() == 'U') {
         num_unique = std::get<std::set<uint8>>(matrix_op::Unique(y)).size();
     }
 
