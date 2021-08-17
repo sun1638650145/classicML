@@ -290,7 +290,7 @@ PYBIND11_MODULE(ops, m) {
             非边界拉格朗日乘子.
 
     Returns:
-    拉格朗日乘子的下标和违背值.)pbdoc",
+        拉格朗日乘子的下标和违背值.)pbdoc",
           pybind11::arg("error"), pybind11::arg("error_cache"),
           pybind11::arg("non_bound_alphas"));
 

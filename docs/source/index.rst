@@ -1,7 +1,7 @@
 classicML: 简单易用的经典机器学习框架
 =====================================
 
-|image1| |image2| |image3|
+|image1| |image2| |image3| |image4| |image5|
 
 classicML 是一个用 Python 和 C++ 混编的机器学习项目，您既可以使用纯
 Python
@@ -64,6 +64,8 @@ classicML
 .. |image2| image:: https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg
 .. |image3| image:: https://readthedocs.org/projects/classicml/badge/?version=latest
    :target: https://classicml.readthedocs.io/zh_CN/latest/?badge=latest
+.. |image4| image:: https://img.shields.io/pypi/v/classicML?color=blue
+.. |image5| image:: https://img.shields.io/pypi/pyversions/classicML
    
 .. toctree::
    :hidden:
