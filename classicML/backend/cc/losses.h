@@ -9,10 +9,10 @@
 #ifndef CLASSICML_BACKEND_CC_LOSSES_H_
 #define CLASSICML_BACKEND_CC_LOSSES_H_
 
-#include "Eigen/Core"
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
 
+#include "dtypes.h"
 #include "exceptions.h"
 
 namespace losses {
@@ -23,10 +23,11 @@ class Loss {
     explicit Loss(std::string name);
     virtual ~Loss() = default;
 
-    virtual double PyCall(const Eigen::MatrixXd &y_pred,
-                          const Eigen::MatrixXd &y_true,
-                          const pybind11::args &args,
-                          const pybind11::kwargs &kwargs);
+    template<typename Dtype, typename Matrix>
+    Dtype PyCall(const Matrix &y_pred,
+                 const Matrix &y_true,
+                 const pybind11::args &args,
+                 const pybind11::kwargs &kwargs);
 
   public:
     std::string name;
@@ -38,10 +39,11 @@ class BinaryCrossentropy : public Loss {
     BinaryCrossentropy();
     explicit BinaryCrossentropy(std::string name);
 
-    double PyCall(const Eigen::MatrixXd &y_pred,
-                  const Eigen::MatrixXd &y_true,
-                  const pybind11::args &args,
-                  const pybind11::kwargs &kwargs) override;
+    template<typename Dtype, typename Matrix>
+    Dtype PyCall(const Matrix &y_pred,
+                 const Matrix &y_true,
+                 const pybind11::args &args,
+                 const pybind11::kwargs &kwargs);
 };
 
 // 多分类交叉熵损失函数.
@@ -50,10 +52,11 @@ class CategoricalCrossentropy : public Loss {
     CategoricalCrossentropy();
     explicit CategoricalCrossentropy(std::string name);
 
-    double PyCall(const Eigen::MatrixXd &y_pred,
-                  const Eigen::MatrixXd &y_true,
-                  const pybind11::args &args,
-                  const pybind11::kwargs &kwargs) override;
+    template<typename Dtype, typename Matrix>
+    Dtype PyCall(const Matrix &y_pred,
+                 const Matrix &y_true,
+                 const pybind11::args &args,
+                 const pybind11::kwargs &kwargs);
 };
 
 // 交叉熵损失函数.
@@ -62,10 +65,11 @@ class Crossentropy : public Loss {
     Crossentropy();
     explicit Crossentropy(std::string name);
 
-    double PyCall(const Eigen::MatrixXd &y_pred,
-                  const Eigen::MatrixXd &y_true,
-                  const pybind11::args &args,
-                  const pybind11::kwargs &kwargs) override;
+    template<typename Dtype, typename Matrix>
+    Dtype PyCall(const Matrix &y_pred,
+                 const Matrix &y_true,
+                 const pybind11::args &args,
+                 const pybind11::kwargs &kwargs);
 };
 
 // 对数似然损失函数.
@@ -77,7 +81,7 @@ class LogLikelihood : public Loss {
     double PyCall(const Eigen::MatrixXd &y_true,
                   const Eigen::MatrixXd &beta,
                   const pybind11::args &args,
-                  const pybind11::kwargs &kwargs) override;
+                  const pybind11::kwargs &kwargs);
 };
 
 // 均方误差损失函数.
@@ -89,7 +93,7 @@ class MeanSquaredError : public Loss {
     double PyCall(const Eigen::MatrixXd &y_pred,
                   const Eigen::MatrixXd &y_true,
                   const pybind11::args &args,
-                  const pybind11::kwargs &kwargs) override;
+                  const pybind11::kwargs &kwargs);
 };
 }  // namespace losses
 
@@ -120,7 +124,10 @@ PYBIND11_MODULE(losses, m) {
                 损失函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readwrite("name", &losses::Loss::name)
-        .def("__call__", &losses::Loss::PyCall, pybind11::arg("y_pred"), pybind11::arg("y_true"));
+        .def("__call__", &losses::Loss::PyCall<float32, Eigen::MatrixXf>,
+             pybind11::arg("y_pred"), pybind11::arg("y_true"))
+        .def("__call__", &losses::Loss::PyCall<float64, Eigen::MatrixXd>,
+             pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
     pybind11::class_<losses::BinaryCrossentropy, losses::Loss>(m, "BinaryCrossentropy", R"pbdoc(
 二分类交叉熵损失函数.
@@ -136,9 +143,10 @@ PYBIND11_MODULE(losses, m) {
                 损失函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readwrite("name", &losses::BinaryCrossentropy::name)
-        .def("__call__", &losses::BinaryCrossentropy::PyCall,
-             pybind11::arg("y_pred"),
-             pybind11::arg("y_true"));
+        .def("__call__", &losses::BinaryCrossentropy::PyCall<float32, Eigen::MatrixXf>,
+             pybind11::arg("y_pred"), pybind11::arg("y_true"))
+        .def("__call__", &losses::BinaryCrossentropy::PyCall<float64, Eigen::MatrixXd>,
+             pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
     pybind11::class_<losses::CategoricalCrossentropy, losses::Loss>(m, "CategoricalCrossentropy", R"pbdoc(
 多分类交叉熵损失函数.
@@ -154,9 +162,10 @@ PYBIND11_MODULE(losses, m) {
                 损失函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readwrite("name", &losses::CategoricalCrossentropy::name)
-        .def("__call__", &losses::CategoricalCrossentropy::PyCall,
-             pybind11::arg("y_pred"),
-             pybind11::arg("y_true"));
+        .def("__call__", &losses::CategoricalCrossentropy::PyCall<float32, Eigen::MatrixXf>,
+             pybind11::arg("y_pred"),pybind11::arg("y_true"))
+        .def("__call__", &losses::CategoricalCrossentropy::PyCall<float64, Eigen::MatrixXd>,
+             pybind11::arg("y_pred"),pybind11::arg("y_true"));
 
     pybind11::class_<losses::Crossentropy, losses::Loss>(m, "Crossentropy", R"pbdoc(
 交叉熵损失函数,
@@ -173,9 +182,10 @@ PYBIND11_MODULE(losses, m) {
                 损失函数名称.
 )pbdoc", pybind11::arg("name"))
         .def_readwrite("name", &losses::Crossentropy::name)
-        .def("__call__", &losses::Crossentropy::PyCall,
-             pybind11::arg("y_pred"),
-             pybind11::arg("y_true"));
+        .def("__call__", &losses::Crossentropy::PyCall<float32, Eigen::MatrixXf>,
+             pybind11::arg("y_pred"),pybind11::arg("y_true"))
+        .def("__call__", &losses::Crossentropy::PyCall<float64, Eigen::MatrixXd>,
+             pybind11::arg("y_pred"),pybind11::arg("y_true"));
 
     pybind11::class_<losses::LogLikelihood, losses::Loss>(m, "LogLikelihood", R"pbdoc(
 对数似然损失函数.
@@ -216,7 +226,7 @@ PYBIND11_MODULE(losses, m) {
     // Aliases.
     m.attr("MSE") = m.attr("MeanSquaredError");
 
-    m.attr("__version__") = "backend.cc.losses.0.7.2";
+    m.attr("__version__") = "backend.cc.losses.0.8.a0";
 }
 
 #endif /* CLASSICML_BACKEND_CC_LOSSES_H_ */
