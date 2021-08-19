@@ -1,6 +1,6 @@
 # classicML: 简单易用的经典机器学习框架
 
-![build](https://github.com/sun1638650145/classicML/workflows/build/badge.svg) ![PyPI](https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg) [![Documentation Status](https://readthedocs.org/projects/classicml/badge/?version=latest)](https://classicml.readthedocs.io/zh_CN/latest/?badge=latest) ![PyPI](https://img.shields.io/pypi/v/classicML?color=blue) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/classicML)
+![build](https://github.com/sun1638650145/classicML/workflows/build/badge.svg) ![PyPI](https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg) [![Documentation Status](https://readthedocs.org/projects/classicml/badge/?version=latest)](https://classicml.readthedocs.io/zh_CN/latest/?badge=latest) [![PyPI](https://img.shields.io/pypi/v/classicML?color=blue)](https://pypi.org/project/classicML/) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/classicML)](https://pypi.org/project/classicML/)
 
 classicML 是一个用 Python 和 C++ 混编的机器学习项目，您既可以使用纯 Python 版本进行学习，也可以使用CC标准版进行实验和探索自定义功能。它既实现了Python的简单易用快速上手，又实现了C++的高效性能。classicML的设计目标是简单易用，快速入门，高扩展性和编程风格简洁。更多信息请访问[文档网站](https://classicml.readthedocs.io/)。
 

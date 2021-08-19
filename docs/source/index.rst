@@ -65,7 +65,9 @@ classicML
 .. |image3| image:: https://readthedocs.org/projects/classicml/badge/?version=latest
    :target: https://classicml.readthedocs.io/zh_CN/latest/?badge=latest
 .. |image4| image:: https://img.shields.io/pypi/v/classicML?color=blue
+   :target: https://pypi.org/project/classicML/
 .. |image5| image:: https://img.shields.io/pypi/pyversions/classicML
+   :target: https://pypi.org/project/classicML/
    
 .. toctree::
    :hidden:
