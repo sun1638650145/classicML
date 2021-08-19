@@ -9,10 +9,10 @@
 #ifndef CLASSICML_BACKEND_CC_METRICS_H_
 #define CLASSICML_BACKEND_CC_METRICS_H_
 
-#include "Eigen/Core"
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
 
+#include "dtypes.h"
 #include "exceptions.h"
 
 namespace metrics {
@@ -23,8 +23,7 @@ class Metric {
         explicit Metric(std::string name);
         virtual ~Metric() = default;
 
-        virtual double PyCall(const Eigen::MatrixXd &y_pred,
-                              const Eigen::MatrixXd &y_true);
+        template<typename Dtype, typename Matrix> Dtype PyCall(const Matrix &y_pred, const Matrix &y_true);
 
     public:
         std::string name;
@@ -36,8 +35,7 @@ class Accuracy : public Metric {
         Accuracy();
         explicit Accuracy(std::string name);
 
-        double PyCall(const Eigen::MatrixXd &y_pred,
-                      const Eigen::MatrixXd &y_true) override;
+        template<typename Dtype, typename Matrix> Dtype PyCall(const Matrix &y_pred, const Matrix &y_true);
 };
 
 // 二分类准确率评估函数.
@@ -46,8 +44,7 @@ class BinaryAccuracy : public Metric {
         BinaryAccuracy();
         explicit BinaryAccuracy(std::string name);
 
-        double PyCall(const Eigen::MatrixXd &y_pred,
-                      const Eigen::MatrixXd &y_true) override;
+        template<typename Dtype, typename Matrix> Dtype PyCall(const Matrix &y_pred, const Matrix &y_true);
 };
 
 // 多分类准确率评估函数.
@@ -56,8 +53,7 @@ class CategoricalAccuracy : public Metric {
         CategoricalAccuracy();
         explicit CategoricalAccuracy(std::string name);
 
-        double PyCall(const Eigen::MatrixXd &y_pred,
-                      const Eigen::MatrixXd &y_true) override;
+        template<typename Dtype, typename Matrix> Dtype PyCall(const Matrix &y_pred, const Matrix &y_true);
 };
 }  // namespace metrics
 
@@ -89,7 +85,9 @@ PYBIND11_MODULE(metrics, m) {
 )pbdoc",
              pybind11::arg("name"))
         .def_readwrite("name", &metrics::Metric::name)
-        .def("__call__", &metrics::Metric::PyCall,
+        .def("__call__", &metrics::Metric::PyCall<float32, Eigen::MatrixXf>,
+             pybind11::arg("y_pred"), pybind11::arg("y_true"))
+        .def("__call__", &metrics::Metric::PyCall<float64, Eigen::MatrixXd>,
              pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
     pybind11::class_<metrics::Accuracy, metrics::Metric>(m, "Accuracy", R"pbdoc(
@@ -108,7 +106,16 @@ PYBIND11_MODULE(metrics, m) {
 )pbdoc",
              pybind11::arg("name"))
         .def_readwrite("name", &metrics::Accuracy::name)
-        .def("__call__", &metrics::Accuracy::PyCall, R"pbdoc(
+        .def("__call__", &metrics::Accuracy::PyCall<float32, Eigen::MatrixXf>, R"pbdoc(
+    Arguments:
+        y_pred: numpy.ndarray, 预测的标签.
+        y_true: numpy.ndarray, 真实的标签.
+
+    Returns:
+        当前的准确率.
+)pbdoc",
+             pybind11::arg("y_pred"), pybind11::arg("y_true"))
+        .def("__call__", &metrics::Accuracy::PyCall<float64, Eigen::MatrixXd>, R"pbdoc(
     Arguments:
         y_pred: numpy.ndarray, 预测的标签.
         y_true: numpy.ndarray, 真实的标签.
@@ -124,7 +131,16 @@ PYBIND11_MODULE(metrics, m) {
         .def(pybind11::init())
         .def(pybind11::init<std::string>(), pybind11::arg("name"))
         .def_readwrite("name", &metrics::BinaryAccuracy::name)
-        .def("__call__", &metrics::BinaryAccuracy::PyCall, R"pbdoc(
+        .def("__call__", &metrics::BinaryAccuracy::PyCall<float32, Eigen::MatrixXf>, R"pbdoc(
+    Arguments:
+        y_pred: numpy.ndarray, 预测的标签.
+        y_true: numpy.ndarray, 真实的标签.
+
+    Returns:
+        当前的准确率.
+)pbdoc",
+             pybind11::arg("y_pred"), pybind11::arg("y_true"))
+        .def("__call__", &metrics::BinaryAccuracy::PyCall<float64, Eigen::MatrixXd>, R"pbdoc(
     Arguments:
         y_pred: numpy.ndarray, 预测的标签.
         y_true: numpy.ndarray, 真实的标签.
@@ -140,7 +156,16 @@ PYBIND11_MODULE(metrics, m) {
         .def(pybind11::init())
         .def(pybind11::init<std::string>(), pybind11::arg("name"))
         .def_readwrite("name", &metrics::CategoricalAccuracy::name)
-        .def("__call__", &metrics::CategoricalAccuracy::PyCall, R"pbdoc(
+        .def("__call__", &metrics::CategoricalAccuracy::PyCall<float32, Eigen::MatrixXf>, R"pbdoc(
+    Arguments:
+        y_pred: numpy.ndarray, 预测的标签.
+        y_true: numpy.ndarray, 真实的标签.
+
+    Returns:
+        当前的准确率.
+)pbdoc",
+             pybind11::arg("y_pred"), pybind11::arg("y_true"))
+        .def("__call__", &metrics::CategoricalAccuracy::PyCall<float64, Eigen::MatrixXd>, R"pbdoc(
     Arguments:
         y_pred: numpy.ndarray, 预测的标签.
         y_true: numpy.ndarray, 真实的标签.
@@ -150,7 +175,7 @@ PYBIND11_MODULE(metrics, m) {
 )pbdoc",
              pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
-    m.attr("__version__") = "backend.cc.metrics.0.3.2";
+    m.attr("__version__") = "backend.cc.metrics.0.4.a0";
 }
 
 #endif /* CLASSICML_BACKEND_CC_METRICS_H_ */

@@ -23,7 +23,7 @@ class TestMetric(object):
         py_acc = PyAccuracy('py_acc')
 
         # 数据为随机产生, 不具有任何实际意义.(Accuracy的实现就是分别调用的二分类和多分类的Accuracy, 故不单独测试.)
-        binary_y_true = np.random.randint(low=0, high=2, size=[10, 1])
+        binary_y_true = np.random.randint(low=0, high=2, size=[10, 1]).astype(np.float64)
         binary_y_pred = np.random.random(size=[10, 1])
 
         cat_y_true = np.random.randint(low=0, high=5, size=10)
