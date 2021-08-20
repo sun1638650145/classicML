@@ -78,10 +78,11 @@ class LogLikelihood : public Loss {
     LogLikelihood();
     explicit LogLikelihood(std::string name);
 
-    double PyCall(const Eigen::MatrixXd &y_true,
-                  const Eigen::MatrixXd &beta,
-                  const pybind11::args &args,
-                  const pybind11::kwargs &kwargs);
+    template<typename Dtype, typename Matrix>
+    Dtype PyCall(const Matrix &y_true,
+                 const Matrix &beta,
+                 const pybind11::args &args,
+                 const pybind11::kwargs &kwargs);
 };
 
 // 均方误差损失函数.
@@ -90,10 +91,11 @@ class MeanSquaredError : public Loss {
     MeanSquaredError();
     explicit MeanSquaredError(std::string name);
 
-    double PyCall(const Eigen::MatrixXd &y_pred,
-                  const Eigen::MatrixXd &y_true,
-                  const pybind11::args &args,
-                  const pybind11::kwargs &kwargs);
+    template<typename Dtype, typename Matrix>
+    Dtype PyCall(const Matrix &y_pred,
+                 const Matrix &y_true,
+                 const pybind11::args &args,
+                 const pybind11::kwargs &kwargs);
 };
 }  // namespace losses
 
@@ -201,9 +203,10 @@ PYBIND11_MODULE(losses, m) {
                 损失函数名称.
 )pbdoc")
         .def_readwrite("name", &losses::LogLikelihood::name)
-        .def("__call__", &losses::LogLikelihood::PyCall,
-             pybind11::arg("y_true"),
-             pybind11::arg("beta"));
+        .def("__call__", &losses::LogLikelihood::PyCall<float32, Eigen::MatrixXf>,
+             pybind11::arg("y_true"),pybind11::arg("beta"))
+        .def("__call__", &losses::LogLikelihood::PyCall<float64, Eigen::MatrixXd>,
+             pybind11::arg("y_true"),pybind11::arg("beta"));
 
     pybind11::class_<losses::MeanSquaredError, losses::Loss>(m, "MeanSquaredError", R"pbdoc(
 均方误差损失函数.
@@ -219,14 +222,15 @@ PYBIND11_MODULE(losses, m) {
                 损失函数名称.
 )pbdoc")
         .def_readwrite("name", &losses::MeanSquaredError::name)
-        .def("__call__", &losses::MeanSquaredError::PyCall,
-             pybind11::arg("y_pred"),
-             pybind11::arg("y_true"));
+        .def("__call__", &losses::MeanSquaredError::PyCall<float32, Eigen::MatrixXf>,
+             pybind11::arg("y_pred"), pybind11::arg("y_true"))
+        .def("__call__", &losses::MeanSquaredError::PyCall<float64, Eigen::MatrixXd>,
+             pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
     // Aliases.
     m.attr("MSE") = m.attr("MeanSquaredError");
 
-    m.attr("__version__") = "backend.cc.losses.0.8.a0";
+    m.attr("__version__") = "backend.cc.losses.0.8.a1";
 }
 
 #endif /* CLASSICML_BACKEND_CC_LOSSES_H_ */

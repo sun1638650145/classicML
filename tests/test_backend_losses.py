@@ -49,7 +49,7 @@ class TestLoss(object):
         cc_ll = CcLogLikelihood('cc_ll')
         py_ll = PyLogLikelihood('py_ll')
 
-        y_true = np.random.randint(low=0, high=2, size=[17, 1])
+        y_true = np.random.randint(low=0, high=2, size=[17, 1]).astype(np.float64)
         beta = np.random.random(size=[3, 1])
         x_hat = np.random.random(size=[17, 3])
 
@@ -63,7 +63,7 @@ class TestLoss(object):
         py_mse = PyMSE('py_mse')
 
         y_pred = np.random.random(size=[10, 1])
-        y_true = np.random.randint(low=0, high=2, size=[10, 1])
+        y_true = np.random.randint(low=0, high=2, size=[10, 1]).astype(np.float64)
 
         assert cc_mean_squared_error.name != py_mean_squared_error.name
         assert cc_mse.name != py_mse.name
