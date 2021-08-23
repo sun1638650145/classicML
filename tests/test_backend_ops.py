@@ -31,7 +31,7 @@ from classicML.backend.python.ops import get_within_class_scatter_matrix
 from classicML.backend.python.ops import select_second_alpha
 from classicML.backend.python.ops import type_of_target
 
-THRESHOLD = 1e-6
+THRESHOLD = 1e-15
 
 
 class TestCalculateError(object):
@@ -131,14 +131,15 @@ class TestGetPriorProbability(object):
         number_of_sample = np.random.randint(10, 15)
         y = np.asarray([1, 1, 0, 0, 1, 0, 1, 0, 1])
 
-        cc_answer_smoothing = cc_get_prior_probability(number_of_sample, y, True)
-        py_answer_smoothing = get_prior_probability(number_of_sample, y, True)
+        # 概率和为1, 所以只验证其中一个即可.
+        cc_answer_smoothing_p0, _ = cc_get_prior_probability(number_of_sample, y, True)
+        py_answer_smoothing_p0, _ = get_prior_probability(number_of_sample, y, True)
 
-        cc_answer = cc_get_prior_probability(number_of_sample, y, False)
-        py_answer = get_prior_probability(number_of_sample, y, False)
+        cc_answer_p0, _ = cc_get_prior_probability(number_of_sample, y, False)
+        py_answer_p0, _ = np.asarray(get_prior_probability(number_of_sample, y, False))
 
-        assert cc_answer_smoothing == py_answer_smoothing
-        assert cc_answer == py_answer
+        assert abs(cc_answer_smoothing_p0 - py_answer_smoothing_p0) <= THRESHOLD
+        assert abs(cc_answer_p0 - py_answer_p0) <= THRESHOLD
 
 
 class TestGetProbabilityDensity(object):
