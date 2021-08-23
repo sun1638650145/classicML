@@ -71,7 +71,7 @@ class NaiveBayesClassifier(BaseModel):
             CLASSICML_LOGGER.warn("属性名称缺失, 请使用pandas.DataFrame; 或检查 self.attributes_name")
 
         # 为特征数据添加属性信息.
-        x = pd.DataFrame(x, columns=self.attribute_name, dtype=_cml_precision.float)
+        x = pd.DataFrame(x, columns=self.attribute_name)
         x.reset_index(drop=True, inplace=True)
         y = pd.Series(y, dtype=_cml_precision.int)
         y.reset_index(drop=True, inplace=True)
@@ -112,8 +112,10 @@ class NaiveBayesClassifier(BaseModel):
                 unique_value = xi.unique()
                 num_of_unique_value = len(unique_value)
 
-                xi0_value_count = pd.DataFrame(np.zeros((1, num_of_unique_value)), columns=unique_value)
-                xi1_value_count = pd.DataFrame(np.zeros((1, num_of_unique_value)), columns=unique_value)
+                xi0_value_count = pd.DataFrame(np.zeros([1, num_of_unique_value], dtype=_cml_precision.float),
+                                               columns=unique_value)
+                xi1_value_count = pd.DataFrame(np.zeros([1, num_of_unique_value], dtype=_cml_precision.float),
+                                               columns=unique_value)
 
                 for key in pd.value_counts(xi0).keys():
                     xi0_value_count[key] += pd.value_counts(xi0)[key]
@@ -169,7 +171,7 @@ class NaiveBayesClassifier(BaseModel):
             x = np.expand_dims(x, axis=0)
 
         # 为特征数据添加属性信息.
-        x = pd.DataFrame(x, columns=self.attribute_name, dtype=_cml_precision.float)
+        x = pd.DataFrame(x, columns=self.attribute_name)
         x.reset_index(drop=True, inplace=True)
 
         # 避免下溢进行对数处理.

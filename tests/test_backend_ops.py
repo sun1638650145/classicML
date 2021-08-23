@@ -2,6 +2,8 @@
     测试cc后端和默认python后端的运行结果是否一致.
     使用的随机数据采取了一些限制以更好满足测试, 但仍然不具有实际意义.
 """
+import os
+os.environ['CLASSICML_PRECISION'] = '64-bit'
 import numpy as np
 
 from classicML import _cml_precision
@@ -29,7 +31,7 @@ from classicML.backend.python.ops import get_within_class_scatter_matrix
 from classicML.backend.python.ops import select_second_alpha
 from classicML.backend.python.ops import type_of_target
 
-THRESHOLD = 1e-15
+THRESHOLD = 1e-6
 
 
 class TestCalculateError(object):

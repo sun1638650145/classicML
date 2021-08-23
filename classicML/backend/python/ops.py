@@ -4,7 +4,7 @@ import numpy as np
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.11.a1'
+__version__ = 'backend.python.ops.0.11.a2'
 
 
 def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):
@@ -98,7 +98,7 @@ def get_conditional_probability(samples_on_attribute,
 
     probability = samples_on_attribute / samples_in_category
 
-    return probability
+    return _cml_precision.float(probability)
 
 
 def get_dependent_prior_probability(samples_on_attribute_in_category,
