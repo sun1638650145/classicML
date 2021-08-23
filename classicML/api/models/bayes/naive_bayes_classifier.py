@@ -3,6 +3,7 @@ from pickle import loads, dumps
 import numpy as np
 import pandas as pd
 
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.backend import type_of_target
@@ -70,9 +71,9 @@ class NaiveBayesClassifier(BaseModel):
             CLASSICML_LOGGER.warn("属性名称缺失, 请使用pandas.DataFrame; 或检查 self.attributes_name")
 
         # 为特征数据添加属性信息.
-        x = pd.DataFrame(x, columns=self.attribute_name)
+        x = pd.DataFrame(x, columns=self.attribute_name, dtype=_cml_precision.float)
         x.reset_index(drop=True, inplace=True)
-        y = pd.Series(y)
+        y = pd.Series(y, dtype=_cml_precision.int)
         y.reset_index(drop=True, inplace=True)
 
         # 获取反正例的样本总数.
@@ -159,8 +160,16 @@ class NaiveBayesClassifier(BaseModel):
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
+        # 修正数据类型.
+        if isinstance(x, list):
+            x = np.expand_dims(x, axis=0)
+        elif isinstance(x, pd.Series):
+            x = np.expand_dims(x.values, axis=0)
+        elif isinstance(x, np.ndarray) and x.ndim == 1:
+            x = np.expand_dims(x, axis=0)
+
         # 为特征数据添加属性信息.
-        x = pd.DataFrame(x, columns=self.attribute_name)
+        x = pd.DataFrame(x, columns=self.attribute_name, dtype=_cml_precision.float)
         x.reset_index(drop=True, inplace=True)
 
         # 避免下溢进行对数处理.

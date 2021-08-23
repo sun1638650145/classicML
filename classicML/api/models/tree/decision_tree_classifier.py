@@ -151,6 +151,8 @@ class DecisionTreeClassifier(BaseModel):
             x = x.values
         elif isinstance(x, pd.Series):
             x = np.expand_dims(x.values, axis=0)
+        elif isinstance(x, np.ndarray) and x.ndim == 1:
+            x = np.expand_dims(x, axis=0)
 
         y_pred = np.zeros(shape=len(x), dtype=_cml_precision.int)
         for i, feature in enumerate(x):

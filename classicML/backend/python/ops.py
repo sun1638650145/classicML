@@ -150,7 +150,7 @@ def get_prior_probability(number_of_sample, y, smoothing):
     else:
         p_0 = len(y[y == 0]) / number_of_sample
 
-    return p_0, 1 - p_0
+    return _cml_precision.float(p_0), _cml_precision.float(1 - p_0)
 
 
 def get_probability_density(sample, mean, var):
@@ -170,9 +170,10 @@ def get_probability_density(sample, mean, var):
           Python版本是没有优化的原始公式版本.
     """
     probability = 1 / (np.sqrt(2 * np.pi) * var) * np.exp(-(sample - mean) ** 2 / (2 * var ** 2))
+    probability = _cml_precision.float(probability)
 
-    if probability == 0:
-        probability = 1e-36  # probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
+    if probability == 0.0:
+        probability = _cml_precision.float(1e-36)  # probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
 
     return probability
 
