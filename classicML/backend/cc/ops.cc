@@ -130,28 +130,24 @@ double ops::GetDependentPriorProbability(const int &samples_on_attribute_in_cate
 }
 
 // 获取类先验概率, 输入特征数据, 标签和是否使用平滑.
-std::tuple<double, double> ops::GetPriorProbability(const int &number_of_sample,
-                                                    const Eigen::RowVectorXd &y,
-                                                    const bool &smoothing) {
+// `Dtype` 兼容32位和64位浮点型, `RowVector` 兼容32位和64位整型行向量, 不支持不同位数模板兼容.
+template<typename Dtype, typename RowVector>
+std::tuple<Dtype, Dtype> ops::GetPriorProbability(const int32 &number_of_sample,
+                                                  const RowVector &y,
+                                                  const bool &smoothing) {
     // 遍历获得反例的个数.
-    double num_of_negative_sample = 0.0;
-    for (int i = 0; i < y.size(); i ++) {
-        if (y[i] == 0) {
-            num_of_negative_sample += 1;
-        }
-    }
+    int32 num_of_negative_sample = y.size() - matrix_op::NonZero(y).size();
 
+    Dtype p_0;
     if (smoothing) {
-        double p_0 = (num_of_negative_sample + 1) / (number_of_sample + 2);
-        std::tuple<double, double> probability(p_0, 1 - p_0);
-
-        return probability;
+        p_0 = (num_of_negative_sample + 1.0) / (number_of_sample + 2);
     } else {
-        double p_0 = num_of_negative_sample / number_of_sample;
-        std::tuple<double, double> probability(p_0, 1 - p_0);
-
-        return probability;
+        p_0 = (Dtype)num_of_negative_sample / number_of_sample;
     }
+
+    std::tuple<Dtype, Dtype> probability(p_0, 1 - p_0);
+
+    return probability;
 }
 
 
@@ -339,9 +335,9 @@ std::string ops::TypeOfTarget_V2(const pybind11::array &y) {
     // `matrix_op::Unique`返回是一个`std::variant`, 需要使用`std::get`处理.
     int32 num_unique;
     if (y.dtype().kind() == 'f' or y.dtype().kind() == 'i') {
-        num_unique = std::get<std::set<float32>>(matrix_op::Unique(y)).size();
+        num_unique = (int32)std::get<std::set<float32>>(matrix_op::Unique(y)).size();
     } else if (y.dtype().kind() == 'U') {
-        num_unique = std::get<std::set<uint8>>(matrix_op::Unique(y)).size();
+        num_unique = (int32)std::get<std::set<uint8>>(matrix_op::Unique(y)).size();
     }
 
     if (y.ndim() == 1 or y.request().shape[1] == 1) {

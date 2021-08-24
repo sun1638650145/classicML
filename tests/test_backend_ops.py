@@ -127,7 +127,7 @@ class TestGetPriorProbability(object):
     def test_answer(self):
         # 数据为随机产生, 不具有任何实际意义.
         number_of_sample = np.random.randint(10, 15)
-        y = np.asarray([1, 1, 0, 0, 1, 0, 1, 0, 1])
+        y = np.asarray([1, 1, 0, 0, 1, 0, 1, 0, 1], dtype=_cml_precision.int)
 
         # 概率和为1, 所以只验证其中一个即可.
         cc_answer_smoothing_p0, _ = cc_get_prior_probability(number_of_sample, y, True)

@@ -40,9 +40,10 @@ double GetDependentPriorProbability(const int &samples_on_attribute_in_category,
                                     const int &values_on_attribute,
                                     const bool &smoothing);
 
-std::tuple<double, double> GetPriorProbability(const int &number_of_sample,
-                                               const Eigen::RowVectorXd &y,
-                                               const bool &smoothing);
+template<typename Dtype, typename RowVector>
+std::tuple<Dtype, Dtype> GetPriorProbability(const int32 &number_of_sample,
+                                             const RowVector &y,
+                                             const bool &smoothing);
 
 double GetProbabilityDensity(const double &sample,
                              const double &mean,
@@ -169,7 +170,19 @@ PYBIND11_MODULE(ops, m) {
           pybind11::arg("samples_on_attribute_in_category"), pybind11::arg("number_of_sample"),
           pybind11::arg("values_on_attribute"), pybind11::arg("smoothing"));
 
-    m.def("cc_get_prior_probability", &ops::GetPriorProbability, R"pbdoc(
+    // Overloaded function.
+    m.def("cc_get_prior_probability", &ops::GetPriorProbability<float32, Eigen::RowVectorXi>, R"pbdoc(
+获取类先验概率.
+
+    Arguments:
+        number_of_sample: int, 样本的总数.
+        y: numpy.ndarray, 标签.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        类先验概率.)pbdoc",
+          pybind11::arg("number_of_sample"), pybind11::arg("y"), pybind11::arg("smoothing"));
+    m.def("cc_get_prior_probability", &ops::GetPriorProbability<float64, Eigen::Matrix<int64, 1, -1>>, R"pbdoc(
 获取类先验概率.
 
     Arguments:
@@ -374,7 +387,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.11.a6";
+    m.attr("__version__") = "backend.cc.ops.0.11.a7";
 }
 
 #endif /* CLASSICML_BACKEND_CC_OPS_H_ */
