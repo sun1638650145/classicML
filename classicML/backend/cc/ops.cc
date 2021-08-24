@@ -151,11 +151,47 @@ std::tuple<Dtype, Dtype> ops::GetPriorProbability(const int32 &number_of_sample,
 }
 
 
-// 获取概率密度, 输入样本的取值, 样本在某个属性的上的均值和样本在某个属性上的方差.
-double ops::GetProbabilityDensity(const double &sample,
-                                  const double &mean,
-                                  const double &var) {
-    double probability =  1 / (sqrt(2 * M_PI) * var) * exp(-(pow((sample - mean), 2) / (2 * pow(var, 2))));
+// 获取概率密度(32/64位), 输入样本的取值(float32/float64),
+// 样本在某个属性的上的均值(float32/float64)和样本在某个属性上的方差(float32/float64).
+std::variant<float32, float64> ops::GetProbabilityDensity(const pybind11::buffer &sample,
+                                                          const pybind11::buffer &mean,
+                                                          const pybind11::buffer &var) {
+    std::string type_code = sample.request().format;
+    if (type_code == "f") {
+        auto _sample = pybind11::cast<float32>(sample);
+        auto _mean = pybind11::cast<float32>(mean);
+        auto _var = pybind11::cast<float32>(var);
+
+        float32 probability =  1 / (sqrtf(2 * M_PI) * _var) * expf(-(powf((_sample - _mean), 2) / (2 * powf(_var, 2))));
+
+        // probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
+        if (probability == 0) {
+            probability = 1e-36;
+        }
+
+        return probability;
+    } else if (type_code == "d") {
+        auto _sample = pybind11::cast<float64>(sample);
+        auto _mean = pybind11::cast<float64>(mean);
+        auto _var = pybind11::cast<float64>(var);
+
+        float64 probability =  1 / (sqrt(2 * M_PI) * _var) * exp(-(pow((_sample - _mean), 2) / (2 * pow(_var, 2))));
+
+        // probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
+        if (probability == 0) {
+            probability = 1e-36;
+        }
+
+        return probability;
+    }
+
+    return {};
+}
+
+// 获取概率密度(32位), 输入样本的取值(Pure Python float),
+// 样本在某个属性的上的均值(Pure Python float)和样本在某个属性上的方差(Pure Python float).
+float32 ops::GetProbabilityDensity(const float32 &sample, const float32 &mean, const float32 &var) {
+    float32 probability =  1 / (sqrtf(2 * M_PI) * var) * expf(-(powf((sample - mean), 2) / (2 * powf(var, 2))));
 
     // probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
     if (probability == 0) {

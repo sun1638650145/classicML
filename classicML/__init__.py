@@ -7,7 +7,7 @@ import logging
 # 配置默认环境变量
 os.environ.setdefault('CLASSICML_ENGINE', 'Python')
 os.environ.setdefault('CLASSICML_FONT', 'Arial Unicode MS')
-os.environ.setdefault('CLASSICML_PRECISION', '64-bit')
+os.environ.setdefault('CLASSICML_PRECISION', '32-bit')
 # 系统logger
 logging.basicConfig(level=logging.INFO)
 CLASSICML_LOGGER = logging.getLogger(name='classicML')

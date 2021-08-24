@@ -45,9 +45,13 @@ std::tuple<Dtype, Dtype> GetPriorProbability(const int32 &number_of_sample,
                                              const RowVector &y,
                                              const bool &smoothing);
 
-double GetProbabilityDensity(const double &sample,
-                             const double &mean,
-                             const double &var);
+// Overloaded function.
+std::variant<float32, float64> GetProbabilityDensity(const pybind11::buffer &sample,
+                                                     const pybind11::buffer &mean,
+                                                     const pybind11::buffer &var);
+float32 GetProbabilityDensity(const float32 &sample,
+                              const float32 &mean,
+                              const float32 &var);
 
 // DEPRECATED(Steve R. Sun): `ops.cc_get_w` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.cc_get_w_v2`.
 Eigen::MatrixXd GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1);
@@ -194,7 +198,27 @@ PYBIND11_MODULE(ops, m) {
         类先验概率.)pbdoc",
           pybind11::arg("number_of_sample"), pybind11::arg("y"), pybind11::arg("smoothing"));
 
-    m.def("cc_get_probability_density", &ops::GetProbabilityDensity, R"pbdoc(
+    // Overloaded function.
+    m.def("cc_get_probability_density", [](const pybind11::buffer &sample,
+                                                  const pybind11::buffer &mean,
+                                                  const pybind11::buffer &var) {
+        return ops::GetProbabilityDensity(sample, mean, var);
+    }, R"pbdoc(
+获得概率密度.
+
+    Arguments:
+        sample: float, 样本的取值.
+        mean: float, 样本在某个属性的上的均值.
+        var: float, 样本在某个属性上的方差.
+
+    Returns:
+        概率密度.)pbdoc",
+          pybind11::arg("sample"), pybind11::arg("mean"), pybind11::arg("var"));
+    m.def("cc_get_probability_density", [](const float32 &sample,
+                                                  const float32 &mean,
+                                                  const float32 &var) {
+        return ops::GetProbabilityDensity(sample, mean, var);
+    }, R"pbdoc(
 获得概率密度.
 
     Arguments:
@@ -387,7 +411,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.11.a7";
+    m.attr("__version__") = "backend.cc.ops.0.11.a8";
 }
 
 #endif /* CLASSICML_BACKEND_CC_OPS_H_ */
