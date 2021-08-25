@@ -200,8 +200,8 @@ PYBIND11_MODULE(ops, m) {
 
     // Overloaded function.
     m.def("cc_get_probability_density", [](const pybind11::buffer &sample,
-                                                  const pybind11::buffer &mean,
-                                                  const pybind11::buffer &var) {
+                                           const pybind11::buffer &mean,
+                                           const pybind11::buffer &var) {
         return ops::GetProbabilityDensity(sample, mean, var);
     }, R"pbdoc(
 获得概率密度.
@@ -215,8 +215,8 @@ PYBIND11_MODULE(ops, m) {
         概率密度.)pbdoc",
           pybind11::arg("sample"), pybind11::arg("mean"), pybind11::arg("var"));
     m.def("cc_get_probability_density", [](const float32 &sample,
-                                                  const float32 &mean,
-                                                  const float32 &var) {
+                                           const float32 &mean,
+                                           const float32 &var) {
         return ops::GetProbabilityDensity(sample, mean, var);
     }, R"pbdoc(
 获得概率密度.

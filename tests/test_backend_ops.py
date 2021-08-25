@@ -3,7 +3,6 @@
     使用的随机数据采取了一些限制以更好满足测试, 但仍然不具有实际意义.
 """
 import os
-
 import numpy as np
 
 from classicML import _cml_precision
@@ -148,9 +147,9 @@ class TestGetPriorProbability(object):
 class TestGetProbabilityDensity(object):
     def test_answer(self):
         # 数据为随机产生, 不具有任何实际意义.
-        sample = np.random.rand()
-        mean = np.random.rand()
-        var = np.random.rand()
+        sample = _cml_precision.float(np.random.rand())
+        mean = _cml_precision.float(np.random.rand())
+        var = _cml_precision.float(np.random.rand())
 
         cc_answer = cc_get_probability_density(sample, mean, var)
         py_answer = get_probability_density(sample, mean, var)
