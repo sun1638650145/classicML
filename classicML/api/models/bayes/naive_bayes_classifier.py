@@ -84,6 +84,8 @@ class NaiveBayesClassifier(BaseModel):
 
         # 获取类先验概率P(c).
         self.p_0, self.p_1 = get_prior_probability(len(x.values), y.values, self.smoothing)
+        self.p_0 = _cml_precision.float(self.p_0)
+        self.p_1 = _cml_precision.float(self.p_1)
 
         number_of_samples, number_of_attributes = x.shape
         # 获取每个属性类条件概率P(x_i|c)或类概率密度p(x_i|c)所需的信息.
@@ -210,14 +212,18 @@ class NaiveBayesClassifier(BaseModel):
                 mean0, var0 = pxi_0['values']
                 mean1, var1 = pxi_1['values']
 
-                p_0 += np.log(get_probability_density(x[index], mean0, var0))
-                p_1 += np.log(get_probability_density(x[index], mean1, var1))
+                p_0 += _cml_precision.float(np.log(get_probability_density(x[index], mean0, var0)))
+                p_1 += _cml_precision.float(np.log(get_probability_density(x[index], mean1, var1)))
             else:
                 D_c_x0, D_c0, N0 = pxi_0['values']
                 D_c_x1, D_c1, N1 = pxi_1['values']
 
-                p_0 += np.log(get_conditional_probability(D_c_x0[x[index]], D_c0, N0, self.smoothing))
-                p_1 += np.log(get_conditional_probability(D_c_x1[x[index]], D_c1, N1, self.smoothing))
+                p_0 += _cml_precision.float(
+                    np.log(get_conditional_probability(D_c_x0[x[index]], D_c0, N0, self.smoothing))
+                )
+                p_1 += _cml_precision.float(
+                    np.log(get_conditional_probability(D_c_x1[x[index]], D_c1, N1, self.smoothing))
+                )
 
         if probability:
             return [p_0 / (p_0 + p_1), p_1 / (p_0 + p_1)]
