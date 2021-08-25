@@ -30,15 +30,15 @@ std::variant<Eigen::Array<float32, 1, 1>, Eigen::Array<float64, 1, 1>>
 ClipAlpha(const pybind11::buffer &alpha, const pybind11::buffer &low, const pybind11::buffer &high);
 Eigen::Array<float32, 1, 1> ClipAlpha(const float32 &alpha, const float32 &low, const float32 &high);
 
-double GetConditionalProbability(const double &samples_on_attribute,
-                                 const int &samples_in_category,
-                                 const int &num_of_categories,
-                                 const bool &smoothing);
+float64 GetConditionalProbability(const uint32 &samples_on_attribute,
+                                  const uint32 &samples_in_category,
+                                  const uint32 &num_of_categories,
+                                  const bool &smoothing);
 
-double GetDependentPriorProbability(const int &samples_on_attribute_in_category,
-                                    const int &number_of_sample,
-                                    const int &values_on_attribute,
-                                    const bool &smoothing);
+float64 GetDependentPriorProbability(const uint32 &samples_on_attribute_in_category,
+                                     const uint32 &number_of_sample,
+                                     const uint32 &values_on_attribute,
+                                     const bool &smoothing);
 
 template<typename Dtype, typename RowVector>
 std::tuple<Dtype, Dtype> GetPriorProbability(const uint32 &number_of_sample,
@@ -49,9 +49,7 @@ std::tuple<Dtype, Dtype> GetPriorProbability(const uint32 &number_of_sample,
 std::variant<float32, float64> GetProbabilityDensity(const pybind11::buffer &sample,
                                                      const pybind11::buffer &mean,
                                                      const pybind11::buffer &var);
-float32 GetProbabilityDensity(const float32 &sample,
-                              const float32 &mean,
-                              const float32 &var);
+float32 GetProbabilityDensity(const float32 &sample, const float32 &mean, const float32 &var);
 
 // DEPRECATED(Steve R. Sun): `ops.cc_get_w` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.cc_get_w_v2`.
 Eigen::MatrixXd GetW(const Eigen::MatrixXd &S_w, const Eigen::MatrixXd &mu_0, const Eigen::MatrixXd &mu_1);
@@ -150,8 +148,8 @@ PYBIND11_MODULE(ops, m) {
 获取类条件概率.
 
     Arguments:
-        samples_on_attribute: float, 在某个属性的样本.
-        samples_in_category: float, 在某个类别上的样本.
+        samples_on_attribute: int, 在某个属性的样本.
+        samples_in_category: int, 在某个类别上的样本.
         num_of_categories: int, 类别的数量.
         smoothing: bool, 是否使用平滑.
 
@@ -409,7 +407,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.11.a8.post";
+    m.attr("__version__") = "backend.cc.ops.0.11.a9";
 }
 
 #endif /* CLASSICML_BACKEND_CC_OPS_H_ */

@@ -79,8 +79,8 @@ def get_conditional_probability(samples_on_attribute,
     """获取类条件概率.
 
     Arguments:
-        samples_on_attribute: float, 在某个属性的样本.
-        samples_in_category: float, 在某个类别上的样本.
+        samples_on_attribute: int, 在某个属性的样本.
+        samples_in_category: int, 在某个类别上的样本.
         num_of_categories: int, 类别的数量.
         smoothing: bool, 是否使用平滑.
 

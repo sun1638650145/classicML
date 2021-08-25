@@ -51,8 +51,8 @@ cc_get_conditional_probability(samples_on_attribute, samples_in_category, num_of
 
 ### 参数
 
-* <b>samples_on_attribute</b>: 浮点数，在某个属性的样本.
-* <b>samples_in_category</b>: 浮点数，在某个类别上的样本.
+* <b>samples_on_attribute</b>: 整数，在某个属性的样本.
+* <b>samples_in_category</b>: 整数，在某个类别上的样本.
 * <b>num_of_categories</b>: 整数，类别的数量.
 * <b>smoothing</b>: 布尔值，是否使用平滑.
 

@@ -102,28 +102,29 @@ Eigen::Array<float32, 1, 1> ops::ClipAlpha(const float32 &alpha, const float32 &
 }
 
 // 获取类条件概率, 输入某个属性值的样本总数, 某个类别的样本总数, 类别的数量和是否使用平滑.
-double ops::GetConditionalProbability(const double &samples_on_attribute,
-                                      const int &samples_in_category,
-                                      const int &num_of_categories,
-                                      const bool &smoothing) {
+float64 ops::GetConditionalProbability(const uint32 &samples_on_attribute,
+                                       const uint32 &samples_in_category,
+                                       const uint32 &num_of_categories,
+                                       const bool &smoothing) {
     if (smoothing) {
-        return (samples_on_attribute + 1) / (samples_in_category + num_of_categories);
+        return ((float64)samples_on_attribute + 1.0) / (float64)(samples_in_category + num_of_categories);
     } else {
-        return samples_on_attribute / samples_in_category;
+        return (float64)samples_on_attribute / (float64)samples_in_category;
     }
 }
 
 // 获取有依赖的类先验概率, 输入类别为c的属性i上取值为xi的样本, 样本的总数, 特征数据和是否使用平滑.
-double ops::GetDependentPriorProbability(const int &samples_on_attribute_in_category,
-                                         const int &number_of_sample,
-                                         const int &values_on_attribute,
-                                         const bool &smoothing) {
-    double probability;
+float64 ops::GetDependentPriorProbability(const uint32 &samples_on_attribute_in_category,
+                                          const uint32 &number_of_sample,
+                                          const uint32 &values_on_attribute,
+                                          const bool &smoothing) {
+    float64 probability;
 
     if (smoothing) {
-        probability = (double)(samples_on_attribute_in_category + 1) / (number_of_sample + 2 * values_on_attribute);
+        probability = (float64)(samples_on_attribute_in_category + 1)
+                / (float64)(number_of_sample + 2 * values_on_attribute);
     } else {
-        probability = (double)samples_on_attribute_in_category / number_of_sample;
+        probability = (float64)samples_on_attribute_in_category / (float64)number_of_sample;
     }
 
     return probability;
