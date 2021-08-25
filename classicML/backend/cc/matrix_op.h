@@ -40,7 +40,7 @@ template<typename Matrix, typename Vector>
 Matrix GetNonZeroSubMatrix(const Matrix &matrix, const Vector &non_zero_mark);
 
 template<typename RowVector>
-std::vector<int32> NonZero(const RowVector &array);
+std::vector<uint32> NonZero(const RowVector &array);
 
 template <typename Matrix, typename Dtype>
 Matrix Reshape(Matrix matrix, const Dtype &row, const Dtype &column);

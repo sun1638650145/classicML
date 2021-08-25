@@ -16,7 +16,7 @@
 template<typename Matrix, typename Vector, typename Array>
 Matrix ops::CalculateError(const Matrix &x,
                            const Matrix &y, // 列向量
-                           const int32 &i,
+                           const uint32 &i,
                            const pybind11::object &kernel,
                            const Matrix &alphas,  // 列向量
                            const Vector &non_zero_alphas,
@@ -130,13 +130,13 @@ double ops::GetDependentPriorProbability(const int &samples_on_attribute_in_cate
 }
 
 // 获取类先验概率, 输入特征数据, 标签和是否使用平滑.
-// `Dtype` 兼容32位和64位浮点型, `RowVector` 兼容32位和64位整型行向量, 不支持不同位数模板兼容.
+// `Dtype` 兼容32位和64位整型, `RowVector` 兼容32位和64位整型行向量, 不支持不同位数模板兼容.
 template<typename Dtype, typename RowVector>
-std::tuple<Dtype, Dtype> ops::GetPriorProbability(const int32 &number_of_sample,
+std::tuple<Dtype, Dtype> ops::GetPriorProbability(const uint32 &number_of_sample,
                                                   const RowVector &y,
                                                   const bool &smoothing) {
     // 遍历获得反例的个数.
-    int32 num_of_negative_sample = y.size() - matrix_op::NonZero(y).size();
+    uint32 num_of_negative_sample = y.size() - matrix_op::NonZero(y).size();
 
     Dtype p_0;
     if (smoothing) {
@@ -258,17 +258,17 @@ Matrix ops::GetWithinClassScatterMatrix(const Matrix &X_0,
 // 会根据行向量精准匹配, C++侧会按照`float`计算, `float`自动类型转换`double`使得Python侧`pure float`返回值恰巧结果为8-15位随机值.
 // [内置类型](https://docs.python.org/zh-cn/3.8/library/stdtypes.html)
 template <typename Dtype, typename RowVector>
-std::tuple<int32, Dtype> ops::SelectSecondAlpha(const Dtype &error,
-                                                const RowVector &error_cache,
-                                                const RowVector &non_bound_alphas) {
-    std::vector<int32> non_bound_index = matrix_op::NonZero(non_bound_alphas);
+std::tuple<uint32, Dtype> ops::SelectSecondAlpha(const Dtype &error,
+                                                 const RowVector &error_cache,
+                                                 const RowVector &non_bound_alphas) {
+    std::vector<uint32> non_bound_index = matrix_op::NonZero(non_bound_alphas);
 
-    int32 index_alpha = 0;
+    uint32 index_alpha = 0;
     Dtype error_alpha = error_cache[index_alpha];
     Dtype delta_e = abs(error - error_cache[non_bound_index[0]]);
 
     // 选取最大间隔的拉格朗日乘子对应的下标和违背值.
-    for (int32 i : non_bound_index) {
+    for (uint32 i : non_bound_index) {
         Dtype temp = abs(error - error_cache[i]);
         if (temp > delta_e) {
             delta_e = temp;
@@ -277,7 +277,7 @@ std::tuple<int32, Dtype> ops::SelectSecondAlpha(const Dtype &error,
         }
     }
 
-    std::tuple<int32, Dtype> alpha_tuple(index_alpha, error_alpha);
+    std::tuple<uint32, Dtype> alpha_tuple(index_alpha, error_alpha);
 
     return alpha_tuple;
 }

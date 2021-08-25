@@ -19,7 +19,7 @@ namespace ops {
 template<typename Matrix, typename Vector, typename Array>
 Matrix CalculateError(const Matrix &x,
                       const Matrix &y,
-                      const int32 &i,
+                      const uint32 &i,
                       const pybind11::object &kernel,
                       const Matrix &alphas,
                       const Vector &non_zero_mark,
@@ -41,7 +41,7 @@ double GetDependentPriorProbability(const int &samples_on_attribute_in_category,
                                     const bool &smoothing);
 
 template<typename Dtype, typename RowVector>
-std::tuple<Dtype, Dtype> GetPriorProbability(const int32 &number_of_sample,
+std::tuple<Dtype, Dtype> GetPriorProbability(const uint32 &number_of_sample,
                                              const RowVector &y,
                                              const bool &smoothing);
 
@@ -66,7 +66,7 @@ Matrix GetWithinClassScatterMatrix(const Matrix &X_0,
                                    const Matrix &mu_1);
 
 template<typename Dtype, typename RowVector>
-std::tuple<int32, Dtype> SelectSecondAlpha(const Dtype &error,
+std::tuple<uint32, Dtype> SelectSecondAlpha(const Dtype &error,
                                            const RowVector &error_cache,
                                            const RowVector &non_bound_alphas);
 
@@ -200,8 +200,8 @@ PYBIND11_MODULE(ops, m) {
 
     // Overloaded function.
     m.def("cc_get_probability_density", [](const pybind11::buffer &sample,
-                                           const pybind11::buffer &mean,
-                                           const pybind11::buffer &var) {
+                                                  const pybind11::buffer &mean,
+                                                  const pybind11::buffer &var) {
         return ops::GetProbabilityDensity(sample, mean, var);
     }, R"pbdoc(
 获得概率密度.
@@ -215,8 +215,8 @@ PYBIND11_MODULE(ops, m) {
         概率密度.)pbdoc",
           pybind11::arg("sample"), pybind11::arg("mean"), pybind11::arg("var"));
     m.def("cc_get_probability_density", [](const float32 &sample,
-                                           const float32 &mean,
-                                           const float32 &var) {
+                                                  const float32 &mean,
+                                                  const float32 &var) {
         return ops::GetProbabilityDensity(sample, mean, var);
     }, R"pbdoc(
 获得概率密度.
@@ -298,7 +298,7 @@ PYBIND11_MODULE(ops, m) {
           pybind11::arg("mu_0"), pybind11::arg("mu_1"));
 
     // Overloaded function.
-    m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<float, Eigen::RowVectorXf>, R"pbdoc(
+    m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<float32, Eigen::RowVectorXf>, R"pbdoc(
 选择第二个拉格朗日乘子, SMO采用的是启发式寻找的思想,
 找到目标函数变化量足够大, 即选取变量样本间隔最大.
 
@@ -312,9 +312,8 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         拉格朗日乘子的下标和违背值.)pbdoc",
-          pybind11::arg("error"), pybind11::arg("error_cache"),
-          pybind11::arg("non_bound_alphas"));
-    m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<double, Eigen::RowVectorXd>, R"pbdoc(
+          pybind11::arg("error"), pybind11::arg("error_cache"), pybind11::arg("non_bound_alphas"));
+    m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<float64, Eigen::RowVectorXd>, R"pbdoc(
 选择第二个拉格朗日乘子, SMO采用的是启发式寻找的思想,
 找到目标函数变化量足够大, 即选取变量样本间隔最大.
 
@@ -328,8 +327,7 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         拉格朗日乘子的下标和违背值.)pbdoc",
-          pybind11::arg("error"), pybind11::arg("error_cache"),
-          pybind11::arg("non_bound_alphas"));
+          pybind11::arg("error"), pybind11::arg("error_cache"), pybind11::arg("non_bound_alphas"));
 
     m.def("cc_type_of_target", pybind11::overload_cast<const Eigen::MatrixXd &>(&ops::TypeOfTarget), R"pbdoc(
 判断输入数据的类型.
@@ -411,7 +409,7 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.)pbdoc",
           pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.11.a8";
+    m.attr("__version__") = "backend.cc.ops.0.11.a8.post";
 }
 
 #endif /* CLASSICML_BACKEND_CC_OPS_H_ */

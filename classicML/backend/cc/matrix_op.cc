@@ -129,10 +129,10 @@ Matrix matrix_op::GetNonZeroSubMatrix(const Matrix &matrix, const Vector &non_ze
 // 返回非零元素下标组成的数组, 输入为数组.
 // `RowVector` 兼容32位和64位浮点型和整型行向量.
 template<typename RowVector>
-std::vector<int32> matrix_op::NonZero(const RowVector &array) {
-    std::vector<int32> buffer;
+std::vector<uint32> matrix_op::NonZero(const RowVector &array) {
+    std::vector<uint32> buffer;
 
-    for (int i = 0; i < array.size(); i ++) {
+    for (int32 i = 0; i < array.size(); i ++) {
         if (array[i] != 0.0) {
             buffer.push_back(i);
         }
@@ -224,7 +224,7 @@ template Eigen::MatrixXf matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXf &m
 template Eigen::MatrixXd matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
                                                         const Eigen::VectorXd &non_zero_mark);
 
-template std::vector<int32> matrix_op::NonZero(const Eigen::RowVectorXf &array);
-template std::vector<int32> matrix_op::NonZero(const Eigen::RowVectorXd &array);
-template std::vector<int32> matrix_op::NonZero(const Eigen::RowVectorXi &array);
-template std::vector<int32> matrix_op::NonZero(const Eigen::Matrix<int64, 1, -1> &array);
+template std::vector<uint32> matrix_op::NonZero(const Eigen::RowVectorXf &array);
+template std::vector<uint32> matrix_op::NonZero(const Eigen::RowVectorXd &array);
+template std::vector<uint32> matrix_op::NonZero(const Eigen::RowVectorXi &array);
+template std::vector<uint32> matrix_op::NonZero(const Eigen::Matrix<int64, 1, -1> &array);
