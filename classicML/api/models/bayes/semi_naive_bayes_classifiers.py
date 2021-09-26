@@ -3,6 +3,7 @@ from pickle import loads, dumps
 import numpy as np
 import pandas as pd
 
+from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.backend import get_conditional_probability
@@ -168,7 +169,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
                                                          len(x.values),
                                                          len(unique_values_xi),
                                                          self.smoothing)
-                p_c.update({'p_c_xi': p_c_xi})
+                p_c.update({'p_c_xi': _cml_precision.float(p_c_xi)})
 
                 # 获取有依赖的类条件概率P(xj|c, xi)或概率密度p(xj|c, xi)所需的信息.
                 for attribute in range(x.shape[1]):
@@ -199,7 +200,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
                         # 统计不同属性值的样本总数.
                         D_c_xi = dict()
                         for name in value_count:
-                            D_c_xi.update({name: float(value_count[name].values)})
+                            D_c_xi.update({name: _cml_precision.float(value_count[name].values)})
 
                         p_c.update({x.columns[attribute]: {
                                     'continuous': continuous,
@@ -333,7 +334,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
         Returns:
             返回预测的结果.
         """
-        y_pred = [0.0, 0.0]
+        y_pred = np.zeros([2], dtype=_cml_precision.float)
 
         if attribute_list is None and super_parent_index is None:
             for i in self._list_of_p_c:
@@ -577,7 +578,7 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
         Returns:
             返回预测的结果.
         """
-        avg_result = {'0': 0.0, '1': 0.0}
+        avg_result = {'0': _cml_precision.float(0.0), '1': _cml_precision.float(0.0)}
         for i in range(len(self._attribute_list)):
             _temp_y_pred = super(AveragedOneDependentEstimator, self)._predict(x, self._attribute_list, i)
             avg_result['0'] += _temp_y_pred[0]
