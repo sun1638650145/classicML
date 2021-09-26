@@ -230,7 +230,7 @@ PYBIND11_MODULE(losses, m) {
     // Aliases.
     m.attr("MSE") = m.attr("MeanSquaredError");
 
-    m.attr("__version__") = "backend.cc.losses.0.8.a1";
+    m.attr("__version__") = "backend.cc.losses.0.8.b0";
 }
 
 #endif /* CLASSICML_BACKEND_CC_LOSSES_H_ */

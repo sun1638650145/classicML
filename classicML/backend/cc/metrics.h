@@ -175,7 +175,7 @@ PYBIND11_MODULE(metrics, m) {
 )pbdoc",
              pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
-    m.attr("__version__") = "backend.cc.metrics.0.4.a0";
+    m.attr("__version__") = "backend.cc.metrics.0.4.b0";
 }
 
 #endif /* CLASSICML_BACKEND_CC_METRICS_H_ */

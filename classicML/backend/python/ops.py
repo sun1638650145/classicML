@@ -4,7 +4,7 @@ import numpy as np
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.11.a2'
+__version__ = 'backend.python.ops.0.11.b0'
 
 
 def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):

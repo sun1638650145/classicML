@@ -374,7 +374,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
                         y_pred[0] += np.log(probability_density)  # 存放数据中多存放一个p_c_xi导致和x的索引无法对齐.
                     else:
                         D_c_xi_xj, D_c_xi, num_of_unique_value = _p_c[probability]['values']
-                        y_pred[0] += np.log(get_conditional_probability(D_c_xi_xj[x[index - 1]],
+                        y_pred[0] += np.log(get_conditional_probability(_cml_precision.int(D_c_xi_xj[x[index - 1]]),
                                                                         D_c_xi,
                                                                         num_of_unique_value,
                                                                         _p_c[probability]['smoothing']))
@@ -390,7 +390,7 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
                         y_pred[1] += np.log(probability_density)
                     else:
                         D_c_xi_xj, D_c_xi, num_of_unique_value = _p_c[probability]['values']
-                        y_pred[1] += np.log(get_conditional_probability(D_c_xi_xj[x[index - 1]],
+                        y_pred[1] += np.log(get_conditional_probability(_cml_precision.int(D_c_xi_xj[x[index - 1]]),
                                                                         D_c_xi,
                                                                         num_of_unique_value,
                                                                         _p_c[probability]['smoothing']))
