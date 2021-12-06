@@ -8,7 +8,7 @@
 
 #include "_utils.h"
 
-_utils::ProgressBar::ProgressBar(const unsigned int &epochs,
+_utils::ProgressBar::ProgressBar(const uint32 &epochs,
                                  const pybind11::object &loss,
                                  const pybind11::object &metric) {
     this->epochs = epochs;
@@ -17,19 +17,19 @@ _utils::ProgressBar::ProgressBar(const unsigned int &epochs,
 }
 
 // 输入当前的训练轮数, 当前的时间戳, 当前的损失值和当前的评估值.
-void _utils::ProgressBar::PyCall(const unsigned int &epoch,
-                                 const double &current,
-                                 const double &loss_value,
-                                 const double &metric_value) {
+void _utils::ProgressBar::PyCall(const uint32 &epoch,
+                                 const float64 &current,
+                                 const float64 &loss_value,
+                                 const float64 &metric_value) {
     this->_update_info(epoch, current, loss_value, metric_value);
     this->_dynamic_display();
 }
 
 // 在终端上显示进度条, 输入当前的训练轮数, 当前的时间戳, 当前的损失值和当前的评估值.
-void _utils::ProgressBar::_update_info(const unsigned int &epoch,
-                                       const double &current,
-                                       const double &loss_value,
-                                       const double &metric_value) {
+void _utils::ProgressBar::_update_info(const uint32 &epoch,
+                                       const float64 &current,
+                                       const float64 &loss_value,
+                                       const float64 &metric_value) {
     this->_draw_bar(epoch);
     this->_draw_detail(epoch, current, loss_value, metric_value);
 }
@@ -40,7 +40,7 @@ void _utils::ProgressBar::_dynamic_display() {
 }
 
 // 绘制进度条(无论总的训练轮数是多少, 显示条的总更新步数是25次), 输入当前的训练轮数.
-void _utils::ProgressBar::_draw_bar(const unsigned int &epoch) {
+void _utils::ProgressBar::_draw_bar(const uint32 &epoch) {
     this->info = "Epoch " + std::to_string(epoch) + "/" + std::to_string(this->epochs) + " [";
 
     if (epoch > (this->epochs - (this->epochs / 25))) {
@@ -48,13 +48,13 @@ void _utils::ProgressBar::_draw_bar(const unsigned int &epoch) {
     } else {
         // 获取箭头的实时位置.
         // arrow = epoch / (epochs / 25)
-        int arrow = ceil((double)epoch / this->epochs * 25);
+        int32 arrow = ceil((int64)epoch / this->epochs * 25);
 
-        for (int i = 0; i < arrow - 1; i ++) {
+        for (int32 i = 0; i < arrow - 1; i ++) {
             this->info += "=";
         }
         this->info += ">";
-        for (int i = 0; i < 25 - arrow; i ++) {
+        for (int32 i = 0; i < 25 - arrow; i ++) {
             this->info += ".";
         }
         this->info += "]";
@@ -62,24 +62,24 @@ void _utils::ProgressBar::_draw_bar(const unsigned int &epoch) {
 }
 
 // 绘制显示的计算信息, 输入当前的训练轮数, 当前的时间戳, 当前的损失值和当前的评估值.
-void _utils::ProgressBar::_draw_detail(const unsigned int &epoch,
-                                       const double &current,
-                                       const double &loss_value,
-                                       const double &metric_value) {
+void _utils::ProgressBar::_draw_detail(const uint32 &epoch,
+                                       const float64 &current,
+                                       const float64 &loss_value,
+                                       const float64 &metric_value) {
     // 时间信息.
     if (epoch == 0) {
         this->info += " ETA: 00:00";
     } else if (epoch > (this->epochs - (this->epochs / 25))) {
-        long total = time(nullptr) - this->ETD;
-        long per_epoch = total * 1000 / this->epochs;
+        int64 total = time(nullptr) - this->ETD;
+        int64 per_epoch = total * 1000 / this->epochs;
         this->info += (" " + std::to_string(total) + "s " + std::to_string(per_epoch) + "ms/step");
     } else {
-        long ETA = (time(nullptr) - (long)current) * (this->epochs - epoch);  // 剩余时间.
+        int64 ETA = (time(nullptr) - (int64)current) * (this->epochs - epoch);  // 剩余时间.
         if (ETA < 60) {
             this->info += ("ETA: " + std::to_string(ETA) + "s");
         } else {
-            long ETA_minutes = floor((double)ETA / 60);
-            long ETA_seconds = ETA % 60;
+            int64 ETA_minutes = floor((float64)ETA / 60);
+            int64 ETA_seconds = ETA % 60;
             this->info += ("ETA: " + std::to_string(ETA_minutes) + ":" + std::to_string(ETA_seconds));
         }
     }

@@ -2,6 +2,8 @@ from glob import glob
 from setuptools import setup, find_packages
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
+EIGEN_DIR = '/usr/local/include/eigen3'  # /path/to/eigen3/download
+
 with open('README.md', 'r') as fp:
     long_description = fp.read()
 
@@ -9,16 +11,14 @@ extension_modules = [
     # backend._utils模块
     Pybind11Extension(
         'classicML/backend/cc/_utils',
-        sorted(glob('classicML/backend/cc/_utils.cc')),
+        sorted(glob('classicML/backend/cc/_utils/*.cc')),
         language='c++',
     ),
     # backend.activations模块
     Pybind11Extension(
         'classicML/backend/cc/activations',
         sorted(glob('classicML/backend/cc/activations.cc')),
-        include_dirs=[
-            '/usr/local/include/eigen3',  # /path/to/eigen3/download
-        ],
+        include_dirs=[EIGEN_DIR],
         language='c++',
     ),
     # backend.callbacks模块
@@ -31,52 +31,42 @@ extension_modules = [
     Pybind11Extension(
         'classicML/backend/cc/initializers',
         sorted(glob('classicML/backend/cc/*.cc')),
-        include_dirs=[
-            '/usr/local/include/eigen3',
-        ],
+        include_dirs=[EIGEN_DIR],
         language='c++',
     ),
     # backend.kernels模块
     Pybind11Extension(
         'classicML/backend/cc/kernels',
         sorted(glob('classicML/backend/cc/*.cc')),
-        include_dirs=[
-            '/usr/local/include/eigen3',
-        ],
+        include_dirs=[EIGEN_DIR],
         language='c++',
     ),
     # backend.losses模块
     Pybind11Extension(
         'classicML/backend/cc/losses',
         sorted(glob('classicML/backend/cc/losses.cc')),
-        include_dirs=[
-            '/usr/local/include/eigen3',
-        ],
+        include_dirs=[EIGEN_DIR],
         language='c++',
     ),
     # backend.metrics模块
     Pybind11Extension(
         'classicML/backend/cc/metrics',
         sorted(glob('classicML/backend/cc/metrics.cc')),
-        include_dirs=[
-            '/usr/local/include/eigen3',
-        ],
+        include_dirs=[EIGEN_DIR],
         language='c++',
     ),
     # backend.ops模块
     Pybind11Extension(
         'classicML/backend/cc/ops',
         sorted(glob('classicML/backend/cc/*.cc')),
-        include_dirs=[
-            '/usr/local/include/eigen3',
-        ],
+        include_dirs=[EIGEN_DIR],
         language='c++',
     )
 ]
 
 setup(
     name='classicML',
-    version='0.7b0',
+    version='0.7.1dev0',
     description='An easy-to-use ML framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -86,7 +76,7 @@ setup(
     packages=find_packages(),
     ext_modules=extension_modules,
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Programming Language :: C++',
