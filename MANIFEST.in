@@ -1,1 +1,2 @@
-recursive-include classicML/backend/cc/*.h
+include classicML/backend/cc/_utils/*.h
+include classicML/backend/cc/*.h
