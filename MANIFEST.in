@@ -1,3 +1,4 @@
 include classicML/backend/cc/_utils/*.h
 include classicML/backend/cc/activations/*.h
+include classicML/backend/cc/callbacks/*.h
 include classicML/backend/cc/*.h

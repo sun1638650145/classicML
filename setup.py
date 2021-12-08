@@ -25,7 +25,8 @@ extension_modules = [
     # backend.callbacks模块
     Pybind11Extension(
         'classicML/backend/cc/callbacks',
-        sorted(glob('classicML/backend/cc/callbacks.cc')),
+        sorted(glob('classicML/backend/cc/callbacks/*.cc')),
+        include_dirs=[EIGEN_DIR],
         language='c++',
     ),
     # backend.initializers模块

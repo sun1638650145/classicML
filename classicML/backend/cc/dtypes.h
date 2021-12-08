@@ -8,7 +8,8 @@
 #ifndef CLASSICML_BACKEND_CC_DTYPES_H
 #define CLASSICML_BACKEND_CC_DTYPES_H
 
-// TODO(Steve R. Sun, tag:code): 由于代码共用的问题, _utils模块尽管不需要matrix类型, 但是还是需要在编译时添加Eigen路径.
+// TODO(Steve R. Sun, tag:code):
+//  由于代码共用的问题, _utils/callbacks模块尽管不需要matrix类型, 但是还是需要在编译时添加Eigen路径.
 #include "Eigen/Core"
 
 typedef float float32;
