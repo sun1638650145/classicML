@@ -146,3 +146,48 @@ Matrix activations::Softmax::Diff(const Matrix &output,
 
     return da;
 }
+
+// 显式实例化.
+template matrix32 activations::Activation::PyCall(const matrix32 &z);
+template matrix64 activations::Activation::PyCall(const matrix64 &z);
+template matrix32 activations::Activation::Diff(const matrix32 &output,
+                                                const matrix32 &a,
+                                                const pybind11::args &args,
+                                                const pybind11::kwargs &kwargs);
+template matrix64 activations::Activation::Diff(const matrix64 &output,
+                                                const matrix64 &a,
+                                                const pybind11::args &args,
+                                                const pybind11::kwargs &kwargs);
+
+template matrix32 activations::Relu::PyCall(const matrix32 &z);
+template matrix64 activations::Relu::PyCall(const matrix64 &z);
+template matrix32 activations::Relu::Diff(const matrix32 &output,
+                                          const matrix32 &a,
+                                          const pybind11::args &args,
+                                          const pybind11::kwargs &kwargs);
+template matrix64 activations::Relu::Diff(const matrix64 &output,
+                                          const matrix64 &a,
+                                          const pybind11::args &args,
+                                          const pybind11::kwargs &kwargs);
+
+template matrix32 activations::Sigmoid::PyCall(const matrix32 &z);
+template matrix64 activations::Sigmoid::PyCall(const matrix64 &z);
+template matrix32 activations::Sigmoid::Diff(const matrix32 &output,
+                                             const matrix32 &a,
+                                             const pybind11::args &args,
+                                             const pybind11::kwargs &kwargs);
+template matrix64 activations::Sigmoid::Diff(const matrix64 &output,
+                                             const matrix64 &a,
+                                             const pybind11::args &args,
+                                             const pybind11::kwargs &kwargs);
+
+template matrix32 activations::Softmax::PyCall(const matrix32 &z);
+template matrix64 activations::Softmax::PyCall(const matrix64 &z);
+template matrix32 activations::Softmax::Diff(const matrix32 &output,
+                                             const matrix32 &a,
+                                             const pybind11::args &args,
+                                             const pybind11::kwargs &kwargs);
+template matrix64 activations::Softmax::Diff(const matrix64 &output,
+                                             const matrix64 &a,
+                                             const pybind11::args &args,
+                                             const pybind11::kwargs &kwargs);

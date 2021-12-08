@@ -12,12 +12,13 @@ extension_modules = [
     Pybind11Extension(
         'classicML/backend/cc/_utils',
         sorted(glob('classicML/backend/cc/_utils/*.cc')),
+        include_dirs=[EIGEN_DIR],
         language='c++',
     ),
     # backend.activations模块
     Pybind11Extension(
         'classicML/backend/cc/activations',
-        sorted(glob('classicML/backend/cc/activations.cc')),
+        sorted(glob('classicML/backend/cc/activations/*.cc')),
         include_dirs=[EIGEN_DIR],
         language='c++',
     ),
