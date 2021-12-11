@@ -10,7 +10,7 @@ if system() == 'Windows':
 else:
     EIGEN_DIR = '/usr/local/include/eigen3'
 
-with open('README.md', 'r') as fp:
+with open('README.md', 'r', encoding='utf-8') as fp:
     long_description = fp.read()
 
 extension_modules = [
