@@ -10,8 +10,8 @@ if system() == 'Windows':
 else:
     EIGEN_DIR = '/usr/local/include/eigen3'
 
-# with open('README.md', 'r') as fp:
-#     long_description = fp.read()
+with open('README.md', 'r') as fp:
+    long_description = fp.read()
 
 extension_modules = [
     # backend._utils模块
@@ -76,8 +76,8 @@ setup(
     name='classicML',
     version='0.7.1dev0',
     description='An easy-to-use ML framework',
-    # long_description=long_description,
-    # long_description_content_type='text/markdown',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Steve R. Sun',
     author_email='s1638650145@gmail.com',
     url='https://github.com/sun1638650145/classicML',
