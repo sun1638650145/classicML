@@ -24,7 +24,7 @@ jobs:
     - name: Before install
       run: |
         # 安装64位的 eigen3
-        vcpkg install eigen3:x64-windows;
+        vcpkg install eigen3:x32-windows;
         # 安装 pybind11和pytest
         python -m pip install --upgrade pip;
         pip install pybind11==2.8.1;
