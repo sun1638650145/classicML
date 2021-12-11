@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, macos-10.15]
+        os: [macos-10.15, windows-2019, ubuntu-18.04, ubuntu-20.04]
         python-version: [3.7, 3.8, 3.9]
       fail-fast: false
 
@@ -28,6 +28,9 @@ jobs:
           rm -rf /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core;
           brew update;
           brew install eigen;
+        elif [ "${{ matrix.os }}" = "windows-2019" ]; then
+          # 安装64位的 eigen3
+          vcpkg install eigen3:x64-windows;
         else
           # ubuntu-16.04下apt安装的最新版本是eigen3.3的beta版, 会导致结果异常, 因此需要手动安装eigen3.3.7+
           # sudo apt update;
@@ -38,10 +41,10 @@ jobs:
           sudo apt install --upgrade -y gcc;
 
           # 下载源码
-          wget https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz;
-          tar -zxvf eigen-3.3.7.tar.gz;
+          wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz;
+          tar -zxvf eigen-3.4.0.tar.gz;
           # 编译安装
-          cd eigen-3.3.7;
+          cd eigen-3.4.0;
           mkdir build;
           cd build;
           cmake ..;

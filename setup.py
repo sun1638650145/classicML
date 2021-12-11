@@ -1,8 +1,14 @@
+from platform import system
+
 from glob import glob
 from setuptools import setup, find_packages
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-EIGEN_DIR = '/usr/local/include/eigen3'  # /path/to/eigen3/download
+# /path/to/eigen3/download
+if system() == 'Windows':
+    EIGEN_DIR = 'C:/vcpkg/installed/x64-windows/include/eigen3'
+else:
+    EIGEN_DIR = '/usr/local/include/eigen3'
 
 with open('README.md', 'r') as fp:
     long_description = fp.read()
