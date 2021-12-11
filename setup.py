@@ -6,7 +6,7 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 
 # /path/to/eigen3/download
 if system() == 'Windows':
-    EIGEN_DIR = 'C:/vcpkg/installed/x64-windows/include/eigen3'
+    EIGEN_DIR = 'c:/vcpkg/installed/x64-windows/include/eigen3'
 else:
     EIGEN_DIR = '/usr/local/include/eigen3'
 
