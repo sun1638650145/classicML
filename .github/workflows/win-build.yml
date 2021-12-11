@@ -1,0 +1,44 @@
+name: win-build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2019]
+        python-version: [3.7, 3.8, 3.9]
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Before install
+      run: |
+        # 安装64位的 eigen3
+        vcpkg install eigen3:x64-windows;
+        # 安装 pybind11和pytest
+        python -m pip install --upgrade pip;
+        pip install pybind11==2.8.1;
+        pip install pytest;
+    - name: Install
+      run: |
+        python3 setup.py install;
+    - name: Test with pytest
+      # 测试模块功能
+      run: |
+        pytest;
+    - name: Test examples
+      # 测试全部的样例能否正常运行
+      run: |
+        for filename in `ls examples`; do
+          python3 examples/$filename;
+        done
