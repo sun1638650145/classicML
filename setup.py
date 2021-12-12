@@ -7,8 +7,8 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 # /path/to/eigen3/download
 if system() == 'Windows':
     EIGEN_DIR = 'c:/vcpkg/installed/x64-windows/include/eigen3'
-    LIBRARIES = ['eigen']
-    LIBRARY_DIRS = ['c:/vcpkg/installed/x64-windows/lib/eigen3']
+    LIBRARIES = ['_utils']  # _utils.cp38-win_amd64.lib
+    LIBRARY_DIRS = sorted(glob('classicML/backend/cc/_utils/*.cc'))
 else:
     EIGEN_DIR = '/usr/local/include/eigen3'
     LIBRARIES = None
@@ -22,8 +22,8 @@ extension_modules = [
     Pybind11Extension(
         'classicML/backend/cc/_utils',
         sorted(glob('classicML/backend/cc/_utils/*.cc')),
-        libraries=None,
-        library_dirs=None,
+        libraries=LIBRARIES,
+        library_dirs=LIBRARY_DIRS,
         include_dirs=[EIGEN_DIR],
         language='c++',
     ),
