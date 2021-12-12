@@ -7,7 +7,9 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 # /path/to/eigen3/download
 if system() == 'Windows':
     EIGEN_DIR = 'c:/vcpkg/installed/x64-windows/include/eigen3'
-    LIBRARIES = ['libeigen3']
+    LIBRARIES = ['libeigen']
+    import os
+    os.listdir('c:/vcpkg/installed/x64-windows/lib/eigen3')
     LIBRARY_DIRS = ['c:/vcpkg/installed/x64-windows/lib/eigen3']
 else:
     EIGEN_DIR = '/usr/local/include/eigen3'
