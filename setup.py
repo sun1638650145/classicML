@@ -11,9 +11,9 @@ mockobj.get_export_symbols = Mock(return_value=None)
 
 # /path/to/eigen3/download
 if system() == 'Windows':
-    EIGEN_DIR = '/usr/local/include/eigen3'
-else:
     EIGEN_DIR = 'c:/vcpkg/installed/x64-windows/include/eigen3'
+else:
+    EIGEN_DIR = '/usr/local/include/eigen3'
 
 with open('README.md', 'r', encoding='utf-8') as fp:
     long_description = fp.read()
