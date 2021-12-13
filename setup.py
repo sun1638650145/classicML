@@ -1,10 +1,19 @@
+from distutils.command.build_ext import build_ext as _du_build_ext
 from glob import glob
+from platform import system
+from unittest.mock import Mock
 
 from setuptools import setup, find_packages
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
+mockobj = _du_build_ext
+mockobj.get_export_symbols = Mock(return_value=None)
+
 # /path/to/eigen3/download
-EIGEN_DIR = '/usr/local/include/eigen3'
+if system() == 'Windows':
+    EIGEN_DIR = '/usr/local/include/eigen3'
+else:
+    EIGEN_DIR = 'c:/vcpkg/installed/x64-windows/include/eigen3'
 
 with open('README.md', 'r', encoding='utf-8') as fp:
     long_description = fp.read()
