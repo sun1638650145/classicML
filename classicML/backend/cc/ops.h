@@ -8,6 +8,10 @@
 #ifndef CLASSICML_BACKEND_CC_OPS_H_
 #define CLASSICML_BACKEND_CC_OPS_H_
 
+#ifdef _WIN64
+#include <stdafx.h>
+#endif
+
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
 #include "pybind11/stl.h"
