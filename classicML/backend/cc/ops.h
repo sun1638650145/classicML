@@ -8,9 +8,7 @@
 #ifndef CLASSICML_BACKEND_CC_OPS_H_
 #define CLASSICML_BACKEND_CC_OPS_H_
 
-#ifdef _WIN64
 #define M_PI        3.14159265358979323846264338327950288
-#endif
 
 #include "pybind11/eigen.h"
 #include "pybind11/pybind11.h"
