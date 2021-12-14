@@ -1,7 +1,7 @@
 classicML: 简单易用的经典机器学习框架
 =====================================
 
-|image1| |image2| |image3| |image4| |image5|
+|image1| |image2| |image3| |image4| |image5| |image6| |image7|
 
 classicML 是一个用 Python 和 C++ 混编的机器学习项目，您既可以使用纯
 Python
@@ -60,13 +60,15 @@ classicML
 
 -  `更多示例代码点击 <https://github.com/sun1638650145/classicML/tree/master/examples>`__
 
-.. |image1| image:: https://github.com/sun1638650145/classicML/workflows/build/badge.svg
-.. |image2| image:: https://github.com/sun1638650145/classicML/workflows/PyPI/badge.svg
-.. |image3| image:: https://readthedocs.org/projects/classicml/badge/?version=latest
+.. |image1| image:: https://github.com/sun1638650145/classicML/actions/workflows/build.yml/badge.svg
+.. |image2| image:: https://github.com/sun1638650145/classicML/actions/workflows/win-build.yml/badge.svg
+.. |image3| image:: https://github.com/sun1638650145/classicML/actions/workflows/pypi.yml/badge.svg
+.. |image4| image:: https://github.com/sun1638650145/classicML/actions/workflows/win-pypi.yml/badge.svg
+.. |image5| image:: https://readthedocs.org/projects/classicml/badge/?version=latest
    :target: https://classicml.readthedocs.io/zh_CN/latest/?badge=latest
-.. |image4| image:: https://img.shields.io/pypi/v/classicML?color=blue
+.. |image6| image:: https://img.shields.io/pypi/v/classicML?color=blue
    :target: https://pypi.org/project/classicML/
-.. |image5| image:: https://img.shields.io/pypi/pyversions/classicML
+.. |image7| image:: https://img.shields.io/pypi/pyversions/classicML
    :target: https://pypi.org/project/classicML/
    
 .. toctree::

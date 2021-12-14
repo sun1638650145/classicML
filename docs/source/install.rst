@@ -8,6 +8,7 @@
     1. classicML 兼容的Python版本: Python 3.7-3.9
     2. classicML 仅支持64位的系统，强行使用32位系统可能会导致精度异常
     3. classicML 现已支持在Apple M1上原生运行, 但您需要使用 Python 3.8 以上版本的
+    4. classicML 将在v0.7.1的正式版开始支持Windows平台
 
 .. _header-n67:
 
@@ -37,7 +38,7 @@ Python 虚拟环境用于将软件包和系统隔离，避免你的误操作导�
 .. code:: shell
 
    python3 -m venv --system-site-packages ./classicML  # 如果你使用的是Windows操作系统，路径将修改为 .\classicML
-   source ./classicML/bin/activate  # 激活虚拟环境
+   source ./classicML/bin/activate  # 激活虚拟环境, Windows操作系统对应命令为 .\classicML\Scripts\activate
 
 .. _header-n76:
 
@@ -56,7 +57,7 @@ Python 虚拟环境用于将软件包和系统隔离，避免你的误操作导�
 --------------------------
 
 .. warning::
-    你执行完上面的操作就已经安装成功classicML，但是，你可以通过下面的方式安装拥有加速版本的classicML. 你可以选择以下两种方式中的任意一种进行安装加速版的classicML。值得注意的是，PyPI预编译软件包仅适配了macOS和Linux；仅在理论上可以使用源码编译的方式在Windows安装，Windows未经过软件测试且作者长时间内不会针对适配.
+    你执行完上面的操作就已经安装成功classicML，但是，你可以通过下面的方式安装拥有加速版本的classicML. 你可以选择以下两种方式中的任意一种进行安装加速版的classicML。值得注意的是，非常不推荐使用源码编译的方式在Windows安装.
 
 .. _header-n136:
 
@@ -86,7 +87,9 @@ Eigen3 在不同平台软件包的名称可能有差异，安装方法也有差�
 
 .. code:: shell
 
-   brew install eigen  # Linux下安装libeigen3-dev
+   brew install eigen
+   # Linux: apt install libeigen3-dev
+   # Windows: vcpkg install eigen3:x64-windows
 
 .. _header-n103:
 
