@@ -1,17 +1,15 @@
-from distutils.command.build_ext import build_ext as _du_build_ext
 from glob import glob
 from platform import system
 from unittest.mock import Mock
 
-from setuptools import setup, find_packages
 from pybind11.setup_helpers import Pybind11Extension, build_ext
+from setuptools import setup, find_packages
 
 if system() == 'Windows':
     # /path/to/eigen3/download
     EIGEN_DIR = 'c:/vcpkg/installed/x64-windows/include/eigen3'
     # 用于解决在Windows下构建时, 链接错误 error LNK2001: unresolved external symbol
-    mock = build_ext
-    mock.get_export_symbols = Mock(return_value=None)
+    build_ext.get_export_symbols = Mock(return_value=None)
 else:
     # /path/to/eigen3/download
     EIGEN_DIR = '/usr/local/include/eigen3'
