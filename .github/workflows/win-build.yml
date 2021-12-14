@@ -32,12 +32,6 @@ jobs:
     - name: Install
       run: |
         python3 setup.py install;
-    - name: Test with pytest
-      # 测试模块功能
-      run: |
-        Get-ChildItem "win_tests" -Filter *.py | Foreach-Object { 
-          pytest $_.FullName; 
-        }
     - name: Test examples
       # 测试全部的样例能否正常运行
       run: |

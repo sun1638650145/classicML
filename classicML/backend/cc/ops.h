@@ -8,6 +8,7 @@
 #ifndef CLASSICML_BACKEND_CC_OPS_H_
 #define CLASSICML_BACKEND_CC_OPS_H_
 
+// 使得在win64平台下可以正常展开M_PI.
 #ifdef _WIN64
 #define _USE_MATH_DEFINES
 #include <cmath>

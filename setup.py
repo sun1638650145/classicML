@@ -6,13 +6,14 @@ from unittest.mock import Mock
 from setuptools import setup, find_packages
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-mockobj = _du_build_ext
-mockobj.get_export_symbols = Mock(return_value=None)
-
-# /path/to/eigen3/download
 if system() == 'Windows':
+    # /path/to/eigen3/download
     EIGEN_DIR = 'c:/vcpkg/installed/x64-windows/include/eigen3'
+    # 用于解决在win下编译时, 链接错误 error LNK2001: unresolved external symbol
+    mockobj = _du_build_ext
+    mockobj.get_export_symbols = Mock(return_value=None)
 else:
+    # /path/to/eigen3/download
     EIGEN_DIR = '/usr/local/include/eigen3'
 
 with open('README.md', 'r', encoding='utf-8') as fp:
