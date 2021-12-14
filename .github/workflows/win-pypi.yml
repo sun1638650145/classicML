@@ -32,5 +32,5 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        pip wheel --no-deps --wheel-dir dist/ -w dist/ .;
+        pip wheel --no-deps --wheel-dir dist/ .;
         python3 -m twine upload --repository pypi dist/* --skip-existing;
