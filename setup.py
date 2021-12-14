@@ -9,7 +9,7 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 if system() == 'Windows':
     # /path/to/eigen3/download
     EIGEN_DIR = 'c:/vcpkg/installed/x64-windows/include/eigen3'
-    # 用于解决在win下编译时, 链接错误 error LNK2001: unresolved external symbol
+    # 用于解决在Windows下构建时, 链接错误 error LNK2001: unresolved external symbol
     mockobj = _du_build_ext
     mockobj.get_export_symbols = Mock(return_value=None)
 else:

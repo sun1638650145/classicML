@@ -16,6 +16,6 @@ model = cml.models.SVC(seed=2021)
 model.compile(C=10000.0, kernel='rbf')
 # 训练模型
 model.fit(ds.x, ds.y)
-# 可视化模型(如果您使用的是MacOS, 请注释掉此句, 这句是为了在CI上测试用的.)
-if sys.platform != 'darwin':
+# 可视化模型(如果您使用的是macOS或Windows, 请注释掉此句, 这句是为了在CI上测试禁用绘图提高测试速度.)
+if sys.platform == 'linux':
     cml.plots.plot_svc(model, ds.x, ds.y, '密度', '含糖率')
