@@ -27,12 +27,10 @@ jobs:
         pip install setuptools wheel twine pybind11==2.8.1;
         # 安装 eigen3
         vcpkg install eigen3:x64-windows;
-    - name: Build
-      run: |
-        pip wheel --no-deps --wheel-dir dist/ -w dist/ .;
-    - name: Publish
+    - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
+        pip wheel --no-deps --wheel-dir dist/ -w dist/ .;
         python3 -m twine upload --repository pypi dist/* --skip-existing;

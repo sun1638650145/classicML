@@ -42,7 +42,7 @@ jobs:
       run: |
         python3 setup.py sdist bdist_wheel
         # 修改Linux下的包名
-        if [ "${{ matrix.os}}" = "ubuntu-18.04" ]; then
+        if [ "${{ matrix.os }}" = "ubuntu-18.04" ]; then
           filename=`ls dist/*.whl`;
           newfilename=${filename/"linux"/"manylinux2010"};
           mv $filename $newfilename;
