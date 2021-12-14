@@ -35,10 +35,12 @@ jobs:
     - name: Test with pytest
       # 测试模块功能
       run: |
-        pytest tests;
+        Get-ChildItem "win_tests" -Filter *.py | Foreach-Object { 
+          pytest $_.FullName; 
+        }
     - name: Test examples
       # 测试全部的样例能否正常运行
       run: |
-        Get-ChildItem "tests" -Filter *.py | Foreach-Object { 
-          pytest $_.FullName; 
+        Get-ChildItem "examples" -Filter *.py | Foreach-Object { 
+          python3 $_.FullName; 
         } 
