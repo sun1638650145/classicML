@@ -29,7 +29,7 @@ jobs:
         vcpkg install eigen3:x64-windows;
     - name: Build
       run: |
-        python3 setup.py sdist bdist_wheel;
+        pip wheel --no-deps --wheel-dir dist/ -w dist/ .;
     - name: Publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
