@@ -56,7 +56,7 @@ extension_modules = [
     # backend.losses模块
     Pybind11Extension(
         'classicML/backend/cc/losses',
-        sorted(glob('classicML/backend/cc/losses.cc')),
+        sorted(glob('classicML/backend/cc/losses/*.cc')),
         include_dirs=[EIGEN_DIR],
         language='c++',
     ),

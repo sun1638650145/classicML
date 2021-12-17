@@ -145,3 +145,58 @@ Dtype losses::MeanSquaredError::PyCall(const Matrix &y_pred,
 
     return loss;
 }
+
+// 显式实例化.
+template float32 losses::Loss::PyCall(const matrix32 &y_pred,
+                                      const matrix32 &y_true,
+                                      const pybind11::args &args,
+                                      const pybind11::kwargs &kwargs);
+template float64 losses::Loss::PyCall(const matrix64 &y_pred,
+                                      const matrix64 &y_true,
+                                      const pybind11::args &args,
+                                      const pybind11::kwargs &kwargs);
+
+template float32 losses::BinaryCrossentropy::PyCall(const matrix32 &y_pred,
+                                                    const matrix32 &y_true,
+                                                    const pybind11::args &args,
+                                                    const pybind11::kwargs &kwargs);
+template float64 losses::BinaryCrossentropy::PyCall(const matrix64 &y_pred,
+                                                    const matrix64 &y_true,
+                                                    const pybind11::args &args,
+                                                    const pybind11::kwargs &kwargs);
+
+template float32 losses::CategoricalCrossentropy::PyCall(const matrix32 &y_pred,
+                                                         const matrix32 &y_true,
+                                                         const pybind11::args &args,
+                                                         const pybind11::kwargs &kwargs);
+template float64 losses::CategoricalCrossentropy::PyCall(const matrix64 &y_pred,
+                                                         const matrix64 &y_true,
+                                                         const pybind11::args &args,
+                                                         const pybind11::kwargs &kwargs);
+
+template float32 losses::Crossentropy::PyCall(const matrix32 &y_pred,
+                                              const matrix32 &y_true,
+                                              const pybind11::args &args,
+                                              const pybind11::kwargs &kwargs);
+template float64 losses::Crossentropy::PyCall(const matrix64 &y_pred,
+                                              const matrix64 &y_true,
+                                              const pybind11::args &args,
+                                              const pybind11::kwargs &kwargs);
+
+template float32 losses::LogLikelihood::PyCall(const matrix32 &y_true,
+                                               const matrix32 &beta,
+                                               const pybind11::args &args,
+                                               const pybind11::kwargs &kwargs);
+template float64 losses::LogLikelihood::PyCall(const matrix64 &y_true,
+                                               const matrix64 &beta,
+                                               const pybind11::args &args,
+                                               const pybind11::kwargs &kwargs);
+
+template float32 losses::MeanSquaredError::PyCall(const matrix32 &y_pred,
+                                                  const matrix32 &y_true,
+                                                  const pybind11::args &args,
+                                                  const pybind11::kwargs &kwargs);
+template float64 losses::MeanSquaredError::PyCall(const matrix64 &y_pred,
+                                                  const matrix64 &y_true,
+                                                  const pybind11::args &args,
+                                                  const pybind11::kwargs &kwargs);
