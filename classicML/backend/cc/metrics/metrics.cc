@@ -16,7 +16,6 @@ metrics::Metric::Metric(std::string name) {
     this->name = std::move(name);
 }
 
-
 // `Dtype` 兼容32位和64位浮点数, `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 // 不支持不同位数模板兼容.
 template<typename Dtype, typename Matrix>
@@ -108,3 +107,16 @@ Dtype metrics::CategoricalAccuracy::PyCall(const Matrix &y_pred, const Matrix &y
 
     return accuracy / (Dtype)y_pred.rows();
 }
+
+// 显式实例化.
+template float32 metrics::Metric::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
+template float64 metrics::Metric::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
+
+template float32 metrics::Accuracy::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
+template float64 metrics::Accuracy::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
+
+template float32 metrics::BinaryAccuracy::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
+template float64 metrics::BinaryAccuracy::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
+
+template float32 metrics::CategoricalAccuracy::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
+template float64 metrics::CategoricalAccuracy::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
