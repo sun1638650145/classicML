@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef CLASSICML_BACKEND_CC_KERNELS_H_
-#define CLASSICML_BACKEND_CC_KERNELS_H_
+#ifndef CLASSICML_BACKEND_CC_KERNELS_KERNELS_H_
+#define CLASSICML_BACKEND_CC_KERNELS_KERNELS_H_
 
 #include "pybind11/eigen.h"
 
@@ -89,4 +89,4 @@ class Sigmoid : public Kernel {
 };
 }  // namespace kernels
 
-#endif /* CLASSICML_BACKEND_CC_KERNELS_H_ */
+#endif /* CLASSICML_BACKEND_CC_KERNELS_KERNELS_H_ */
