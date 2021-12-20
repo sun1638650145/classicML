@@ -49,7 +49,7 @@ extension_modules = [
     # backend.kernels模块
     Pybind11Extension(
         'classicML/backend/cc/kernels',
-        sorted(glob('classicML/backend/cc/*.cc')),
+        sorted(glob('classicML/backend/cc/kernels/*.cc') + ['classicML/backend/cc/matrix_op.cc']),
         include_dirs=[EIGEN_DIR],
         language='c++',
     ),

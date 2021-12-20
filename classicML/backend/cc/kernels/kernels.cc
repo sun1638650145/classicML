@@ -139,3 +139,19 @@ template<typename Matrix> Matrix kernels::Sigmoid::PyCall(const Matrix &x_i, con
 
     return matrix_op::Reshape(kappa, 1, -1);
 }
+
+// 显式实例化.
+template matrix32 kernels::Kernel::PyCall(const matrix32 &x_i, const matrix32 &x_j);
+template matrix64 kernels::Kernel::PyCall(const matrix64 &x_i, const matrix64 &x_j);
+
+template matrix32 kernels::Linear::PyCall(const matrix32 &x_i, const matrix32 &x_j);
+template matrix64 kernels::Linear::PyCall(const matrix64 &x_i, const matrix64 &x_j);
+
+template matrix32 kernels::Polynomial::PyCall(const matrix32 &x_i, const matrix32 &x_j);
+template matrix64 kernels::Polynomial::PyCall(const matrix64 &x_i, const matrix64 &x_j);
+
+template matrix32 kernels::RBF::PyCall(const matrix32 &x_i, const matrix32 &x_j);
+template matrix64 kernels::RBF::PyCall(const matrix64 &x_i, const matrix64 &x_j);
+
+template matrix32 kernels::Sigmoid::PyCall(const matrix32 &x_i, const matrix32 &x_j);
+template matrix64 kernels::Sigmoid::PyCall(const matrix64 &x_i, const matrix64 &x_j);

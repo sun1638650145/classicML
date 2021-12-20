@@ -41,14 +41,14 @@ Matrix matrix_op::BroadcastSub(const Matrix &a, const Matrix &b) {
 
         if (a.rows() > b.rows()) {
             Matrix result_matrix(a.rows(), a.cols());
-            for (int row = 0; row < a.rows(); row ++) {
+            for (int32 row = 0; row < a.rows(); row ++) {
                 result_matrix.row(row) = a.row(row) - b;
             }
 
             return result_matrix;
         } else {
             Matrix result_matrix(b.rows(), b.cols());
-            for (int row = 0; row < b.rows(); row ++) {
+            for (int32 row = 0; row < b.rows(); row ++) {
                 result_matrix.row(row) = b.row(row) - a;
             }
 
@@ -201,13 +201,8 @@ std::variant<std::set<float32>, std::set<uint8>> matrix_op::Unique(const pybind1
 }
 
 // 显式实例化.
-template Eigen::MatrixXf matrix_op::BroadcastSub(const Eigen::MatrixXf &a, const Eigen::MatrixXf &b);
-template Eigen::MatrixXd matrix_op::BroadcastSub(const Eigen::MatrixXd &a, const Eigen::MatrixXd &b);
-
-template Eigen::MatrixXf matrix_op::Reshape(Eigen::MatrixXf matrix, const int32 &row, const int32 &column);
-// reshape的row, column 提供的是单精度的情况.
-template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int32 &row, const int32 &column);
-template Eigen::MatrixXd matrix_op::Reshape(Eigen::MatrixXd matrix, const int64 &row, const int64 &column);
+template matrix32 matrix_op::BroadcastSub(const matrix32 &a, const matrix32 &b);
+template matrix64 matrix_op::BroadcastSub(const matrix64 &a, const matrix64 &b);
 
 template Eigen::MatrixXf matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
@@ -228,3 +223,8 @@ template std::vector<uint32> matrix_op::NonZero(const Eigen::RowVectorXf &array)
 template std::vector<uint32> matrix_op::NonZero(const Eigen::RowVectorXd &array);
 template std::vector<uint32> matrix_op::NonZero(const Eigen::RowVectorXi &array);
 template std::vector<uint32> matrix_op::NonZero(const Eigen::Matrix<int64, 1, -1> &array);
+
+template matrix32 matrix_op::Reshape(matrix32 matrix, const int32 &row, const int32 &column);
+// reshape的row, column 提供的是单精度的情况.
+template matrix64 matrix_op::Reshape(matrix64 matrix, const int32 &row, const int32 &column);
+template matrix64 matrix_op::Reshape(matrix64 matrix, const int64 &row, const int64 &column);
