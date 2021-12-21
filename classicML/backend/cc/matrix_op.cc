@@ -204,14 +204,14 @@ std::variant<std::set<float32>, std::set<uint8>> matrix_op::Unique(const pybind1
 template matrix32 matrix_op::BroadcastSub(const matrix32 &a, const matrix32 &b);
 template matrix64 matrix_op::BroadcastSub(const matrix64 &a, const matrix64 &b);
 
-template Eigen::MatrixXf matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXf, float32>
+template matrix32 matrix_op::GenerateRandomStandardNormalDistributionMatrix<matrix32, float32>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
-template Eigen::MatrixXd matrix_op::GenerateRandomStandardNormalDistributionMatrix<Eigen::MatrixXd, float64>
+template matrix64 matrix_op::GenerateRandomStandardNormalDistributionMatrix<matrix64, float64>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
 
-template Eigen::MatrixXf matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXf, float32>
+template matrix32 matrix_op::GenerateRandomUniformDistributionMatrix<matrix32, float32>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
-template Eigen::MatrixXd matrix_op::GenerateRandomUniformDistributionMatrix<Eigen::MatrixXd, float64>
+template matrix64 matrix_op::GenerateRandomUniformDistributionMatrix<matrix64, float64>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
 
 template Eigen::MatrixXf matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXf &matrix,
