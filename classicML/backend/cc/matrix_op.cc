@@ -160,16 +160,16 @@ Matrix matrix_op::Reshape(Matrix matrix, const Dtype &row, const Dtype &column) 
         }
     }
 
-    // TODO(Steve R. Sun, tag:code): Eigen 3.4 实现了reshape方法, 基于兼容性考虑暂时保留旧版实现.
-    if (EIGEN_WORLD_VERSION == 3 and EIGEN_MAJOR_VERSION == 4) {
-        return matrix.reshape(new_row, new_column);
-    } else {
+    // TODO(Steve R. Sun, tag:code): Eigen 3.4 实现了reshape方法, 基于兼容性考虑通过条件编译保留旧版实现.
+    #if (EIGEN_WORLD_VERSION == 3 and EIGEN_MAJOR_VERSION == 4)
+        return matrix.reshaped(new_row, new_column);
+    #else
         // 在 Eigen 3.3.x 没有实现reshape方法, 这里是参照官方文档实现的一种代替方式.
         Eigen::Map<Matrix> map(matrix.data(), new_row, new_column);
         Matrix reshaped_matrix = map;
 
         return reshaped_matrix;
-    }
+    #endif
 }
 
 // 返回变体(唯一值组成的集合), 输入为`numpy.ndarray`.
