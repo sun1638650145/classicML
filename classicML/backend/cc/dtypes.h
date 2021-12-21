@@ -24,4 +24,7 @@ typedef std::uint32_t uint32;
 typedef Eigen::MatrixXf matrix32;
 typedef Eigen::MatrixXd matrix64;
 
+typedef Eigen::RowVectorXi row_vector32i;
+typedef Eigen::Matrix<std::int64_t, 1, -1> row_vector64i;
+
 #endif /* CLASSICML_BACKEND_CC_DTYPES_H */
