@@ -17,7 +17,7 @@ pip install classicML
 
 ## 3.我如何才能联系到作者？
 
-首先，你可以只直接在[Github Issues](https://github.com/sun1638650145/classicML/issues)上进行提问；然后你也可以通过[作者邮箱](s1638650145@gmail.com)进行联系，作者看到后将会立即回复你的.
+首先，你可以直接在[Github Issues](https://github.com/sun1638650145/classicML/issues)上进行提问；然后你也可以通过[作者邮箱](s1638650145@gmail.com)进行联系，作者看到后将会立即回复你的.
 
 ## 4.为什么我使用可视化工具，中文都是显示的小方框？
 
@@ -42,4 +42,3 @@ font.family: ArialUnicodeMS, sans-seri
 # 步骤3(刷新字库缓存)
 rm -rf ~/.cache/matplotlib
 ```
-
