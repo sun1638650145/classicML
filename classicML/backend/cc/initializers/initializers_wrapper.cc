@@ -4,6 +4,7 @@
 //
 // Created by 孙瑞琦 on 2021/12/21.
 //
+//
 
 #include "pybind11/pybind11.h"
 
@@ -63,36 +64,36 @@ Arguments:
              pybind11::arg("seed")=pybind11::none())
         .def_readwrite("name", &initializers::RandomNormal::name)
         .def_readwrite("seed", &initializers::RandomNormal::seed)
-        .def("__call__", [](initializers::RandomNormal &self, const row_vector32i &attributes_or_structure){
-                return self.PyCall<matrix32, row_vector32i, float32>(attributes_or_structure);
-            }, R"pbdoc(
+        /* overload匹配顺序: Pure int兼容np.int32和np.int64, 因此重载函数注册时, np.int32和np.int64必须在int32之前. */
+        .def("__call__", &initializers::RandomNormal::PyCall1<matrix32, np_int32, float32>, R"pbdoc(
 函数实现.
     Arguments:
         attributes_or_structure: int or list,
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::RandomNormal &self, const row_vector64i &attributes_or_structure){
-                return self.PyCall<matrix64, row_vector64i, float64>(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::RandomNormal::PyCall1<matrix64, np_int64, float64>, R"pbdoc(
 函数实现.
     Arguments:
         attributes_or_structure: int or list,
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::RandomNormal &self, const pybind11::buffer &attributes_or_structure){
-                return self.PyCall(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::RandomNormal::PyCall1<matrix32, int32, float32>, R"pbdoc(
 函数实现.
     Arguments:
         attributes_or_structure: int or list,
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::RandomNormal &self, const int32 &attributes_or_structure){
-                return self.PyCall(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::RandomNormal::PyCall2<matrix32, row_vector32i, float32>, R"pbdoc(
+函数实现.
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", &initializers::RandomNormal::PyCall2<matrix64, row_vector64i, float64>, R"pbdoc(
 函数实现.
     Arguments:
         attributes_or_structure: int or list,
@@ -114,9 +115,7 @@ References:
              pybind11::arg("seed")=pybind11::none())
         .def_readwrite("name", &initializers::HeNormal::name)
         .def_readwrite("seed", &initializers::HeNormal::seed)
-        .def("__call__", [](initializers::HeNormal &self, const row_vector32i &attributes_or_structure){
-                return self.PyCall<matrix32, row_vector32i, float32>(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::HeNormal::PyCall1<matrix32, np_int32, float32>, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
 
     Arguments:
@@ -124,9 +123,7 @@ References:
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::HeNormal &self, const row_vector64i &attributes_or_structure){
-                return self.PyCall<matrix64, row_vector64i, float64>(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::HeNormal::PyCall1<matrix64, np_int64, float64>, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
 
     Arguments:
@@ -134,9 +131,7 @@ References:
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::HeNormal &self, const pybind11::buffer &attributes_or_structure){
-                return self.PyCall(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::HeNormal::PyCall1<matrix32, int32, float32>, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
 
     Arguments:
@@ -144,9 +139,15 @@ References:
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::HeNormal &self, const int32 &attributes_or_structure){
-                return self.PyCall(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::HeNormal::PyCall2<matrix32, row_vector32i, float32>, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", &initializers::HeNormal::PyCall2<matrix64, row_vector64i, float64>, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in)), 其中N_in为对应连接的输入层的神经元个数.
 
     Arguments:
@@ -170,9 +171,7 @@ References:
              pybind11::arg("seed")=pybind11::none())
         .def_readwrite("name", &initializers::XavierNormal::name)
         .def_readwrite("seed", &initializers::XavierNormal::seed)
-        .def("__call__", [](initializers::XavierNormal &self, const row_vector32i &attributes_or_structure){
-                return self.PyCall<matrix32, row_vector32i, float32>(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::XavierNormal::PyCall1<matrix32, np_int32, float32>, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in+N_out)),
 其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
 
@@ -181,9 +180,7 @@ Arguments:
         如果是逻辑回归就是样本的特征数;
         如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::XavierNormal &self, const row_vector64i &attributes_or_structure){
-                return self.PyCall<matrix64, row_vector64i, float64>(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::XavierNormal::PyCall1<matrix64, np_int64, float64>, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in+N_out)),
 其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
 
@@ -192,9 +189,7 @@ Arguments:
         如果是逻辑回归就是样本的特征数;
         如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::XavierNormal &self, const pybind11::buffer &attributes_or_structure){
-                return self.PyCall(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::XavierNormal::PyCall1<matrix32, int32, float32>, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in+N_out)),
 其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
 
@@ -203,9 +198,16 @@ Arguments:
             如果是逻辑回归就是样本的特征数;
             如果是神经网络, 就是定义神经网络的网络结构.
 )pbdoc", pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::XavierNormal &self, const int32 &attributes_or_structure){
-                return self.PyCall(attributes_or_structure);
-            }, R"pbdoc(
+        .def("__call__", &initializers::XavierNormal::PyCall2<matrix32, row_vector32i, float32>, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in+N_out)),
+其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", &initializers::XavierNormal::PyCall2<matrix64, row_vector64i, float64>, R"pbdoc(
 初始化方式为W~N(0, sqrt(2/N_in+N_out)),
 其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
 
@@ -226,18 +228,51 @@ Glorot正态分布随机初始化器.
              pybind11::arg("seed")=pybind11::none())
         .def_readwrite("name", &initializers::GlorotNormal::name)
         .def_readwrite("seed", &initializers::GlorotNormal::seed)
-        .def("__call__", [](initializers::GlorotNormal &self, const row_vector32i &attributes_or_structure){
-                return self.PyCall<matrix32, row_vector32i, float32>(attributes_or_structure);
-            }, pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::GlorotNormal &self, const row_vector64i &attributes_or_structure){
-                return self.PyCall<matrix64, row_vector64i, float64>(attributes_or_structure);
-            }, pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::GlorotNormal &self, const pybind11::buffer &attributes_or_structure){
-                return self.PyCall(attributes_or_structure);
-            }, pybind11::arg("attributes_or_structure"))
-        .def("__call__", [](initializers::GlorotNormal &self, const int32 &attributes_or_structure){
-                return self.PyCall(attributes_or_structure);
-            }, pybind11::arg("attributes_or_structure"));
+        .def("__call__", &initializers::GlorotNormal::PyCall1<matrix32, np_int32, float32>, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in+N_out)),
+其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
+
+Arguments:
+    attributes_or_structure: int or list,
+        如果是逻辑回归就是样本的特征数;
+        如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", &initializers::GlorotNormal::PyCall1<matrix64, np_int64, float64>, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in+N_out)),
+其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
+
+Arguments:
+    attributes_or_structure: int or list,
+        如果是逻辑回归就是样本的特征数;
+        如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", &initializers::GlorotNormal::PyCall1<matrix32, int32, float32>, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in+N_out)),
+其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", &initializers::GlorotNormal::PyCall2<matrix32, row_vector32i, float32>, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in+N_out)),
+其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"))
+        .def("__call__", &initializers::GlorotNormal::PyCall2<matrix64, row_vector64i, float64>, R"pbdoc(
+初始化方式为W~N(0, sqrt(2/N_in+N_out)),
+其中N_in为对应连接的输入层的神经元个数, N_out为本层的神经元个数.
+
+    Arguments:
+        attributes_or_structure: int or list,
+            如果是逻辑回归就是样本的特征数;
+            如果是神经网络, 就是定义神经网络的网络结构.
+)pbdoc", pybind11::arg("attributes_or_structure"));
 
     pybind11::class_<initializers::RBFNormal, initializers::Initializer>(m, "RBFNormal", R"pbdoc(
 RBF网络的初始化器.
@@ -249,7 +284,7 @@ RBF网络的初始化器.
              pybind11::arg("seed")=pybind11::none())
         .def_readwrite("name", &initializers::RBFNormal::name)
         .def_readwrite("seed", &initializers::RBFNormal::seed)
-        .def("__call__", pybind11::overload_cast<const pybind11::buffer &>(&initializers::RBFNormal::PyCall), R"pbdoc(
+        .def("__call__", &initializers::RBFNormal::PyCall<matrix32, np_int32, float32>, R"pbdoc(
 Arguments:
     hidden_units: int, 径向基函数网络的隐含层神经元数量.
 
@@ -258,7 +293,16 @@ Notes:
       但是实际工程发现, 有负值的时候可能会导致求高斯函数的时候增加损失不收敛,
       因此, 全部初始化为正数.
 )pbdoc", pybind11::arg("hidden_units"))
-        .def("__call__", pybind11::overload_cast<const int32 &>(&initializers::RBFNormal::PyCall), R"pbdoc(
+        .def("__call__", &initializers::RBFNormal::PyCall<matrix64, np_int64, float64>, R"pbdoc(
+Arguments:
+    hidden_units: int, 径向基函数网络的隐含层神经元数量.
+
+Notes:
+    - 这里隐含层神经元中心本应初始化为标准随机正态分布矩阵,
+      但是实际工程发现, 有负值的时候可能会导致求高斯函数的时候增加损失不收敛,
+      因此, 全部初始化为正数.
+)pbdoc", pybind11::arg("hidden_units"))
+        .def("__call__", &initializers::RBFNormal::PyCall<matrix32, int32, float32>, R"pbdoc(
 Arguments:
     hidden_units: int, 径向基函数网络的隐含层神经元数量.
 
@@ -268,5 +312,5 @@ Notes:
       因此, 全部初始化为正数.
 )pbdoc", pybind11::arg("hidden_units"));
 
-    m.attr("__version__") = "backend.cc.initializers.0.5.1dev20211221";
+    m.attr("__version__") = "backend.cc.initializers.0.6dev20211225";
 }
