@@ -5,4 +5,5 @@ include classicML/backend/cc/initializers/*.h
 include classicML/backend/cc/kernels/*.h
 include classicML/backend/cc/losses/*.h
 include classicML/backend/cc/metrics/*.h
+include classicML/backend/cc/ops/*.h
 include classicML/backend/cc/*.h

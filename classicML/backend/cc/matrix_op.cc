@@ -7,9 +7,10 @@
 
 #include "matrix_op.h"
 
+namespace matrix_op {
 // 返回全部元素是否为离散整数的布尔值, 输入为`numpy.ndarray`.
-bool matrix_op::AnyDiscreteInteger(const pybind11::array &array) {
-    auto array_ = pybind11::cast<Eigen::MatrixXf>(array);
+bool AnyDiscreteInteger(const pybind11::array &array) {
+    auto array_ = pybind11::cast<matrix32>(array);
 
     // 任一元素取整不等于它本身的就是连续值.
     for (int32 row = 0; row < array_.rows(); row ++) {
@@ -26,7 +27,7 @@ bool matrix_op::AnyDiscreteInteger(const pybind11::array &array) {
 // 返回广播减法的矩阵, 输入a矩阵和b矩阵.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 template <typename Matrix>
-Matrix matrix_op::BroadcastSub(const Matrix &a, const Matrix &b) {
+Matrix BroadcastSub(const Matrix &a, const Matrix &b) {
     if (a.rows() == b.rows() && a.cols() == b.cols()) {
         // 执行普通减法.
         return a - b;
@@ -60,9 +61,9 @@ Matrix matrix_op::BroadcastSub(const Matrix &a, const Matrix &b) {
 // 生成标准随机正态分布矩阵, 输入为矩阵的行数, 列数和随机种子.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位浮点数.
 template<typename Matrix, typename Dtype>
-Matrix matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int32 &rows,
-                                                                 const int32 &columns,
-                                                                 const std::optional<uint32> &seed) {
+Matrix GenerateRandomStandardNormalDistributionMatrix(const int32 &rows,
+                                                      const int32 &columns,
+                                                      const std::optional<uint32> &seed) {
     static std::normal_distribution<Dtype> _distribution(0,1);
     static std::default_random_engine _engine;
     if (!seed.has_value()) {
@@ -83,9 +84,9 @@ Matrix matrix_op::GenerateRandomStandardNormalDistributionMatrix(const int32 &ro
 // 生成随机均匀分布矩阵, 输入为矩阵的行数, 列数和随机种子.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位浮点数.
 template<typename Matrix, typename Dtype>
-Matrix matrix_op::GenerateRandomUniformDistributionMatrix(const int32 &rows,
-                                                          const int32 &columns,
-                                                          const std::optional<uint32> &seed) {
+Matrix GenerateRandomUniformDistributionMatrix(const int32 &rows,
+                                               const int32 &columns,
+                                               const std::optional<uint32> &seed) {
     static std::uniform_real_distribution<Dtype> _distribution(0,1);
     static std::default_random_engine _engine;
     if (!seed.has_value()) {
@@ -106,7 +107,7 @@ Matrix matrix_op::GenerateRandomUniformDistributionMatrix(const int32 &rows,
 // 获取非零元素组成的子矩阵, 输入父矩阵和非零标签.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位浮点型向量, 不支持不同位数模板兼容.
 template<typename Matrix, typename Vector>
-Matrix matrix_op::GetNonZeroSubMatrix(const Matrix &matrix, const Vector &non_zero_mark) {
+Matrix GetNonZeroSubMatrix(const Matrix &matrix, const Vector &non_zero_mark) {
     if (matrix.rows() != non_zero_mark.rows()) {
         throw pybind11::value_error("行数不同, 无法操作");
     }
@@ -129,7 +130,7 @@ Matrix matrix_op::GetNonZeroSubMatrix(const Matrix &matrix, const Vector &non_ze
 // 返回非零元素下标组成的数组, 输入为数组.
 // `RowVector` 兼容32位和64位浮点型和整型行向量.
 template<typename RowVector>
-std::vector<uint32> matrix_op::NonZero(const RowVector &array) {
+std::vector<uint32> NonZero(const RowVector &array) {
     std::vector<uint32> buffer;
 
     for (int32 i = 0; i < array.size(); i ++) {
@@ -145,7 +146,7 @@ std::vector<uint32> matrix_op::NonZero(const RowVector &array) {
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵; `Dtype` 兼容32位和64位整型.
 // tips: `matrix_op::Reshape` 的内部实现依赖于Eigen::Map, 所以不要惊讶为什么此处的第一个参数不是常引用.
 template <typename Matrix, typename Dtype>
-Matrix matrix_op::Reshape(Matrix matrix, const Dtype &row, const Dtype &column) {
+Matrix Reshape(Matrix matrix, const Dtype &row, const Dtype &column) {
     Dtype new_row = row;
     Dtype new_column = column;
 
@@ -173,7 +174,7 @@ Matrix matrix_op::Reshape(Matrix matrix, const Dtype &row, const Dtype &column) 
 }
 
 // 返回变体(唯一值组成的集合), 输入为`numpy.ndarray`.
-std::variant<std::set<float32>, std::set<uint8>> matrix_op::Unique(const pybind11::array &array) {
+std::variant<std::set<float32>, std::set<uint8>> Unique(const pybind11::array &array) {
     if (array.dtype().kind() == 'f' or array.dtype().kind() == 'i') {
         std::set<float32> buffer;
         auto array_ = pybind11::cast<Eigen::MatrixXf>(array);
@@ -206,30 +207,29 @@ std::variant<std::set<float32>, std::set<uint8>> matrix_op::Unique(const pybind1
 }
 
 // 显式实例化.
-template matrix32 matrix_op::BroadcastSub(const matrix32 &a, const matrix32 &b);
-template matrix64 matrix_op::BroadcastSub(const matrix64 &a, const matrix64 &b);
+template matrix32 BroadcastSub(const matrix32 &a, const matrix32 &b);
+template matrix64 BroadcastSub(const matrix64 &a, const matrix64 &b);
 
-template matrix32 matrix_op::GenerateRandomStandardNormalDistributionMatrix<matrix32, float32>
+template matrix32 GenerateRandomStandardNormalDistributionMatrix<matrix32, float32>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
-template matrix64 matrix_op::GenerateRandomStandardNormalDistributionMatrix<matrix64, float64>
-        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
-
-template matrix32 matrix_op::GenerateRandomUniformDistributionMatrix<matrix32, float32>
-        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
-template matrix64 matrix_op::GenerateRandomUniformDistributionMatrix<matrix64, float64>
+template matrix64 GenerateRandomStandardNormalDistributionMatrix<matrix64, float64>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
 
-template Eigen::MatrixXf matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXf &matrix,
-                                                        const Eigen::VectorXf &non_zero_mark);
-template Eigen::MatrixXd matrix_op::GetNonZeroSubMatrix(const Eigen::MatrixXd &matrix,
-                                                        const Eigen::VectorXd &non_zero_mark);
+template matrix32 GenerateRandomUniformDistributionMatrix<matrix32, float32>
+        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
+template matrix64 GenerateRandomUniformDistributionMatrix<matrix64, float64>
+        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
 
-template std::vector<uint32> matrix_op::NonZero(const Eigen::RowVectorXf &array);
-template std::vector<uint32> matrix_op::NonZero(const Eigen::RowVectorXd &array);
-template std::vector<uint32> matrix_op::NonZero(const Eigen::RowVectorXi &array);
-template std::vector<uint32> matrix_op::NonZero(const Eigen::Matrix<int64, 1, -1> &array);
+template matrix32 GetNonZeroSubMatrix(const matrix32 &matrix, const vector32 &non_zero_mark);
+template matrix64 GetNonZeroSubMatrix(const matrix64 &matrix, const vector64 &non_zero_mark);
 
-template matrix32 matrix_op::Reshape(matrix32 matrix, const int32 &row, const int32 &column);
+template std::vector<uint32> NonZero(const row_vector32f &array);
+template std::vector<uint32> NonZero(const row_vector64f &array);
+template std::vector<uint32> NonZero(const row_vector32i &array);
+template std::vector<uint32> NonZero(const row_vector64i &array);
+
+template matrix32 Reshape(matrix32 matrix, const int32 &row, const int32 &column);
 // reshape的row, column 提供的是单精度的情况.
-template matrix64 matrix_op::Reshape(matrix64 matrix, const int32 &row, const int32 &column);
-template matrix64 matrix_op::Reshape(matrix64 matrix, const int64 &row, const int64 &column);
+template matrix64 Reshape(matrix64 matrix, const int32 &row, const int32 &column);
+template matrix64 Reshape(matrix64 matrix, const int64 &row, const int64 &column);
+} // namespace matrix_op

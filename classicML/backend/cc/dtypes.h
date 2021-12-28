@@ -29,8 +29,17 @@ typedef pybind11::numpy_scalar<int64> np_int64;
 
 typedef Eigen::MatrixXf matrix32;
 typedef Eigen::MatrixXd matrix64;
+typedef Eigen::Matrix<int64, -1, -1> matrix64i;
 
+typedef Eigen::VectorXf vector32;
+typedef Eigen::VectorXd vector64;
+
+typedef Eigen::RowVectorXf row_vector32f;
+typedef Eigen::RowVectorXd row_vector64f;
 typedef Eigen::RowVectorXi row_vector32i;
-typedef Eigen::Matrix<std::int64_t, 1, -1> row_vector64i;
+typedef Eigen::Matrix<int64, 1, -1> row_vector64i;
+
+typedef Eigen::ArrayXf array32;
+typedef Eigen::ArrayXd array64;
 
 #endif /* CLASSICML_BACKEND_CC_DTYPES_H_ */

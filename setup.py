@@ -70,7 +70,7 @@ extension_modules = [
     # backend.ops模块
     Pybind11Extension(
         'classicML/backend/cc/ops',
-        sorted(glob('classicML/backend/cc/*.cc')),
+        sorted(glob('classicML/backend/cc/ops/*.cc') + ['classicML/backend/cc/matrix_op.cc']),
         include_dirs=[EIGEN_DIR],
         language='c++',
     )
@@ -78,7 +78,7 @@ extension_modules = [
 
 setup(
     name='classicML',
-    version='0.7.1dev3',
+    version='0.7.1.dev4',
     description='An easy-to-use ML framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
