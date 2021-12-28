@@ -411,9 +411,9 @@ template matrix64 CalculateError<matrix64, vector64, array64>
          const vector64 &non_zero_alphas,
          const matrix64 &b);
 
-template std::tuple<float32, float32> ops::GetPriorProbability
+template std::tuple<float32, float32> GetPriorProbability
         (const uint32 &number_of_sample, const row_vector32i &y, const bool &smoothing);
-template std::tuple<float64, float64> ops::GetPriorProbability
+template std::tuple<float64, float64> GetPriorProbability
         (const uint32 &number_of_sample, const row_vector64i &y, const bool &smoothing);
 
 template matrix32 GetW_V2(const matrix32 &S_w, const matrix32 &mu_0, const matrix32 &mu_1);
