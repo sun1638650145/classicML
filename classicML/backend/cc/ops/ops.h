@@ -5,8 +5,14 @@
 //  Created by 孙瑞琦 on 2020/10/10.
 //
 
-#ifndef CLASSICML_BACKEND_CC_OPS_H_
-#define CLASSICML_BACKEND_CC_OPS_H_
+#ifndef CLASSICML_BACKEND_CC_OPS_OPS_H_
+#define CLASSICML_BACKEND_CC_OPS_OPS_H_
+
+// 使得在win64平台下可以正常展开M_PI.
+#ifdef _WIN64
+#define _USE_MATH_DEFINES
+#include <cmath>
+#endif
 
 #include "pybind11/stl.h"
 
@@ -75,4 +81,4 @@ std::string TypeOfTarget(const pybind11::array &y);
 std::string TypeOfTarget_V2(const pybind11::array &y);
 }  // namespace ops
 
-#endif /* CLASSICML_BACKEND_CC_OPS_H_ */
+#endif /* CLASSICML_BACKEND_CC_OPS_OPS_H_ */
