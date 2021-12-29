@@ -37,7 +37,7 @@ Matrix CalculateError(const Matrix &x,
 
         // 调用核函数的__call__方法.
         pybind11::object py_kappa = kernel(valid_x, x_i);
-        auto kappa = py_kappa.cast<Vector>();
+        auto kappa = py_kappa.cast<Matrix>();
 
         // 这里是Hadamard积, 故临时需要使用ArrayXd.
         Array temp = matrix_op::Reshape(valid_alphas, -1, 1);

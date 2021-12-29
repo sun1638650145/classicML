@@ -6,7 +6,7 @@
 //
 //
 
-#include "pybind11/pybind11.h"
+#include "pybind11/stl.h"
 
 #include "ops.h"
 
@@ -437,5 +437,5 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.12dev20211229";
+    m.attr("__version__") = "backend.cc.ops.0.12.1dev20211229";
 }
