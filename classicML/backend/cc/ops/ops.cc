@@ -1,8 +1,9 @@
 //
-//  ops.cc
-//  ops
+// ops.cc
+// ops
 //
-//  Created by 孙瑞琦 on 2020/10/10.
+// Created by 孙瑞琦 on 2020/10/10.
+// Refactor by 孙瑞琦 on 2021/12/29.
 //
 //
 
@@ -11,31 +12,32 @@
 namespace ops {
 // 返回KKT条件的违背值;
 // 输入特征数据, 标签, 要计算的样本下标, 支持向量分类器使用的核函数, 全部拉格朗日乘子, 非零拉格朗日乘子和偏置项.
-// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Array` 兼容32位和64位浮点型Eigen::Array数组, `Vector` 兼容32位和64位浮点型向量,
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位浮点型向量, `Array` 兼容32位和64位浮点型Eigen::Array数组,
 // 不支持不同位数模板兼容.
-// TODO(Steve R. Sun, tag:performance): 在CC中使用Python实现的核函数实际性能和Python没差别, 但是由于其他地方依旧使用的是C++代码, 还是会有明显的性能提高.
+// TODO(Steve R. Sun, tag:performance): 在C++中使用Python实现的核函数实际性能和Python没差别,
+//  但是由于其他地方依旧使用的是C++代码, 还是会有明显的性能提高.
 template<typename Matrix, typename Vector, typename Array>
 Matrix CalculateError(const Matrix &x,
-                      const Matrix &y, // 列向量
+                      const Vector &y,
                       const uint32 &i,
                       const pybind11::object &kernel,
-                      const Matrix &alphas,  // 列向量
+                      const Vector &alphas,
                       const Vector &non_zero_alphas,
                       const Matrix &b) {
     Matrix x_i = x.row(i);
-    Matrix y_i = y.row(i);
+    Vector y_i = y.row(i);
 
     // 拉格朗日乘子全是零的时候, 每个样本都不会对结果产生影响.
     Matrix fx = b;
     // 如果有非零元素, 提取全部合格的标签和对应的拉格朗日乘子.
     if (non_zero_alphas.any()) {
-        Matrix valid_x = matrix_op::GetNonZeroSubMatrix(x, non_zero_alphas);
-        Array valid_y = matrix_op::GetNonZeroSubMatrix(y, non_zero_alphas);
-        Matrix valid_alphas = matrix_op::GetNonZeroSubMatrix(alphas, non_zero_alphas);
+        auto valid_x = matrix_op::GetNonZeroSubMatrix<Matrix, Matrix, Vector>(x, non_zero_alphas);
+        Array valid_y = matrix_op::GetNonZeroSubMatrix<Matrix, Vector, Vector>(y, non_zero_alphas);
+        auto valid_alphas = matrix_op::GetNonZeroSubMatrix<Matrix, Vector, Vector>(alphas, non_zero_alphas);
 
         // 调用核函数的__call__方法.
         pybind11::object py_kappa = kernel(valid_x, x_i);
-        auto kappa = py_kappa.cast<Matrix>();
+        auto kappa = py_kappa.cast<Vector>();
 
         // 这里是Hadamard积, 故临时需要使用ArrayXd.
         Array temp = matrix_op::Reshape(valid_alphas, -1, 1);
@@ -50,48 +52,10 @@ Matrix CalculateError(const Matrix &x,
     return error;
 }
 
-// 返回修剪后的拉格朗日乘子(32/64位), 输入拉格朗日乘子的下界和上界(float32/float64).
-std::variant<Eigen::Array<float32, 1, 1>, Eigen::Array<float64, 1, 1>>
-ClipAlpha(const pybind11::buffer &alpha, const pybind11::buffer &low, const pybind11::buffer &high) {
-    std::string type_code = alpha.request().format;
-    if (type_code == "f") {
-        auto _alpha = pybind11::cast<float32>(alpha);
-        auto _low = pybind11::cast<float32>(low);
-        auto _high = pybind11::cast<float32>(high);
-
-        Eigen::Array<float32, 1, 1> clipped_alpha;
-        clipped_alpha = _alpha;
-
-        if (_alpha > _high) {
-            clipped_alpha = _high;
-        } else if (_alpha < _low) {
-            clipped_alpha = _low;
-        }
-
-        return clipped_alpha;
-    } else if (type_code == "d") {
-        auto _alpha = pybind11::cast<float64>(alpha);
-        auto _low = pybind11::cast<float64>(low);
-        auto _high = pybind11::cast<float64>(high);
-
-        Eigen::Array<float64, 1, 1> clipped_alpha;
-        clipped_alpha = _alpha;
-
-        if (_alpha > _high) {
-            clipped_alpha = _high;
-        } else if (_alpha < _low) {
-            clipped_alpha = _low;
-        }
-
-        return clipped_alpha;
-    }
-    return {};
-}
-
-// 返回修剪后的拉格朗日乘子(32位), 输入拉格朗日乘子的下界和上界(Pure Python float).
-Eigen::Array<float32, 1, 1> ClipAlpha(const float32 &alpha, const float32 &low, const float32 &high) {
-    Eigen::Array<float32, 1, 1> clipped_alpha;
-    clipped_alpha = alpha;
+// 返回修剪后的拉格朗日乘子(32/64位), 输入拉格朗日乘子的下界和上界(pure float/np.float32/np.float64).
+template<typename RFloat, typename PFloat>
+RFloat ClipAlpha(PFloat &alpha, PFloat &low, PFloat &high) {
+    RFloat clipped_alpha = alpha;
 
     if (alpha > high) {
         clipped_alpha = high;
@@ -102,33 +66,31 @@ Eigen::Array<float32, 1, 1> ClipAlpha(const float32 &alpha, const float32 &low, 
     return clipped_alpha;
 }
 
-// 获取类条件概率, 输入某个属性值的样本总数, 某个类别的样本总数, 类别的数量和是否使用平滑.
-float64 GetConditionalProbability(const uint32 &samples_on_attribute,
-                                  const uint32 &samples_in_category,
-                                  const uint32 &num_of_categories,
-                                  const bool &smoothing) {
+// 获取类条件概率(32/64位), 输入某个属性值的样本总数, 某个类别的样本总数, 类别的数量和是否使用平滑(pure uint/np.uint32/np.uint64).
+template<typename Float, typename Uint>
+Float GetConditionalProbability(Uint &samples_on_attribute,
+                                Uint &samples_in_category,
+                                Uint &num_of_categories,
+                                const bool &smoothing) {
     if (smoothing) {
-        return ((float64)samples_on_attribute + 1.0) / (float64)(samples_in_category + num_of_categories);
+        return ((Float)samples_on_attribute + 1.0) / (Float)(samples_in_category + num_of_categories);
     } else {
-        return (float64)samples_on_attribute / (float64)samples_in_category;
+        return (Float)samples_on_attribute / (Float)samples_in_category;
     }
 }
 
-// 获取有依赖的类先验概率, 输入类别为c的属性i上取值为xi的样本, 样本的总数, 特征数据和是否使用平滑.
-float64 GetDependentPriorProbability(const uint32 &samples_on_attribute_in_category,
-                                     const uint32 &number_of_sample,
-                                     const uint32 &values_on_attribute,
-                                     const bool &smoothing) {
-    float64 probability;
-
+// 获取有依赖的类先验概率(32/64位),
+// 输入类别为c的属性i上取值为xi的样本, 样本的总数, 特征数据和是否使用平滑(pure uint/np.uint32/np.uint64).
+template<typename Float, typename Uint>
+Float GetDependentPriorProbability(Uint &samples_on_attribute_in_category,
+                                   Uint &number_of_sample,
+                                   Uint &values_on_attribute,
+                                   const bool &smoothing) {
     if (smoothing) {
-        probability = (float64)(samples_on_attribute_in_category + 1)
-                / (float64)(number_of_sample + 2 * values_on_attribute);
+        return (Float)(samples_on_attribute_in_category + 1) / (Float)(number_of_sample + 2 * values_on_attribute);
     } else {
-        probability = (float64)samples_on_attribute_in_category / (float64)number_of_sample;
+        return (Float)samples_on_attribute_in_category / (Float)number_of_sample;
     }
-
-    return probability;
 }
 
 // 获取类先验概率, 输入特征数据, 标签和是否使用平滑.
@@ -140,7 +102,7 @@ std::tuple<Dtype, Dtype> GetPriorProbability(const uint32 &number_of_sample,
     // 遍历获得反例的个数.
     uint32 num_of_negative_sample = y.size() - matrix_op::NonZero(y).size();
 
-    Dtype p_0;
+    Dtype p_0{};
     if (smoothing) {
         p_0 = (num_of_negative_sample + 1.0) / (number_of_sample + 2);
     } else {
@@ -152,48 +114,18 @@ std::tuple<Dtype, Dtype> GetPriorProbability(const uint32 &number_of_sample,
     return probability;
 }
 
+// 获取概率密度(32/64位),
+// 输入样本的取值(pure float/np.float32/np.float64),
+// 样本在某个属性的上的均值(pure float/np.float32/np.float64)和样本在某个属性上的方差(pure float/np.float32/np.float64).
+template<typename RFloat, typename PFloat>
+RFloat GetProbabilityDensity(PFloat &sample, PFloat &mean, PFloat &var) {
+    RFloat probability{};
 
-// 获取概率密度(32/64位), 输入样本的取值(float32/float64),
-// 样本在某个属性的上的均值(float32/float64)和样本在某个属性上的方差(float32/float64).
-std::variant<float32, float64> GetProbabilityDensity(const pybind11::buffer &sample,
-                                                     const pybind11::buffer &mean,
-                                                     const pybind11::buffer &var) {
-    std::string type_code = sample.request().format;
-    if (type_code == "f") {
-        auto _sample = pybind11::cast<float32>(sample);
-        auto _mean = pybind11::cast<float32>(mean);
-        auto _var = pybind11::cast<float32>(var);
-
-        float32 probability = 1 / (sqrtf(2 * M_PI) * _var) * expf(-(powf((_sample - _mean), 2) / (2 * powf(_var, 2))));
-
-        // probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
-        if (probability == 0) {
-            probability = 1e-36;
-        }
-
-        return probability;
-    } else if (type_code == "d") {
-        auto _sample = pybind11::cast<float64>(sample);
-        auto _mean = pybind11::cast<float64>(mean);
-        auto _var = pybind11::cast<float64>(var);
-
-        float64 probability = 1 / (sqrt(2 * M_PI) * _var) * exp(-(pow((_sample - _mean), 2) / (2 * pow(_var, 2))));
-
-        // probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
-        if (probability == 0) {
-            probability = 1e-36;
-        }
-
-        return probability;
+    if (sizeof(sample) == sizeof(np_float32) or sizeof(sample) == sizeof(float32)) {
+        probability = 1 / (sqrtf(2 * M_PI) * var) * expf(-(powf((sample - mean), 2) / (2 * powf(var, 2))));
+    } else {
+        probability = 1 / (sqrt(2 * M_PI) * var) * exp(-(pow((sample - mean), 2) / (2 * pow(var, 2))));
     }
-
-    return {};
-}
-
-// 获取概率密度(32位), 输入样本的取值(Pure Python float),
-// 样本在某个属性的上的均值(Pure Python float)和样本在某个属性上的方差(Pure Python float).
-float32 GetProbabilityDensity(const float32 &sample, const float32 &mean, const float32 &var) {
-    float32 probability = 1 / (sqrtf(2 * M_PI) * var) * expf(-(powf((sample - mean), 2) / (2 * powf(var, 2))));
 
     // probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
     if (probability == 0) {
@@ -238,10 +170,7 @@ Matrix GetW_V2(const Matrix &S_w, const Matrix &mu_0, const Matrix &mu_1) {
 // 返回类内散度矩阵, 输入为反正例的集合矩阵和反正例的均值向量.
 // `Matrix` 兼容的32位和64位浮点型Eigen::Matrix矩阵.
 template<typename Matrix>
-Matrix GetWithinClassScatterMatrix(const Matrix &X_0,
-                                   const Matrix &X_1,
-                                   const Matrix &mu_0,
-                                   const Matrix &mu_1) {
+Matrix GetWithinClassScatterMatrix(const Matrix &X_0, const Matrix &X_1, const Matrix &mu_0, const Matrix &mu_1) {
     // 公式(使用latex语法):
     // S_w = \sum_0 + \sum_1
     // \sum_i = \sum_{x \in X_i}(x - \mu_0)(x - \mu_1)^T
@@ -254,13 +183,10 @@ Matrix GetWithinClassScatterMatrix(const Matrix &X_0,
 }
 
 // 返回第二个拉格朗日乘子的下标和违背值组成的元组, 输入KKT条件的违背值, KKT条件的违背值缓存和非边界拉格朗日乘子.
-// `Dtype` 兼容32位和64位浮点数, `RowVector` 兼容32位和64位浮点型行向量,
+// `Dtype` 兼容(pure float/np.float32/np.float64, `RowVector` 兼容32位和64位浮点型行向量,
 // 不支持不同位数模板兼容.
-// Python的内置类型只有`float`, 这里和使用`pybind11::buffer`最大的区别是在于, Python侧`float`和`double`无法区分, 但是此处重载时
-// 会根据行向量精准匹配, C++侧会按照`float`计算, `float`自动类型转换`double`使得Python侧`pure float`返回值恰巧结果为8-15位随机值.
-// [内置类型](https://docs.python.org/zh-cn/3.8/library/stdtypes.html)
 template<typename Dtype, typename RowVector>
-std::tuple<uint32, Dtype> SelectSecondAlpha(const Dtype &error,
+std::tuple<uint32, Dtype> SelectSecondAlpha(Dtype &error,
                                             const RowVector &error_cache,
                                             const RowVector &non_bound_alphas) {
     std::vector<uint32> non_bound_index = matrix_op::NonZero(non_bound_alphas);
@@ -286,7 +212,7 @@ std::tuple<uint32, Dtype> SelectSecondAlpha(const Dtype &error,
 
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.
 // 只处理float64的输入数据.
-std::string TypeOfTarget(const Eigen::MatrixXd &y) {
+std::string TypeOfTarget(const matrix64 &y) {
     pybind11::print("WARNING:classicML: `ops.cc_type_of_target` 已经被弃用,"
                     " 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.");
     bool any = true;
@@ -324,7 +250,7 @@ std::string TypeOfTarget(const Eigen::MatrixXd &y) {
 
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.
 // 只处理int64的输入数据.
-std::string TypeOfTarget(const Eigen::Matrix<int64, Eigen::Dynamic, Eigen::Dynamic> &y) {
+std::string TypeOfTarget(const matrix64i &y) {
     pybind11::print("WARNING:classicML: `ops.cc_type_of_target` 已经被弃用,"
                     " 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.");
     // 取唯一值统计元素个数.
@@ -352,7 +278,6 @@ std::string TypeOfTarget(const Eigen::Matrix<int64, Eigen::Dynamic, Eigen::Dynam
 
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.
 // 处理其他类型的输入数据.
-// TODO(Steve R. Sun, tag:code): Python版本的和CC版本在对于判断str类型的有差异, CC版本全部返回的是unknown.
 std::string TypeOfTarget(const pybind11::array &y) {
     pybind11::print("WARNING:classicML: `ops.cc_type_of_target` 已经被弃用,"
                     " 它将在未来的正式版本中被移除, 请使用 `ops.cc_type_of_target_v2`.");
@@ -396,25 +321,59 @@ std::string TypeOfTarget_V2(const pybind11::array &y) {
 // 显式实例化.
 template matrix32 CalculateError<matrix32, vector32, array32>
         (const matrix32 &x,
-         const matrix32 &y,  // 列向量
+         const vector32 &y,
          const uint32 &i,
          const pybind11::object &kernel,
-         const matrix32 &alphas,  // 列向量
+         const vector32 &alphas,
          const vector32 &non_zero_alphas,
          const matrix32 &b);
 template matrix64 CalculateError<matrix64, vector64, array64>
         (const matrix64 &x,
-         const matrix64 &y,  // 列向量
+         const vector64 &y,
          const uint32 &i,
          const pybind11::object &kernel,
-         const matrix64 &alphas,  // 列向量
+         const vector64 &alphas,
          const vector64 &non_zero_alphas,
          const matrix64 &b);
 
-template std::tuple<float32, float32> GetPriorProbability
+template np_float32 ClipAlpha(np_float32 &alpha, np_float32 &low, np_float32 &high);
+template np_float64 ClipAlpha(np_float64 &alpha, np_float64 &low, np_float64 &high);
+template np_float32 ClipAlpha(float32 &alpha, float32 &low, float32 &high);
+
+template np_float32 GetConditionalProbability(np_uint32 &samples_on_attribute,
+                                              np_uint32 &samples_in_category,
+                                              np_uint32 &num_of_categories,
+                                              const bool &smoothing);
+template np_float64 GetConditionalProbability(np_uint64 &samples_on_attribute,
+                                              np_uint64 &samples_in_category,
+                                              np_uint64 &num_of_categories,
+                                              const bool &smoothing);
+template np_float32 GetConditionalProbability(uint32 &samples_on_attribute,
+                                              uint32 &samples_in_category,
+                                              uint32 &num_of_categories,
+                                              const bool &smoothing);
+
+template np_float32 GetDependentPriorProbability(np_uint32 &samples_on_attribute_in_category,
+                                                 np_uint32 &number_of_sample,
+                                                 np_uint32 &values_on_attribute,
+                                                 const bool &smoothing);
+template np_float64 GetDependentPriorProbability(np_uint64 &samples_on_attribute_in_category,
+                                                 np_uint64 &number_of_sample,
+                                                 np_uint64 &values_on_attribute,
+                                                 const bool &smoothing);
+template np_float32 GetDependentPriorProbability(uint32 &samples_on_attribute_in_category,
+                                                 uint32 &number_of_sample,
+                                                 uint32 &values_on_attribute,
+                                                 const bool &smoothing);
+
+template std::tuple<np_float32, np_float32> GetPriorProbability
         (const uint32 &number_of_sample, const row_vector32i &y, const bool &smoothing);
-template std::tuple<float64, float64> GetPriorProbability
+template std::tuple<np_float64, np_float64> GetPriorProbability
         (const uint32 &number_of_sample, const row_vector64i &y, const bool &smoothing);
+
+template np_float32 GetProbabilityDensity(np_float32 &sample, np_float32 &mean, np_float32 &var);
+template np_float64 GetProbabilityDensity(np_float64 &sample, np_float64 &mean, np_float64 &var);
+template np_float32 GetProbabilityDensity(float32 &sample, float32 &mean, float32 &var);
 
 template matrix32 GetW_V2(const matrix32 &S_w, const matrix32 &mu_0, const matrix32 &mu_1);
 template matrix64 GetW_V2(const matrix64 &S_w, const matrix64 &mu_0, const matrix64 &mu_1);
@@ -428,10 +387,13 @@ template matrix64 GetWithinClassScatterMatrix(const matrix64 &X_0,
                                               const matrix64 &mu_0,
                                               const matrix64 &mu_1);
 
-template std::tuple<uint32, float32> SelectSecondAlpha(const float32 &error,
+template std::tuple<uint32, np_float32> SelectSecondAlpha(np_float32 &error,
+                                                          const row_vector32f &error_cache,
+                                                          const row_vector32f &non_bound_alphas);
+template std::tuple<uint32, np_float64> SelectSecondAlpha(np_float64 &error,
+                                                          const row_vector64f &error_cache,
+                                                          const row_vector64f &non_bound_alphas);
+template std::tuple<uint32, float32> SelectSecondAlpha(float32 &error,
                                                        const row_vector32f &error_cache,
                                                        const row_vector32f &non_bound_alphas);
-template std::tuple<uint32, float64> SelectSecondAlpha(const float64 &error,
-                                                       const row_vector64f &error_cache,
-                                                       const row_vector64f &non_bound_alphas);
 } // namespace ops

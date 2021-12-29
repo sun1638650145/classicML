@@ -185,8 +185,8 @@ class TestGetWithinClassScatterMatrix(object):
 class TestSelectSecondAlpha(object):
     def test_answer(self):
         error = 0.5
-        error_cache = np.asarray([0.1, 0.2, 0.3])
-        non_bound_alphas = np.asarray([1., 2., 3.])
+        error_cache = np.asarray([0.1, 0.2, 0.3], dtype=_cml_precision.float)
+        non_bound_alphas = np.asarray([1., 2., 3.], dtype=_cml_precision.float)
 
         cc_answer = cc_select_second_alpha(error, error_cache, non_bound_alphas)
         py_answer = select_second_alpha(error, error_cache, non_bound_alphas)

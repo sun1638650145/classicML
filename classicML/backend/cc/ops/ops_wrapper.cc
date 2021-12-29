@@ -1,8 +1,8 @@
 //
-//  ops_wrapper.cc
-//  ops
+// ops_wrapper.cc
+// ops
 //
-//  Created by 孙瑞琦 on 2020/12/28.
+// Created by 孙瑞琦 on 2020/12/28.
 //
 //
 
@@ -28,13 +28,13 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         KKT条件的违背值.)pbdoc",
-        pybind11::arg("x"),
-        pybind11::arg("y"),
-        pybind11::arg("i"),
-        pybind11::arg("kernel"),
-        pybind11::arg("alphas"),
-        pybind11::arg("non_zero_alphas"),
-        pybind11::arg("b"));
+          pybind11::arg("x"),
+          pybind11::arg("y"),
+          pybind11::arg("i"),
+          pybind11::arg("kernel"),
+          pybind11::arg("alphas"),
+          pybind11::arg("non_zero_alphas"),
+          pybind11::arg("b"));
     m.def("cc_calculate_error", &ops::CalculateError<matrix64, vector64, array64>, R"pbdoc(
 计算KKT条件的违背值.
 
@@ -49,18 +49,16 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         KKT条件的违背值.)pbdoc",
-        pybind11::arg("x"),
-        pybind11::arg("y"),
-        pybind11::arg("i"),
-        pybind11::arg("kernel"),
-        pybind11::arg("alphas"),
-        pybind11::arg("non_zero_alphas"),
-        pybind11::arg("b"));
+          pybind11::arg("x"),
+          pybind11::arg("y"),
+          pybind11::arg("i"),
+          pybind11::arg("kernel"),
+          pybind11::arg("alphas"),
+          pybind11::arg("non_zero_alphas"),
+          pybind11::arg("b"));
 
     // Overloaded function.
-    m.def("cc_clip_alpha", [](const pybind11::buffer &alpha, const pybind11::buffer &low, const pybind11::buffer &high){
-              return ops::ClipAlpha(alpha, low, high);
-          }, R"pbdoc(
+    m.def("cc_clip_alpha", &ops::ClipAlpha<np_float32, np_float32>, R"pbdoc(
 修剪拉格朗日乘子.
 
     Arguments:
@@ -71,9 +69,18 @@ PYBIND11_MODULE(ops, m) {
     Returns:
         修剪后的拉格朗日乘子.
 )pbdoc", pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
-    m.def("cc_clip_alpha", [](const float32 &alpha, const float32 &low, const float32 &high){
-              return ops::ClipAlpha(alpha, low, high);
-          }, R"pbdoc(
+    m.def("cc_clip_alpha", &ops::ClipAlpha<np_float64, np_float64>, R"pbdoc(
+修剪拉格朗日乘子.
+
+    Arguments:
+        alpha: numpy.ndarray, 拉格朗日乘子.
+        low: float, 正则化系数的下界.
+        high: float, 正则化系数的上界.
+
+    Returns:
+        修剪后的拉格朗日乘子.
+)pbdoc", pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
+    m.def("cc_clip_alpha", &ops::ClipAlpha<np_float32, float32>, R"pbdoc(
 修剪拉格朗日乘子.
 
     Arguments:
@@ -85,7 +92,8 @@ PYBIND11_MODULE(ops, m) {
         修剪后的拉格朗日乘子.
 )pbdoc", pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
 
-    m.def("cc_get_conditional_probability", &ops::GetConditionalProbability, R"pbdoc(
+    // Overloaded function.
+    m.def("cc_get_conditional_probability", &ops::GetConditionalProbability<np_float32, np_uint32>, R"pbdoc(
 获取类条件概率.
 
     Arguments:
@@ -96,12 +104,43 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         类条件概率.)pbdoc",
-        pybind11::arg("samples_on_attribute"),
-        pybind11::arg("samples_in_category"),
-        pybind11::arg("num_of_categories"),
-        pybind11::arg("smoothing"));
+          pybind11::arg("samples_on_attribute"),
+          pybind11::arg("samples_in_category"),
+          pybind11::arg("num_of_categories"),
+          pybind11::arg("smoothing"));
+    m.def("cc_get_conditional_probability", &ops::GetConditionalProbability<np_float64, np_uint64>, R"pbdoc(
+获取类条件概率.
 
-    m.def("cc_get_dependent_prior_probability", &ops::GetDependentPriorProbability, R"pbdoc(
+    Arguments:
+        samples_on_attribute: int, 在某个属性的样本.
+        samples_in_category: int, 在某个类别上的样本.
+        num_of_categories: int, 类别的数量.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        类条件概率.)pbdoc",
+          pybind11::arg("samples_on_attribute"),
+          pybind11::arg("samples_in_category"),
+          pybind11::arg("num_of_categories"),
+          pybind11::arg("smoothing"));
+    m.def("cc_get_conditional_probability", &ops::GetConditionalProbability<np_float32, uint32>, R"pbdoc(
+获取类条件概率.
+
+    Arguments:
+        samples_on_attribute: int, 在某个属性的样本.
+        samples_in_category: int, 在某个类别上的样本.
+        num_of_categories: int, 类别的数量.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        类条件概率.)pbdoc",
+          pybind11::arg("samples_on_attribute"),
+          pybind11::arg("samples_in_category"),
+          pybind11::arg("num_of_categories"),
+          pybind11::arg("smoothing"));
+
+    // Overloaded function.
+    m.def("cc_get_dependent_prior_probability", &ops::GetDependentPriorProbability<np_float32, np_uint32>, R"pbdoc(
 获取有依赖的类先验概率.
 
     Arguments:
@@ -112,13 +151,43 @@ PYBIND11_MODULE(ops, m) {
 
     Returns:
         先验概率.)pbdoc",
-        pybind11::arg("samples_on_attribute_in_category"),
-        pybind11::arg("number_of_sample"),
-        pybind11::arg("values_on_attribute"),
-        pybind11::arg("smoothing"));
+          pybind11::arg("samples_on_attribute_in_category"),
+          pybind11::arg("number_of_sample"),
+          pybind11::arg("values_on_attribute"),
+          pybind11::arg("smoothing"));
+    m.def("cc_get_dependent_prior_probability", &ops::GetDependentPriorProbability<np_float64, np_uint64>, R"pbdoc(
+获取有依赖的类先验概率.
+
+    Arguments:
+        samples_on_attribute_in_category: int, 类别为c的属性i上取值为xi的样本.
+        number_of_sample: int, 样本的总数.
+        values_on_attribute: int, 在属性i上的取值数.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        先验概率.)pbdoc",
+          pybind11::arg("samples_on_attribute_in_category"),
+          pybind11::arg("number_of_sample"),
+          pybind11::arg("values_on_attribute"),
+          pybind11::arg("smoothing"));
+    m.def("cc_get_dependent_prior_probability", &ops::GetDependentPriorProbability<np_float32, uint32>, R"pbdoc(
+获取有依赖的类先验概率.
+
+    Arguments:
+        samples_on_attribute_in_category: int, 类别为c的属性i上取值为xi的样本.
+        number_of_sample: int, 样本的总数.
+        values_on_attribute: int, 在属性i上的取值数.
+        smoothing: bool, 是否使用平滑.
+
+    Returns:
+        先验概率.)pbdoc",
+          pybind11::arg("samples_on_attribute_in_category"),
+          pybind11::arg("number_of_sample"),
+          pybind11::arg("values_on_attribute"),
+          pybind11::arg("smoothing"));
 
     // Overloaded function.
-    m.def("cc_get_prior_probability", &ops::GetPriorProbability<float32, row_vector32i>, R"pbdoc(
+    m.def("cc_get_prior_probability", &ops::GetPriorProbability<np_float32, row_vector32i>, R"pbdoc(
 获取类先验概率.
 
     Arguments:
@@ -129,7 +198,7 @@ PYBIND11_MODULE(ops, m) {
     Returns:
         类先验概率.
 )pbdoc", pybind11::arg("number_of_sample"), pybind11::arg("y"), pybind11::arg("smoothing"));
-    m.def("cc_get_prior_probability", &ops::GetPriorProbability<float64, row_vector64i>, R"pbdoc(
+    m.def("cc_get_prior_probability", &ops::GetPriorProbability<np_float64, row_vector64i>, R"pbdoc(
 获取类先验概率.
 
     Arguments:
@@ -142,11 +211,7 @@ PYBIND11_MODULE(ops, m) {
 )pbdoc", pybind11::arg("number_of_sample"), pybind11::arg("y"), pybind11::arg("smoothing"));
 
     // Overloaded function.
-    m.def("cc_get_probability_density", [](const pybind11::buffer &sample,
-                                                    const pybind11::buffer &mean,
-                                                    const pybind11::buffer &var){
-              return ops::GetProbabilityDensity(sample, mean, var);
-          }, R"pbdoc(
+    m.def("cc_get_probability_density", &ops::GetProbabilityDensity<np_float32, np_float32>, R"pbdoc(
 获得概率密度.
 
     Arguments:
@@ -157,11 +222,18 @@ PYBIND11_MODULE(ops, m) {
     Returns:
         概率密度.
 )pbdoc", pybind11::arg("sample"), pybind11::arg("mean"), pybind11::arg("var"));
-    m.def("cc_get_probability_density", [](const float32 &sample,
-                                                    const float32 &mean,
-                                                    const float32 &var) {
-              return ops::GetProbabilityDensity(sample, mean, var);
-          }, R"pbdoc(
+    m.def("cc_get_probability_density", &ops::GetProbabilityDensity<np_float64, np_float64>, R"pbdoc(
+获得概率密度.
+
+    Arguments:
+        sample: float, 样本的取值.
+        mean: float, 样本在某个属性的上的均值.
+        var: float, 样本在某个属性上的方差.
+
+    Returns:
+        概率密度.
+)pbdoc", pybind11::arg("sample"), pybind11::arg("mean"), pybind11::arg("var"));
+    m.def("cc_get_probability_density", &ops::GetProbabilityDensity<np_float32, float32>, R"pbdoc(
 获得概率密度.
 
     Arguments:
@@ -239,6 +311,36 @@ PYBIND11_MODULE(ops, m) {
 )pbdoc", pybind11::arg("X_0"), pybind11::arg("X_1"), pybind11::arg("mu_0"), pybind11::arg("mu_1"));
 
     // Overloaded function.
+    m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<np_float32, row_vector32f>, R"pbdoc(
+选择第二个拉格朗日乘子, SMO采用的是启发式寻找的思想,
+找到目标函数变化量足够大, 即选取变量样本间隔最大.
+
+    Arguments:
+        error: float,
+            KKT条件的违背值.
+        error_cache: numpy.ndarray,
+            KKT条件的违背值缓存.
+        non_bound_alphas: numpy.ndarray,
+            非边界拉格朗日乘子.
+
+    Returns:
+        拉格朗日乘子的下标和违背值.
+)pbdoc", pybind11::arg("error"), pybind11::arg("error_cache"), pybind11::arg("non_bound_alphas"));
+    m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<np_float64, row_vector64f>, R"pbdoc(
+选择第二个拉格朗日乘子, SMO采用的是启发式寻找的思想,
+找到目标函数变化量足够大, 即选取变量样本间隔最大.
+
+    Arguments:
+        error: float,
+            KKT条件的违背值.
+        error_cache: numpy.ndarray,
+            KKT条件的违背值缓存.
+        non_bound_alphas: numpy.ndarray,
+            非边界拉格朗日乘子.
+
+    Returns:
+        拉格朗日乘子的下标和违背值.
+)pbdoc", pybind11::arg("error"), pybind11::arg("error_cache"), pybind11::arg("non_bound_alphas"));
     m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<float32, row_vector32f>, R"pbdoc(
 选择第二个拉格朗日乘子, SMO采用的是启发式寻找的思想,
 找到目标函数变化量足够大, 即选取变量样本间隔最大.
@@ -254,22 +356,8 @@ PYBIND11_MODULE(ops, m) {
     Returns:
         拉格朗日乘子的下标和违背值.
 )pbdoc", pybind11::arg("error"), pybind11::arg("error_cache"), pybind11::arg("non_bound_alphas"));
-    m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<float64, row_vector64f>, R"pbdoc(
-选择第二个拉格朗日乘子, SMO采用的是启发式寻找的思想,
-找到目标函数变化量足够大, 即选取变量样本间隔最大.
 
-    Arguments:
-        error: float,
-            KKT条件的违背值.
-        error_cache: numpy.ndarray,
-            KKT条件的违背值缓存.
-        non_bound_alphas: numpy.ndarray,
-            非边界拉格朗日乘子.
-
-    Returns:
-        拉格朗日乘子的下标和违背值.
-)pbdoc", pybind11::arg("error"), pybind11::arg("error_cache"), pybind11::arg("non_bound_alphas"));
-
+    // Overloaded function.
     m.def("cc_type_of_target", pybind11::overload_cast<const matrix64 &>(&ops::TypeOfTarget), R"pbdoc(
 判断输入数据的类型.
 
@@ -349,5 +437,5 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.11.2dev20211228";
+    m.attr("__version__") = "backend.cc.ops.0.12dev20211229";
 }

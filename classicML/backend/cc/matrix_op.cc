@@ -104,22 +104,24 @@ Matrix GenerateRandomUniformDistributionMatrix(const int32 &rows,
     return matrix;
 }
 
-// 获取非零元素组成的子矩阵, 输入父矩阵和非零标签.
-// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位浮点型向量, 不支持不同位数模板兼容.
-template<typename Matrix, typename Vector>
-Matrix GetNonZeroSubMatrix(const Matrix &matrix, const Vector &non_zero_mark) {
-    if (matrix.rows() != non_zero_mark.rows()) {
+// 获取非零元素组成的子矩阵, 输入父矩阵和非零拉格朗日乘子.
+// `Matrix` 兼容32位和64位浮点型矩阵,
+// `Matrix_Vector` 兼容32位和64位浮点型矩阵或向量,
+// `Vector` 兼容32位和64位浮点型向量, 不支持不同位数模板兼容.
+template<typename Matrix, typename Matrix_Vector, typename Vector>
+Matrix GetNonZeroSubMatrix(const Matrix_Vector &matrix_vector, const Vector &non_zero_alphas) {
+    if (matrix_vector.rows() != non_zero_alphas.rows()) {
         throw pybind11::value_error("行数不同, 无法操作");
     }
 
     // 初始化子矩阵.
-    auto row = (int32)(non_zero_mark.array() == 1).count();  // 统计非零元素个数.
-    Matrix sub_matrix(row, matrix.cols());
+    auto row = (int32)(non_zero_alphas.array() == 1).count();  // 统计非零元素个数.
+    Matrix sub_matrix(row, matrix_vector.cols());
 
     row = 0;
-    for (int32 i = 0; i < non_zero_mark.rows(); i ++) {
-        if (non_zero_mark[i] == 1) {
-            sub_matrix.row(row) = matrix.row(i);
+    for (int32 i = 0; i < non_zero_alphas.rows(); i ++) {
+        if (non_zero_alphas[i] == 1) {
+            sub_matrix.row(row) = matrix_vector.row(i);
             row ++;
         }
     }
@@ -220,8 +222,14 @@ template matrix32 GenerateRandomUniformDistributionMatrix<matrix32, float32>
 template matrix64 GenerateRandomUniformDistributionMatrix<matrix64, float64>
         (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
 
-template matrix32 GetNonZeroSubMatrix(const matrix32 &matrix, const vector32 &non_zero_mark);
-template matrix64 GetNonZeroSubMatrix(const matrix64 &matrix, const vector64 &non_zero_mark);
+template matrix32 GetNonZeroSubMatrix<matrix32, matrix32, vector32>
+        (const matrix32 &matrix, const vector32 &non_zero_mark);
+template matrix64 GetNonZeroSubMatrix<matrix64, matrix64, vector64>
+        (const matrix64 &matrix, const vector64 &non_zero_mark);
+template matrix32 GetNonZeroSubMatrix<matrix32, vector32, vector32>
+        (const vector32 &matrix, const vector32 &non_zero_mark);
+template matrix64 GetNonZeroSubMatrix<matrix64, vector64, vector64>
+        (const vector64 &matrix, const vector64 &non_zero_mark);
 
 template std::vector<uint32> NonZero(const row_vector32f &array);
 template std::vector<uint32> NonZero(const row_vector64f &array);

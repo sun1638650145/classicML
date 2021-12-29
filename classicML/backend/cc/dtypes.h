@@ -23,9 +23,15 @@ typedef std::int64_t int64;
 
 typedef std::uint8_t uint8;
 typedef std::uint32_t uint32;
+typedef std::uint64_t uint64;
+
+typedef pybind11::numpy_scalar<float32> np_float32;
+typedef pybind11::numpy_scalar<float64> np_float64;
 
 typedef pybind11::numpy_scalar<int32> np_int32;
 typedef pybind11::numpy_scalar<int64> np_int64;
+typedef pybind11::numpy_scalar<uint32> np_uint32;
+typedef pybind11::numpy_scalar<uint64> np_uint64;
 
 typedef Eigen::MatrixXf matrix32;
 typedef Eigen::MatrixXd matrix64;
