@@ -34,7 +34,7 @@ clip_alpha(alpha, low, high)
 
 ### 参数
 
-* <b>alpha</b>: 一个 Numpy数组，拉格朗日乘子.
+* <b>alpha</b>: 浮点数，拉格朗日乘子.
 * <b>low</b>: 浮点数，正则化系数的下界.
 * <b>high</b>: 浮点数，正则化系数的上界.
 

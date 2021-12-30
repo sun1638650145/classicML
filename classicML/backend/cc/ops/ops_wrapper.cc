@@ -62,7 +62,7 @@ PYBIND11_MODULE(ops, m) {
 修剪拉格朗日乘子.
 
     Arguments:
-        alpha: numpy.ndarray, 拉格朗日乘子.
+        alpha: float, 拉格朗日乘子.
         low: float, 正则化系数的下界.
         high: float, 正则化系数的上界.
 
@@ -73,7 +73,7 @@ PYBIND11_MODULE(ops, m) {
 修剪拉格朗日乘子.
 
     Arguments:
-        alpha: numpy.ndarray, 拉格朗日乘子.
+        alpha: float, 拉格朗日乘子.
         low: float, 正则化系数的下界.
         high: float, 正则化系数的上界.
 
@@ -84,7 +84,7 @@ PYBIND11_MODULE(ops, m) {
 修剪拉格朗日乘子.
 
     Arguments:
-        alpha: numpy.ndarray, 拉格朗日乘子.
+        alpha: float, 拉格朗日乘子.
         low: float, 正则化系数的下界.
         high: float, 正则化系数的上界.
 

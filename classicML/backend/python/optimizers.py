@@ -30,7 +30,7 @@ else:
     from classicML.backend.python.ops import clip_alpha
     from classicML.backend.python.ops import select_second_alpha
 
-__version__ = 'backend.python.optimizers.0.1.a1'
+__version__ = 'backend.python.optimizers.0.1.a2'
 
 
 def _get_optimizer_parameters(args, kwargs):
@@ -1061,6 +1061,7 @@ class SequentialMinimalOptimization(Optimizer):
             return False
 
         alpha_j_new = alpha_j_old + y_j * (error_i - error_j) / eta
+        alpha_j_new = np.squeeze(np.asarray(alpha_j_new))  # 降维.
         alpha_j_new = clip_alpha(alpha_j_new, low, high)
 
         if np.abs(alpha_j_new - alpha_j_old) < 1e-5:  # 更新幅度过小.
