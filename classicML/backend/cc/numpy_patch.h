@@ -1,7 +1,7 @@
 //
 // [PR描述](https://github.com/pybind/pybind11/pull/3544)
 // 不确定PR是否会被合并, 如果合并了, 这个feature补丁将会被删除.
-// 当前对应的版本为 pybind11 2.8.x
+// 当前对应的版本为 pybind11 2.9.0
 // 由于结构体命名冲突
 // `npy_api` -> `npy_api_patch`
 // `is_complex` -> `is_complex_patch`
@@ -195,23 +195,23 @@ struct npy_format_descriptor_name_patch;
 
 template <typename T>
 struct npy_format_descriptor_name_patch<T, enable_if_t<std::is_integral<T>::value>> {
-    static constexpr auto name = _<std::is_same<T, bool>::value>(
-        _("bool"), _<std::is_signed<T>::value>("int", "uint") + _<sizeof(T)*8>()
+    static constexpr auto name = const_name<std::is_same<T, bool>::value>(
+        const_name("numpy.bool_"), const_name<std::is_signed<T>::value>("numpy.int", "numpy.uint") + const_name<sizeof(T)*8>()
     );
 };
 
 template <typename T>
 struct npy_format_descriptor_name_patch<T, enable_if_t<std::is_floating_point<T>::value>> {
-    static constexpr auto name = _<std::is_same<T, float>::value || std::is_same<T, double>::value>(
-        _("float") + _<sizeof(T)*8>(), _("longdouble")
+    static constexpr auto name = const_name<std::is_same<T, float>::value || std::is_same<T, double>::value>(
+        const_name("numpy.float") + const_name<sizeof(T)*8>(), const_name("numpy.longdouble")
     );
 };
 
 template <typename T>
 struct npy_format_descriptor_name_patch<T, enable_if_t<is_complex_patch<T>::value>> {
-    static constexpr auto name = _<std::is_same<typename T::value_type, float>::value
+    static constexpr auto name = const_name<std::is_same<typename T::value_type, float>::value
                                || std::is_same<typename T::value_type, double>::value>(
-        _("complex") + _<sizeof(typename T::value_type)*16>(), _("longcomplex")
+        const_name("numpy.complex") + const_name<sizeof(typename T::value_type)*16>(), const_name("numpy.longcomplex")
     );
 };
 
