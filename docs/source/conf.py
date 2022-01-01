@@ -1,6 +1,6 @@
 # 项目信息
 project = 'classicML'
-copyright = '2020-2021, Steve R. Sun'
+copyright = '2020-2022, Steve R. Sun'
 author = 'Steve R. Sun'
 
 # 版本号
