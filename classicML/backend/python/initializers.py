@@ -3,7 +3,7 @@ import numpy as np
 
 from classicML import _cml_precision
 
-__version__ = 'backend.python.initializers.0.5.b2'
+__version__ = 'backend.python.initializers.0.5.b3'
 
 
 class Initializer(object):
@@ -48,7 +48,7 @@ class RandomNormal(Initializer):
                 如果是逻辑回归就是样本的特征数;
                 如果是神经网络, 就是定义神经网络的网络结构.
         """
-        if isinstance(attributes_or_structure, int):
+        if isinstance(attributes_or_structure, (int, _cml_precision.int)):
             parameters = np.random.randn(attributes_or_structure + 1, 1).astype(_cml_precision.float)  # 初始化属性数+1(偏置项b)
         else:
             parameters = {}
@@ -82,7 +82,7 @@ class HeNormal(Initializer):
                 如果是逻辑回归就是样本的特征数;
                 如果是神经网络, 就是定义神经网络的网络结构.
         """
-        if isinstance(attributes_or_structure, int):
+        if isinstance(attributes_or_structure, (int, _cml_precision.int)):
             parameters = (np.random.randn(attributes_or_structure + 1, 1)
                           * np.sqrt(2 / attributes_or_structure)).astype(_cml_precision.float)  # 初始化属性数+1(偏置项b)
         else:
@@ -119,7 +119,7 @@ class XavierNormal(Initializer):
                 如果是逻辑回归就是样本的特征数;
                 如果是神经网络, 就是定义神经网络的网络结构.
         """
-        if isinstance(attributes_or_structure, int):
+        if isinstance(attributes_or_structure, (int, _cml_precision.int)):
             # 逻辑回归没有多层结构
             # 令 2 / (N_in + N_out) = 2 / N_in * 2, 即 N_in
             parameters = (np.random.randn(attributes_or_structure + 1, 1)
