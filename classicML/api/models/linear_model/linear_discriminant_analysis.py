@@ -72,16 +72,28 @@ class LinearDiscriminantAnalysis(BaseModel):
             CLASSICML_LOGGER.error('模型没有权重')
             raise ValueError('你必须先进行训练')
 
-        coord = np.dot(x, self.w.T).astype(_cml_precision.float)
+        x = np.asarray(x, dtype=_cml_precision.float)
 
+        coord = np.dot(x, self.w.T)
         center_0 = np.dot(self.w, self.mu_0.T)
         center_1 = np.dot(self.w, self.mu_1.T)
 
         y_pred = np.abs(coord - center_0) > np.abs(coord - center_1)
         y_pred = np.squeeze(y_pred)
-        y_pred = y_pred.astype(_cml_precision.int)
 
-        return y_pred
+        return _cml_precision.int(y_pred)
+
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        return super(LinearDiscriminantAnalysis, self).score(x, y)
 
     def load_weights(self, filepath):
         """加载模型参数.

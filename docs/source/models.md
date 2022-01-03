@@ -82,6 +82,23 @@ predict(x)
 
 * <b>NotImplementedError</b>: 需要用户自行实现.
 
+### score
+
+```python
+score(x, y)
+```
+
+在预测模式下计算准确率.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+
+#### 返回
+
+当前的准确率.
+
 ### load_weights
 
 ```python
@@ -494,6 +511,23 @@ predict(x)
 #### 异常
 
 * <b>ValueError</b>: 模型没有训练的错误.
+
+### score
+
+```python
+score(x, y)
+```
+
+在预测模式下计算准确率.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+
+#### 返回
+
+当前的准确率.
 
 ### load_weights
 
