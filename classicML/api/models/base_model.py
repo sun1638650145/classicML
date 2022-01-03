@@ -1,6 +1,8 @@
 from abc import ABC
 from abc import abstractmethod
 
+from classicML.backend import metrics
+
 
 class BaseModel(ABC):
     """classicML的模型抽象基类, classicML的模型全部继承于此.
@@ -18,7 +20,7 @@ class BaseModel(ABC):
         """训练模型.
 
         Arguments:
-            x: array-like, 特征数据
+            x: array-like, 特征数据.
             y: array-like, 标签.
 
         Raises:
@@ -37,6 +39,24 @@ class BaseModel(ABC):
             NotImplementedError: 需要用户自行实现.
         """
         raise NotImplementedError
+
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        y_pred = self.predict(x)
+        if len(y_pred.shape) == 1:
+            y_pred = y_pred.reshape(-1, 1)
+
+        accuracy = metrics.Accuracy()(y_pred, y)
+
+        return accuracy
 
     def load_weights(self, filepath):
         """加载模型参数.
