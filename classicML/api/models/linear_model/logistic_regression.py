@@ -44,7 +44,6 @@ class LogisticRegression(BaseModel):
         self.seed = seed
         self.initializer = initializer
 
-        self.initializer = None
         self.optimizer = None
         self.loss = None
         self.metric = None
@@ -85,7 +84,8 @@ class LogisticRegression(BaseModel):
         x = np.asarray(x, dtype=_cml_precision.float)
         y = np.asarray(y, dtype=_cml_precision.int)
 
-        _attributes_of_feature = x.shape[1]
+        # 指明样本的特征数据类型.
+        _attributes_of_feature = _cml_precision.int(x.shape[1])
 
         # 没有使用权重文件, 则使用初始化器初始化参数
         if self.is_loaded is False:
@@ -117,6 +117,18 @@ class LogisticRegression(BaseModel):
         y_pred = np.squeeze(y_pred)
 
         return y_pred
+
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        return super(LogisticRegression, self).score(x, y)
 
     def load_weights(self, filepath):
         """加载模型参数.

@@ -10,8 +10,8 @@ from classicML import __version__ as cml_version
 
 __version__ = 'backend.io.0.6'
 
-min_cml_version = '0.5'
-min__version__ = 'backend.io.0.3'
+min_support_model_version = '0.5'  # 兼容最低的模型版本.
+min_support_io_version = 'backend.io.0.3'  # 兼容的最低I/O版本.
 
 
 def _parse(model_name, fp):
@@ -27,7 +27,7 @@ def _parse(model_name, fp):
     file_cml_version = re.findall('\\d+\\.\\d+(?:\\.\\d+)*', description_gp.attrs['version'])[0]
     file_backend_version = 'backend.io.' + re.findall('\\d+\\.\\d+', description_gp.attrs['version'])[-1]
 
-    if (file_cml_version < min_cml_version) or (file_backend_version < min__version__):
+    if (file_cml_version < min_support_model_version) or (file_backend_version < min_support_io_version):
         CLASSICML_LOGGER.error('文件核验失败, 模型版本过低')
         raise ValueError('文件核验失败')
     if description_gp.attrs['model_name'] != model_name:
