@@ -1,4 +1,5 @@
 """classicML的I/O函数, 用于模型保存等操作."""
+import getpass
 import re
 from time import time
 
@@ -8,7 +9,7 @@ from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML import __version__ as cml_version
 
-__version__ = 'backend.io.0.6'
+__version__ = 'backend.io.0.6.1'
 
 min_support_model_version = '0.5'  # 兼容最低的模型版本.
 min_support_io_version = 'backend.io.0.3'  # 兼容的最低I/O版本.
@@ -49,6 +50,7 @@ def initialize_weights_file(filepath, mode, model_name):
       /
       ｜-- description
           |-- version 版本信息
+          |-- author 作者
           |-- model_name 模型名称
           |__ saved_time 时间戳
       ｜__ parameters
@@ -74,6 +76,7 @@ def initialize_weights_file(filepath, mode, model_name):
             # 创建描述信息组.
             description_gp = fp.create_group(name='description')
             description_gp.attrs['version'] = cml_version + '.' + __version__
+            description_gp.attrs['author'] = getpass.getuser()
             description_gp.attrs['model_name'] = model_name
             description_gp.attrs['saved_time'] = _cml_precision.float(time())
 
