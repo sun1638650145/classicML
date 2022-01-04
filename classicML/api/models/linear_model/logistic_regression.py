@@ -113,6 +113,7 @@ class LogisticRegression(BaseModel):
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
+        x = np.asarray(x, dtype=_cml_precision.float)
         y_pred, _ = self.optimizer.forward(x, self.beta)
         y_pred = np.squeeze(y_pred)
 

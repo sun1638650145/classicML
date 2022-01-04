@@ -67,7 +67,7 @@ class RadialBasisFunctionNetwork(BaseModel):
             - 使用交叉熵作为损失函数有潜在异常的可能性,
               除隐含层神经元个数和学习率之外, 建议使用默认参数.
         """
-        self.hidden_units = hidden_units
+        self.hidden_units = _cml_precision.int(hidden_units)
 
         self.initializer = get_initializer('rbf_normal', self.seed)
         self.optimizer = get_optimizer(optimizer)
@@ -118,9 +118,22 @@ class RadialBasisFunctionNetwork(BaseModel):
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
+        x = np.asarray(x, dtype=_cml_precision.float)
         y_pred, _ = self.optimizer.forward(x, self.parameters)
 
         return y_pred
+
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        return super(RadialBasisFunctionNetwork, self).score(x, y)
 
     def load_weights(self, filepath):
         """加载模型参数.
