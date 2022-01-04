@@ -101,7 +101,8 @@ class BackPropagationNeuralNetwork(BaseModel):
             network_structure = copy.deepcopy(self.network_structure)
             network_structure.insert(0, _attributes_of_feature)  # 插入输入层结构
 
-            self.parameters = self.initializer(attributes_or_structure=network_structure)
+            self.parameters = self.initializer(
+                attributes_or_structure=np.asarray(network_structure, dtype=_cml_precision.int))
         # 使用优化器优化
         self.parameters = self.optimizer(x, y, epochs, self.parameters, verbose, self.loss, self.metric, callbacks)
         # 标记训练完成
@@ -129,9 +130,22 @@ class BackPropagationNeuralNetwork(BaseModel):
             CLASSICML_LOGGER.error('请检查参数的数据类型')
             raise TypeError('参数的类型错误')
 
+        x = np.asarray(x, dtype=_cml_precision.float)
         y_pred, _ = self.optimizer.forward(x, self.parameters)
 
         return y_pred
+
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        return super(BackPropagationNeuralNetwork, self).score(x, y)
 
     def load_weights(self, filepath):
         """加载模型参数.
