@@ -141,6 +141,7 @@ class SupportVectorClassifier(BaseModel):
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
+        x = np.asarray(x, dtype=_cml_precision.float)
         number_of_sample = x.shape[0]
         y_pred = np.ones((number_of_sample, ), dtype=_cml_precision.int)
 
@@ -151,6 +152,18 @@ class SupportVectorClassifier(BaseModel):
                 y_pred[sample] = -1
 
         return y_pred
+
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        return super(SupportVectorClassifier, self).score(x, y)
 
     def load_weights(self, filepath):
         """加载模型参数.

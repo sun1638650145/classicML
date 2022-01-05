@@ -7,7 +7,7 @@
 
     1. classicML 兼容的Python版本: Python 3.7-3.9
     2. classicML 仅支持64位的系统，强行在32位系统上编译可能会导致精度异常
-    3. classicML 现已支持在Apple M1上原生运行, 但您需要使用 Python 3.8 以上版本的
+    3. classicML 现已支持在Apple M1上原生运行, 但您需要使用 Python 3.8 以上的版本
     4. classicML 将在v0.7.1的正式版开始支持Windows平台
 
 .. _header-n67:
@@ -57,7 +57,7 @@ Python 虚拟环境用于将软件包和系统隔离，避免你的误操作导�
 --------------------------
 
 .. warning::
-    你执行完上面的操作就已经安装成功classicML，但是，你可以通过下面的方式安装拥有加速版本的classicML. 你可以选择以下两种方式中的任意一种进行安装加速版的classicML。值得注意的是，非常不推荐使用源码编译的方式在Windows安装.
+    你执行完上面的操作就已经安装成功classicML，但是，你可以通过下面的方式安装拥有加速版本的classicML. 你可以选择以下两种方式中的任意一种进行安装加速版的classicML.值得注意的是，非常不推荐使用源码编译的方式在Windows安装.
 
 .. _header-n136:
 
@@ -76,7 +76,7 @@ Python 虚拟环境用于将软件包和系统隔离，避免你的误操作导�
 .. note::
     1. Eigen 3 的版本不得低于 3.3.7
     2. classicML 0.5~0.7 pybind11 的版本为 2.6.0~2.8.1
-    3. classicML 0.7.x+ pybind11 的版本不得低于 2.9.0
+    3. classicML 0.7.X以及更高版本 pybind11 的版本不得低于 2.9.0
     4. C++ 的版本不得低于 c++17
 
 .. _header-n99:

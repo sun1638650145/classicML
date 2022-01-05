@@ -13,7 +13,7 @@ model = cml.models.SVC()
 model = cml.models.DecisionTreeClassifier()
 ```
 
-目前，在 classicML 中大部分模型都有五个类方法```model.compile()```，```model.fit()```，```model.predict()```，```model.save_weights()```，```model.load_weights()```；前三个类方法分别控制模型工作流程中的编译模型参数，训练模型，使用训练好的模型进行预测推理；后两个方法可以实现模型权重的保存和加载. 以支持向量机为例，流程大概是这样的：
+目前，在 classicML 中大部分模型都有六个类方法```model.compile()```，```model.fit()```，```model.predict()```，```model.score()```，```model.save_weights()```，```model.load_weights()```；前四个类方法分别控制模型工作流程中的编译模型参数，训练模型，使用训练好的模型进行预测推理和在预测模式下计算准确率；后两个方法可以实现模型权重的保存和加载. 以支持向量机为例，流程大概是这样的：
 
 ```python
 import classicML as cml
@@ -1107,6 +1107,23 @@ predict(x)
 #### 异常
 
 * <b>ValueError</b>: 模型没有训练的错误.
+
+### score
+
+```python
+score(x, y)
+```
+
+在预测模式下计算准确率.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+
+#### 返回
+
+当前的准确率.
 
 ### load_weights
 
