@@ -178,6 +178,18 @@ class DecisionTreeClassifier(BaseModel):
         else:
             return self._predict(x, decision_tree.subtree[x[decision_tree.feature_index]])
 
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        return super(DecisionTreeClassifier, self).score(x, y)
+
     def load_weights(self, filepath):
         """加载模型参数.
 

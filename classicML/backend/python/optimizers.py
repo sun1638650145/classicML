@@ -958,7 +958,8 @@ class SequentialMinimalOptimization(Optimizer):
             if entire_flag is True:
                 # 遍历所有样本还是没有更新, 就退出循环.
                 if pair_of_alpha_changed == 0:
-                    support = self.non_zero_alphas.nonzero()[0]
+                    # `numpy.nonzero`获取索引产生的新数组, 类型默认为pure int(参与numpy自动转换为np.int64).
+                    support = _cml_precision.int(self.non_zero_alphas.nonzero()[0])
                     support_vector = x[support]
                     support_alpha = self.alphas[self.non_zero_alphas]
                     support_y = y[support]
@@ -968,7 +969,7 @@ class SequentialMinimalOptimization(Optimizer):
             elif pair_of_alpha_changed == 0:
                 entire_flag = True
 
-        # `numpy.nonzero`获取索引产生的新数组, 类型默认为pure int(参与numpy自动转换为np.int64),
+        # `numpy.nonzero`获取索引产生的新数组, 类型默认为pure int(参与numpy自动转换为np.int64).
         support = _cml_precision.int(self.non_zero_alphas.nonzero()[0])
         support_vector = x[support]
         support_alpha = self.alphas[self.non_zero_alphas]
