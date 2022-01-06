@@ -203,9 +203,14 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
                             D_c_xi.update({name: _cml_precision.float(value_count[name].values)})
 
                         p_c.update({x.columns[attribute]: {
-                                    'continuous': continuous,
-                                    'values': [D_c_xi, c_xi.shape[0], num_of_unique_value],
-                                    'smoothing': self.smoothing}})
+                            'continuous': continuous,
+                            'values': [
+                                D_c_xi,
+                                # 指明数据类型, pure int在32位精度下会占用更多的内存.
+                                _cml_precision.int(c_xi.shape[0]),
+                                _cml_precision.int(num_of_unique_value)
+                            ],
+                            'smoothing': self.smoothing}})
 
                 self._list_of_p_c.append({'category': category, 'attribute': value, 'p_c': p_c})
 
@@ -519,7 +524,19 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
                 x_test = x.iloc[i, :]
                 y_pred.append(self._predict(x_test))
 
-        return y_pred
+        return np.asarray(y_pred)
+
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        return super(AveragedOneDependentEstimator, self).score(x, y)
 
     def load_weights(self, filepath):
         """加载模型参数.
@@ -597,6 +614,6 @@ class AveragedOneDependentEstimator(SuperParentOneDependentEstimator):
             avg_result['1'] += _temp_y_pred[1]
 
         if avg_result['0'] > avg_result['1']:
-            return 0
+            return _cml_precision.int(0)
         else:
-            return 1
+            return _cml_precision.int(1)
