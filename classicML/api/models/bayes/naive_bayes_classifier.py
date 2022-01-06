@@ -84,8 +84,6 @@ class NaiveBayesClassifier(BaseModel):
 
         # 获取类先验概率P(c).
         self.p_0, self.p_1 = get_prior_probability(len(x.values), y.values, self.smoothing)
-        self.p_0 = _cml_precision.float(self.p_0)
-        self.p_1 = _cml_precision.float(self.p_1)
 
         number_of_samples, number_of_attributes = x.shape
         # 获取每个属性类条件概率P(x_i|c)或类概率密度p(x_i|c)所需的信息.
@@ -104,11 +102,11 @@ class NaiveBayesClassifier(BaseModel):
                 xi1_var = np.var(xi1)
 
                 self.pi_0.update({x.columns[attribute]: {
-                                  'continuous': continuous,
-                                  'values': [xi0_mean, xi0_var]}})  # values存放了均值和方差.
+                    'continuous': continuous,
+                    'values': [xi0_mean, xi0_var]}})  # values存放了均值和方差.
                 self.pi_1.update({x.columns[attribute]: {
-                                  'continuous': continuous,
-                                  'values': [xi1_mean, xi1_var]}})
+                    'continuous': continuous,
+                    'values': [xi1_mean, xi1_var]}})
             else:
                 # 离散值计算条件概率信息.
                 unique_value = xi.unique()
@@ -188,7 +186,7 @@ class NaiveBayesClassifier(BaseModel):
                 x_test = x.iloc[i, :]
                 y_pred.append(self._predict(x_test, p_0, p_1, probability))
 
-        return y_pred
+        return np.asarray(y_pred)
 
     def _predict(self, x, p_0, p_1, probability):
         """通过朴素贝叶斯分类器预测单个样本.
@@ -229,9 +227,21 @@ class NaiveBayesClassifier(BaseModel):
             return [p_0 / (p_0 + p_1), p_1 / (p_0 + p_1)]
         else:
             if p_0 > p_1:
-                return 0
+                return _cml_precision.int(0)
             else:
-                return 1
+                return _cml_precision.int(1)
+
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        return super(NaiveBayesClassifier, self).score(x, y)
 
     def load_weights(self, filepath):
         """加载模型参数.
