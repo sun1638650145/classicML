@@ -9,6 +9,6 @@ formats:
 
 # 编译文档时需要的依赖
 python:
-  version: 3.7
+  version: 3.8
   install:
     - requirements: docs/requirements.txt
