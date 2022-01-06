@@ -244,9 +244,9 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
                 y_pred.append([p_0 / (p_0 + p_1), p_1 / (p_0 + p_1)])
             else:
                 if p_0 > p_1:
-                    y_pred.append(0)
+                    y_pred.append(_cml_precision.int(0))
                 else:
-                    y_pred.append(1)
+                    y_pred.append(_cml_precision.int(1))
         else:
             for i in range(x.shape[0]):
                 x_test = x.iloc[i, :]
@@ -255,11 +255,23 @@ class SuperParentOneDependentEstimator(OneDependentEstimator):
                     y_pred.append([p_0 / (p_0 + p_1), p_1 / (p_0 + p_1)])
                 else:
                     if p_0 > p_1:
-                        y_pred.append(0)
+                        y_pred.append(_cml_precision.int(0))
                     else:
-                        y_pred.append(1)
+                        y_pred.append(_cml_precision.int(1))
 
-        return y_pred
+        return np.asarray(y_pred)
+
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        return super(SuperParentOneDependentEstimator, self).score(x, y)
 
     def load_weights(self, filepath):
         """加载模型参数.
