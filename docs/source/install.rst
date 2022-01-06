@@ -75,8 +75,8 @@ Python 虚拟环境用于将软件包和系统隔离，避免你的误操作导�
 
 .. note::
     1. Eigen 3 的版本不得低于 3.3.7
-    2. classicML 0.5~0.7 pybind11 的版本为 2.6.0~2.8.1
-    3. classicML 0.7.X以及更高版本 pybind11 的版本不得低于 2.9.0
+    2. 若使用 pybind11 2.6.0或更高版本, 可以编译 classicML 0.5～0.7
+    3. 若使用 pybind11 2.9.0或更高版本, 可以编译 classicML 0.7.1或更高版本
     4. C++ 的版本不得低于 c++17
 
 .. _header-n99:
