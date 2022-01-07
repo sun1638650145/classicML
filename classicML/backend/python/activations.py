@@ -1,7 +1,7 @@
 """classicML的激活函数."""
 import numpy as np
 
-__version__ = 'backend.python.activations.0.6.b0'
+__version__ = 'backend.python.activations.0.6.1'
 
 
 class Activation(object):

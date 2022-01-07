@@ -1,5 +1,7 @@
 """classicML的回调函数."""
 
+__version__ = 'backend.python.callbacks.0.2'
+
 
 class History(object):
     """保存训练的历史记录.

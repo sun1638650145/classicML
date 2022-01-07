@@ -30,7 +30,7 @@ else:
     from classicML.backend.python.ops import clip_alpha
     from classicML.backend.python.ops import select_second_alpha
 
-__version__ = 'backend.python.optimizers.0.1.a2'
+__version__ = 'backend.python.optimizers.0.1'
 
 
 def _get_optimizer_parameters(args, kwargs):

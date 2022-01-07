@@ -63,5 +63,5 @@ Arguments:
 )pbdoc",
             pybind11::arg("loss_value"), pybind11::arg("metric_name"));
 
-    m.attr("__version__") = "backend.cc.callbacks.0.2dev20211208";
+    m.attr("__version__") = "backend.cc.callbacks.0.2";
 }

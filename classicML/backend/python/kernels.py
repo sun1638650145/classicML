@@ -1,7 +1,7 @@
 """classicML的核函数."""
 import numpy as np
 
-__version__ = 'backend.python.kernels.0.10.b0'
+__version__ = 'backend.python.kernels.0.10.2'
 
 
 class Kernel(object):

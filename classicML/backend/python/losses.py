@@ -1,7 +1,7 @@
 """classicML的损失函数."""
 import numpy as np
 
-__version__ = 'backend.python.losses.0.8.b0'
+__version__ = 'backend.python.losses.0.8.1'
 
 
 class Loss(object):

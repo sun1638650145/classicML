@@ -51,8 +51,3 @@ cml.plots.plot_lda(model, ds.x, ds.y, '密度', '含糖率')
 ```
 
 * [更多示例代码点击](https://github.com/sun1638650145/classicML/tree/master/examples)
-
-## v0.7 预览
-
-在之前的版本`classicML`全局精度是`float64`的，现在我们引入`CLASSICML_PRECISION`，这样你就可以控制全局精度，使用32位的精度时，可以获得更快的运行速度和更小固化模型。
-

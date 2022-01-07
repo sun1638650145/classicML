@@ -50,5 +50,5 @@ Arguments:
             pybind11::arg("loss"),
             pybind11::arg("metric"));
 
-    m.attr("__version__") = "backend.cc._utils.0.2dev20211206";
+    m.attr("__version__") = "backend.cc._utils.0.2";
 }

@@ -4,6 +4,8 @@ from time import time
 
 import numpy as np
 
+__version__ = 'backend.python._utils.0.2'
+
 
 class ProgressBar(object):
     """训练进度条.
