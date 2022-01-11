@@ -8,39 +8,40 @@
 
 #include "activations.h"
 
-activations::Activation::Activation() {
+namespace activations {
+Activation::Activation() {
     this->name = "activation";
 }
 
-activations::Activation::Activation(std::string name) {
+Activation::Activation(std::string name) {
     this->name = std::move(name);
 }
 
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
-template<typename Matrix> Matrix activations::Activation::PyCall(const Matrix &z) {
+template<typename Matrix> Matrix Activation::PyCall(const Matrix &z) {
     throw exceptions::NotImplementedError();
 }
 
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 template<typename Matrix>
-Matrix activations::Activation::Diff(const Matrix &output,
-                                     const Matrix &a,
-                                     const pybind11::args &args,
-                                     const pybind11::kwargs &kwargs) {
+Matrix Activation::Diff(const Matrix &output,
+                        const Matrix &a,
+                        const pybind11::args &args,
+                        const pybind11::kwargs &kwargs) {
     throw exceptions::NotImplementedError();
 }
 
-activations::Relu::Relu() {
+Relu::Relu() {
     this->name = "relu";
 }
 
-activations::Relu::Relu(std::string name) {
+Relu::Relu(std::string name) {
     this->name = std::move(name);
 }
 
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 // 经过激活后的张量, 输入为张量.
-template<typename Matrix> Matrix activations::Relu::PyCall(const Matrix &z) {
+template<typename Matrix> Matrix Relu::PyCall(const Matrix &z) {
     Matrix result(z.rows(), z.cols());
 
     for (int32 row = 0; row < z.rows(); row ++) {
@@ -59,10 +60,10 @@ template<typename Matrix> Matrix activations::Relu::PyCall(const Matrix &z) {
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 // 计算函数的微分, 输入为前向传播输出的张量和输入的张量.
 template<typename Matrix>
-Matrix activations::Relu::Diff(const Matrix &output,
-                               const Matrix &a,
-                               const pybind11::args &args,
-                               const pybind11::kwargs &kwargs) {
+Matrix Relu::Diff(const Matrix &output,
+                  const Matrix &a,
+                  const pybind11::args &args,
+                  const pybind11::kwargs &kwargs) {
     Matrix da = output;
 
     for (int32 row = 0; row < a.rows(); row ++) {
@@ -76,17 +77,17 @@ Matrix activations::Relu::Diff(const Matrix &output,
     return da;
 }
 
-activations::Sigmoid::Sigmoid() {
+Sigmoid::Sigmoid() {
     this->name = "sigmoid";
 }
 
-activations::Sigmoid::Sigmoid(std::string name) {
+Sigmoid::Sigmoid(std::string name) {
     this->name = std::move(name);
 }
 
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 // 经过激活后的张量, 输入为张量.
-template<typename Matrix> Matrix activations::Sigmoid::PyCall(const Matrix &z) {
+template<typename Matrix> Matrix Sigmoid::PyCall(const Matrix &z) {
     Matrix result(z.rows(), z.cols());
     result = 1 / (1 + (-z.array()).exp());
 
@@ -96,10 +97,10 @@ template<typename Matrix> Matrix activations::Sigmoid::PyCall(const Matrix &z) {
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 // 计算函数的微分, 输入为输出的张量, 输入的张量和真实的标签.
 template<typename Matrix>
-Matrix activations::Sigmoid::Diff(const Matrix &output,
-                                  const Matrix &a,
-                                  const pybind11::args &args,
-                                  const pybind11::kwargs &kwargs) {
+Matrix Sigmoid::Diff(const Matrix &output,
+                     const Matrix &a,
+                     const pybind11::args &args,
+                     const pybind11::kwargs &kwargs) {
     Matrix y_true = pybind11::cast<Matrix>(args[0]);
     Matrix error = y_true - output;
     Matrix da = a.array() * (1 - a.array()) * error.array();
@@ -107,18 +108,18 @@ Matrix activations::Sigmoid::Diff(const Matrix &output,
     return da;
 }
 
-activations::Softmax::Softmax() {
+Softmax::Softmax() {
     this->name = "softmax";
 }
 
-activations::Softmax::Softmax(std::string name) {
+Softmax::Softmax(std::string name) {
     this->name = std::move(name);
 }
 
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 // 经过激活后的张量, 输入为张量.
 template<typename Matrix>
-Matrix activations::Softmax::PyCall(const Matrix &z) {
+Matrix Softmax::PyCall(const Matrix &z) {
     Matrix temp_z = z;
     Matrix result = z;
 
@@ -138,56 +139,57 @@ Matrix activations::Softmax::PyCall(const Matrix &z) {
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 // Softmax函数的微分, 输入为输出的张量, 输入的张量和真实的标签.
 template<typename Matrix>
-Matrix activations::Softmax::Diff(const Matrix &output,
-                                  const Matrix &a,
-                                  const pybind11::args &args,
-                                  const pybind11::kwargs &kwargs) {
+Matrix Softmax::Diff(const Matrix &output,
+                     const Matrix &a,
+                     const pybind11::args &args,
+                     const pybind11::kwargs &kwargs) {
     Matrix da = a - output;
 
     return da;
 }
 
 // 显式实例化.
-template matrix32 activations::Activation::PyCall(const matrix32 &z);
-template matrix64 activations::Activation::PyCall(const matrix64 &z);
-template matrix32 activations::Activation::Diff(const matrix32 &output,
-                                                const matrix32 &a,
-                                                const pybind11::args &args,
-                                                const pybind11::kwargs &kwargs);
-template matrix64 activations::Activation::Diff(const matrix64 &output,
-                                                const matrix64 &a,
-                                                const pybind11::args &args,
-                                                const pybind11::kwargs &kwargs);
+template matrix32 Activation::PyCall(const matrix32 &z);
+template matrix64 Activation::PyCall(const matrix64 &z);
+template matrix32 Activation::Diff(const matrix32 &output,
+                                   const matrix32 &a,
+                                   const pybind11::args &args,
+                                   const pybind11::kwargs &kwargs);
+template matrix64 Activation::Diff(const matrix64 &output,
+                                   const matrix64 &a,
+                                   const pybind11::args &args,
+                                   const pybind11::kwargs &kwargs);
 
-template matrix32 activations::Relu::PyCall(const matrix32 &z);
-template matrix64 activations::Relu::PyCall(const matrix64 &z);
-template matrix32 activations::Relu::Diff(const matrix32 &output,
-                                          const matrix32 &a,
-                                          const pybind11::args &args,
-                                          const pybind11::kwargs &kwargs);
-template matrix64 activations::Relu::Diff(const matrix64 &output,
-                                          const matrix64 &a,
-                                          const pybind11::args &args,
-                                          const pybind11::kwargs &kwargs);
+template matrix32 Relu::PyCall(const matrix32 &z);
+template matrix64 Relu::PyCall(const matrix64 &z);
+template matrix32 Relu::Diff(const matrix32 &output,
+                             const matrix32 &a,
+                             const pybind11::args &args,
+                             const pybind11::kwargs &kwargs);
+template matrix64 Relu::Diff(const matrix64 &output,
+                             const matrix64 &a,
+                             const pybind11::args &args,
+                             const pybind11::kwargs &kwargs);
 
-template matrix32 activations::Sigmoid::PyCall(const matrix32 &z);
-template matrix64 activations::Sigmoid::PyCall(const matrix64 &z);
-template matrix32 activations::Sigmoid::Diff(const matrix32 &output,
-                                             const matrix32 &a,
-                                             const pybind11::args &args,
-                                             const pybind11::kwargs &kwargs);
-template matrix64 activations::Sigmoid::Diff(const matrix64 &output,
-                                             const matrix64 &a,
-                                             const pybind11::args &args,
-                                             const pybind11::kwargs &kwargs);
+template matrix32 Sigmoid::PyCall(const matrix32 &z);
+template matrix64 Sigmoid::PyCall(const matrix64 &z);
+template matrix32 Sigmoid::Diff(const matrix32 &output,
+                                const matrix32 &a,
+                                const pybind11::args &args,
+                                const pybind11::kwargs &kwargs);
+template matrix64 Sigmoid::Diff(const matrix64 &output,
+                                const matrix64 &a,
+                                const pybind11::args &args,
+                                const pybind11::kwargs &kwargs);
 
-template matrix32 activations::Softmax::PyCall(const matrix32 &z);
-template matrix64 activations::Softmax::PyCall(const matrix64 &z);
-template matrix32 activations::Softmax::Diff(const matrix32 &output,
-                                             const matrix32 &a,
-                                             const pybind11::args &args,
-                                             const pybind11::kwargs &kwargs);
-template matrix64 activations::Softmax::Diff(const matrix64 &output,
-                                             const matrix64 &a,
-                                             const pybind11::args &args,
-                                             const pybind11::kwargs &kwargs);
+template matrix32 Softmax::PyCall(const matrix32 &z);
+template matrix64 Softmax::PyCall(const matrix64 &z);
+template matrix32 Softmax::Diff(const matrix32 &output,
+                                const matrix32 &a,
+                                const pybind11::args &args,
+                                const pybind11::kwargs &kwargs);
+template matrix64 Softmax::Diff(const matrix64 &output,
+                                const matrix64 &a,
+                                const pybind11::args &args,
+                                const pybind11::kwargs &kwargs);
+}  // namespace activations

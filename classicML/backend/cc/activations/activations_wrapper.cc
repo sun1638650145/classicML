@@ -208,5 +208,5 @@ Softmax函数的微分.
     m.attr("sigmoid") = activations::Sigmoid();
     m.attr("softmax") = activations::Softmax();
 
-    m.attr("__version__") = "backend.cc.activations.0.6.1";
+    m.attr("__version__") = "backend.cc.activations.0.6.2";
 }

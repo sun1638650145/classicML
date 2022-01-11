@@ -139,5 +139,5 @@ Arguments:
     // Aliases.
     m.attr("MSE") = m.attr("MeanSquaredError");
 
-    m.attr("__version__") = "backend.cc.losses.0.8.1";
+    m.attr("__version__") = "backend.cc.losses.0.8.2";
 }

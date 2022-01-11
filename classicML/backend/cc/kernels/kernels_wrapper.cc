@@ -189,5 +189,5 @@ Arguments:
         .def("__call__", &kernels::Sigmoid::PyCall<matrix32>, pybind11::arg("x_i"), pybind11::arg("x_j"))
         .def("__call__", &kernels::Sigmoid::PyCall<matrix64>, pybind11::arg("x_i"), pybind11::arg("x_j"));
 
-    m.attr("__version__") = "backend.cc.kernels.0.10.2";
+    m.attr("__version__") = "backend.cc.kernels.0.10.3";
 }
