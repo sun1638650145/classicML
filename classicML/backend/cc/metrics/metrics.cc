@@ -8,26 +8,27 @@
 
 #include "metrics.h"
 
-metrics::Metric::Metric() {
+namespace metrics {
+Metric::Metric() {
     this->name = "metric";
 }
 
-metrics::Metric::Metric(std::string name) {
+Metric::Metric(std::string name) {
     this->name = std::move(name);
 }
 
 // `Dtype` 兼容32位和64位浮点数, `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 // 不支持不同位数模板兼容.
 template<typename Dtype, typename Matrix>
-Dtype metrics::Metric::PyCall(const Matrix &y_pred, const Matrix &y_true) {
+Dtype Metric::PyCall(const Matrix &y_pred, const Matrix &y_true) {
     throw exceptions::NotImplementedError(); // 与Py后端实现相同, 主动抛出异常.
 }
 
-metrics::Accuracy::Accuracy() {
+Accuracy::Accuracy() {
     this->name = "accuracy";
 }
 
-metrics::Accuracy::Accuracy(std::string name) {
+Accuracy::Accuracy(std::string name) {
     this->name = std::move(name);
 }
 
@@ -35,7 +36,7 @@ metrics::Accuracy::Accuracy(std::string name) {
 // 不支持不同位数模板兼容.
 // 返回准确率, 输入为两个张量(两个向量必须形状一致).
 template<typename Dtype, typename Matrix>
-Dtype metrics::Accuracy::PyCall(const Matrix &y_pred, const Matrix &y_true) {
+Dtype Accuracy::PyCall(const Matrix &y_pred, const Matrix &y_true) {
     if (y_pred.cols() == 1) {
         BinaryAccuracy metric = BinaryAccuracy();
         return metric.PyCall<Dtype, Matrix>(y_pred, y_true);
@@ -45,11 +46,11 @@ Dtype metrics::Accuracy::PyCall(const Matrix &y_pred, const Matrix &y_true) {
     }
 }
 
-metrics::BinaryAccuracy::BinaryAccuracy() {
+BinaryAccuracy::BinaryAccuracy() {
     this->name = "binary_accuracy";
 }
 
-metrics::BinaryAccuracy::BinaryAccuracy(std::string name) {
+BinaryAccuracy::BinaryAccuracy(std::string name) {
     this->name = std::move(name);
 }
 
@@ -57,7 +58,7 @@ metrics::BinaryAccuracy::BinaryAccuracy(std::string name) {
 // 不支持不同位数模板兼容.
 // 返回准确率, 输入为两个张量(两个向量必须形状一致).
 template<typename Dtype, typename Matrix>
-Dtype metrics::BinaryAccuracy::PyCall(const Matrix &y_pred, const Matrix &y_true) {
+Dtype BinaryAccuracy::PyCall(const Matrix &y_pred, const Matrix &y_true) {
     if (y_pred.cols() != y_true.cols() || y_pred.rows() != y_true.rows()) {
         throw pybind11::value_error("形状不一致");
     }
@@ -74,11 +75,11 @@ Dtype metrics::BinaryAccuracy::PyCall(const Matrix &y_pred, const Matrix &y_true
     return accuracy / (Dtype)y_pred.size();
 }
 
-metrics::CategoricalAccuracy::CategoricalAccuracy() {
+CategoricalAccuracy::CategoricalAccuracy() {
     this->name = "categorical_accuracy";
 }
 
-metrics::CategoricalAccuracy::CategoricalAccuracy(std::string name) {
+CategoricalAccuracy::CategoricalAccuracy(std::string name) {
     this->name = std::move(name);
 }
 
@@ -86,7 +87,7 @@ metrics::CategoricalAccuracy::CategoricalAccuracy(std::string name) {
 // 不支持不同位数模板兼容.
 // 返回准确率, 输入为两个张量(两个向量必须形状一致).
 template<typename Dtype, typename Matrix>
-Dtype metrics::CategoricalAccuracy::PyCall(const Matrix &y_pred, const Matrix &y_true) {
+Dtype CategoricalAccuracy::PyCall(const Matrix &y_pred, const Matrix &y_true) {
     if (y_pred.cols() != y_true.cols() || y_pred.rows() != y_true.rows()) {
         throw pybind11::value_error("形状不一致");
     }
@@ -109,14 +110,15 @@ Dtype metrics::CategoricalAccuracy::PyCall(const Matrix &y_pred, const Matrix &y
 }
 
 // 显式实例化.
-template float32 metrics::Metric::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
-template float64 metrics::Metric::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
+template float32 Metric::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
+template float64 Metric::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
 
-template float32 metrics::Accuracy::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
-template float64 metrics::Accuracy::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
+template float32 Accuracy::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
+template float64 Accuracy::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
 
-template float32 metrics::BinaryAccuracy::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
-template float64 metrics::BinaryAccuracy::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
+template float32 BinaryAccuracy::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
+template float64 BinaryAccuracy::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
 
-template float32 metrics::CategoricalAccuracy::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
-template float64 metrics::CategoricalAccuracy::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
+template float32 CategoricalAccuracy::PyCall(const matrix32 &y_pred, const matrix32 &y_true);
+template float64 CategoricalAccuracy::PyCall(const matrix64 &y_pred, const matrix64 &y_true);
+}  // namespace metrics

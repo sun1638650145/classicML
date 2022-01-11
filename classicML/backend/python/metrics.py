@@ -1,7 +1,7 @@
 """classicML的评估函数."""
 import numpy as np
 
-__version__ = 'backend.python.metrics.0.4.1'
+__version__ = 'backend.python.metrics.0.4.2'
 
 
 class Metric(object):
