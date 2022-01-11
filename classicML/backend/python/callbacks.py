@@ -1,6 +1,6 @@
 """classicML的回调函数."""
 
-__version__ = 'backend.python.callbacks.0.2'
+__version__ = 'backend.python.callbacks.0.2.1'
 
 
 class History(object):

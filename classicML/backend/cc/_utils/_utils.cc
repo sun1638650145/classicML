@@ -8,39 +8,40 @@
 
 #include "_utils.h"
 
-_utils::ProgressBar::ProgressBar(const uint32 &epochs,
-                                 const pybind11::object &loss,
-                                 const pybind11::object &metric) {
+namespace _utils {
+ProgressBar::ProgressBar(const uint32 &epochs,
+                         const pybind11::object &loss,
+                         const pybind11::object &metric) {
     this->epochs = epochs;
     this->loss = loss;
     this->metric = metric;
 }
 
 // 输入当前的训练轮数, 当前的时间戳, 当前的损失值和当前的评估值.
-void _utils::ProgressBar::PyCall(const uint32 &epoch,
-                                 const float64 &current,
-                                 const float64 &loss_value,
-                                 const float64 &metric_value) {
+void ProgressBar::PyCall(const uint32 &epoch,
+                         const float64 &current,
+                         const float64 &loss_value,
+                         const float64 &metric_value) {
     this->_update_info(epoch, current, loss_value, metric_value);
     this->_dynamic_display();
 }
 
 // 在终端上显示进度条, 输入当前的训练轮数, 当前的时间戳, 当前的损失值和当前的评估值.
-void _utils::ProgressBar::_update_info(const uint32 &epoch,
-                                       const float64 &current,
-                                       const float64 &loss_value,
-                                       const float64 &metric_value) {
+void ProgressBar::_update_info(const uint32 &epoch,
+                               const float64 &current,
+                               const float64 &loss_value,
+                               const float64 &metric_value) {
     this->_draw_bar(epoch);
     this->_draw_detail(epoch, current, loss_value, metric_value);
 }
 
 // 在终端显示.
-void _utils::ProgressBar::_dynamic_display() {
+void ProgressBar::_dynamic_display() {
     std::cout << "\r" << this->info;
 }
 
 // 绘制进度条(无论总的训练轮数是多少, 显示条的总更新步数是25次), 输入当前的训练轮数.
-void _utils::ProgressBar::_draw_bar(const uint32 &epoch) {
+void ProgressBar::_draw_bar(const uint32 &epoch) {
     this->info = "Epoch " + std::to_string(epoch) + "/" + std::to_string(this->epochs) + " [";
 
     if (epoch > (this->epochs - (this->epochs / 25))) {
@@ -62,7 +63,7 @@ void _utils::ProgressBar::_draw_bar(const uint32 &epoch) {
 }
 
 // 绘制显示的计算信息, 输入当前的训练轮数, 当前的时间戳, 当前的损失值和当前的评估值.
-void _utils::ProgressBar::_draw_detail(const uint32 &epoch,
+void ProgressBar::_draw_detail(const uint32 &epoch,
                                        const float64 &current,
                                        const float64 &loss_value,
                                        const float64 &metric_value) {
@@ -99,3 +100,4 @@ void _utils::ProgressBar::_draw_detail(const uint32 &epoch,
         this->info += '\n';
     }
 }
+}  // namespace _utils
