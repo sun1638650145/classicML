@@ -18,7 +18,7 @@
 
 PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
 
-template<typename> struct numpy_scalar;  // Forward declaration
+template<typename> struct numpy_scalar; // Forward declaration
 
 PYBIND11_NAMESPACE_BEGIN(detail)
 
@@ -87,10 +87,10 @@ struct npy_api_patch {
     }
 
     bool PyArray_Check_(PyObject *obj) const {
-        return (bool) PyObject_TypeCheck(obj, PyArray_Type_);
+        return PyObject_TypeCheck(obj, PyArray_Type_) != 0;
     }
     bool PyArrayDescr_Check_(PyObject *obj) const {
-        return (bool) PyObject_TypeCheck(obj, PyArrayDescr_Type_);
+        return PyObject_TypeCheck(obj, PyArrayDescr_Type_) != 0;
     }
 
     unsigned int (*PyArray_GetNDArrayCFeatureVersion_)();
