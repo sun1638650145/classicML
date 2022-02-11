@@ -254,3 +254,72 @@ class DecisionTreeClassifier(BaseModel):
         except TypeError:
             CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
             raise TypeError('模型权重保存失败')
+
+
+class TwoLevelDecisionTreeClassifier(BaseModel):
+    """2层决策树分类器.
+
+    Attributes:
+        tree: 生成的2层决策树.
+        generator: 生成2层决策树的实现算法.
+    """
+    def __init__(self):
+        """初始化2层决策树分类器.
+        """
+        super(TwoLevelDecisionTreeClassifier, self).__init__()
+
+        self.tree = None
+        self.generator = tree.generators.TwoLevelDecisionTreeGenerator()
+
+    def fit(self, x, y, **kwargs):
+        """训练2层决策树分类器.
+
+        Args:
+            x: numpy.ndarray or array-like, 特征数据.
+            y: numpy.ndarray or array-like, 标签.
+            kwargs:
+                sample_distribution: numpy.ndarray,
+                    样本分布.
+
+        Return:
+            TwoLevelDecisionTreeClassifier实例.
+        """
+        sample_distribution = kwargs['sample_distribution']
+
+        x = np.asarray(x, dtype=_cml_precision.float)
+        y = np.asarray(y, dtype=_cml_precision.int)
+
+        # 生成2层决策树分类器.
+        self.tree = self.generator(x, y, sample_distribution)
+
+        return self
+
+    def predict(self, x, **kwargs):
+        """使用2层决策树分类器进行预测.
+
+        Args:
+            x: numpy.ndarray or array-like, 特征数据.
+
+        Return:
+            TwoLevelDecisionTreeClassifier预测的结果.
+        """
+        y_pred = np.zeros(shape=len(x), dtype=_cml_precision.int)
+        for i, feature in enumerate(x):
+            y_pred[i] = self._predict(feature, self.tree)
+
+        return y_pred
+
+    def _predict(self, x, decision_tree):
+        """通过递归决策树预测结果.
+
+        Args:
+            x: numpy.ndarray, 特征数据.
+            decision_tree: classicML.backend.tree._TreeNode, 决策树实例.
+        """
+        if decision_tree.leaf:
+            return decision_tree.category
+
+        if x[decision_tree.feature_index] >= decision_tree.dividing_point:
+            return self._predict(x, decision_tree.subtree['upper_tree'])
+        else:
+            return self._predict(x, decision_tree.subtree['lower_tree'])

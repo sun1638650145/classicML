@@ -187,3 +187,72 @@ class Gini(Criterion):
         value = 1 - np.sum(pk ** 2)
 
         return value
+
+
+class WeightedGini(Criterion):
+    """带权重的基尼指数."""
+    def __init__(self, name='weighted_gini'):
+        super(WeightedGini, self).__init__(name=name)
+
+    def __call__(self, D, sample_distribution):
+        """计算带权重的基尼指数.
+
+        Args:
+            D: numpy.ndarray,
+                需要计算的数据集.
+            sample_distribution: numpy.ndarray,
+                样本分布.
+        """
+        normal_factor = np.sum(sample_distribution)
+
+        temp_dataframe = pd.DataFrame(data=np.vstack(tup=(D, sample_distribution)).T)  # 按列合并.
+        pk = temp_dataframe.groupby(by=0).sum().values  # 分组对分布求和.
+        pk /= normal_factor  # 进行归一化.
+
+        value = 1 - np.sum(pk ** 2)
+
+        return value
+
+    def get_value(self, *args, **kwargs):
+        """计算基尼指数的值.
+
+        Args:
+            args:
+                D: numpy.ndarray, 需要计算的数据集.
+                y: numpy.ndarray, 标签.
+                sample_distribution: numpy.ndarray,
+                    样本分布.
+        """
+        D, y, sample_distribution = args[0], args[1], args[2]
+
+        # 合并后, 进行排序.
+        temp_arr = np.vstack(tup=(D, y, sample_distribution)).T
+        indices = np.lexsort((temp_arr[:, 0],))
+        temp_arr = temp_arr[indices]
+
+        D, y, sample_distribution = temp_arr[:, 0], temp_arr[:, 1], temp_arr[:, 2]
+
+        normal_factor = np.sum(sample_distribution)
+        criterion_value = float('inf')
+        dividing_point = None
+
+        # 构建连续值候选划分点集.
+        T_set = [
+            ((D[i] + D[i + 1]) / 2) for i in range(len(D) - 1)
+        ]
+
+        for t in T_set:
+            y_upper = y[D >= t]
+            y_lower = y[D < t]
+            distribution_upper = sample_distribution[D >= t]
+            distribution_lower = sample_distribution[D < t]
+
+            current_criterion_value = (np.sum(distribution_upper) * self.__call__(y_upper, distribution_upper) +
+                                       np.sum(distribution_lower) * self.__call__(y_lower, distribution_lower))
+            current_criterion_value /= normal_factor  # 进行归一化.
+
+            if criterion_value > current_criterion_value:
+                criterion_value = current_criterion_value
+                dividing_point = t
+
+        return [criterion_value, dividing_point]

@@ -24,6 +24,10 @@ def get_criterion(criterion):
         return tree.criteria.Gain()
     elif criterion == 'entropy':
         return tree.criteria.Entropy()
+    elif criterion == 'weighted_gini':
+        return tree.criteria.WeightedGini()
+    elif isinstance(criterion, tree.criteria.Criterion):
+        return criterion
     else:
         CLASSICML_LOGGER.error('选择错误')
         raise AttributeError

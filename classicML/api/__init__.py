@@ -1,4 +1,5 @@
 from classicML.api.models import BaseModel
+from classicML.api.models import AdaBoostClassifier
 from classicML.api.models import AveragedOneDependentEstimator
 from classicML.api.models import AODE
 from classicML.api.models import BackPropagationNeuralNetwork
@@ -15,3 +16,4 @@ from classicML.api.models import SuperParentOneDependentEstimator
 from classicML.api.models import SPODE
 from classicML.api.models import SupportVectorClassifier
 from classicML.api.models import SVC
+from classicML.api.models import TwoLevelDecisionTreeClassifier

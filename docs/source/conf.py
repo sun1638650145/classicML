@@ -4,7 +4,7 @@ copyright = '2020-2022, Steve R. Sun'
 author = 'Steve R. Sun'
 
 # 版本号
-release = '0.7.1'
+release = '0.8a0'
 
 # markdown插件
 extensions = [

@@ -1,5 +1,5 @@
 """An easy-to-use ML framework."""
-__version__ = '0.7.1'
+__version__ = '0.8a0'
 
 import os
 import logging
@@ -25,6 +25,7 @@ from classicML.api import models
 from classicML.api import plots
 
 from classicML.api import BaseModel
+from classicML.api import AdaBoostClassifier
 from classicML.api import AveragedOneDependentEstimator
 from classicML.api import AODE
 from classicML.api import BackPropagationNeuralNetwork
@@ -41,6 +42,7 @@ from classicML.api import SuperParentOneDependentEstimator
 from classicML.api import SPODE
 from classicML.api import SupportVectorClassifier
 from classicML.api import SVC
+from classicML.api import TwoLevelDecisionTreeClassifier
 
 from classicML.backend import activations
 from classicML.backend import callbacks

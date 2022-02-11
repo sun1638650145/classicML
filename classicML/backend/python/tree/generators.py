@@ -1,4 +1,5 @@
 """classicML中树结构的生成器."""
+import numpy as np
 import pandas as pd
 
 from classicML import _cml_precision
@@ -87,6 +88,84 @@ class TreeGenerator(object):
     def tree_generate(self, *args, **kwargs):
         """树的生成实现."""
         raise NotImplementedError
+
+
+class TwoLevelDecisionTreeGenerator(TreeGenerator):
+    """2层决策树生成器.
+    """
+    def __init__(self, name='2-level_decision_tree_generator', criterion='weighted_gini'):
+        super(TwoLevelDecisionTreeGenerator, self).__init__(name, criterion)
+
+    def tree_generate(self, D, y, sample_distribution, height=0):
+        """生成决策树.
+
+        Args:
+            D: numpy.ndarray or array-like, 特征数据.
+            y: numpy.ndarray or array-like, 标签.
+            sample_distribution: numpy.ndarray,
+                样本分布.
+            height: int, default=0,
+                决策树的高度.
+
+        Return:
+            TwoLevelDecisionTreeGenerator实例.
+        """
+        decision_tree = _TreeNode()
+        decision_tree.height = height
+
+        # 高度为2或者样本少于2.
+        if height == 2 or len(D) <= 2:
+            positive_weight = np.sum(sample_distribution[y == 1])
+            negative_weight = np.sum(sample_distribution[y == -1])
+
+            # 设置为叶子结点.
+            decision_tree.leaf = True
+            if positive_weight > negative_weight:
+                decision_tree.category = 1
+            else:
+                decision_tree.category = -1
+
+            return decision_tree
+
+        decision_tree.feature_index, decision_tree.dividing_point = (
+            self.choose_feature_to_divide(D, y, sample_distribution)
+        )
+
+        D_upper = D[:, decision_tree.feature_index] >= decision_tree.dividing_point
+        D_lower = D[:, decision_tree.feature_index] < decision_tree.dividing_point
+
+        # 递归产生子树.
+        decision_tree.subtree['upper_tree'] = self.tree_generate(
+            D[D_upper, :], y[D_upper], sample_distribution[D_upper], height + 1)
+        decision_tree.subtree['lower_tree'] = self.tree_generate(
+            D[D_lower, :], y[D_lower], sample_distribution[D_lower], height + 1)
+
+        return decision_tree
+
+    def choose_feature_to_divide(self, D, y, sample_distribution):
+        """选择最优划分.
+
+        Args:
+            D: numpy.ndarray or array-like, 特征数据.
+            y: numpy.ndarray or array-like, 标签.
+            sample_distribution: numpy.ndarray,
+                样本分布.
+
+        Returns:
+            当前结点划分的类别的索引和划分点的值.
+        """
+        criterion_value = float('inf')
+        dividing_point = None
+        category_index = -1
+
+        for i in range(D.shape[1]):
+            current_criterion_value, current_dividing_point = self.criterion.get_value(D[:, i], y, sample_distribution)
+            if criterion_value > current_criterion_value:
+                criterion_value = current_criterion_value  # 更新迭代不可删.
+                dividing_point = current_dividing_point
+                category_index = i
+
+        return category_index, dividing_point
 
 
 class DecisionTreeGenerator(TreeGenerator):
