@@ -10,7 +10,7 @@ ds = cml.data.Dataset(label_mode='max-margin')
 ds.from_csv(DATASET_PATH)
 # 生成模型.
 model = cml.AdaBoostClassifier()
-model.compile()
+model.compile(base_algorithm=cml.TwoLevelDecisionTreeClassifier)
 # 训练模型.
 model.fit(ds.x, ds.y)
-print(model.alpha_list)
+print(model.predict(ds.x))

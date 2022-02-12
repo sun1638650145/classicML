@@ -1,6 +1,7 @@
 import numpy as np
 
 from classicML import _cml_precision
+from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.api.models import TwoLevelDecisionTreeClassifier
 
@@ -16,8 +17,10 @@ class AdaBoostClassifier(BaseModel):
             AdaBoost集成的基学习器列表.
         alpha_list: list of float,
             AdaBoost集成的基学习器对应的权重.
-        BaseLearner: `BaseLearner`实例,
+        BaseLearner: `BaseLearner`对象, default=None
             AdaBoost使用的基学习器.
+        is_trained: bool, default=False,
+            模型训练后将被标记为True.
     """
     def __init__(self):
         """初始化AdaBoost分类器.
@@ -26,7 +29,19 @@ class AdaBoostClassifier(BaseModel):
 
         self.estimators = []
         self.alpha_list = []
-        self.BaseLearner = TwoLevelDecisionTreeClassifier
+        self.BaseLearner = None
+
+        self.is_trained = False
+
+    def compile(self, base_algorithm=TwoLevelDecisionTreeClassifier):
+        """编译AdaBoost分类器.
+
+        Args:
+            base_algorithm: `BaseLearner`对象, default=TwoLevelDecisionTreeClassifier,
+                AdaBoost使用的基学习器算法;
+                目前只实现了`TwoLevelDecisionTreeClassifier`, 未来将接入更多算法.
+        """
+        self.BaseLearner = base_algorithm
 
     def fit(self, x, y, max_estimators=50):
         """训练AdaBoost分类器.
@@ -68,7 +83,35 @@ class AdaBoostClassifier(BaseModel):
             if error > 0.5 or error < EPSILON:
                 break
 
+        # 标记训练完成.
+        self.is_trained = True
+
         return self
 
     def predict(self, x, **kwargs):
-        pass
+        """使用AdaBoost分类器进行预测.
+
+        Args:
+            x: numpy.ndarray or array-like,
+                特征数据.
+
+        Return:
+            AdaBoostClassifier预测的结果.
+
+        Raise:
+            ValueError: 模型没有训练的错误.
+        """
+        if self.is_trained is False:
+            CLASSICML_LOGGER.error('模型没有训练')
+            raise ValueError('你必须先进行训练')
+
+        y_pred = np.zeros(shape=x.shape[0], dtype=_cml_precision.float)
+
+        for i, (estimator, alpha) in enumerate(zip(self.estimators, self.alpha_list)):
+            y_pred += alpha * estimator.predict(x)
+
+        y_pred /= np.sum(self.alpha_list)  # 进行规范化.
+        y_pred[y_pred >= 0] = 1
+        y_pred[y_pred < 0] = -1
+
+        return y_pred.astype(_cml_precision.int)
