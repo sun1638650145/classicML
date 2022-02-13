@@ -43,6 +43,15 @@ def _set_tree_axis(axes):
     axes.set_yticks([])
 
 
+def _adaboost_plot_config(CS, x_label, y_label):
+    """设置AdaBoost分类器的其他配置项."""
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.clabel(CS, fmt={CS.levels[0]: '决策边界'})
+    plt.axis([0, 1, 0, 1])
+    plt.legend()
+
+
 def _bayes_plot_config(x_label, y_label):
     """设置贝叶斯画布的其他配置项"""
     plt.xlabel(x_label)

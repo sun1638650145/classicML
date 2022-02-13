@@ -1,6 +1,8 @@
 """
 这个例子将展示如何使用AdaBoost分类器.
 """
+import sys
+
 import classicML as cml
 
 DATASET_PATH = './datasets/西瓜数据集alpha.csv'
@@ -13,4 +15,6 @@ model = cml.AdaBoostClassifier()
 model.compile(base_algorithm=cml.TwoLevelDecisionTreeClassifier)
 # 训练模型.
 model.fit(ds.x, ds.y)
-print(model.predict(ds.x))
+# 可视化模型(如果您使用的是macOS或Windows, 请注释掉此句, 这句是为了在CI上测试禁用绘图提高测试速度.)
+if sys.platform == 'linux':
+    cml.plots.plot_adaboost(model, ds.x, ds.y, '密度', '含糖率')
