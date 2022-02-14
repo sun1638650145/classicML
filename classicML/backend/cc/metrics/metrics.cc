@@ -66,8 +66,9 @@ Dtype BinaryAccuracy::PyCall(const Matrix &y_pred, const Matrix &y_true) {
     auto accuracy = (Dtype)y_pred.size();
 
     for (int32 i = 0; i < y_pred.size(); i++) {
-        if ((y_pred(i, 0) < 0.5 && y_true(i, 0) == 1) ||
-            (y_pred(i, 0) >= 0.5 && y_true(i, 0) == 0)) {
+        if ((y_pred(i, 0) < 0.5 and y_true(i, 0) == 1) or
+            (y_pred(i, 0) >= 0.5 and y_true(i, 0) == 0) or
+            (y_pred(i, 0) >= 0.5 and y_true(i, 0) == -1)) {
             accuracy -= 1;
         }
     }

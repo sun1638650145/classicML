@@ -115,3 +115,15 @@ class AdaBoostClassifier(BaseModel):
         y_pred[y_pred < 0] = -1
 
         return y_pred.astype(_cml_precision.int)
+
+    def score(self, x, y):
+        """在预测模式下计算准确率.
+
+        Arguments:
+            x: array-like, 特征数据.
+            y: array-like, 标签.
+
+        Returns:
+            当前的准确率.
+        """
+        return super(AdaBoostClassifier, self).score(x, y)
