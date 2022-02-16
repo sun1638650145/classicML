@@ -1,10 +1,12 @@
+from pickle import dumps, loads
+
 import numpy as np
 
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.api.models import TwoLevelDecisionTreeClassifier
-
+from classicML.backend import io
 
 EPSILON = 1e-36  # 常小数.
 
@@ -21,6 +23,8 @@ class AdaBoostClassifier(BaseModel):
             AdaBoost使用的基学习器.
         is_trained: bool, default=False,
             模型训练后将被标记为True.
+        is_loaded: bool, default=False,
+            如果模型加载了权重将被标记为True.
     """
     def __init__(self):
         """初始化AdaBoost分类器.
@@ -32,6 +36,7 @@ class AdaBoostClassifier(BaseModel):
         self.BaseLearner = None
 
         self.is_trained = False
+        self.is_loaded = False
 
     def compile(self, base_algorithm=TwoLevelDecisionTreeClassifier):
         """编译AdaBoost分类器.
@@ -101,7 +106,7 @@ class AdaBoostClassifier(BaseModel):
         Raise:
             ValueError: 模型没有训练的错误.
         """
-        if self.is_trained is False:
+        if self.is_trained is False and self.is_loaded is False:
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
@@ -127,3 +132,60 @@ class AdaBoostClassifier(BaseModel):
             当前的准确率.
         """
         return super(AdaBoostClassifier, self).score(x, y)
+
+    def load_weights(self, filepath):
+        """加载模型参数.
+
+        Arguments:
+            filepath: str, 权重文件加载的路径.
+
+        Raises:
+            KeyError: 模型权重加载失败.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='r',
+                                                   model_name='AdaBoostClassifier')
+        # 加载模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            self.BaseLearner = loads(compile_ds.attrs['base_algorithm'].tobytes())
+
+            self.estimators = loads(weights_ds.attrs['estimators'].tobytes())
+            self.alpha_list = weights_ds.attrs['alpha_list']
+            # 标记加载完成.
+            self.is_loaded = True
+        except KeyError:
+            CLASSICML_LOGGER.error('模型权重加载失败, 请检查文件是否损坏')
+            raise KeyError('模型权重加载失败')
+
+    def save_weights(self, filepath):
+        """将模型权重保存为一个HDF5文件.
+
+        Arguments:
+            filepath: str, 权重文件保存的路径.
+
+        Raises:
+            TypeError: 模型权重保存失败.
+
+        References:
+            - [如何存储原始的二进制数据](https://docs.h5py.org/en/2.3/strings.html)
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='w',
+                                                   model_name='AdaBoostClassifier')
+        # 保存模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            compile_ds.attrs['base_algorithm'] = np.void(dumps(self.BaseLearner))
+
+            weights_ds.attrs['estimators'] = np.void(dumps(self.estimators))
+            weights_ds.attrs['alpha_list'] = self.alpha_list
+        except TypeError:
+            CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
+            raise TypeError('模型权重保存失败')

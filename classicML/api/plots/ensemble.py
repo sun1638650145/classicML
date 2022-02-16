@@ -75,7 +75,7 @@ def plot_adaboost(adaboost, x, y, x_label=None, y_label=None, plot_estimators=Fa
     Raise:
         ValueError: 模型没有训练的错误.
     """
-    if adaboost.is_trained is False:
+    if adaboost.is_trained is False and adaboost.is_loaded is False:
         CLASSICML_LOGGER.error('模型没有训练')
         raise ValueError('你必须先进行训练')
 
