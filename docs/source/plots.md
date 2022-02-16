@@ -46,7 +46,28 @@ plot_history(history)
 
 #### 参数
 
-* <b>history</b>: ```cml.backend.callbacks.History``` ，callbacks实例.
+* <b>history</b>: ```cml.backend.callbacks.History``` , callbacks实例.
+
+### plot_adaboost
+
+```python
+plot_adaboost(adaboost, x, y, x_label=None, y_label=None, plot_estimators=False)
+```
+
+可视化`AdaBoost`分类器二维示意图.
+
+#### 参数
+
+* <b>adaboost</b>: classicML.models.AdaBoostClassifier, AdaBoost分类器实例.
+* <b>x</b>: 一个 Numpy数组, 特征数据.
+* <b>y</b>: 一个 Numpy数组, 标签.
+* <b>x_label</b>: 字符串, 横轴的标签.
+* <b>y_label</b>: 字符串, 纵轴的标签.
+* <b>plot_estimators</b>: 布尔值, 是否绘制基学习器的决策边界.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
 
 ### plot_linear_discriminant_analysis
 

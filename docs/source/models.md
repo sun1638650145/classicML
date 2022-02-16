@@ -131,6 +131,113 @@ save_weights(filepath)
 
 * <b>NotImplemented</b>: 需要用户自行实现.
 
+## AdaBoostClassifier
+
+`AdaBoost`分类器.
+
+```python
+cml.models.AdaBoostClassifier()
+```
+
+### compile
+
+```python
+compile(base_algorithm=TwoLevelDecisionTreeClassifier)
+```
+
+编译`AdaBoost`分类器.
+
+#### 参数
+
+* <b>base_algorithm</b>: `BaseLearner`对象, `AdaBoost`使用的基学习器算法; 目前只实现了`TwoLevelDecisionTreeClassifier`, 未来将接入更多算法.
+
+### fit
+
+```python
+fit(x, y, max_estimators=50)
+```
+
+训练`AdaBoost`分类器.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组, 特征数据.
+* <b>y</b>: 一个 Numpy数组, 标签.
+* <b>max_estimators</b>: 整数, 基学习器集成的最大数量(训练的最大轮数).
+
+#### 返回
+
+一个`AdaBoostClassifier`实例.
+
+### predict
+
+```python
+predict(x)
+```
+
+使用AdaBoost分类器进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组, 特征数据.
+
+#### 返回
+
+`AdaBoostClassifier`预测的结果.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
+### score
+
+```python
+score(x, y)
+```
+
+在预测模式下计算准确率.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+
+#### 返回
+
+当前的准确率.
+
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
 ## AveragedOneDependentEstimator
 
 平均独依赖估计器，一种半朴素贝叶斯分类器.
