@@ -64,7 +64,7 @@ class AdaBoostClassifier(BaseModel):
         y = np.asarray(y, dtype=_cml_precision.int)
 
         # 样本分布初始化.
-        sample_distribution = np.ones(len(x)) / len(x)
+        sample_distribution = np.ones(len(x), dtype=_cml_precision.float) / len(x)
 
         for _ in range(max_estimators):
             # 基于样本分布训练基学习器.
@@ -73,7 +73,8 @@ class AdaBoostClassifier(BaseModel):
             # 计算当前基学习器的误差(损失).
             error = np.sum(sample_distribution[y_pred != y])
             # 计算基学习器的权重, 保存权重和基学习器.
-            alpha = np.log((1 - error) / np.maximum(error, EPSILON)) / 2  # 使用常小数避免除零.
+            alpha = np.log((1 - error) / np.maximum(error, EPSILON)) / 2
+            alpha = alpha.astype(_cml_precision.float)  # 使用常小数避免除零.
             self.alpha_list.append(alpha)
             self.estimators.append(base_learner)
             # 更新样本分布.
@@ -87,6 +88,8 @@ class AdaBoostClassifier(BaseModel):
             # 2. 退出条件放在最后, 避免出现极端情况第一个基学习器误差大于0.5, AdaBoost为空.
             if error > 0.5 or error < EPSILON:
                 break
+
+        self.alpha_list = np.asarray(self.alpha_list)
 
         # 标记训练完成.
         self.is_trained = True
