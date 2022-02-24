@@ -144,3 +144,46 @@ __call__(D)
 #### 参数
 
 * <b>D</b>: Pandas的Series，需要计算的数据集.
+
+## WeightedGini
+
+带权重的基尼指数.
+
+```python
+cml.backend.tree.criteria.Gini(name='weighted_gini')
+```
+
+### 参数
+
+* <b>name</b>: 字符串，划分标准的名称.
+
+### \__call__
+
+计算带权重的基尼指数.
+
+```python
+__call__(D, sample_distribution)
+```
+
+#### 参数
+
+* <b>D</b>: 一个 Numpy数组，需要计算的数据集.
+* <b>sample_distribution</b>: 一个 Numpy数组，样本分布.
+
+### get_value
+
+计算基尼指数的值.
+
+```python
+get_value(*args, **kwargs)
+```
+
+#### 参数
+
+- <b>D</b>: 一个 Numpy数组，需要计算的数据集.
+
+- <b>y</b>: 一个 Numpy数组，对应的标签.
+
+- <b>sample_distribution</b>: 一个 Numpy数组，样本分布.
+
+  

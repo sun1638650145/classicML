@@ -108,7 +108,7 @@ class TwoLevelDecisionTreeGenerator(TreeGenerator):
                 决策树的高度.
 
         Return:
-            TwoLevelDecisionTreeGenerator实例.
+            _TreeNode树结点实例.
         """
         decision_tree = _TreeNode()
         decision_tree.height = height
@@ -152,20 +152,20 @@ class TwoLevelDecisionTreeGenerator(TreeGenerator):
                 样本分布.
 
         Returns:
-            当前结点划分的类别的索引和划分点的值.
+            当前结点划分属性的索引和划分点的值.
         """
         criterion_value = float('inf')
         dividing_point = None
-        category_index = -1
+        feature_index = -1
 
         for i in range(D.shape[1]):
             current_criterion_value, current_dividing_point = self.criterion.get_value(D[:, i], y, sample_distribution)
             if criterion_value > current_criterion_value:
                 criterion_value = current_criterion_value  # 更新迭代不可删.
                 dividing_point = current_dividing_point
-                category_index = i
+                feature_index = i
 
-        return category_index, dividing_point
+        return feature_index, dividing_point
 
 
 class DecisionTreeGenerator(TreeGenerator):
@@ -190,7 +190,7 @@ class DecisionTreeGenerator(TreeGenerator):
             y: pandas.DataFrame, 标签.
 
         Returns:
-            DecisionTreeClassifier实例.
+            _TreeNode树结点实例.
         """
         decision_tree = _TreeNode()
         decision_tree.num_of_leaves = 0

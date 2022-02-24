@@ -219,7 +219,7 @@ class WeightedGini(Criterion):
         Args:
             args:
                 D: numpy.ndarray, 需要计算的数据集.
-                y: numpy.ndarray, 标签.
+                y: numpy.ndarray, 对应的标签.
                 sample_distribution: numpy.ndarray,
                     样本分布.
         """
