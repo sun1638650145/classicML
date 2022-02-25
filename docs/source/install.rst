@@ -5,7 +5,7 @@
 
 .. warning::
 
-    1. classicML 兼容的Python版本: Python 3.7-3.9
+    1. classicML 兼容的Python版本: Python 3.7-3.10; 推荐使用Python 3.8 以上版本, Python 3.7目前已不进行软件测试并将在未来逐渐停止支持
     2. classicML 仅支持64位的系统，强行在32位系统上编译可能会导致精度异常
     3. classicML 现已支持在Apple M1上原生运行, 但您需要使用 Python 3.8 以上的版本
     4. classicML 将在v0.7.1的正式版开始支持Windows平台
