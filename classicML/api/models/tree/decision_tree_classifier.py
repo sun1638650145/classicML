@@ -11,6 +11,58 @@ from classicML.backend import io
 from classicML.backend import tree
 
 
+class DecisionStumpClassifier(BaseModel):
+    """决策树桩分类器.
+
+    Attributes:
+        stump: 生成的决策树桩.
+        generator: 生成决策树桩的实现算法.
+    """
+    def __init__(self):
+        """初始化决策树桩分类器.
+        """
+        super(DecisionStumpClassifier, self).__init__()
+
+        self.stump = None
+        self.generator = tree.generators.DecisionStumpGenerator()
+
+    def fit(self, x, y, **kwargs):
+        """训练决策树桩分类器.
+
+        Args:
+            x: numpy.ndarray or array-like, 特征数据.
+            y: numpy.ndarray or array-like, 标签.
+
+        Return:
+            DecisionStumpClassifier实例.
+        """
+        x = np.asarray(x, dtype=_cml_precision.float)
+        y = np.asarray(y, dtype=_cml_precision.int)
+
+        # 生成决策树桩分类器.
+        self.stump = self.generator(x, y)
+
+        return self
+
+    def predict(self, x, **kwargs):
+        """使用决策树桩分类器进行预测.
+
+        Args:
+            x: numpy.ndarray or array-like, 特征数据.
+
+        Return:
+            DecisionStumpClassifier预测的结果.
+        """
+        y_pred = np.ones(shape=len(x), dtype=_cml_precision.int)
+
+        if self.stump.division_mode == 'gte':
+            y_pred[x[:, self.stump.feature_index] >= self.stump.dividing_point] = -1  # 划分方式是大于等于时, 设置大于等于划分点的值为反例.
+        else:
+            y_pred[x[:, self.stump.feature_index] < self.stump.dividing_point] = -1  # 划分方式是小于时, 设置小于划分点的值为反例.
+
+        return y_pred
+
+
 class DecisionTreeClassifier(BaseModel):
     """决策树分类器.
 

@@ -4,7 +4,49 @@ import numpy as np
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.12.1'
+__version__ = 'backend.python.ops.0.13a0'
+
+
+def bootstrap_sampling(x, y=None, seed=None):
+    """对样本进行自助采样.
+
+    Args:
+        x: numpy.ndarray, array-like, 数据样本.
+        y: numpy.ndarray, array-like, default=None,
+            数据样本(标签).
+        seed: int, default=None,
+            随机种子.
+
+    Returns:
+        自助采样后的新样本.
+    """
+    x = np.asarray(x)
+    num_of_samples = x.shape[0]
+    if x.ndim == 1:
+        x = x.reshape(-1, 1)
+
+    if y is not None:
+        y = np.asarray(y)
+        if y.ndim == 1:
+            y = y.reshape(-1, 1)
+        # 检查样本的第一维是否一致.
+        if num_of_samples != y.shape[0]:
+            raise ValueError('两个数组长度不一致[%d, %d].' % (num_of_samples, y.shape[0]))
+        array = np.hstack(tup=(x, y))
+    else:
+        array = x
+
+    # 进行随机采样, 生成索引.
+    np.random.seed(seed)  # 设置随机种子.
+    indices = np.random.choice(a=np.arange(num_of_samples), size=num_of_samples)
+
+    if y is not None:
+        x = array[indices][0:, :x.shape[1]]
+        y = array[indices][:, x.shape[1]:]
+
+        return x, y
+    else:
+        return array[indices]
 
 
 def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):

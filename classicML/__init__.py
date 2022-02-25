@@ -1,5 +1,5 @@
 """An easy-to-use ML framework."""
-__version__ = '0.8a5'
+__version__ = '0.8a6'
 
 import os
 import logging
@@ -30,6 +30,8 @@ from classicML.api import AveragedOneDependentEstimator
 from classicML.api import AODE
 from classicML.api import BackPropagationNeuralNetwork
 from classicML.api import BPNN
+from classicML.api import BaggingClassifier
+from classicML.api import DecisionStumpClassifier
 from classicML.api import DecisionTreeClassifier
 from classicML.api import LinearDiscriminantAnalysis
 from classicML.api import LDA

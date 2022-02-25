@@ -1,9 +1,33 @@
 """classicML中树结构的生成器."""
+import os
+
 import numpy as np
 import pandas as pd
 
 from classicML import _cml_precision
 from classicML.backend.training import get_criterion
+
+if os.environ['CLASSICML_ENGINE'] == 'CC':
+    from classicML.backend.cc.metrics import BinaryAccuracy
+else:
+    from classicML.backend.python.metrics import BinaryAccuracy
+
+
+class _DecisionStump(object):
+    """决策树桩.
+
+    Attributes:
+        feature_index: int, default=-1,
+            划分的类别的下标.
+        dividing_point: float, default=None,
+            划分点的值.
+        division_mode: {'gte', 'le'}, default='',
+            划分模式.
+    """
+    def __init__(self):
+        self.feature_index = -1
+        self.dividing_point = None
+        self.division_mode = ''
 
 
 class _TreeNode(object):
@@ -166,6 +190,79 @@ class TwoLevelDecisionTreeGenerator(TreeGenerator):
                 feature_index = i
 
         return feature_index, dividing_point
+
+
+class DecisionStumpGenerator(TreeGenerator):
+    """决策树桩生成器.
+
+    Attributes:
+        name: str, 生成器的名称.
+    """
+    def __init__(self, name='decision_stump_generator'):
+        """初始化生成器.
+
+        Args:
+            name: str, 生成器的名称.
+        """
+        self.name = name
+
+    def tree_generate(self, D, y):
+        """生成决策树桩.
+
+        Args:
+            D: numpy.ndarray or array-like, 特征数据.
+            y: numpy.ndarray or array-like, 标签.
+
+        Return:
+            _DecisionStump实例.
+        """
+        stump = _DecisionStump()
+        error = _cml_precision.float(np.inf)
+
+        # TODO(Steve Sun, tag:code): 时间复杂度O(N^3)过高.
+        for i in range(D.shape[1]):
+            # 构建连续值候选划分点集.
+            D_ = np.sort(D[:, i])
+            T_set = [
+                ((D_[i] + D_[i + 1]) / 2) for i in range(len(D_) - 1)
+            ]
+
+            for division_mode in ('gte', 'le'):
+                for t in T_set:
+                    current_error = self.evaluate(D, y, i, t, division_mode)
+
+                    if current_error < error:
+                        stump.feature_index = i
+                        stump.dividing_point = t
+                        stump.division_mode = division_mode
+                        error = current_error
+
+        return stump
+
+    @staticmethod
+    def evaluate(D, y, column, dividing_point, division_mode):
+        """对当前的划分方式进行评估.
+
+        Args:
+            D: numpy.ndarray or array-like, 特征数据.
+            y: numpy.ndarray or array-like, 标签.
+            column: int, 划分的类别的下标.
+            dividing_point: float, 划分点的值.
+            division_mode: {'gte', 'le'}, 划分模式.
+
+        Return:
+            当前的划分方式评估的结果.
+        """
+        y_pred = np.ones(shape=(len(D)), dtype=_cml_precision.int)
+        if division_mode == 'gte':
+            y_pred[D[:, column] >= dividing_point] = -1  # 划分方式是大于等于时, 设置大于等于划分点的值为反例.
+        else:
+            y_pred[D[:, column] < dividing_point] = -1  # 划分方式是小于时, 设置小于划分点的值为反例.
+
+        y_pred = y_pred.reshape(-1, 1)
+        error = 1 - BinaryAccuracy()(y_pred, y)
+
+        return error
 
 
 class DecisionTreeGenerator(TreeGenerator):

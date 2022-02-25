@@ -40,6 +40,7 @@ else:
 
 # ops模块
 if os.environ['CLASSICML_ENGINE'] == 'CC':
+    from classicML.backend.python.ops import bootstrap_sampling as cc_bootstrap_sampling
     from classicML.backend.cc.ops import cc_calculate_error
     from classicML.backend.cc.ops import cc_clip_alpha
     from classicML.backend.cc.ops import cc_get_conditional_probability
@@ -55,6 +56,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_type_of_target_v2
     from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
+    from classicML.backend.python.ops import bootstrap_sampling
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
     from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
     from classicML.backend.cc.ops import cc_get_conditional_probability as get_conditional_probability
@@ -69,6 +71,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import __version__ as ops__version__
     CLASSICML_LOGGER.info('后端版本是: {}'.format(ops__version__))
 else:
+    from classicML.backend.python.ops import bootstrap_sampling
     from classicML.backend.python.ops import calculate_error
     from classicML.backend.python.ops import clip_alpha
     from classicML.backend.python.ops import get_conditional_probability
