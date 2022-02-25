@@ -31,7 +31,8 @@ jobs:
         pip install pytest;
     - name: Install
       run: |
-        python3 setup.py install;
+        pip wheel --no-deps --wheel-dir dist/ .;
+        pip install dist/*.whl;
     - name: Test with pytest
       # 测试模块功能
       run: |
