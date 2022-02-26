@@ -1,3 +1,5 @@
+from pickle import dumps, loads
+
 import numpy as np
 
 from classicML import _cml_precision
@@ -5,6 +7,7 @@ from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.api.models import DecisionStumpClassifier
 from classicML.backend import bootstrap_sampling
+from classicML.backend import io
 
 
 class BaggingClassifier(BaseModel):
@@ -19,6 +22,8 @@ class BaggingClassifier(BaseModel):
             初始自助采样的随机种子.
         is_trained: bool, default=False,
             模型训练后将被标记为True.
+        is_loaded: bool, default=False,
+            如果模型加载了权重将被标记为True.
     """
     def __init__(self):
         """初始化Bagging分类器.
@@ -30,6 +35,7 @@ class BaggingClassifier(BaseModel):
         self.seed = -1
 
         self.is_trained = False
+        self.is_loaded = False
 
     def compile(self, base_algorithm=DecisionStumpClassifier, seed=np.random.randint(65535)):
         """编译Bagging分类器.
@@ -85,7 +91,7 @@ class BaggingClassifier(BaseModel):
         Raise:
             ValueError: 模型没有训练的错误.
         """
-        if self.is_trained is False:
+        if self.is_trained is False and self.is_loaded is False:
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
@@ -110,3 +116,60 @@ class BaggingClassifier(BaseModel):
             当前的准确率.
         """
         return super(BaggingClassifier, self).score(x, y)
+
+    def load_weights(self, filepath):
+        """加载模型参数.
+
+        Arguments:
+            filepath: str, 权重文件加载的路径.
+
+        Raises:
+            KeyError: 模型权重加载失败.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='r',
+                                                   model_name='BaggingClassifier')
+        # 加载模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            self.BaseLearner = loads(compile_ds.attrs['base_algorithm'].tobytes())
+
+            self.estimators = loads(weights_ds.attrs['estimators'].tobytes())
+            self.seed = weights_ds.attrs['seed']
+            # 标记加载完成.
+            self.is_loaded = True
+        except KeyError:
+            CLASSICML_LOGGER.error('模型权重加载失败, 请检查文件是否损坏')
+            raise KeyError('模型权重加载失败')
+
+    def save_weights(self, filepath):
+        """将模型权重保存为一个HDF5文件.
+
+        Arguments:
+            filepath: str, 权重文件保存的路径.
+
+        Raises:
+            TypeError: 模型权重保存失败.
+
+        References:
+            - [如何存储原始的二进制数据](https://docs.h5py.org/en/2.3/strings.html)
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='w',
+                                                   model_name='BaggingClassifier')
+        # 保存模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            compile_ds.attrs['base_algorithm'] = np.void(dumps(self.BaseLearner))
+
+            weights_ds.attrs['estimators'] = np.void(dumps(self.estimators))
+            weights_ds.attrs['seed'] = self.seed
+        except TypeError:
+            CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
+            raise TypeError('模型权重保存失败')
