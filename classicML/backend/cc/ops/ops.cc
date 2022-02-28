@@ -10,6 +10,52 @@
 #include "ops.h"
 
 namespace ops {
+// 返回自助采样后的新样本.
+// 输入数据样本, (对应标签)和(随机种子).
+// `XMatrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
+// `YMatrix` 兼容32位和64位浮点型, 32位和64位整型Eigen::Matrix矩阵.
+template<typename XMatrix, typename YMatrix>
+std::tuple<XMatrix, YMatrix> BootstrapSampling1(const XMatrix &x, const YMatrix &y, std::optional<uint32> seed) {
+    auto num_of_samples = (int32)x.rows();
+
+    // 检查样本的第一维是否一致.
+    if (num_of_samples != y.rows()) {
+        std::string error_message = "两个数组长度不一致[" + std::to_string(num_of_samples)
+                                    + ", " + std::to_string(y.rows()) + "].";
+        throw pybind11::value_error(error_message);
+    }
+
+    // 进行随机采样, 生成索引.
+    srand(!seed.has_value() ? time(nullptr) : seed.value()); // 设置随机种子.
+    row_vector32i indices = row_vector32i::Random(num_of_samples).unaryExpr(
+        [=](int32 element) {
+            return abs(element) % num_of_samples;
+        }
+    );
+
+    // 进行切片.
+    return {x(indices, Eigen::all), y(indices, Eigen::all)};
+}
+
+// 返回自助采样后的新样本.
+// 输入数据样本, (对应标签)和(随机种子).
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
+template<typename Matrix>
+Matrix BootstrapSampling2(const Matrix &x, const pybind11::object &y, std::optional<uint32> seed) {
+    auto num_of_samples = (int32)x.rows();
+
+    // 进行随机采样, 生成索引.
+    srand(!seed.has_value() ? time(nullptr) : seed.value()); // 设置随机种子.
+    row_vector32i indices = row_vector32i::Random(num_of_samples).unaryExpr(
+        [=](int32 element) {
+            return abs(element) % num_of_samples;
+        }
+    );
+
+    // 进行切片.
+    return x(indices, Eigen::all);
+}
+
 // 返回KKT条件的违背值;
 // 输入特征数据, 标签, 要计算的样本下标, 支持向量分类器使用的核函数, 全部拉格朗日乘子, 非零拉格朗日乘子和偏置项.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位浮点型向量, `Array` 兼容32位和64位浮点型Eigen::Array数组,
@@ -319,6 +365,21 @@ std::string TypeOfTarget_V2(const pybind11::array &y) {
 }
 
 // 显式实例化.
+template std::tuple<matrix32, matrix32> BootstrapSampling1(const matrix32 &x,
+                                                           const matrix32 &y,
+                                                           std::optional<uint32> seed);
+template std::tuple<matrix64, matrix64> BootstrapSampling1(const matrix64 &x,
+                                                           const matrix64 &y,
+                                                           std::optional<uint32> seed);
+template std::tuple<matrix32, matrix32i> BootstrapSampling1(const matrix32 &x,
+                                                            const matrix32i &y,
+                                                            std::optional<uint32> seed);
+template std::tuple<matrix64, matrix64i> BootstrapSampling1(const matrix64 &x,
+                                                            const matrix64i &y,
+                                                            std::optional<uint32> seed);
+template matrix32 BootstrapSampling2(const matrix32 &x, const pybind11::object &y, std::optional<uint32> seed);
+template matrix64 BootstrapSampling2(const matrix64 &x, const pybind11::object &y, std::optional<uint32> seed);
+
 template matrix32 CalculateError<matrix32, vector32, array32>
         (const matrix32 &x,
          const vector32 &y,

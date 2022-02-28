@@ -32,21 +32,15 @@ def bootstrap_sampling(x, y=None, seed=None):
         # 检查样本的第一维是否一致.
         if num_of_samples != y.shape[0]:
             raise ValueError('两个数组长度不一致[%d, %d].' % (num_of_samples, y.shape[0]))
-        array = np.hstack(tup=(x, y))
-    else:
-        array = x
 
     # 进行随机采样, 生成索引.
     np.random.seed(seed)  # 设置随机种子.
     indices = np.random.choice(a=np.arange(num_of_samples), size=num_of_samples)
 
     if y is not None:
-        x = array[indices][0:, :x.shape[1]]
-        y = array[indices][:, x.shape[1]:]
-
-        return x, y
+        return x[indices], y[indices]
     else:
-        return array[indices]
+        return x[indices]
 
 
 def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):

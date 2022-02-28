@@ -14,6 +14,98 @@ PYBIND11_MODULE(ops, m) {
     m.doc() = R"pbdoc(classicML的底层核心操作, 以C++实现)pbdoc";
 
     // Overloaded function.
+    m.def("cc_bootstrap_sampling", &ops::BootstrapSampling1<matrix32, matrix32>, R"pbdoc(
+对样本进行自助采样.
+
+    Args:
+        x: numpy.ndarray, array-like, 数据样本.
+        y: numpy.ndarray, array-like, default=None,
+            数据样本(标签).
+        seed: int, default=None,
+            随机种子.
+
+    Returns:
+        自助采样后的新样本.)pbdoc",
+          pybind11::arg("x"),
+          pybind11::arg("y")=pybind11::none(),
+          pybind11::arg("seed")=pybind11::none());
+    m.def("cc_bootstrap_sampling", &ops::BootstrapSampling1<matrix64, matrix64>, R"pbdoc(
+对样本进行自助采样.
+
+    Args:
+        x: numpy.ndarray, array-like, 数据样本.
+        y: numpy.ndarray, array-like, default=None,
+            数据样本(标签).
+        seed: int, default=None,
+            随机种子.
+
+    Returns:
+        自助采样后的新样本.)pbdoc",
+          pybind11::arg("x"),
+          pybind11::arg("y")=pybind11::none(),
+          pybind11::arg("seed")=pybind11::none());
+    m.def("cc_bootstrap_sampling", &ops::BootstrapSampling1<matrix32, matrix32i>, R"pbdoc(
+对样本进行自助采样.
+
+    Args:
+        x: numpy.ndarray, array-like, 数据样本.
+        y: numpy.ndarray, array-like, default=None,
+            数据样本(标签).
+        seed: int, default=None,
+            随机种子.
+
+    Returns:
+        自助采样后的新样本.)pbdoc",
+          pybind11::arg("x"),
+          pybind11::arg("y")=pybind11::none(),
+          pybind11::arg("seed")=pybind11::none());
+    m.def("cc_bootstrap_sampling", &ops::BootstrapSampling1<matrix64, matrix64i>, R"pbdoc(
+对样本进行自助采样.
+
+    Args:
+        x: numpy.ndarray, array-like, 数据样本.
+        y: numpy.ndarray, array-like, default=None,
+            数据样本(标签).
+        seed: int, default=None,
+            随机种子.
+
+    Returns:
+        自助采样后的新样本.)pbdoc",
+          pybind11::arg("x"),
+          pybind11::arg("y")=pybind11::none(),
+          pybind11::arg("seed")=pybind11::none());
+    m.def("cc_bootstrap_sampling", &ops::BootstrapSampling2<matrix32>, R"pbdoc(
+对样本进行自助采样.
+
+    Args:
+        x: numpy.ndarray, array-like, 数据样本.
+        y: numpy.ndarray, array-like, default=None,
+            数据样本(标签).
+        seed: int, default=None,
+            随机种子.
+
+    Returns:
+        自助采样后的新样本.)pbdoc",
+          pybind11::arg("x"),
+          pybind11::arg("y")=pybind11::none(),
+          pybind11::arg("seed")=pybind11::none());
+    m.def("cc_bootstrap_sampling", &ops::BootstrapSampling2<matrix64>, R"pbdoc(
+对样本进行自助采样.
+
+    Args:
+        x: numpy.ndarray, array-like, 数据样本.
+        y: numpy.ndarray, array-like, default=None,
+            数据样本(标签).
+        seed: int, default=None,
+            随机种子.
+
+    Returns:
+        自助采样后的新样本.)pbdoc",
+          pybind11::arg("x"),
+          pybind11::arg("y")=pybind11::none(),
+          pybind11::arg("seed")=pybind11::none());
+
+    // Overloaded function.
     m.def("cc_calculate_error", &ops::CalculateError<matrix32, vector32, array32>, R"pbdoc(
 计算KKT条件的违背值.
 
@@ -437,5 +529,5 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.12.1";
+    m.attr("__version__") = "backend.cc.ops.0.13a1";
 }

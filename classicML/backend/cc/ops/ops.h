@@ -22,6 +22,12 @@
 #include "../matrix_op.h"
 
 namespace ops {
+// overload匹配顺序: 优先匹配存在y的情况.
+template<typename XMatrix, typename YMatrix>
+std::tuple<XMatrix, YMatrix> BootstrapSampling1(const XMatrix &x, const YMatrix &y, std::optional<uint32> seed);
+template<typename Matrix>
+Matrix BootstrapSampling2(const Matrix &x, const pybind11::object &y, std::optional<uint32> seed); // 用于匹配y为None的情况.
+
 template<typename Matrix, typename Vector, typename Array>
 Matrix CalculateError(const Matrix &x,
                       const Vector &y,
