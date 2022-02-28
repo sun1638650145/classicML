@@ -42,7 +42,7 @@ class TestBootstrapSampling(object):
     def test_x_y_seed(self):
         # 数据为随机产生, 不具有任何实际意义.
         x = np.random.rand(5, 2)
-        y = np.random.rand(5, 1).astype(int)
+        y = np.random.rand(5, 1).astype(_cml_precision.int)
         seed = 2022
 
         cc_answer = cc_bootstrap_sampling(x, y, seed)
@@ -53,7 +53,7 @@ class TestBootstrapSampling(object):
     def test_x_y(self):
         # 数据为随机产生, 不具有任何实际意义.
         x = np.random.rand(5, 2)
-        y = np.random.rand(5, 1).astype(int)
+        y = np.random.rand(5, 1).astype(_cml_precision.int)
 
         cc_answer = cc_bootstrap_sampling(x, y)
         py_answer = bootstrap_sampling(x, y)
