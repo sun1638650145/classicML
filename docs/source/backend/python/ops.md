@@ -2,6 +2,24 @@
 
 classicML的底层核心操作.
 
+## bootstrap_sampling
+
+```python
+bootstrap_sampling(x, y=None, seed=None)
+```
+
+对样本进行自助采样.
+
+### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，数据样本(标签).
+* <b>seed</b>: 整数，随机种子.
+
+### 返回
+
+自助采样后的新样本.
+
 ## calculate_error
 
 ```python

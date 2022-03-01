@@ -29,6 +29,8 @@ y_pred = model.predict(x_test)
 model.save_weights('./weights.h5')
 ```
 
+注意, `DecisionStumpClassifier`和`TwoLevelDecisionTreeClassifier`被设计用来作为基学习器使用, 不推荐直接使用.
+
 ## BaseModel
 
 classicML的模型抽象基类, classicML的模型全部继承于此. 通过继承`BaseModel`, 至少实现`fit`和`predict`方法就可以构建自己的模型.
@@ -175,7 +177,7 @@ fit(x, y, max_estimators=50)
 predict(x)
 ```
 
-使用AdaBoost分类器进行预测.
+使用`AdaBoost`分类器进行预测.
 
 #### 参数
 
@@ -491,6 +493,158 @@ save_weights(filepath)
 #### 注意
 
 * 模型将不会保存关于优化器的超参数.
+
+## BaggingClassifier
+
+`Bagging`分类器.
+
+```python
+cml.models.BaggingClassifier()
+```
+
+### compile
+
+```python
+compile(self, base_algorithm=DecisionStumpClassifier, seed=np.random.randint(65535))
+```
+
+编译`Bagging`分类器.
+
+#### 参数
+
+* <b>base_algorithm</b>: `BaseLearner`对象, `Bagging`使用的基学习器算法; 目前只实现了`DecisionStumpClassifier`, 未来将接入更多算法.
+
+### fit
+
+```python
+fit(x, y, n_estimators=10)
+```
+
+训练`Bagging`分类器.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组, 特征数据.
+* <b>y</b>: 一个 Numpy数组, 标签.
+* <b>n_estimators</b>: 整数, 基学习器集成的数量.
+
+#### 返回
+
+一个`BaggingClassifier`实例.
+
+### predict
+
+```python
+predict(x)
+```
+
+使用`Bagging`分类器进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组, 特征数据.
+
+#### 返回
+
+`BaggingClassifier`预测的结果.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
+### score
+
+```python
+score(x, y)
+```
+
+在预测模式下计算准确率.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>y</b>: 一个 Numpy数组，标签.
+
+#### 返回
+
+当前的准确率.
+
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
+## DecisionStumpClassifier
+
+决策树桩分类器.
+
+```python
+cml.models.DecisionStumpClassifier()
+```
+
+### fit
+
+```python
+fit(x, y)
+```
+
+训练决策树桩分类器.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，或者是Pandas的DataFrame，特征数据.
+* <b>y</b>: 一个 Numpy数组，或者是Pandas的DataFrame，标签.
+
+#### 返回
+
+一个```DecisionStumpClassifier```实例.
+
+#### 异常
+
+* <b>AttributeError</b>: 没有验证集.
+
+### predict
+
+```python
+predict(x)
+```
+
+使用决策树桩分类器进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+
+#### 返回
+
+`DecisionStumpClassifier`预测的结果.
 
 ## DecisionTreeClassifier
 
@@ -1339,3 +1493,45 @@ save_weights(filepath)
 #### 注意
 
 * 模型将不会保存关于优化器的超参数.
+
+## TwoLevelDecisionTreeClassifier
+
+2层决策树分类器.
+
+```python
+cml.models.TwoLevelDecisionTreeClassifier()
+```
+
+### fit
+
+```python
+fit(x, y, **kwargs)
+```
+
+训练2层决策树分类器.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，或者是Pandas的DataFrame，特征数据.
+* <b>y</b>: 一个 Numpy数组，或者是Pandas的DataFrame，标签.
+* <b>sample_distribution</b>: 一个 Numpy数组，样本分布.
+
+#### 返回
+
+一个```TwoLevelDecisionTreeClassifier```实例.
+
+### predict
+
+```python
+predict(x)
+```
+
+使用决策树桩分类器进行预测.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+
+#### 返回
+
+`TwoLevelDecisionTreeClassifier`预测的结果.

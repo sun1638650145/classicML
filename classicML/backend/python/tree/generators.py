@@ -214,7 +214,7 @@ class DecisionStumpGenerator(TreeGenerator):
             y: numpy.ndarray or array-like, 标签.
 
         Return:
-            _DecisionStump实例.
+            _DecisionStump决策树桩实例.
         """
         stump = _DecisionStump()
         error = _cml_precision.float(np.inf)
