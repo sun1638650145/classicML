@@ -78,7 +78,7 @@ extension_modules = [
 
 setup(
     name='classicML',
-    version='0.8a9',
+    version='0.8b0',
     description='An easy-to-use ML framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -88,7 +88,7 @@ setup(
     packages=find_packages(),
     ext_modules=extension_modules,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
         'Programming Language :: C++',

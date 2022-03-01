@@ -232,8 +232,8 @@ class DecisionStumpGenerator(TreeGenerator):
                     current_error = self.evaluate(D, y, i, t, division_mode)
 
                     if current_error < error:
-                        stump.feature_index = i
-                        stump.dividing_point = t
+                        stump.feature_index = _cml_precision.int(i)
+                        stump.dividing_point = _cml_precision.float(t)
                         stump.division_mode = division_mode
                         error = current_error
 
