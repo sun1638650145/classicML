@@ -63,14 +63,10 @@ Matrix BroadcastSub(const Matrix &a, const Matrix &b) {
 template<typename Matrix, typename Dtype>
 Matrix GenerateRandomStandardNormalDistributionMatrix(const int32 &rows,
                                                       const int32 &columns,
-                                                      const std::optional<uint32> &seed) {
+                                                      std::optional<uint32> &seed) {
     static std::normal_distribution<Dtype> _distribution(0,1);
     static std::default_random_engine _engine;
-    if (!seed.has_value()) {
-        _engine.seed(time(nullptr));
-    } else {
-        _engine.seed(seed.value());
-    }
+    _engine.seed(!seed.has_value() ? time(nullptr) : seed.value());
 
     Matrix matrix = Matrix::Zero(rows, columns).unaryExpr(
         [](Dtype element) {
@@ -86,14 +82,10 @@ Matrix GenerateRandomStandardNormalDistributionMatrix(const int32 &rows,
 template<typename Matrix, typename Dtype>
 Matrix GenerateRandomUniformDistributionMatrix(const int32 &rows,
                                                const int32 &columns,
-                                               const std::optional<uint32> &seed) {
+                                               std::optional<uint32> &seed) {
     static std::uniform_real_distribution<Dtype> _distribution(0,1);
     static std::default_random_engine _engine;
-    if (!seed.has_value()) {
-        _engine.seed(time(nullptr));
-    } else {
-        _engine.seed(seed.value());
-    }
+    _engine.seed(!seed.has_value() ? time(nullptr) : seed.value());
 
     Matrix matrix = Matrix::Zero(rows, columns).unaryExpr(
         [](Dtype element) {
@@ -213,14 +205,14 @@ template matrix32 BroadcastSub(const matrix32 &a, const matrix32 &b);
 template matrix64 BroadcastSub(const matrix64 &a, const matrix64 &b);
 
 template matrix32 GenerateRandomStandardNormalDistributionMatrix<matrix32, float32>
-        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
+        (const int32 &rows, const int32 &columns, std::optional<uint32> &seed);
 template matrix64 GenerateRandomStandardNormalDistributionMatrix<matrix64, float64>
-        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
+        (const int32 &rows, const int32 &columns, std::optional<uint32> &seed);
 
 template matrix32 GenerateRandomUniformDistributionMatrix<matrix32, float32>
-        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
+        (const int32 &rows, const int32 &columns, std::optional<uint32> &seed);
 template matrix64 GenerateRandomUniformDistributionMatrix<matrix64, float64>
-        (const int32 &rows, const int32 &columns, const std::optional<uint32> &seed);
+        (const int32 &rows, const int32 &columns, std::optional<uint32> &seed);
 
 template matrix32 GetNonZeroSubMatrix<matrix32, matrix32, vector32>
         (const matrix32 &matrix, const vector32 &non_zero_mark);

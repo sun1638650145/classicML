@@ -251,9 +251,7 @@ std::tuple<uint32, Dtype> SelectSecondAlpha(Dtype &error,
         }
     }
 
-    std::tuple<uint32, Dtype> alpha_tuple(index_alpha, error_alpha);
-
-    return alpha_tuple;
+    return {index_alpha, error_alpha};
 }
 
 // 返回输入数据的数据类型的字符串, 输入为待测试数据.

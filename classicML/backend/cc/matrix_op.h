@@ -28,12 +28,12 @@ Matrix BroadcastSub(const Matrix &a, const Matrix &b);
 template<typename Matrix, typename Dtype>
 Matrix GenerateRandomStandardNormalDistributionMatrix(const int32 &rows,
                                                       const int32 &columns,
-                                                      const std::optional<uint32> &seed);
+                                                      std::optional<uint32> &seed);
 
 template<typename Matrix, typename Dtype>
 Matrix GenerateRandomUniformDistributionMatrix(const int32 &rows,
                                                const int32 &columns,
-                                               const std::optional<uint32> &seed);
+                                               std::optional<uint32> &seed);
 
 template<typename Matrix, typename Matrix_Vector, typename Vector>
 Matrix GetNonZeroSubMatrix(const Matrix_Vector &matrix_vector, const Vector &non_zero_alphas);
