@@ -78,7 +78,7 @@ extension_modules = [
 
 setup(
     name='classicML',
-    version='0.8b0',
+    version='0.8rc0',
     description='An easy-to-use ML framework',
     long_description=long_description,
     long_description_content_type='text/markdown',
