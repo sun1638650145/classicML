@@ -31,9 +31,20 @@ jobs:
           brew update;
           brew install eigen;
         else
-          sudo apt update;
-          sudo apt install -y libeigen3-dev;
+          # ubuntu-20.04下apt安装的最新版本是eigen3.3.7, classicML v0.8需要使用eigen3.4的新特性.
+          # 下载源码
+          wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz;
+          tar -zxvf eigen-3.4.0.tar.gz;
+          # 编译安装
+          cd eigen-3.4.0;
+          mkdir build;
+          cd build;
+          cmake ..;
+          sudo make;
+          sudo make install;
           sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
+          # 返回home目录
+          cd ~;
         fi
     - name: Build and publish
       env:
