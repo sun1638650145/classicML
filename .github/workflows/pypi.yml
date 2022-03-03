@@ -42,7 +42,6 @@ jobs:
           cmake ..;
           sudo make;
           sudo make install;
-          sudo cp -r /usr/include/eigen3 /usr/local/include/eigen3;
           # 返回home目录
           cd ~;
         fi
