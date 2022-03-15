@@ -1,7 +1,7 @@
 """classicML的评估函数."""
 import numpy as np
 
-__version__ = 'backend.python.metrics.0.4.3a0'
+__version__ = 'backend.python.metrics.0.4.3rc1'
 
 
 class Metric(object):
@@ -87,14 +87,12 @@ class BinaryAccuracy(Metric):
         if y_true.ndim == 1:
             y_true = y_true.reshape(-1, 1)
 
-        y_pred[y_pred >= 0.5] = 1
-        y_pred[y_pred < 0.5] = 0
-        y_true[y_true >= 0.5] = 1
-        y_true[y_true < 0.5] = 0
+        accuracy = y_pred.shape[0]
+        for i in zip(y_pred, y_true):
+            if (i[0] < 0.5 and i[1] == 1) or (i[0] >= 0.5 and i[1] == 0) or (i[0] >= 0.5 and i[1] == -1):
+                accuracy -= 1
 
-        accuracy = np.mean(np.equal(y_pred, y_true))
-
-        return accuracy
+        return accuracy / y_pred.shape[0]
 
 
 class CategoricalAccuracy(Metric):

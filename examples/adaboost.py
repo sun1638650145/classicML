@@ -11,7 +11,7 @@ DATASET_PATH = './datasets/西瓜数据集alpha.csv'
 ds = cml.data.Dataset(label_mode='max-margin')
 ds.from_csv(DATASET_PATH)
 # 生成模型.
-model = cml.AdaBoostClassifier()
+model = cml.models.AdaBoostClassifier()
 model.compile(base_algorithm=cml.TwoLevelDecisionTreeClassifier)
 # 训练模型.
 model.fit(ds.x, ds.y)

@@ -13,7 +13,7 @@ ATTRIBUTE_NAME = ['密度', '含糖率']
 ds = cml.data.Dataset()
 ds.from_csv(DATASET_PATH)
 # 生成模型
-model = cml.NB(attribute_name=ATTRIBUTE_NAME)
+model = cml.models.NB(attribute_name=ATTRIBUTE_NAME)
 model.compile()
 # 训练模型
 model.fit(ds.x, ds.y)

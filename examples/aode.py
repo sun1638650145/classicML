@@ -10,7 +10,7 @@ ATTRIBUTE_NAME = ['脐部', '色泽', '根蒂', '敲声', '纹理', '触感', '�
 ds = cml.data.Dataset()
 ds.from_csv(DATASET_PATH, sep='\t')
 # 生成模型
-model = cml.AODE(attribute_name=ATTRIBUTE_NAME)
+model = cml.models.AODE(attribute_name=ATTRIBUTE_NAME)
 model.compile(smoothing=True)
 # 训练模型
 model.fit(ds.x, ds.y)

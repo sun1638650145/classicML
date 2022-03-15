@@ -15,7 +15,7 @@ ds = cml.data.Dataset(label_mode='one-hot',
                       name='iris')
 ds.from_csv(DATASET_PATH)
 # 生成神经网络
-model = cml.BPNN(seed=2021)
+model = cml.models.BPNN(seed=2021)
 model.compile(network_structure=[4, 2, 3],
               optimizer='sgd',
               loss='categorical_crossentropy',
