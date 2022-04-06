@@ -18,11 +18,15 @@
 
 PYBIND11_NAMESPACE_BEGIN(PYBIND11_NAMESPACE)
 
-template<typename> struct numpy_scalar; // Forward declaration
+template<typename>
+struct numpy_scalar; // Forward declaration
 
 PYBIND11_NAMESPACE_BEGIN(detail)
 
-template <std::size_t> constexpr int platform_lookup() { return -1; }
+template <std::size_t>
+constexpr int platform_lookup() {
+    return -1;
+}
 
 // Lookup a type according to its size, and return a value corresponding to the NumPy typenum.
 template <std::size_t size, typename T, typename... Ts, typename... Ints>
@@ -40,15 +44,26 @@ struct npy_api_patch {
         NPY_ARRAY_ALIGNED_ = 0x0100,
         NPY_ARRAY_WRITEABLE_ = 0x0400,
         NPY_BOOL_ = 0,
-        NPY_BYTE_, NPY_UBYTE_,
-        NPY_SHORT_, NPY_USHORT_,
-        NPY_INT_, NPY_UINT_,
-        NPY_LONG_, NPY_ULONG_,
-        NPY_LONGLONG_, NPY_ULONGLONG_,
-        NPY_FLOAT_, NPY_DOUBLE_, NPY_LONGDOUBLE_,
-        NPY_CFLOAT_, NPY_CDOUBLE_, NPY_CLONGDOUBLE_,
+        NPY_BYTE_,
+        NPY_UBYTE_,
+        NPY_SHORT_,
+        NPY_USHORT_,
+        NPY_INT_,
+        NPY_UINT_,
+        NPY_LONG_,
+        NPY_ULONG_,
+        NPY_LONGLONG_,
+        NPY_ULONGLONG_,
+        NPY_FLOAT_,
+        NPY_DOUBLE_,
+        NPY_LONGDOUBLE_,
+        NPY_CFLOAT_,
+        NPY_CDOUBLE_,
+        NPY_CLONGDOUBLE_,
         NPY_OBJECT_ = 17,
-        NPY_STRING_, NPY_UNICODE_, NPY_VOID_,
+        NPY_STRING_,
+        NPY_UNICODE_,
+        NPY_VOID_,
         // Platform-dependent normalization
         NPY_INT8_ = NPY_BYTE_,
         NPY_UINT8_ = NPY_UBYTE_,
@@ -57,22 +72,22 @@ struct npy_api_patch {
         // `npy_common.h` defines the integer aliases. In order, it checks:
         // NPY_BITSOF_LONG, NPY_BITSOF_LONGLONG, NPY_BITSOF_INT, NPY_BITSOF_SHORT, NPY_BITSOF_CHAR
         // and assigns the alias to the first matching size, so we should check in this order.
-        NPY_INT32_ = platform_lookup<4, long, int, short>(
-                NPY_LONG_, NPY_INT_, NPY_SHORT_),
+        NPY_INT32_ = platform_lookup<4, long, int, short>(NPY_LONG_, NPY_INT_, NPY_SHORT_),
         NPY_UINT32_ = platform_lookup<4, unsigned long, unsigned int, unsigned short>(
                 NPY_ULONG_, NPY_UINT_, NPY_USHORT_),
-        NPY_INT64_ = platform_lookup<8, long, long long, int>(
-                NPY_LONG_, NPY_LONGLONG_, NPY_INT_),
+        NPY_INT64_ = platform_lookup<8, long, long long, int>(NPY_LONG_, NPY_LONGLONG_, NPY_INT_),
         NPY_UINT64_ = platform_lookup<8, unsigned long, unsigned long long, unsigned int>(
                 NPY_ULONG_, NPY_ULONGLONG_, NPY_UINT_),
-        NPY_FLOAT32_ = platform_lookup<4, double, float, long double>(
-                NPY_DOUBLE_, NPY_FLOAT_, NPY_LONGDOUBLE_),
-        NPY_FLOAT64_ = platform_lookup<8, double, float, long double>(
-                NPY_DOUBLE_, NPY_FLOAT_, NPY_LONGDOUBLE_),
-        NPY_COMPLEX64_ = platform_lookup<8, std::complex<double>, std::complex<float>, std::complex<long double>>(
-                NPY_DOUBLE_, NPY_FLOAT_, NPY_LONGDOUBLE_),
-        NPY_COMPLEX128_ = platform_lookup<8, std::complex<double>, std::complex<float>, std::complex<long double>>(
-                NPY_DOUBLE_, NPY_FLOAT_, NPY_LONGDOUBLE_),
+        NPY_FLOAT32_
+        = platform_lookup<4, double, float, long double>(NPY_DOUBLE_, NPY_FLOAT_, NPY_LONGDOUBLE_),
+        NPY_FLOAT64_
+        = platform_lookup<8, double, float, long double>(NPY_DOUBLE_, NPY_FLOAT_, NPY_LONGDOUBLE_),
+        NPY_COMPLEX64_
+        = platform_lookup<8, std::complex<double>, std::complex<float>, std::complex<long double>>(
+        NPY_DOUBLE_, NPY_FLOAT_, NPY_LONGDOUBLE_),
+        NPY_COMPLEX128_
+        = platform_lookup<8, std::complex<double>, std::complex<float>, std::complex<long double>>(
+        NPY_DOUBLE_, NPY_FLOAT_, NPY_LONGDOUBLE_),
         NPY_CHAR_ = std::is_signed<char>::value ? NPY_BYTE_ : NPY_UBYTE_,
     };
 
@@ -81,7 +96,7 @@ struct npy_api_patch {
         int len;
     };
 
-    static npy_api_patch& get() {
+    static npy_api_patch &get() {
         static npy_api_patch api = lookup();
         return api;
     }
@@ -96,9 +111,14 @@ struct npy_api_patch {
     unsigned int (*PyArray_GetNDArrayCFeatureVersion_)();
     PyObject *(*PyArray_DescrFromType_)(int);
     PyObject *(*PyArray_TypeObjectFromType_)(int);
-    PyObject *(*PyArray_NewFromDescr_)
-            (PyTypeObject *, PyObject *, int, Py_intptr_t const *,
-             Py_intptr_t const *, void *, int, PyObject *);
+    PyObject *(*PyArray_NewFromDescr_)(PyTypeObject *,
+                                       PyObject *,
+                                       int,
+                                       Py_intptr_t const *,
+                                       Py_intptr_t const *,
+                                       void *,
+                                       int,
+                                       PyObject *);
     // Unused. Not removed because that affects ABI of the class.
     PyObject *(*PyArray_DescrNewFromType_)(int);
     int (*PyArray_CopyInto_)(PyObject *, PyObject *);
@@ -109,17 +129,23 @@ struct npy_api_patch {
     PyObject *(*PyArray_DescrFromScalar_)(PyObject *);
     PyObject *(*PyArray_Scalar_)(void *, PyObject *, PyObject *);
     void (*PyArray_ScalarAsCtype_)(PyObject *, void *);
-    PyObject *(*PyArray_FromAny_) (PyObject *, PyObject *, int, int, int, PyObject *);
-    int (*PyArray_DescrConverter_) (PyObject *, PyObject **);
-    bool (*PyArray_EquivTypes_) (PyObject *, PyObject *);
-    int (*PyArray_GetArrayParamsFromObject_)(PyObject *, PyObject *, unsigned char, PyObject **, int *,
-                                             Py_intptr_t *, PyObject **, PyObject *);
+    PyObject *(*PyArray_FromAny_)(PyObject *, PyObject *, int, int, int, PyObject *);
+    int (*PyArray_DescrConverter_)(PyObject *, PyObject **);
+    bool (*PyArray_EquivTypes_)(PyObject *, PyObject *);
+    int (*PyArray_GetArrayParamsFromObject_)(PyObject *,
+                                             PyObject *,
+                                             unsigned char,
+                                             PyObject **,
+                                             int *,
+                                             Py_intptr_t *,
+                                             PyObject **,
+                                             PyObject *);
     PyObject *(*PyArray_Squeeze_)(PyObject *);
     // Unused. Not removed because that affects ABI of the class.
     int (*PyArray_SetBaseObject_)(PyObject *, PyObject *);
-    PyObject* (*PyArray_Resize_)(PyObject*, PyArray_Dims*, int, int);
-    PyObject* (*PyArray_Newshape_)(PyObject*, PyArray_Dims*, int);
-    PyObject* (*PyArray_View_)(PyObject*, PyObject*, PyObject*);
+    PyObject *(*PyArray_Resize_)(PyObject *, PyArray_Dims *, int, int);
+    PyObject *(*PyArray_Newshape_)(PyObject *, PyArray_Dims *, int);
+    PyObject *(*PyArray_View_)(PyObject *, PyObject *, PyObject *);
 
 private:
     enum functions {
@@ -150,16 +176,13 @@ private:
     static npy_api_patch lookup() {
         module_ m = module_::import("numpy.core.multiarray");
         auto c = m.attr("_ARRAY_API");
-#if PY_MAJOR_VERSION >= 3
         void **api_ptr = (void **) PyCapsule_GetPointer(c.ptr(), NULL);
-#else
-        void **api_ptr = (void **) PyCObject_AsVoidPtr(c.ptr());
-#endif
         npy_api_patch api;
 #define DECL_NPY_API(Func) api.Func##_ = (decltype(api.Func##_)) api_ptr[API_##Func];
         DECL_NPY_API(PyArray_GetNDArrayCFeatureVersion);
-        if (api.PyArray_GetNDArrayCFeatureVersion_() < 0x7)
+        if (api.PyArray_GetNDArrayCFeatureVersion_() < 0x7) {
             pybind11_fail("pybind11 numpy support requires numpy >= 1.7.0");
+        }
         DECL_NPY_API(PyArray_Type);
         DECL_NPY_API(PyVoidArrType_Type);
         DECL_NPY_API(PyArrayDescr_Type);
@@ -187,41 +210,47 @@ private:
     }
 };
 
-template <typename T> struct is_complex_patch : std::false_type { };
-template <typename T> struct is_complex_patch<std::complex<T>> : std::true_type { };
+template <typename T>
+struct is_complex_patch : std::false_type { };
+template <typename T>
+struct is_complex_patch<std::complex<T>> : std::true_type { };
 
 template <typename T, typename = void>
 struct npy_format_descriptor_name_patch;
 
 template <typename T>
 struct npy_format_descriptor_name_patch<T, enable_if_t<std::is_integral<T>::value>> {
-    static constexpr auto name = const_name<std::is_same<T, bool>::value>(
-        const_name("bool"), const_name<std::is_signed<T>::value>("int", "uint") + const_name<sizeof(T)*8>()
-    );
+static constexpr auto name = const_name<std::is_same<T, bool>::value>(
+        const_name("bool"),
+        const_name<std::is_signed<T>::value>("int", "uint") + const_name<sizeof(T) * 8>());
 };
 
 template <typename T>
 struct npy_format_descriptor_name_patch<T, enable_if_t<std::is_floating_point<T>::value>> {
-    static constexpr auto name = const_name<std::is_same<T, float>::value || std::is_same<T, double>::value>(
-        const_name("float") + const_name<sizeof(T)*8>(), const_name("longdouble")
-    );
+static constexpr auto name
+        = const_name < std::is_same<T, float>::value
+                       || std::is_same<T, double>::value
+        > (const_name("float") + const_name<sizeof(T) * 8>(), const_name("longdouble"));
 };
 
 template <typename T>
 struct npy_format_descriptor_name_patch<T, enable_if_t<is_complex_patch<T>::value>> {
-    static constexpr auto name = const_name<std::is_same<typename T::value_type, float>::value
-                               || std::is_same<typename T::value_type, double>::value>(
-        const_name("complex") + const_name<sizeof(typename T::value_type)*16>(), const_name("longcomplex")
-    );
+static constexpr auto name
+        = const_name < std::is_same<typename T::value_type, float>::value
+                       || std::is_same<typename T::value_type, double>::value
+        > (const_name("complex") + const_name<sizeof(typename T::value_type) * 16>(),
+           const_name("longcomplex"));
 };
 
-template<typename T> struct numpy_scalar_info {};
+template <typename T>
+struct numpy_scalar_info {};
 
-#define DECL_NPY_SCALAR(ctype_, typenum_) \
-template<> struct numpy_scalar_info<ctype_> { \
-    static constexpr auto name = npy_format_descriptor_name_patch<ctype_>::name; \
-    static constexpr int typenum = npy_api_patch::typenum_##_; \
-}
+#define DECL_NPY_SCALAR(ctype_, typenum_)                                                         \
+    template <>                                                                                   \
+    struct numpy_scalar_info<ctype_> {                                                            \
+        static constexpr auto name = npy_format_descriptor_name_patch<ctype_>::name;                    \
+        static constexpr int typenum = npy_api_patch::typenum_##_;                                      \
+    }
 
 // boolean type
 DECL_NPY_SCALAR(bool, NPY_BOOL);
@@ -295,7 +324,7 @@ struct type_caster<numpy_scalar<T>> {
 
 PYBIND11_NAMESPACE_END(detail)
 
-template<typename T>
+template <typename T>
 struct numpy_scalar {
     using value_type = T;
 
@@ -305,7 +334,10 @@ struct numpy_scalar {
     numpy_scalar(value_type value) : value(value) {}
 
     operator value_type() { return value; }
-    numpy_scalar& operator=(value_type value) { this->value = value; return *this; }
+    numpy_scalar &operator=(value_type value) {
+        this->value = value;
+        return *this;
+    }
 };
 
 template<typename T>
