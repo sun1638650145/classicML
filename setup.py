@@ -104,8 +104,8 @@ setup(
     install_requires=[
         'h5py>=3.4.0, <=3.6.0',
         'matplotlib>=3.5.0, <=3.5.1',
-        'numpy>=1.21.0, <=1.22.2',
-        'pandas>=1.3.4, <=1.4.1',
+        'numpy>=1.21.0, <=1.22.3',
+        'pandas>=1.3.4, <=1.4.2',
         'psutil>=5.7.2, <=5.9.0',
     ],
     python_requires='>=3.7',
