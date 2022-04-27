@@ -4,15 +4,16 @@ import re
 from time import time
 
 import h5py
+from packaging.version import Version
 
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 from classicML import __version__ as cml_version
 
-__version__ = 'backend.io.0.6.1'
+__version__ = 'backend.io.0.7'
 
-min_support_model_version = '0.5'  # 兼容最低的模型版本.
-min_support_io_version = 'backend.io.0.3'  # 兼容的最低I/O版本.
+min_support_model_version = Version('0.5')  # 兼容最低的模型版本.
+min_support_io_version = Version('0.7')  # 兼容的最低I/O版本.
 
 
 def _parse(model_name, fp):
@@ -25,10 +26,10 @@ def _parse(model_name, fp):
     """
     description_gp = fp['description']
 
-    file_cml_version = re.findall('\\d+\\.\\d+(?:\\.\\d+)*', description_gp.attrs['version'])[0]
-    file_backend_version = 'backend.io.' + re.findall('\\d+\\.\\d+', description_gp.attrs['version'])[-1]
+    file_cml_version = Version(description_gp.attrs['cml_version'])
+    file_io_version = Version(re.findall('\\d+\\.\\d+(?:\\.\\d+)*', description_gp.attrs['io_version'])[0])
 
-    if (file_cml_version < min_support_model_version) or (file_backend_version < min_support_io_version):
+    if (file_cml_version < min_support_model_version) or (file_io_version < min_support_io_version):
         CLASSICML_LOGGER.error('文件核验失败, 模型版本过低')
         raise ValueError('文件核验失败')
     if description_gp.attrs['model_name'] != model_name:
@@ -49,7 +50,8 @@ def initialize_weights_file(filepath, mode, model_name):
     具体结构如下:
       /
       ｜-- description
-          |-- version 版本信息
+          |-- cml_version classicML的版本信息
+          |-- io_version classicML使用的I/O版本信息
           |-- author 作者
           |-- model_name 模型名称
           |__ saved_time 时间戳
@@ -75,7 +77,8 @@ def initialize_weights_file(filepath, mode, model_name):
         if mode == 'w':
             # 创建描述信息组.
             description_gp = fp.create_group(name='description')
-            description_gp.attrs['version'] = cml_version + '.' + __version__
+            description_gp.attrs['cml_version'] = cml_version
+            description_gp.attrs['io_version'] = __version__
             description_gp.attrs['author'] = getpass.getuser()
             description_gp.attrs['model_name'] = model_name
             description_gp.attrs['saved_time'] = _cml_precision.float(time())
