@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11, ubuntu-20.04]
+        os: [macos-10.15, ubuntu-18.04]
         python-version: ['3.7', '3.8', '3.9', '3.10']
       fail-fast: false
 
@@ -26,12 +26,12 @@ jobs:
         python3 -m pip install --upgrade pip;
         pip install setuptools wheel twine pybind11==2.9.2;
         # 安装 eigen3
-        if [ "${{ matrix.os }}" = "macos-11" ]; then
+        if [ "${{ matrix.os }}" = "macos-10.15" ]; then
           rm -rf /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core;
           brew update;
           brew install eigen;
         else
-          # ubuntu-20.04下apt安装的最新版本是eigen3.3.7, classicML v0.8需要使用eigen3.4的新特性.
+          # ubuntu-18.04下apt安装的最新版本是eigen3.3.7, classicML v0.8需要使用eigen3.4的新特性.
           # 下载源码
           wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz;
           tar -zxvf eigen-3.4.0.tar.gz;
@@ -52,7 +52,7 @@ jobs:
       run: |
         python3 setup.py sdist bdist_wheel
         # 修改Linux下的包名
-        if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
+        if [ "${{ matrix.os }}" = "ubuntu-18.04" ]; then
           filename=`ls dist/*.whl`;
           newfilename=${filename/"linux"/"manylinux2010"};
           mv $filename $newfilename;
