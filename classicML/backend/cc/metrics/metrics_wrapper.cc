@@ -134,5 +134,5 @@ Returns:
     当前的准确率.
 )pbdoc", pybind11::arg("y_pred"), pybind11::arg("y_true"));
 
-    m.attr("__version__") = "backend.cc.metrics.0.4.3rc1";
+    m.attr("__version__") = "backend.cc.metrics.0.4.3";
 }
