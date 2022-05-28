@@ -1,4 +1,6 @@
 """classicML的底层核心操作."""
+from typing import Union
+
 import numpy as np
 
 from classicML import _cml_precision
@@ -43,6 +45,26 @@ def bootstrap_sampling(x, y=None, seed=None):
         return x[indices]
 
 
+def calculate_centroids(x: np.ndarray,
+                        clusters: np.ndarray) -> np.ndarray:
+    """计算均值向量.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        clusters: numpy.ndarray, 当前的簇标记.
+
+    Return:
+        均值向量.
+    """
+    n_clusters = np.unique(clusters).size
+
+    centroids = []
+    for cluster in range(n_clusters):
+        centroids.append(np.mean(x[clusters == cluster], axis=0))
+
+    return np.asarray(centroids, dtype=_cml_precision.float)
+
+
 def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):
     """计算KKT条件的违背值.
 
@@ -84,6 +106,40 @@ def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):
     return np.squeeze(error)
 
 
+# TODO(Steve Sun, tag:code): 实现完整计算欧式距离.
+def calculate_euclidean_distance(x0: np.ndarray,
+                                 x1: np.ndarray) -> np.ndarray:
+    """计算欧式距离.
+
+    Args:
+        x0, x1: numpy.ndarray, 要计算欧式距离的两个值.
+
+    Return:
+        欧式距离.
+    """
+    distances = np.expand_dims(x0, axis=1) - x1
+    distances = np.sqrt(np.sum(distances ** 2, axis=-1))
+
+    return distances
+
+
+def compare_differences(x0: np.ndarray,
+                        x1: np.ndarray,
+                        tol: float) -> np.ndarray:
+    """比较差异.
+
+    Args:
+        x0, x1: numpy.ndarray, 要比较差异的两个值.
+        tol: float, 最小差异阈值.
+
+    Return:
+        差异向量.
+    """
+    differences = np.abs(x0 - x1)
+
+    return np.any(differences > tol, axis=-1)
+
+
 def clip_alpha(alpha, low, high):
     """修剪拉格朗日乘子.
 
@@ -106,6 +162,18 @@ def clip_alpha(alpha, low, high):
         alpha = low
 
     return alpha
+
+
+def get_cluster(distances: np.ndarray) -> np.ndarray:
+    """获得簇标记.
+
+    Args:
+        distances: numpy.ndarray, 距离.
+
+    Return:
+        簇标记.
+    """
+    return np.argmin(distances, axis=-1)
 
 
 def get_conditional_probability(samples_on_attribute,
@@ -289,6 +357,48 @@ def get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1):
     S_w = S_0 + S_1
 
     return S_w
+
+
+def init_centroids(x: np.ndarray,
+                   n_clusters: int,
+                   init: Union[str, list, np.ndarray]) -> np.ndarray:
+    """初始化初始均值向量.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        n_clusters: int, 聚类簇的数量.
+        init: 'random', list or numpy.ndarray, 均值向量的初始化方式,
+            'random': 采用随机初始化;
+            list or numpy.ndarray: 可以指定训练数据的索引, 也可以直接给定具体的均值向量.
+
+    Return:
+        均值向量.
+    """
+    if init == 'random':
+        centroid_index = np.random.randint(low=0, high=len(x), size=n_clusters)
+        centroids = x[centroid_index, :]
+    elif type(init) in (list, np.ndarray):
+        init = np.squeeze(init)
+        if len(init.shape) == 1:  # 指定训练数据的索引.
+            if len(init) != n_clusters:
+                CLASSICML_LOGGER.error('你设置聚类簇数量与初始化均值向量数量不一致[%d, %d].', len(init), n_clusters)
+                raise ValueError('你设置聚类簇数量与初始化均值向量数量不一致[%d, %d].' % (len(init), n_clusters))
+            elif np.min(init) < 0 or np.max(init) >= len(x):
+                CLASSICML_LOGGER.error('你使用了非法的索引(请检查索引是否越界或负值).')
+                raise ValueError('你使用了非法的索引(请检查索引是否越界或负值).')
+
+            centroids = x[init, :]
+        else:  # 直接给定具体的均值向量.
+            if init.shape != (n_clusters, x.shape[1]):
+                CLASSICML_LOGGER.error('你使用了非法的均值向量.')
+                raise ValueError('你使用了非法的均值向量.')
+
+            centroids = np.asarray(init, dtype=_cml_precision.float)
+    else:
+        CLASSICML_LOGGER.error('你使用了非法的均值向量.')
+        raise TypeError('你使用了非法的均值向量.')
+
+    return centroids
 
 
 def select_second_alpha(error, error_cache, non_bound_alphas):

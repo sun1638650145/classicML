@@ -8,6 +8,8 @@ from classicML.api.models.bayes.semi_naive_bayes_classifiers import AveragedOneD
 from classicML.api.models.bayes.semi_naive_bayes_classifiers import SuperParentOneDependentEstimator
 from classicML.api.models.bayes.semi_naive_bayes_classifiers import SuperParentOneDependentEstimator as SPODE
 
+from classicML.api.models.cluster.k_means import KMeans
+
 from classicML.api.models.tree.decision_tree_classifier import DecisionStumpClassifier
 from classicML.api.models.tree.decision_tree_classifier import TwoLevelDecisionTreeClassifier
 from classicML.api.models.ensemble.bagging import BaggingClassifier

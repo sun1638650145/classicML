@@ -7,6 +7,7 @@ from classicML.api.models import BPNN
 from classicML.api.models import BaggingClassifier
 from classicML.api.models import DecisionStumpClassifier
 from classicML.api.models import DecisionTreeClassifier
+from classicML.api.models import KMeans
 from classicML.api.models import LinearDiscriminantAnalysis
 from classicML.api.models import LDA
 from classicML.api.models import LogisticRegression

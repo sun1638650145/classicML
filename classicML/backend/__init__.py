@@ -41,8 +41,12 @@ else:
 # ops模块
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_bootstrap_sampling
+    from classicML.backend.python.ops import calculate_centroids as cc_calculate_centroids
     from classicML.backend.cc.ops import cc_calculate_error
+    from classicML.backend.python.ops import calculate_euclidean_distance as cc_calculate_euclidean_distance
     from classicML.backend.cc.ops import cc_clip_alpha
+    from classicML.backend.python.ops import compare_differences as cc_compare_differences
+    from classicML.backend.python.ops import get_cluster as cc_get_cluster
     from classicML.backend.cc.ops import cc_get_conditional_probability
     from classicML.backend.cc.ops import cc_get_dependent_prior_probability
     from classicML.backend.cc.ops import cc_get_prior_probability
@@ -53,18 +57,24 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
     from classicML.backend.cc.ops import cc_select_second_alpha
     from classicML.backend.cc.ops import cc_type_of_target as cc_type_of_target_v1  # 正式版将移除.
+    from classicML.backend.python.ops import init_centroids as cc_init_centroids
     from classicML.backend.cc.ops import cc_type_of_target_v2
     from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
     from classicML.backend.cc.ops import cc_bootstrap_sampling as bootstrap_sampling
+    from classicML.backend.python.ops import calculate_centroids
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
+    from classicML.backend.python.ops import calculate_euclidean_distance
     from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
+    from classicML.backend.python.ops import compare_differences
+    from classicML.backend.python.ops import get_cluster
     from classicML.backend.cc.ops import cc_get_conditional_probability as get_conditional_probability
     from classicML.backend.cc.ops import cc_get_dependent_prior_probability as get_dependent_prior_probability
     from classicML.backend.cc.ops import cc_get_prior_probability as get_prior_probability
     from classicML.backend.cc.ops import cc_get_probability_density as get_probability_density
     from classicML.backend.cc.ops import cc_get_w_v2 as get_w
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix as get_within_class_scatter_matrix
+    from classicML.backend.python.ops import init_centroids
     from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
     from classicML.backend.cc.ops import cc_type_of_target_v2 as type_of_target
 
@@ -72,8 +82,12 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     CLASSICML_LOGGER.info('后端版本是: {}'.format(ops__version__))
 else:
     from classicML.backend.python.ops import bootstrap_sampling
+    from classicML.backend.python.ops import calculate_centroids
     from classicML.backend.python.ops import calculate_error
+    from classicML.backend.python.ops import calculate_euclidean_distance
     from classicML.backend.python.ops import clip_alpha
+    from classicML.backend.python.ops import compare_differences
+    from classicML.backend.python.ops import get_cluster
     from classicML.backend.python.ops import get_conditional_probability
     from classicML.backend.python.ops import get_dependent_prior_probability
     from classicML.backend.python.ops import get_prior_probability
@@ -82,6 +96,7 @@ else:
     from classicML.backend.python.ops import get_w_v2
     from classicML.backend.python.ops import get_w_v2 as get_w
     from classicML.backend.python.ops import get_within_class_scatter_matrix
+    from classicML.backend.python.ops import init_centroids
     from classicML.backend.python.ops import select_second_alpha
     from classicML.backend.python.ops import type_of_target
 
