@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import List, Union
 
 import numpy as np
@@ -10,6 +11,7 @@ from classicML.backend import calculate_euclidean_distance
 from classicML.backend import get_cluster
 from classicML.backend import calculate_centroids
 from classicML.backend import compare_differences
+from classicML.backend import io
 
 
 class KMeans(BaseModel):
@@ -26,6 +28,8 @@ class KMeans(BaseModel):
         clusters: numpy.ndarray, 经过训练后数据的簇标记.
         is_trained: bool, default=False,
             模型训练后将被标记为True.
+        is_loaded: bool, default=False,
+            如果模型加载了权重将被标记为True.
     """
     def __init__(self, n_clusters: int = 3):
         """初始化K-均值聚类.
@@ -42,6 +46,7 @@ class KMeans(BaseModel):
         self.centroids = None
         self.clusters = None
         self.is_trained = False
+        self.is_loaded = False
 
     def compile(self,
                 init: Union[str, List, np.ndarray] = 'random',
@@ -109,7 +114,7 @@ class KMeans(BaseModel):
         Raise:
             ValueError: 模型没有训练的错误.
         """
-        if self.is_trained is False:
+        if self.is_trained is False and self.is_loaded is False:
             CLASSICML_LOGGER.error('模型没有训练')
             raise ValueError('你必须先进行训练')
 
@@ -130,3 +135,59 @@ class KMeans(BaseModel):
         """
         CLASSICML_LOGGER.error('无监督学习(聚类)没有score方法')
         raise NotImplementedError('无监督学习(聚类)没有score方法')
+
+    def load_weights(self, filepath: Union[str, Path]):
+        """加载模型参数.
+
+        Args:
+            filepath: str, 权重文件加载的路径.
+
+        Raise:
+            KeyError: 模型权重加载失败.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='r',
+                                                   model_name='KMeans')
+        # 加载模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            self.init = compile_ds.attrs['init']
+            self.tol = compile_ds.attrs['tol']
+
+            self.centroids = weights_ds.attrs['centroids']
+            self.clusters = weights_ds.attrs['clusters']
+            # 标记加载完成
+            self.is_loaded = True
+        except KeyError:
+            CLASSICML_LOGGER.error('模型权重加载失败, 请检查文件是否损坏')
+            raise KeyError('模型权重加载失败')
+
+    def save_weights(self, filepath: Union[str, Path]):
+        """将模型权重保存为一个HDF5文件.
+
+        Args:
+            filepath: str, 权重文件保存的路径.
+
+        Raise:
+            TypeError: 模型权重保存失败.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='w',
+                                                   model_name='KMeans')
+        # 保存模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            compile_ds.attrs['init'] = self.init
+            compile_ds.attrs['tol'] = self.tol
+
+            weights_ds.attrs['centroids'] = self.centroids
+            weights_ds.attrs['clusters'] = self.clusters
+        except TypeError:
+            CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
+            raise TypeError('模型权重保存失败')

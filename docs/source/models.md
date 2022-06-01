@@ -846,6 +846,38 @@ predict(x)
 
 * <b>ValueError</b>: 模型没有训练的错误.
 
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
 ## LinearDiscriminantAnalysis
 
 线性判别分析.
