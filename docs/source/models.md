@@ -779,6 +779,73 @@ save_weights(filepath)
 
 * 模型将不会保存关于优化器的超参数.
 
+## KMeans
+
+K-均值聚类.
+
+```python
+cml.models.KMeans(n_clusters=3)
+```
+
+### 参数
+
+* <b>n_clusters</b>: 整数, 聚类簇的数量.
+
+### compile
+
+```python
+compile(init='random', tol=1e-3)
+```
+
+编译K-均值聚类.
+
+#### 参数
+
+* <b>criterion</b>: {'gain', 'gini', 'entropy'}，决策树学习的划分方式.
+* <b>pruning</b>: {None, 'pre', 'post'}，是否对决策树进行剪枝操作，None表示不使用剪枝.
+* <b>init</b>: 均值向量的初始化方式
+    * 'random': 随机初始化;
+    * 列表或一个 Numpy数组: 可以指定训练数据的索引或者值, 也可以直接给定具体的均值向量.
+
+* <b>tol</b>: 浮点数, 停止训练的最小调整幅度阈值.
+
+### fit
+
+```python
+fit(x, epochs=100)
+```
+
+训练K-均值聚类.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组, 特征数据.
+* <b>epochs</b>: 整数, 最大的训练轮数, 如果均值向量已经不更新将会提前自动结束训练.
+
+#### 返回
+
+一个```K-means```实例.
+
+### predict
+
+```python
+predict(x)
+```
+
+使用K-均值聚类预测新样本所在的簇.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组或者列表，特征数据.
+
+#### 返回
+
+新样本所在的簇.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
 ## LinearDiscriminantAnalysis
 
 线性判别分析.

@@ -54,10 +54,10 @@ def initialize_weights_file(filepath, mode, model_name):
           |-- io_version classicML使用的I/O版本信息
           |-- author 作者
           |-- model_name 模型名称
-          |__ saved_time 时间戳
-      ｜__ parameters
+          |-- saved_time 时间戳
+      ｜-- parameters
           ｜-- compile 训练相关超参数
-          ｜__ weights 模型的权重
+          ｜-- weights 模型的权重
 
     Arguments:
         filepath: str, 权重文件加载的路径.

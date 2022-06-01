@@ -6,7 +6,7 @@ import numpy as np
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.13'
+__version__ = 'backend.python.ops.0.14a1'
 
 
 def bootstrap_sampling(x, y=None, seed=None):
@@ -21,6 +21,11 @@ def bootstrap_sampling(x, y=None, seed=None):
 
     Returns:
         自助采样后的新样本.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
     """
     x = np.asarray(x)
     num_of_samples = x.shape[0]
@@ -55,6 +60,11 @@ def calculate_centroids(x: np.ndarray,
 
     Return:
         均值向量.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
     """
     n_clusters = np.unique(clusters).size
 
@@ -116,6 +126,11 @@ def calculate_euclidean_distance(x0: np.ndarray,
 
     Return:
         欧式距离.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
     """
     distances = np.expand_dims(x0, axis=1) - x1
     distances = np.sqrt(np.sum(distances ** 2, axis=-1))
@@ -134,6 +149,11 @@ def compare_differences(x0: np.ndarray,
 
     Return:
         差异向量.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
     """
     differences = np.abs(x0 - x1)
 
@@ -172,6 +192,11 @@ def get_cluster(distances: np.ndarray) -> np.ndarray:
 
     Return:
         簇标记.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
     """
     return np.argmin(distances, axis=-1)
 
@@ -373,6 +398,11 @@ def init_centroids(x: np.ndarray,
 
     Return:
         均值向量.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
     """
     if init == 'random':
         centroid_index = np.random.randint(low=0, high=len(x), size=n_clusters)
