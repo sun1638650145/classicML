@@ -82,6 +82,14 @@ def _logistic_regression_plot_config(x_label, y_label):
     plt.legend()
 
 
+def _k_means_config(x_label, y_label):
+    """设置K均值聚类画布的其他配置项."""
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.axis([0, 1, 0, 1])
+    plt.legend()
+
+
 def _svc_plot_config(CS, kernel_name, C, x_label, y_label):
     """设置支持向量分类器的其他配置项."""
     plt.xlabel(x_label)

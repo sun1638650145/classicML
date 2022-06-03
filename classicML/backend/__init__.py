@@ -41,6 +41,7 @@ else:
 # ops模块
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_bootstrap_sampling
+    from classicML.backend.python.ops import ConvexHull
     from classicML.backend.python.ops import calculate_centroids as cc_calculate_centroids
     from classicML.backend.cc.ops import cc_calculate_error
     from classicML.backend.python.ops import calculate_euclidean_distance as cc_calculate_euclidean_distance
@@ -62,6 +63,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
     from classicML.backend.cc.ops import cc_bootstrap_sampling as bootstrap_sampling
+    from classicML.backend.python.ops import ConvexHull as ConvexHull
     from classicML.backend.python.ops import calculate_centroids
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
     from classicML.backend.python.ops import calculate_euclidean_distance
@@ -82,6 +84,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     CLASSICML_LOGGER.info('后端版本是: {}'.format(ops__version__))
 else:
     from classicML.backend.python.ops import bootstrap_sampling
+    from classicML.backend.python.ops import ConvexHull
     from classicML.backend.python.ops import calculate_centroids
     from classicML.backend.python.ops import calculate_error
     from classicML.backend.python.ops import calculate_euclidean_distance

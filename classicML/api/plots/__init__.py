@@ -3,8 +3,9 @@ import os
 from matplotlib import pyplot as _plt
 
 from classicML.api.plots.bayes import plot_bayes
-from classicML.api.plots.callbacks import plot_history
 from classicML.api.plots.ensemble import plot_ensemble
+from classicML.api.plots.callbacks import plot_history
+from classicML.api.plots.cluster import plot_k_means
 from classicML.api.plots.linear_model import plot_linear_discriminant_analysis
 from classicML.api.plots.linear_model import plot_linear_discriminant_analysis as plot_lda
 from classicML.api.plots.linear_model import plot_logistic_regression

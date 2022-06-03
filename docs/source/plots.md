@@ -36,18 +36,6 @@ cml.plots.plot_bayes(bayes, x, y)
 
 * <b>ValueError</b>: 模型没有训练的错误.
 
-### plot_history
-
-```python
-plot_history(history)
-```
-
-可视化历史记录.
-
-#### 参数
-
-* <b>history</b>: ```cml.backend.callbacks.History``` , callbacks实例.
-
 ### plot_ensemble
 
 ```python
@@ -64,6 +52,37 @@ plot_ensemble(ensemble_model, x, y, x_label=None, y_label=None, plot_estimators=
 * <b>x_label</b>: 字符串, 横轴的标签.
 * <b>y_label</b>: 字符串, 纵轴的标签.
 * <b>plot_estimators</b>: 布尔值, 是否绘制基学习器的分类边界.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
+### plot_history
+
+```python
+plot_history(history)
+```
+
+可视化历史记录.
+
+#### 参数
+
+* <b>history</b>: ```cml.backend.callbacks.History``` , callbacks实例.
+
+### plot_k_means
+
+```python
+plot_k_means(k_means, x, x_label=None, y_label=None)
+```
+
+可视化K-均值聚类二维示意图.
+
+#### 参数
+
+* <b>lda</b>: ```cml.models.KMeans```, K-均值聚类实例.
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>x_label</b>: 字符串，横轴的标签.
+* <b>y_label</b>: 字符串，纵轴的标签.
 
 #### 异常
 

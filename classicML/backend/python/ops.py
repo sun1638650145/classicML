@@ -1,12 +1,12 @@
 """classicML的底层核心操作."""
-from typing import Union
+from typing import List, Union
 
 import numpy as np
 
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.14a1'
+__version__ = 'backend.python.ops.0.14a2'
 
 
 def bootstrap_sampling(x, y=None, seed=None):
@@ -48,6 +48,80 @@ def bootstrap_sampling(x, y=None, seed=None):
         return x[indices], y[indices]
     else:
         return x[indices]
+
+
+class ConvexHull(object):
+    """使用Graham扫描算法计算二维凸包.
+
+    Attributes:
+        points: np.ndarray or list, 计算凸包的点.
+        hull: list, 凸包的点.
+
+    References:
+        - [Graham Scan Algorithm](https://lvngd.com/blog/convex-hull-graham-scan-algorithm-python/)
+    """
+
+    def __init__(self, points: Union[np.ndarray, List]):
+        """
+        Args:
+            points: np.ndarray or list, 计算凸包的点.
+        """
+        super(ConvexHull, self).__init__()
+        self.points = np.asarray(points)
+        self.hull = self.compute_convex_hull()
+
+    def compute_convex_hull(self) -> np.ndarray:
+        """计算二维凸包.
+
+        Return:
+            二维凸包.
+        """
+        hull = []
+        # 对点进行排序, 优先根据x升序.
+        self.points = self.points[np.argsort(self.points[:, 0])]
+
+        start, self.points = self.points[0], self.points[1:, ]
+        hull.append(start)
+
+        # 对点进行排序, 优先根据x斜率.
+        slopes = []
+        for i, point in enumerate(self.points):
+            slopes.append([i, self.get_slope(start, point)])  # 逐元素计算斜率.
+        slopes.sort(key=lambda x: x[1])  # 根据斜率排序.
+        slopes_indices = np.asarray(slopes, dtype=np.int32)[:, 0]
+
+        self.points = self.points[slopes_indices]
+
+        for point in self.points:
+            hull.append(point)
+            while len(hull) > 2 and self.get_cross_product(hull[-3], hull[-2], hull[-1]) < 0:
+                hull.pop(-2)  # 删除序列中间的那个.
+
+        # 增加第一个元素成为闭环.
+        hull.append(hull[0])
+
+        return np.asarray(hull)
+
+    @staticmethod
+    def get_slope(p0: np.ndarray, p1: np.ndarray) -> float:
+        """计算斜率.
+
+        Return:
+            斜率.
+        """
+        if p0[0] == p1[0]:
+            return np.inf
+        else:
+            return (p0[1] - p1[1]) / (p0[0] - p1[0])
+
+    @staticmethod
+    def get_cross_product(p0: np.ndarray, p1: np.ndarray, p2: np.ndarray) -> float:
+        """计算向量积.
+
+        Return:
+            向量积.
+        """
+        return (p1[0] - p0[0]) * (p2[1] - p0[1]) - (p1[1] - p0[1]) * (p2[0] - p0[0])  # x1y2 - x2y1
 
 
 def calculate_centroids(x: np.ndarray,
