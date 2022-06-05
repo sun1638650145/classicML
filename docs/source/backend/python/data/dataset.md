@@ -19,7 +19,7 @@ cml.data.Dataset(dataset_type='train',
 ### 参数
 
 * <b>dataset_type</b>: {'train', 'validation', 'test'}，数据集的类型，如果声明为测试集，将不会生成对应的标签.
-* <b>label_mode</b>: {'one-hot', 'max-margin'}，标签的编码格式.
+* <b>label_mode</b>: {'one-hot', 'max-margin', 'unsupervised'}，标签的编码格式.
 * <b>fillna</b>: 布尔值，是否填充缺失值.
 * <b>digitization</b>: 布尔值，是否使用数值化，将离散标签转化成数值.
 * <b>normalization</b>: 布尔值，是否使用归一化.

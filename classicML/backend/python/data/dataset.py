@@ -19,7 +19,7 @@ class Dataset(object):
     Attributes:
         dataset_type: {'train', 'validation', 'test'}, default='train',
             数据集的类型, 如果声明为测试集, 将不会生成对应的标签.
-        label_mode: {'one-hot', 'max-margin'}, default=None,
+        label_mode: {'one-hot', 'max-margin', 'unsupervised'}, default=None,
             标签的编码格式.
         fillna: bool, default=True,
             是否填充缺失值.
@@ -33,7 +33,7 @@ class Dataset(object):
             数据集的名称.
         x: numpy.ndarray,
             处理后的特征数据.
-        y: numpy.ndarray,
+        y: numpy.ndarray, default=None,
             处理后的标签.
         class_indices: dict,
             类标签和类索引的映射字典.
@@ -87,9 +87,13 @@ class Dataset(object):
             经过预处理的特征数据和标签.
         """
         # 预处理特征数据.
-        self._preprocessing_features(dataframe.iloc[:, :-1].values)
+        if self.label_mode == 'unsupervised':
+            self._preprocessing_features(dataframe.values)
+        else:
+            self._preprocessing_features(dataframe.iloc[:, :-1].values)
+
         # 预处理标签.
-        if self.dataset_type != 'test':
+        if self.dataset_type != 'test' and self.label_mode != 'unsupervised':
             if len(np.unique(dataframe.iloc[:, -1].values)) == 2:
                 self._preprocessing_binary_labels(dataframe.iloc[:, -1].values)
             else:
@@ -131,7 +135,7 @@ class Dataset(object):
         Returns:
             经过预处理的特征数据和标签.
         """
-        if y is None and self.dataset_type == 'train':
+        if y is None and self.dataset_type == 'train' and self.label_mode != 'unsupervised':
             CLASSICML_LOGGER.warn('请检查您的数据集, 训练集似乎应该有标签数据.')
 
         x = np.asarray(x, dtype=_cml_precision.float)
