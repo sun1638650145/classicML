@@ -11,6 +11,7 @@ from classicML.backend import kernels
 from classicML.backend.cc.ops import cc_bootstrap_sampling
 from classicML.backend.cc.ops import cc_calculate_error
 from classicML.backend.cc.ops import cc_clip_alpha
+from classicML.backend.cc.ops import cc_get_cluster
 from classicML.backend.cc.ops import cc_get_conditional_probability
 from classicML.backend.cc.ops import cc_get_dependent_prior_probability
 from classicML.backend.cc.ops import cc_get_prior_probability
@@ -23,6 +24,7 @@ from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 from classicML.backend.python.ops import bootstrap_sampling
 from classicML.backend.python.ops import calculate_error
 from classicML.backend.python.ops import clip_alpha
+from classicML.backend.python.ops import get_cluster
 from classicML.backend.python.ops import get_conditional_probability
 from classicML.backend.python.ops import get_dependent_prior_probability
 from classicML.backend.python.ops import get_prior_probability
@@ -115,6 +117,17 @@ class TestClipAlpha(object):
         cc_answer = cc_clip_alpha(alpha, low, high)
         py_answer = clip_alpha(alpha, low, high)
         assert abs(cc_answer - py_answer) <= THRESHOLD and (py_answer == high)
+
+
+class TestGetCluster(object):
+    def test_answer(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        distances = np.random.random(size=[30, 3])
+
+        cc_answer = cc_get_cluster(distances)
+        py_answer = get_cluster(distances)
+
+        assert np.all(abs(cc_answer - py_answer)) <= THRESHOLD
 
 
 class TestGetConditionalProbability(object):

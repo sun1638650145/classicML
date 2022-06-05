@@ -51,7 +51,7 @@ class Dataset(object):
         Arguments:
             dataset_type: {'train', 'validation', 'test'}, default='train',
                 数据集的类型, 如果声明为测试集, 将不会生成对应的标签.
-            label_mode: {'one-hot', 'max-margin'}, default=None,
+            label_mode: {'one-hot', 'max-margin', 'unsupervised'}, default=None,
                 标签的编码格式.
             fillna: bool, default=True,
                 是否填充缺失值.

@@ -112,6 +112,21 @@ RFloat ClipAlpha(PFloat &alpha, PFloat &low, PFloat &high) {
     return clipped_alpha;
 }
 
+// 返回簇标记, 输入距离矩阵;
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
+template<typename Matrix>
+row_vector32i GetCluster(const Matrix &distances) {
+    row_vector32i indices(distances.rows());
+
+    for (int32 i = 0; i < distances.rows(); i ++) {
+        int index;
+        distances.row(i).minCoeff(&index);
+        indices[i] = index;
+    }
+
+    return indices;
+}
+
 // 获取类条件概率(32/64位), 输入某个属性值的样本总数, 某个类别的样本总数, 类别的数量和是否使用平滑(pure uint/np.uint32/np.uint64).
 template<typename Float, typename Uint>
 Float GetConditionalProbability(Uint &samples_on_attribute,
@@ -398,6 +413,9 @@ template matrix64 CalculateError<matrix64, vector64, array64>
 template np_float32 ClipAlpha(np_float32 &alpha, np_float32 &low, np_float32 &high);
 template np_float64 ClipAlpha(np_float64 &alpha, np_float64 &low, np_float64 &high);
 template np_float32 ClipAlpha(float32 &alpha, float32 &low, float32 &high);
+
+template row_vector32i GetCluster(const matrix32 &distances);
+template row_vector32i GetCluster(const matrix64 &distances);
 
 template np_float32 GetConditionalProbability(np_uint32 &samples_on_attribute,
                                               np_uint32 &samples_in_category,

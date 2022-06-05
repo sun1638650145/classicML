@@ -42,6 +42,9 @@ Matrix CalculateError(const Matrix &x,
 template<typename RFloat, typename PFloat>
 RFloat ClipAlpha(PFloat &alpha, PFloat &low, PFloat &high);
 
+template<typename Matrix>
+row_vector32i GetCluster(const Matrix &distances);
+
 template<typename Float, typename Uint>
 Float GetConditionalProbability(Uint &samples_on_attribute,
                                 Uint &samples_in_category,

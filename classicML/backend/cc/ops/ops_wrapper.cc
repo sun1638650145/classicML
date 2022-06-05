@@ -184,6 +184,25 @@ PYBIND11_MODULE(ops, m) {
         修剪后的拉格朗日乘子.
 )pbdoc", pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
 
+    m.def("cc_get_cluster", &ops::GetCluster<matrix32>, R"pbdoc(
+获得簇标记.
+
+    Args:
+        distances: numpy.ndarray, 距离.
+
+    Return:
+        簇标记.
+)pbdoc", pybind11::arg("distances"));
+    m.def("cc_get_cluster", &ops::GetCluster<matrix64>, R"pbdoc(
+获得簇标记.
+
+    Args:
+        distances: numpy.ndarray, 距离.
+
+    Return:
+        簇标记.
+)pbdoc", pybind11::arg("distances"));
+
     // Overloaded function.
     m.def("cc_get_conditional_probability", &ops::GetConditionalProbability<np_float32, np_uint32>, R"pbdoc(
 获取类条件概率.
@@ -529,5 +548,5 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.13";
+    m.attr("__version__") = "backend.cc.ops.0.14a3";
 }
