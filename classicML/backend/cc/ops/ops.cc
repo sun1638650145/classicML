@@ -112,19 +112,20 @@ RFloat ClipAlpha(PFloat &alpha, PFloat &low, PFloat &high) {
     return clipped_alpha;
 }
 
+// 返回差异向量, 输入比较差异的两个值(32/64位浮点型Eigen::Matrix矩阵.)和最小差异阈值(pure float/np.float32/np.float64).
+// 不支持不同位数模板兼容.
+template<typename Matrix, typename Float>
+row_vector_bool CompareDifferences(const Matrix &x0, const Matrix &x1, Float &tol) {
+    auto differences = (x0 - x1).array().abs();
+
+    return differences.rowwise().maxCoeff() > tol; // 最大值大于最小阈值即可(即np.any()).
+}
+
 // 返回簇标记, 输入距离矩阵;
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 template<typename Matrix>
 row_vector32i GetCluster(const Matrix &distances) {
-    row_vector32i indices(distances.rows());
-
-    for (int32 i = 0; i < distances.rows(); i ++) {
-        int index;
-        distances.row(i).minCoeff(&index);
-        indices[i] = index;
-    }
-
-    return indices;
+    return matrix_op::ArgMin(distances);
 }
 
 // 获取类条件概率(32/64位), 输入某个属性值的样本总数, 某个类别的样本总数, 类别的数量和是否使用平滑(pure uint/np.uint32/np.uint64).
@@ -413,6 +414,10 @@ template matrix64 CalculateError<matrix64, vector64, array64>
 template np_float32 ClipAlpha(np_float32 &alpha, np_float32 &low, np_float32 &high);
 template np_float64 ClipAlpha(np_float64 &alpha, np_float64 &low, np_float64 &high);
 template np_float32 ClipAlpha(float32 &alpha, float32 &low, float32 &high);
+
+template row_vector_bool CompareDifferences(const matrix32 &x0, const matrix32 &x1, np_float32 &tol);
+template row_vector_bool CompareDifferences(const matrix64 &x0, const matrix64 &x1, np_float64 &tol);
+template row_vector_bool CompareDifferences(const matrix32 &x0, const matrix32 &x1, float32 &tol);
 
 template row_vector32i GetCluster(const matrix32 &distances);
 template row_vector32i GetCluster(const matrix64 &distances);

@@ -22,6 +22,9 @@
 namespace matrix_op {
 bool AnyDiscreteInteger(const pybind11::array &array);
 
+template<typename Matrix>
+row_vector32i ArgMin(const Matrix &array);
+
 template <typename Matrix>
 Matrix BroadcastSub(const Matrix &a, const Matrix &b);
 

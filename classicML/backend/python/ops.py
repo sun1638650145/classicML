@@ -6,7 +6,7 @@ import numpy as np
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.14a3'
+__version__ = 'backend.python.ops.0.14a4'
 
 
 def bootstrap_sampling(x, y=None, seed=None):
@@ -212,28 +212,6 @@ def calculate_euclidean_distance(x0: np.ndarray,
     return distances
 
 
-def compare_differences(x0: np.ndarray,
-                        x1: np.ndarray,
-                        tol: float) -> np.ndarray:
-    """比较差异.
-
-    Args:
-        x0, x1: numpy.ndarray, 要比较差异的两个值.
-        tol: float, 最小差异阈值.
-
-    Return:
-        差异向量.
-
-    Notes:
-        - 该函数提供了非Python后端的实现版本,
-          你可以使用其他的版本, 函数的调用方式和接口一致,
-          Python版本是没有优化的原始公式版本.
-    """
-    differences = np.abs(x0 - x1)
-
-    return np.any(differences > tol, axis=-1)
-
-
 def clip_alpha(alpha, low, high):
     """修剪拉格朗日乘子.
 
@@ -256,6 +234,28 @@ def clip_alpha(alpha, low, high):
         alpha = low
 
     return alpha
+
+
+def compare_differences(x0: np.ndarray,
+                        x1: np.ndarray,
+                        tol: float) -> np.ndarray:
+    """比较差异.
+
+    Args:
+        x0, x1: numpy.ndarray, 要比较差异的两个值.
+        tol: float, 最小差异阈值.
+
+    Return:
+        差异向量.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
+    """
+    differences = np.abs(x0 - x1)
+
+    return np.any(differences > tol, axis=-1)
 
 
 def get_cluster(distances: np.ndarray) -> np.ndarray:

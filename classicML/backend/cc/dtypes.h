@@ -45,6 +45,7 @@ typedef Eigen::RowVectorXf row_vector32f;
 typedef Eigen::RowVectorXd row_vector64f;
 typedef Eigen::RowVectorXi row_vector32i;
 typedef Eigen::Matrix<int64, 1, -1> row_vector64i;
+typedef Eigen::Matrix<bool, 1, -1> row_vector_bool;
 
 typedef Eigen::ArrayXf array32;
 typedef Eigen::ArrayXd array64;

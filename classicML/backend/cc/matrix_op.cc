@@ -24,6 +24,21 @@ bool AnyDiscreteInteger(const pybind11::array &array) {
     return true;
 }
 
+// 返回数组的每行最小值的索引, 输入数组.
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
+template<typename Matrix>
+row_vector32i ArgMin(const Matrix &array) {
+    row_vector32i indices(array.rows());
+
+    for (int32 i = 0; i < array.rows(); i ++) {
+        int32 index;
+        array.row(i).minCoeff(&index);
+        indices[i] = index;
+    }
+
+    return indices;
+}
+
 // 返回广播减法的矩阵, 输入a矩阵和b矩阵.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 template <typename Matrix>
@@ -201,6 +216,9 @@ std::variant<std::set<float32>, std::set<uint8>> Unique(const pybind11::array &a
 }
 
 // 显式实例化.
+template row_vector32i ArgMin(const matrix32 &array);
+template row_vector32i ArgMin(const matrix64 &array);
+
 template matrix32 BroadcastSub(const matrix32 &a, const matrix32 &b);
 template matrix64 BroadcastSub(const matrix64 &a, const matrix64 &b);
 

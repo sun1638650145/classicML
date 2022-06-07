@@ -42,6 +42,9 @@ Matrix CalculateError(const Matrix &x,
 template<typename RFloat, typename PFloat>
 RFloat ClipAlpha(PFloat &alpha, PFloat &low, PFloat &high);
 
+template<typename Matrix, typename Float>
+row_vector_bool CompareDifferences(const Matrix &x0, const Matrix &x1, Float &tol);
+
 template<typename Matrix>
 row_vector32i GetCluster(const Matrix &distances);
 

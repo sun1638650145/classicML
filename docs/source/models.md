@@ -801,8 +801,6 @@ compile(init='random', tol=1e-3)
 
 #### 参数
 
-* <b>criterion</b>: {'gain', 'gini', 'entropy'}，决策树学习的划分方式.
-* <b>pruning</b>: {None, 'pre', 'post'}，是否对决策树进行剪枝操作，None表示不使用剪枝.
 * <b>init</b>: 均值向量的初始化方式
     * 'random': 随机初始化;
     * 列表或一个 Numpy数组: 可以指定训练数据的索引或者值, 也可以直接给定具体的均值向量.

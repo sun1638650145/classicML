@@ -184,6 +184,39 @@ PYBIND11_MODULE(ops, m) {
         修剪后的拉格朗日乘子.
 )pbdoc", pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
 
+    // Overloaded function.
+    m.def("cc_compare_differences", &ops::CompareDifferences<matrix32, np_float32>, R"pbdoc(
+比较差异.
+
+    Args:
+        x0, x1: numpy.ndarray, 要比较差异的两个值.
+        tol: float, 最小差异阈值.
+
+    Return:
+        差异向量.
+)pbdoc", pybind11::arg("x0"), pybind11::arg("x1"), pybind11::arg("tol"));
+    m.def("cc_compare_differences", &ops::CompareDifferences<matrix64, np_float64>, R"pbdoc(
+比较差异.
+
+    Args:
+        x0, x1: numpy.ndarray, 要比较差异的两个值.
+        tol: float, 最小差异阈值.
+
+    Return:
+        差异向量.
+)pbdoc", pybind11::arg("x0"), pybind11::arg("x1"), pybind11::arg("tol"));
+    m.def("cc_compare_differences", &ops::CompareDifferences<matrix32, float32>, R"pbdoc(
+比较差异.
+
+    Args:
+        x0, x1: numpy.ndarray, 要比较差异的两个值.
+        tol: float, 最小差异阈值.
+
+    Return:
+        差异向量.
+)pbdoc", pybind11::arg("x0"), pybind11::arg("x1"), pybind11::arg("tol"));
+
+    // Overloaded function.
     m.def("cc_get_cluster", &ops::GetCluster<matrix32>, R"pbdoc(
 获得簇标记.
 
@@ -548,5 +581,5 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.14a3";
+    m.attr("__version__") = "backend.cc.ops.0.14a4";
 }

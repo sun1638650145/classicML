@@ -46,7 +46,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_calculate_error
     from classicML.backend.python.ops import calculate_euclidean_distance as cc_calculate_euclidean_distance
     from classicML.backend.cc.ops import cc_clip_alpha
-    from classicML.backend.python.ops import compare_differences as cc_compare_differences
+    from classicML.backend.cc.ops import cc_compare_differences
     from classicML.backend.cc.ops import cc_get_cluster
     from classicML.backend.cc.ops import cc_get_conditional_probability
     from classicML.backend.cc.ops import cc_get_dependent_prior_probability
@@ -68,7 +68,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
     from classicML.backend.python.ops import calculate_euclidean_distance
     from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
-    from classicML.backend.python.ops import compare_differences
+    from classicML.backend.cc.ops import cc_compare_differences as compare_differences
     from classicML.backend.cc.ops import cc_get_cluster as get_cluster
     from classicML.backend.cc.ops import cc_get_conditional_probability as get_conditional_probability
     from classicML.backend.cc.ops import cc_get_dependent_prior_probability as get_dependent_prior_probability
