@@ -207,7 +207,7 @@ def calculate_euclidean_distance(x0: np.ndarray,
           Python版本是没有优化的原始公式版本.
     """
     distances = np.expand_dims(x0, axis=1) - x1
-    distances = np.linalg.norm(distances, ord=2)
+    distances = np.linalg.norm(distances, ord=2, axis=-1)
 
     return distances
 
