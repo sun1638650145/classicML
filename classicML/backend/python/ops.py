@@ -6,7 +6,7 @@ import numpy as np
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.14a4'
+__version__ = 'backend.python.ops.0.14a5'
 
 
 def bootstrap_sampling(x, y=None, seed=None):
@@ -207,7 +207,7 @@ def calculate_euclidean_distance(x0: np.ndarray,
           Python版本是没有优化的原始公式版本.
     """
     distances = np.expand_dims(x0, axis=1) - x1
-    distances = np.sqrt(np.sum(distances ** 2, axis=-1))
+    distances = np.linalg.norm(distances, ord=2)
 
     return distances
 

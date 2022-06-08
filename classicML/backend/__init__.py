@@ -44,7 +44,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.python.ops import ConvexHull
     from classicML.backend.python.ops import calculate_centroids as cc_calculate_centroids
     from classicML.backend.cc.ops import cc_calculate_error
-    from classicML.backend.python.ops import calculate_euclidean_distance as cc_calculate_euclidean_distance
+    from classicML.backend.cc.ops import cc_calculate_euclidean_distance
     from classicML.backend.cc.ops import cc_clip_alpha
     from classicML.backend.cc.ops import cc_compare_differences
     from classicML.backend.cc.ops import cc_get_cluster
@@ -66,7 +66,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.python.ops import ConvexHull as ConvexHull
     from classicML.backend.python.ops import calculate_centroids
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
-    from classicML.backend.python.ops import calculate_euclidean_distance
+    from classicML.backend.cc.ops import cc_calculate_euclidean_distance as calculate_euclidean_distance
     from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
     from classicML.backend.cc.ops import cc_compare_differences as compare_differences
     from classicML.backend.cc.ops import cc_get_cluster as get_cluster

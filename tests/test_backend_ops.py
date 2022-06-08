@@ -10,6 +10,7 @@ from classicML.backend import kernels
 
 from classicML.backend.cc.ops import cc_bootstrap_sampling
 from classicML.backend.cc.ops import cc_calculate_error
+from classicML.backend.cc.ops import cc_calculate_euclidean_distance
 from classicML.backend.cc.ops import cc_clip_alpha
 from classicML.backend.cc.ops import cc_compare_differences
 from classicML.backend.cc.ops import cc_get_cluster
@@ -24,6 +25,7 @@ from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
 from classicML.backend.python.ops import bootstrap_sampling
 from classicML.backend.python.ops import calculate_error
+from classicML.backend.python.ops import calculate_euclidean_distance
 from classicML.backend.python.ops import clip_alpha
 from classicML.backend.python.ops import compare_differences
 from classicML.backend.python.ops import get_cluster
@@ -96,6 +98,18 @@ class TestCalculateError(object):
         cc_answer = cc_calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b)
         py_answer = calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b)
         assert abs(cc_answer - py_answer) <= THRESHOLD
+
+
+class TestCalculateEuclideanDistance(object):
+    def test_answer(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        x0 = np.random.random(size=[30, 3])
+        x1 = np.random.random(size=[3, 3])
+
+        cc_answer = cc_calculate_euclidean_distance(x0, x1)
+        py_answer = calculate_euclidean_distance(x0, x1)
+
+        assert np.all(abs(cc_answer - py_answer)) <= THRESHOLD
 
 
 class TestClipAlpha(object):

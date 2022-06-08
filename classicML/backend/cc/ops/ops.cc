@@ -98,6 +98,22 @@ Matrix CalculateError(const Matrix &x,
     return error;
 }
 
+// 返回欧式距离, 输入要计算欧式距离的两个值.
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
+template<typename Matrix>
+Matrix CalculateEuclideanDistance(const Matrix &x0, const Matrix &x1) {
+    auto distances = Matrix(x0.rows(), x1.rows());
+
+    // Eigen::Matrix 不能增加到3个维度, 只能使用循环实现.
+    for (int row = 0; row < distances.rows(); row ++) {
+        for (int col = 0; col < distances.cols(); col ++) {
+            distances(row, col) = (x0.row(row) - x1.row(col)).norm();
+        }
+    }
+
+    return distances;
+}
+
 // 返回修剪后的拉格朗日乘子(32/64位), 输入拉格朗日乘子的下界和上界(pure float/np.float32/np.float64).
 template<typename RFloat, typename PFloat>
 RFloat ClipAlpha(PFloat &alpha, PFloat &low, PFloat &high) {
@@ -410,6 +426,9 @@ template matrix64 CalculateError<matrix64, vector64, array64>
          const vector64 &alphas,
          const vector64 &non_zero_alphas,
          const matrix64 &b);
+
+template matrix32 CalculateEuclideanDistance(const matrix32 &x0, const matrix32 &x1);
+template matrix64 CalculateEuclideanDistance(const matrix64 &x0, const matrix64 &x1);
 
 template np_float32 ClipAlpha(np_float32 &alpha, np_float32 &low, np_float32 &high);
 template np_float64 ClipAlpha(np_float64 &alpha, np_float64 &low, np_float64 &high);

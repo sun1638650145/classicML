@@ -150,6 +150,24 @@ PYBIND11_MODULE(ops, m) {
           pybind11::arg("b"));
 
     // Overloaded function.
+    m.def("cc_calculate_euclidean_distance", &ops::CalculateEuclideanDistance<matrix32>, R"pbdoc(
+计算欧式距离.
+
+    Args:
+        x0, x1: numpy.ndarray, 要计算欧式距离的两个值.
+
+    Return:
+        欧式距离.)pbdoc", pybind11::arg("x0"), pybind11::arg("x1"));
+    m.def("cc_calculate_euclidean_distance", &ops::CalculateEuclideanDistance<matrix64>, R"pbdoc(
+计算欧式距离.
+
+    Args:
+        x0, x1: numpy.ndarray, 要计算欧式距离的两个值.
+
+    Return:
+        欧式距离.)pbdoc", pybind11::arg("x0"), pybind11::arg("x1"));
+
+    // Overloaded function.
     m.def("cc_clip_alpha", &ops::ClipAlpha<np_float32, np_float32>, R"pbdoc(
 修剪拉格朗日乘子.
 
@@ -581,5 +599,5 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.14a4";
+    m.attr("__version__") = "backend.cc.ops.0.14a5";
 }
