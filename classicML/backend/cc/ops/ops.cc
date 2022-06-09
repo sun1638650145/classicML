@@ -56,6 +56,34 @@ Matrix BootstrapSampling2(const Matrix &x, const pybind11::object &y, std::optio
     return x(indices, Eigen::all);
 }
 
+// 返回均值向量.
+// 输入特征数据和当前的簇标记.
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `RowVector` 兼容32位和64位整/浮点型行向量, `Dtype` 兼容32位和64位整/浮点型.
+// 不支持不同位数模板兼容.
+template<typename Matrix, typename RowVector, typename Dtype>
+Matrix CalculateCentroids(const Matrix &x, const RowVector &clusters) {
+    auto n_clusters = matrix_op::Unique<RowVector, Dtype>(clusters).size();
+    auto distances = Matrix(n_clusters, x.cols());
+
+    for (int32 cluster = 0; cluster < n_clusters; cluster ++) {
+        auto mean = Matrix(1, x.cols());
+        int32 count = 0;
+
+        // 计算每个簇的均值向量.
+        for (int32 i = 0; i < x.rows(); i ++) {
+            if (clusters(i) == cluster) {
+                mean += x.row(i);
+                count += 1;
+            }
+        }
+        mean /= count;
+
+        distances.row(cluster) = mean;
+    }
+
+    return distances;
+}
+
 // 返回KKT条件的违背值;
 // 输入特征数据, 标签, 要计算的样本下标, 支持向量分类器使用的核函数, 全部拉格朗日乘子, 非零拉格朗日乘子和偏置项.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `Vector` 兼容32位和64位浮点型向量, `Array` 兼容32位和64位浮点型Eigen::Array数组,
@@ -409,6 +437,11 @@ template std::tuple<matrix64, matrix64i> BootstrapSampling1(const matrix64 &x,
                                                             std::optional<uint32> seed);
 template matrix32 BootstrapSampling2(const matrix32 &x, const pybind11::object &y, std::optional<uint32> seed);
 template matrix64 BootstrapSampling2(const matrix64 &x, const pybind11::object &y, std::optional<uint32> seed);
+
+template matrix32 CalculateCentroids<matrix32, row_vector32f, float32>(const matrix32 &x, const row_vector32f &clusters);
+template matrix64 CalculateCentroids<matrix64, row_vector64f, float64>(const matrix64 &x, const row_vector64f &clusters);
+template matrix32 CalculateCentroids<matrix32, row_vector32i, int32>(const matrix32 &x, const row_vector32i &clusters);
+template matrix64 CalculateCentroids<matrix64, row_vector64i, int64>(const matrix64 &x, const row_vector64i &clusters);
 
 template matrix32 CalculateError<matrix32, vector32, array32>
         (const matrix32 &x,

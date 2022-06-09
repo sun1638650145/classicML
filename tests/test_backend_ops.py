@@ -9,6 +9,7 @@ from classicML import _cml_precision
 from classicML.backend import kernels
 
 from classicML.backend.cc.ops import cc_bootstrap_sampling
+from classicML.backend.cc.ops import cc_calculate_centroids
 from classicML.backend.cc.ops import cc_calculate_error
 from classicML.backend.cc.ops import cc_calculate_euclidean_distance
 from classicML.backend.cc.ops import cc_clip_alpha
@@ -24,6 +25,7 @@ from classicML.backend.cc.ops import cc_select_second_alpha
 from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
 from classicML.backend.python.ops import bootstrap_sampling
+from classicML.backend.python.ops import calculate_centroids
 from classicML.backend.python.ops import calculate_error
 from classicML.backend.python.ops import calculate_euclidean_distance
 from classicML.backend.python.ops import clip_alpha
@@ -82,6 +84,18 @@ class TestBootstrapSampling(object):
         cc_answer = cc_bootstrap_sampling(x, seed=seed)
         py_answer = bootstrap_sampling(x, seed=seed)
         assert cc_answer[0].shape == py_answer[0].shape  # x
+
+
+class TestCalculateCentroids(object):
+    def test_answer(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        x = np.random.rand(10, 5)
+        clusters = np.random.randint(0, 5, 10)
+
+        cc_answer = cc_calculate_centroids(x, clusters)
+        py_answer = calculate_centroids(x, clusters)
+
+        assert np.all(abs(cc_answer - py_answer)) <= THRESHOLD
 
 
 class TestCalculateError(object):

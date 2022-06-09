@@ -28,6 +28,9 @@ std::tuple<XMatrix, YMatrix> BootstrapSampling1(const XMatrix &x, const YMatrix 
 template<typename Matrix>
 Matrix BootstrapSampling2(const Matrix &x, const pybind11::object &y, std::optional<uint32> seed); // 用于匹配y为None的情况.
 
+template<typename Matrix, typename RowVector, typename Float>
+Matrix CalculateCentroids(const Matrix &x, const RowVector &clusters);
+
 template<typename Matrix, typename Vector, typename Array>
 Matrix CalculateError(const Matrix &x,
                       const Vector &y,

@@ -47,7 +47,10 @@ std::vector<uint32> NonZero(const RowVector &array);
 template <typename Matrix, typename Dtype>
 Matrix Reshape(Matrix matrix, const Dtype &row, const Dtype &column);
 
+// Overloaded function.
 std::variant<std::set<float32>, std::set<uint8>> Unique(const pybind11::array &array);
+template <typename Matrix, typename Dtype>
+std::set<Dtype> Unique(const Matrix &array);
 }  // namespace matrix_op
 
 #endif /* CLASSICML_BACKEND_CC_MATRIX_OP_H_ */

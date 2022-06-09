@@ -106,6 +106,44 @@ PYBIND11_MODULE(ops, m) {
           pybind11::arg("seed")=pybind11::none());
 
     // Overloaded function.
+    m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix32, row_vector32f, float32>, R"pbdoc(
+计算均值向量.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        clusters: numpy.ndarray, 当前的簇标记.
+
+    Return:
+        均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("clusters"));
+    m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix64, row_vector64f, float64>, R"pbdoc(
+计算均值向量.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        clusters: numpy.ndarray, 当前的簇标记.
+
+    Return:
+        均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("clusters"));
+    m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix32, row_vector32i, int32>, R"pbdoc(
+计算均值向量.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        clusters: numpy.ndarray, 当前的簇标记.
+
+    Return:
+        均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("clusters"));
+    m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix64, row_vector64i, int64>, R"pbdoc(
+计算均值向量.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        clusters: numpy.ndarray, 当前的簇标记.
+
+    Return:
+        均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("clusters"));
+
+    // Overloaded function.
     m.def("cc_calculate_error", &ops::CalculateError<matrix32, vector32, array32>, R"pbdoc(
 计算KKT条件的违背值.
 
@@ -599,5 +637,5 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.14a5";
+    m.attr("__version__") = "backend.cc.ops.0.14a6";
 }

@@ -182,14 +182,17 @@ Matrix Reshape(Matrix matrix, const Dtype &row, const Dtype &column) {
     #endif
 }
 
-// 返回变体(唯一值组成的集合), 输入为`numpy.ndarray`.
+// Overloaded function.
+// 1. 返回变体(唯一值组成的集合), 输入为`numpy.ndarray`.
+// 2. 返回变体(唯一值组成的集合), 输入为Eigen::Matrix矩阵.
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵/Eigen::RowVector行向量; `Dtype` 兼容32位和64位浮点型/整型.
 std::variant<std::set<float32>, std::set<uint8>> Unique(const pybind11::array &array) {
     if (array.dtype().kind() == 'f' or array.dtype().kind() == 'i') {
         std::set<float32> buffer;
         auto array_ = pybind11::cast<Eigen::MatrixXf>(array);
 
-        for (int row = 0; row < array_.rows(); row ++) {
-            for (int col = 0; col < array_.cols(); col ++) {
+        for (int32 row = 0; row < array_.rows(); row ++) {
+            for (int32 col = 0; col < array_.cols(); col ++) {
                 buffer.insert(array_(row, col));
             }
         }
@@ -213,6 +216,18 @@ std::variant<std::set<float32>, std::set<uint8>> Unique(const pybind11::array &a
     }
 
     return {};
+}
+template <typename Matrix, typename Dtype>
+std::set<Dtype> Unique(const Matrix &array) {
+    std::set<Dtype> buffer;
+
+    for (int32 row = 0; row < array.rows(); row ++) {
+        for (int32 col = 0; col < array.cols(); col ++) {
+            buffer.insert(array(row, col));
+        }
+    }
+
+    return buffer;
 }
 
 // 显式实例化.
@@ -250,4 +265,11 @@ template matrix32 Reshape(matrix32 matrix, const int32 &row, const int32 &column
 // reshape的row, column 提供的是单精度的情况.
 template matrix64 Reshape(matrix64 matrix, const int32 &row, const int32 &column);
 template matrix64 Reshape(matrix64 matrix, const int64 &row, const int64 &column);
+
+template std::set<float32> Unique(const matrix32 &array);
+template std::set<float64> Unique(const matrix64 &array);
+template std::set<int32> Unique(const row_vector32i &array);
+template std::set<int64> Unique(const row_vector64i &array);
+template std::set<float32> Unique(const row_vector32f &array);
+template std::set<float64> Unique(const row_vector64f &array);
 } // namespace matrix_op
