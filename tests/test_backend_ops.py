@@ -95,7 +95,7 @@ class TestCalculateCentroids(object):
         cc_answer = cc_calculate_centroids(x, clusters)
         py_answer = calculate_centroids(x, clusters)
 
-        assert np.all(abs(cc_answer - py_answer)) <= THRESHOLD
+        assert abs(cc_answer - py_answer).max() <= THRESHOLD
 
 
 class TestCalculateError(object):
@@ -123,7 +123,7 @@ class TestCalculateEuclideanDistance(object):
         cc_answer = cc_calculate_euclidean_distance(x0, x1)
         py_answer = calculate_euclidean_distance(x0, x1)
 
-        assert np.all(abs(cc_answer - py_answer)) <= THRESHOLD
+        assert abs(cc_answer - py_answer).max() <= THRESHOLD
 
 
 class TestClipAlpha(object):
@@ -170,7 +170,7 @@ class TestGetCluster(object):
         cc_answer = cc_get_cluster(distances)
         py_answer = get_cluster(distances)
 
-        assert np.all(abs(cc_answer - py_answer)) <= THRESHOLD
+        assert abs(cc_answer - py_answer).max() <= THRESHOLD
 
 
 class TestGetConditionalProbability(object):
