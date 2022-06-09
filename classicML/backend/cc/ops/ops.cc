@@ -67,6 +67,7 @@ Matrix CalculateCentroids(const Matrix &x, const RowVector &clusters) {
 
     for (int32 cluster = 0; cluster < n_clusters; cluster ++) {
         auto mean = Matrix(1, x.cols());
+        mean.setZero(); // 初始化为0.
         int32 count = 0;
 
         // 计算每个簇的均值向量.
