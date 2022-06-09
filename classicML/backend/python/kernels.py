@@ -1,7 +1,7 @@
 """classicML的核函数."""
 import numpy as np
 
-__version__ = 'backend.python.kernels.0.10.3'
+__version__ = 'backend.python.kernels.0.10.4a0'
 
 
 class Kernel(object):
@@ -44,7 +44,7 @@ class Linear(Kernel):
         """
         kappa = np.matmul(x_j, x_i.T)
 
-        return np.asmatrix(kappa)
+        return kappa
 
 
 class Polynomial(Kernel):
@@ -76,7 +76,7 @@ class Polynomial(Kernel):
         """
         kappa = self.gamma * np.power(np.matmul(x_j, x_i.T), self.degree)
 
-        return np.asmatrix(kappa)
+        return kappa
 
 
 class RBF(Kernel):
@@ -105,7 +105,7 @@ class RBF(Kernel):
         """
         kappa = np.exp(self.gamma * -np.sum(np.power(x_j - x_i, 2), axis=1))
 
-        return np.asmatrix(kappa)
+        return kappa
 
 
 class Gaussian(RBF):
@@ -148,4 +148,4 @@ class Sigmoid(Kernel):
         """
         kappa = self.gamma * np.tanh(self.beta * np.matmul(x_j, x_i.T) + self.theta)
 
-        return np.asmatrix(kappa)
+        return kappa

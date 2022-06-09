@@ -39,9 +39,9 @@ class TestKernel(object):
 
         assert cc_gaussian.name != py_gaussian.name
         assert cc_rbf.name != py_rbf.name
-        assert (abs(cc_gaussian(x_i, x_j) - py_gaussian(x_i, x_j)) <= THRESHOLD).all()
-        assert (abs(cc_gaussian(x_i, x_j) - py_gaussian(x_i, x_j)) <= THRESHOLD).all()
-        assert (cc_gaussian(x_i, x_j) == cc_rbf(x_i, x_j)).all()
+        assert abs(cc_gaussian(x_i, x_j) - py_gaussian(x_i, x_j)).max() <= THRESHOLD
+        assert abs(cc_rbf(x_i, x_j) - py_rbf(x_i, x_j)).max() <= THRESHOLD
+        assert abs(cc_gaussian(x_i, x_j) - cc_rbf(x_i, x_j)).max() <= THRESHOLD
 
     def test_linear(self):
         cc_linear = CcLinear('cc_linear')
@@ -61,7 +61,7 @@ class TestKernel(object):
         x_j = np.random.random(size=[1, 2])
 
         assert cc_poly.name != py_poly.name
-        assert (abs(cc_poly(x_i, x_j) - py_poly(x_i, x_j)) <= THRESHOLD).all()
+        assert abs(cc_poly(x_i, x_j) - py_poly(x_i, x_j)).max() <= THRESHOLD
 
     def test_sigmoid(self):
         cc_sigmoid = CcSigmoid('cc_sigmoid', gamma=2.1, beta=1.5, theta=-1.1)
@@ -71,4 +71,4 @@ class TestKernel(object):
         x_j = np.random.random(size=[1, 2])
 
         assert cc_sigmoid.name != py_sigmoid.name
-        assert (abs(cc_sigmoid(x_i, x_j) - py_sigmoid(x_i, x_j)) <= THRESHOLD).all()
+        assert abs(cc_sigmoid(x_i, x_j) - py_sigmoid(x_i, x_j)).max() <= THRESHOLD
