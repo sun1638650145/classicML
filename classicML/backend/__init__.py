@@ -42,7 +42,7 @@ else:
 if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_bootstrap_sampling
     from classicML.backend.python.ops import ConvexHull
-    from classicML.backend.python.ops import calculate_centroids as cc_calculate_centroids
+    from classicML.backend.cc.ops import cc_calculate_centroids
     from classicML.backend.cc.ops import cc_calculate_error
     from classicML.backend.cc.ops import cc_calculate_euclidean_distance
     from classicML.backend.cc.ops import cc_clip_alpha
@@ -64,7 +64,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
 
     from classicML.backend.cc.ops import cc_bootstrap_sampling as bootstrap_sampling
     from classicML.backend.python.ops import ConvexHull as ConvexHull
-    from classicML.backend.python.ops import calculate_centroids
+    from classicML.backend.cc.ops import cc_calculate_centroids as calculate_centroids
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
     from classicML.backend.cc.ops import cc_calculate_euclidean_distance as calculate_euclidean_distance
     from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
