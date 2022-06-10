@@ -20,6 +20,23 @@ cc_bootstrap_sampling(x, y=None, seed=None)
 
 自助采样后的新样本.
 
+## cc_calculate_centroids
+
+```python
+cc_calculate_centroids(x, clusters)
+```
+
+计算均值向量.
+
+### 参数
+
+* <b>x</b>: 一个 Numpy数组, 特征数据.
+* <b>clusters</b>: 一个 Numpy数组, 当前的簇标记.
+
+### 返回
+
+均值向量.
+
 ## cc_calculate_error
 
 ```python
@@ -42,6 +59,22 @@ cc_calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b)
 
 KKT条件的违背值.
 
+## cc_calculate_euclidean_distance
+
+```python
+cc_calculate_euclidean_distance(x0, x1)
+```
+
+计算欧式距离.
+
+### 参数
+
+* <b>x0, x1</b>: Numpy数组, 要计算欧式距离的两个值.
+
+### 返回
+
+欧式距离.
+
 ## cc_clip_alpha 
 
 ```python
@@ -58,6 +91,39 @@ cc_clip_alpha(alpha, low, high)
 
 ### 返回
 修剪后的拉格朗日乘子.
+
+## cc_compare_differences 
+
+```python
+cc_compare_differences(x0, x1, tol)
+```
+
+比较差异.
+
+### 参数
+
+* <b>x0, x1</b>: Numpy数组, 要比较差异的两个值.
+* <b>tol</b>: 浮点数, 最小差异阈值.
+
+### 返回
+
+差异向量.
+
+## cc_get_cluster
+
+```python
+cc_get_cluster(distances)
+```
+
+获取类条件概率.
+
+### 参数
+
+* <b>distances</b>: 一个Numpy, 距离.
+
+### 返回
+
+簇标记.
 
 ## cc_get_conditional_probability
 

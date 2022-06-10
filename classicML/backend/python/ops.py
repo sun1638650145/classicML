@@ -55,7 +55,7 @@ class ConvexHull(object):
 
     Attributes:
         points: np.ndarray or list, 计算凸包的点.
-        hull: list, 凸包的点.
+        hull: np.ndarray, 凸包的点.
 
     References:
         - [Graham Scan Algorithm](https://lvngd.com/blog/convex-hull-graham-scan-algorithm-python/)
@@ -86,7 +86,7 @@ class ConvexHull(object):
         # 对点进行排序, 优先根据x斜率.
         slopes = []
         for i, point in enumerate(self.points):
-            slopes.append([i, self.get_slope(start, point)])  # 逐元素计算斜率.
+            slopes.append([i, self._get_slope(start, point)])  # 逐元素计算斜率.
         slopes.sort(key=lambda x: x[1])  # 根据斜率排序.
         slopes_indices = np.asarray(slopes, dtype=np.int32)[:, 0]
 
@@ -94,7 +94,7 @@ class ConvexHull(object):
 
         for point in self.points:
             hull.append(point)
-            while len(hull) > 2 and self.get_cross_product(hull[-3], hull[-2], hull[-1]) < 0:
+            while len(hull) > 2 and self._get_cross_product(hull[-3], hull[-2], hull[-1]) < 0:
                 hull.pop(-2)  # 删除序列中间的那个.
 
         # 增加第一个元素成为闭环.
@@ -103,7 +103,7 @@ class ConvexHull(object):
         return np.asarray(hull)
 
     @staticmethod
-    def get_slope(p0: np.ndarray, p1: np.ndarray) -> float:
+    def _get_slope(p0: np.ndarray, p1: np.ndarray) -> float:
         """计算斜率.
 
         Return:
@@ -115,7 +115,7 @@ class ConvexHull(object):
             return (p0[1] - p1[1]) / (p0[0] - p1[0])
 
     @staticmethod
-    def get_cross_product(p0: np.ndarray, p1: np.ndarray, p2: np.ndarray) -> float:
+    def _get_cross_product(p0: np.ndarray, p1: np.ndarray, p2: np.ndarray) -> float:
         """计算向量积.
 
         Return:

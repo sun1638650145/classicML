@@ -79,7 +79,7 @@ plot_k_means(k_means, x, x_label=None, y_label=None)
 
 #### 参数
 
-* <b>lda</b>: ```cml.models.KMeans```, K-均值聚类实例.
+* <b>k_means</b>: ```cml.models.KMeans```, K-均值聚类实例.
 * <b>x</b>: 一个 Numpy数组，特征数据.
 * <b>x_label</b>: 字符串，横轴的标签.
 * <b>y_label</b>: 字符串，纵轴的标签.

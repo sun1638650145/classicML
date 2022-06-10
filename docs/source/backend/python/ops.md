@@ -20,6 +20,52 @@ bootstrap_sampling(x, y=None, seed=None)
 
 自助采样后的新样本.
 
+## ConvexHull
+
+使用Graham扫描算法计算二维凸包.
+
+```python
+ConvexHull(points)
+```
+
+### 参数
+
+* <b>points</b>: 一个Numpy数组或列表, 计算凸包的点.
+* <b>hull</b>: 一个Numpy数组或列表, 凸包的点.
+
+###  参考文献
+
+* [Graham Scan Algorithm](https://lvngd.com/blog/convex-hull-graham-scan-algorithm-python/)
+
+### compute_convex_hull
+
+计算二维凸包.
+
+```python
+compute_convex_hull()
+```
+
+#### 返回
+
+二维凸包.
+
+## calculate_centroids
+
+```python
+calculate_centroids(x, clusters)
+```
+
+计算均值向量.
+
+### 参数
+
+* <b>x</b>: 一个 Numpy数组, 特征数据.
+* <b>clusters</b>: 一个 Numpy数组, 当前的簇标记.
+
+### 返回
+
+均值向量.
+
 ## calculate_error
 
 ```python
@@ -42,6 +88,22 @@ calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b)
 
 KKT条件的违背值.
 
+## calculate_euclidean_distance
+
+```python
+calculate_euclidean_distance(x0, x1)
+```
+
+计算欧式距离.
+
+### 参数
+
+* <b>x0, x1</b>: Numpy数组, 要计算欧式距离的两个值.
+
+### 返回
+
+欧式距离.
+
 ## clip_alpha 
 
 ```python
@@ -59,6 +121,39 @@ clip_alpha(alpha, low, high)
 ### 返回
 
 修剪后的拉格朗日乘子.
+
+## compare_differences 
+
+```python
+compare_differences(x0, x1, tol)
+```
+
+比较差异.
+
+### 参数
+
+* <b>x0, x1</b>: Numpy数组, 要比较差异的两个值.
+* <b>tol</b>: 浮点数, 最小差异阈值.
+
+### 返回
+
+差异向量.
+
+## get_cluster
+
+```python
+get_cluster(distances)
+```
+
+获取类条件概率.
+
+### 参数
+
+* <b>distances</b>: 一个Numpy, 距离.
+
+### 返回
+
+簇标记.
 
 ## get_conditional_probability
 
@@ -196,6 +291,26 @@ get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1)
 ### 返回
 
 类内散度矩阵.
+
+## init_centroids
+
+```python
+init_centroids(x, n_clusters, init)
+```
+
+初始化初始均值向量.
+
+### 参数
+
+* <b>x</b>: 一个 Numpy数组，KKT条件的违背值缓存.
+* <b>n_clusters</b>: 整数, 聚类簇的数量.
+* <b>init</b>: 均值向量的初始化方式,
+    * 'random': 采用随机初始化;
+    * 列表或一个Numpy数组: 可以指定训练数据的索引, 也可以直接给定具体的均值向量.
+
+### 返回
+
+均值向量.
 
 ## select_second_alpha
 
