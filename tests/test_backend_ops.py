@@ -21,6 +21,7 @@ from classicML.backend.cc.ops import cc_get_prior_probability
 from classicML.backend.cc.ops import cc_get_probability_density
 from classicML.backend.cc.ops import cc_get_w_v2 as cc_get_w
 from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
+from classicML.backend.cc.ops import cc_init_centroids
 from classicML.backend.cc.ops import cc_select_second_alpha
 from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
@@ -37,6 +38,7 @@ from classicML.backend.python.ops import get_prior_probability
 from classicML.backend.python.ops import get_probability_density
 from classicML.backend.python.ops import get_w_v2 as get_w
 from classicML.backend.python.ops import get_within_class_scatter_matrix
+from classicML.backend.python.ops import init_centroids
 from classicML.backend.python.ops import select_second_alpha
 from classicML.backend.python.ops import type_of_target
 
@@ -278,6 +280,39 @@ class TestGetWithinClassScatterMatrix(object):
         py_answer = get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1)
 
         assert cc_answer.all() == py_answer.all()
+
+
+class TestInitCentroids(object):
+    def test_str(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        x = np.random.rand(10, 3)
+        n_clusters = 3
+        init = 'random'
+
+        cc_answer = cc_init_centroids(x, n_clusters, init)
+        py_answer = init_centroids(x, n_clusters, init)
+
+        assert cc_answer.shape == py_answer.shape
+
+    def test_indices(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        x = np.random.rand(10, 3)
+        n_clusters = 3
+        init = np.random.randint(0, 10, size=n_clusters)
+
+        cc_answer = cc_init_centroids(x, n_clusters, init)
+        py_answer = init_centroids(x, n_clusters, init)
+        assert abs(cc_answer - py_answer).max() <= THRESHOLD
+
+    def test_specified_value(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        x = np.random.rand(10, 3)
+        n_clusters = 3
+        init = np.random.choice(len(x), n_clusters)
+
+        cc_answer = cc_init_centroids(x, n_clusters, init)
+        py_answer = init_centroids(x, n_clusters, init)
+        assert abs(cc_answer - py_answer).max() <= THRESHOLD
 
 
 class TestSelectSecondAlpha(object):

@@ -6,7 +6,7 @@ import numpy as np
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.14a6'
+__version__ = 'backend.python.ops.0.14a7'
 
 
 def bootstrap_sampling(x, y=None, seed=None):
@@ -458,6 +458,7 @@ def get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1):
     return S_w
 
 
+#TODO(Steve R. Sun, tag:code): 添加设置随机种子的功能.
 def init_centroids(x: np.ndarray,
                    n_clusters: int,
                    init: Union[str, list, np.ndarray]) -> np.ndarray:
@@ -479,8 +480,8 @@ def init_centroids(x: np.ndarray,
           Python版本是没有优化的原始公式版本.
     """
     if init == 'random':
-        centroid_index = np.random.randint(low=0, high=len(x), size=n_clusters)
-        centroids = x[centroid_index, :]
+        centroid_indices = np.random.randint(low=0, high=len(x), size=n_clusters)
+        centroids = x[centroid_indices, :]
     elif type(init) in (list, np.ndarray):
         init = np.squeeze(init)
         if len(init.shape) == 1:  # 指定训练数据的索引.

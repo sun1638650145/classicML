@@ -77,11 +77,16 @@ RFloat GetProbabilityDensity(PFloat &sample, PFloat &mean, PFloat &var);
 // DEPRECATED(Steve R. Sun): `ops.cc_get_w` 已经被弃用, 它将在未来的正式版本中被移除, 请使用 `ops.cc_get_w_v2`.
 matrix64 GetW(const matrix64 &S_w, const matrix64 &mu_0, const matrix64 &mu_1);
 
-template <typename Matrix>
+template<typename Matrix>
 Matrix GetW_V2(const Matrix &S_w, const Matrix &mu_0, const Matrix &mu_1);
 
-template <typename Matrix>
+template<typename Matrix>
 Matrix GetWithinClassScatterMatrix(const Matrix &X_0, const Matrix &X_1, const Matrix &mu_0, const Matrix &mu_1);
+
+template<typename Matrix, typename Dtype>
+Matrix InitCentroids1(const Matrix &x, const Dtype &n_clusters, const std::string &init);
+template<typename Matrix, typename Dtype>
+Matrix InitCentroids2(const Matrix &x, const Dtype &n_clusters, Matrix init);
 
 template<typename Dtype, typename RowVector>
 std::tuple<uint32, Dtype> SelectSecondAlpha(Dtype &error,

@@ -56,9 +56,9 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_get_w_v2
     from classicML.backend.cc.ops import cc_get_w_v2 as cc_get_w
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
+    from classicML.backend.cc.ops import cc_init_centroids
     from classicML.backend.cc.ops import cc_select_second_alpha
     from classicML.backend.cc.ops import cc_type_of_target as cc_type_of_target_v1  # 正式版将移除.
-    from classicML.backend.python.ops import init_centroids as cc_init_centroids
     from classicML.backend.cc.ops import cc_type_of_target_v2
     from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
@@ -76,7 +76,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_get_probability_density as get_probability_density
     from classicML.backend.cc.ops import cc_get_w_v2 as get_w
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix as get_within_class_scatter_matrix
-    from classicML.backend.python.ops import init_centroids
+    from classicML.backend.cc.ops import cc_init_centroids as init_centroids
     from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
     from classicML.backend.cc.ops import cc_type_of_target_v2 as type_of_target
 

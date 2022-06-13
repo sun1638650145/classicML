@@ -511,6 +511,56 @@ PYBIND11_MODULE(ops, m) {
 )pbdoc", pybind11::arg("X_0"), pybind11::arg("X_1"), pybind11::arg("mu_0"), pybind11::arg("mu_1"));
 
     // Overloaded function.
+    m.def("cc_init_centroids", &ops::InitCentroids1<matrix32, uint32>, R"pbdoc(
+初始化初始均值向量.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        n_clusters: int, 聚类簇的数量.
+        init: 'random', list or numpy.ndarray, 均值向量的初始化方式,
+            'random': 采用随机初始化;
+            list or numpy.ndarray: 可以指定训练数据的索引, 也可以直接给定具体的均值向量.
+
+    Return:
+        均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("n_clusters"), pybind11::arg("init"));
+    m.def("cc_init_centroids", &ops::InitCentroids1<matrix64, uint64>, R"pbdoc(
+初始化初始均值向量.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        n_clusters: int, 聚类簇的数量.
+        init: 'random', list or numpy.ndarray, 均值向量的初始化方式,
+            'random': 采用随机初始化;
+            list or numpy.ndarray: 可以指定训练数据的索引, 也可以直接给定具体的均值向量.
+
+    Return:
+        均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("n_clusters"), pybind11::arg("init"));
+    m.def("cc_init_centroids", &ops::InitCentroids2<matrix32, uint32>, R"pbdoc(
+初始化初始均值向量.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        n_clusters: int, 聚类簇的数量.
+        init: 'random', list or numpy.ndarray, 均值向量的初始化方式,
+            'random': 采用随机初始化;
+            list or numpy.ndarray: 可以指定训练数据的索引, 也可以直接给定具体的均值向量.
+
+    Return:
+        均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("n_clusters"), pybind11::arg("init"));
+    m.def("cc_init_centroids", &ops::InitCentroids2<matrix64, uint64>, R"pbdoc(
+初始化初始均值向量.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        n_clusters: int, 聚类簇的数量.
+        init: 'random', list or numpy.ndarray, 均值向量的初始化方式,
+            'random': 采用随机初始化;
+            list or numpy.ndarray: 可以指定训练数据的索引, 也可以直接给定具体的均值向量.
+
+    Return:
+        均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("n_clusters"), pybind11::arg("init"));
+
+    // Overloaded function.
     m.def("cc_select_second_alpha", &ops::SelectSecondAlpha<np_float32, row_vector32f>, R"pbdoc(
 选择第二个拉格朗日乘子, SMO采用的是启发式寻找的思想,
 找到目标函数变化量足够大, 即选取变量样本间隔最大.
@@ -637,5 +687,5 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.14a6";
+    m.attr("__version__") = "backend.cc.ops.0.14a7";
 }

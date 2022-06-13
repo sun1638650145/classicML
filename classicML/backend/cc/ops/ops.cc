@@ -289,6 +289,56 @@ Matrix GetWithinClassScatterMatrix(const Matrix &X_0, const Matrix &X_1, const M
     return S_w;
 }
 
+// 返回初始均值向量, 输入为特征数据, 聚类簇的数量和均值向量的初始化方式.
+// `Matrix` 兼容的32位和64位浮点型Eigen::Matrix矩阵.
+// `Dtype` 兼容的32位和64位整型数据类型.
+template<typename Matrix, typename Dtype>
+Matrix InitCentroids1(const Matrix &x, const Dtype &n_clusters, const std::string &init) {
+    if (init == "random") {
+        auto num_of_samples = (int32)x.rows();
+
+        // 进行随机采样, 生成索引.
+        srand(time(nullptr));
+        row_vector32i centroid_indices = row_vector32i::Random(n_clusters).unaryExpr(
+            [=](int32 element) {
+                return abs(element) % num_of_samples;
+            }
+        );
+
+        return x(centroid_indices, Eigen::all);
+    } else {
+        pybind11::print("ERROR:classicML:你使用了非法的均值向量.");
+        throw pybind11::type_error("你使用了非法的均值向量.");
+    }
+}
+
+// 返回初始均值向量, 输入为特征数据, 聚类簇的数量和均值向量的初始化方式.
+// `Matrix` 兼容的32位和64位浮点型Eigen::Matrix矩阵.
+// `Dtype` 兼容的32位和64位整型数据类型.
+template<typename Matrix, typename Dtype>
+Matrix InitCentroids2(const Matrix &x, const Dtype &n_clusters, Matrix init) {
+    if (init.rows() == n_clusters and init.cols() == x.cols()) {  // 直接给定具体的值.
+        return init;
+    } else if (init.size() == n_clusters) {
+        if (init.maxCoeff() >= x.rows() or init.minCoeff() < 0) {
+            pybind11::print("ERROR:classicML:你使用了非法的索引(请检查索引是否越界或负值).");
+            throw pybind11::value_error("你使用了非法的索引(请检查索引是否越界或负值).");
+        } else {
+            init = matrix_op::Reshape(init, 1, -1);
+            row_vector32i centroid_indices = init.unaryExpr(
+                [=](Dtype element) {
+                    return (int32)element;
+                }
+            );
+
+            return x(centroid_indices, Eigen::all);
+        }
+    } else {
+        pybind11::print("ERROR:classicML:你使用了非法的均值向量.");
+        throw pybind11::type_error("你使用了非法的均值向量.");
+    }
+}
+
 // 返回第二个拉格朗日乘子的下标和违背值组成的元组, 输入KKT条件的违背值, KKT条件的违背值缓存和非边界拉格朗日乘子.
 // `Dtype` 兼容(pure float/np.float32/np.float64, `RowVector` 兼容32位和64位浮点型行向量,
 // 不支持不同位数模板兼容.
@@ -521,6 +571,11 @@ template matrix64 GetWithinClassScatterMatrix(const matrix64 &X_0,
                                               const matrix64 &X_1,
                                               const matrix64 &mu_0,
                                               const matrix64 &mu_1);
+
+template matrix32 InitCentroids1(const matrix32 &x, const uint32 &n_clusters, const std::string &init);
+template matrix64 InitCentroids1(const matrix64 &x, const uint64 &n_clusters, const std::string &init);
+template matrix32 InitCentroids2(const matrix32 &x, const uint32 &n_clusters, matrix32 init);
+template matrix64 InitCentroids2(const matrix64 &x, const uint64 &n_clusters, matrix64 init);
 
 template std::tuple<uint32, np_float32> SelectSecondAlpha(np_float32 &error,
                                                           const row_vector32f &error_cache,

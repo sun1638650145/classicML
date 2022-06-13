@@ -259,6 +259,26 @@ cc_get_within_class_scatter_matrix(X_0, X_1, mu_0, mu_1)
 
 类内散度矩阵.
 
+## cc_init_centroids
+
+```python
+cc_init_centroids(x, n_clusters, init)
+```
+
+初始化初始均值向量.
+
+### 参数
+
+* <b>x</b>: 一个 Numpy数组，KKT条件的违背值缓存.
+* <b>n_clusters</b>: 整数, 聚类簇的数量.
+* <b>init</b>: 均值向量的初始化方式,
+    * 'random': 采用随机初始化;
+    * 列表或一个Numpy数组: 可以指定训练数据的索引, 也可以直接给定具体的均值向量.
+
+### 返回
+
+均值向量.
+
 ## cc_select_second_alpha
 
 ```python
