@@ -105,6 +105,29 @@ PYBIND11_MODULE(ops, m) {
           pybind11::arg("y")=pybind11::none(),
           pybind11::arg("seed")=pybind11::none());
 
+    pybind11::class_<ops::ConvexHull>(m, "ConvexHull", R"pbdoc(
+使用Graham扫描算法计算二维凸包.
+
+    Attributes:
+        points: np.ndarray or list, 计算凸包的点.
+        hull: np.ndarray, 凸包的点.
+
+    References:
+        - [Graham Scan Algorithm](https://lvngd.com/blog/convex-hull-graham-scan-algorithm-python/)
+)pbdoc")
+        .def(pybind11::init<matrix32>(), R"pbdoc(
+Args:
+    points: np.ndarray or list, 计算凸包的点.
+)pbdoc", pybind11::arg("points"))
+        .def_readwrite("points", &ops::ConvexHull::points)
+        .def_readonly("hull", &ops::ConvexHull::hull)
+        .def("compute_convex_hull", &ops::ConvexHull::ComputeConvexHull, R"pbdoc(
+计算二维凸包.
+
+Return:
+    二维凸包.
+)pbdoc");
+
     // Overloaded function.
     m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix32, row_vector32f, float32>, R"pbdoc(
 计算均值向量.
@@ -687,5 +710,5 @@ PYBIND11_MODULE(ops, m) {
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.14a7";
+    m.attr("__version__") = "backend.cc.ops.0.14a8";
 }

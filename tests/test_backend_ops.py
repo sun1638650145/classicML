@@ -9,6 +9,7 @@ from classicML import _cml_precision
 from classicML.backend import kernels
 
 from classicML.backend.cc.ops import cc_bootstrap_sampling
+from classicML.backend.cc.ops import ConvexHull as CcConvexHull
 from classicML.backend.cc.ops import cc_calculate_centroids
 from classicML.backend.cc.ops import cc_calculate_error
 from classicML.backend.cc.ops import cc_calculate_euclidean_distance
@@ -26,6 +27,7 @@ from classicML.backend.cc.ops import cc_select_second_alpha
 from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
 from classicML.backend.python.ops import bootstrap_sampling
+from classicML.backend.python.ops import ConvexHull
 from classicML.backend.python.ops import calculate_centroids
 from classicML.backend.python.ops import calculate_error
 from classicML.backend.python.ops import calculate_euclidean_distance
@@ -86,6 +88,17 @@ class TestBootstrapSampling(object):
         cc_answer = cc_bootstrap_sampling(x, seed=seed)
         py_answer = bootstrap_sampling(x, seed=seed)
         assert cc_answer[0].shape == py_answer[0].shape  # x
+
+
+class TestConvexHull(object):
+    def test_answer(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        points = [(np.random.randint(0, 100), np.random.randint(0, 100)) for _ in range(10)]
+
+        cc_answer = CcConvexHull(points).hull
+        py_answer = ConvexHull(points).hull
+
+        assert abs(cc_answer - py_answer).max() <= THRESHOLD
 
 
 class TestCalculateCentroids(object):

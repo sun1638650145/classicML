@@ -56,6 +56,91 @@ Matrix BootstrapSampling2(const Matrix &x, const pybind11::object &y, std::optio
     return x(indices, Eigen::all);
 }
 
+ConvexHull::ConvexHull(matrix32 points) {
+    this->points = std::move(points);
+    this->hull = this->ComputeConvexHull();
+}
+
+// 计算二维凸包.
+matrix32 ConvexHull::ComputeConvexHull() {
+    std::vector<matrix32> hull;
+    // 对点进行排序, 优先根据x升序.
+    ops::ConvexHull::MatrixSorting(this->points);
+
+    auto start = this->points.row(0);
+    // block()方法是引用, 所以需要拷贝.
+    auto points = this->points.block(1, 0, this->points.rows() - 1, this->points.cols());
+    hull.emplace_back(start);
+
+    // 对点进行排序, 优先根据x斜率.
+    std::vector<std::tuple<int32, float32>> slope; // slope(索引, 斜率值).
+    for (int32 i = 0; i < points.rows(); i ++) {
+        slope.emplace_back(i, ops::ConvexHull::GetSlope(start, points.row(i)));
+    }
+    std::sort(slope.begin(),
+              slope.end(),
+              [](std::tuple<int32, float32> const& t1, std::tuple<int32, float32> const& t2){
+                  return std::get<1>(t1) < std::get<1>(t2);
+              });
+    vector32i slope_indices(slope.size());
+    for (int32 i = 0; i < slope.size(); i ++) {
+        slope_indices(i) = std::get<0>(slope[i]);
+    }
+
+    for (int32 i = 0; i < points(slope_indices, Eigen::all).rows(); i ++) {
+        hull.emplace_back(points(slope_indices, Eigen::all).row(i));
+        while (hull.size() > 2 and ops::ConvexHull::GetCrossProduct(hull[hull.size() - 3],
+                                                                    hull[hull.size() - 2],
+                                                                    hull[hull.size() - 1]) < 0) {
+            // 删除序列中间的那个.
+            hull.erase(hull.end() - 2);
+        }
+    }
+
+    // 增加第一个元素成为闭环.
+    hull.push_back(hull[0]);
+
+    // 转换为Eigen矩阵.
+    matrix32 hull_mat(hull.size(), 2);
+    for (int32 i = 0; i < hull.size(); i ++) {
+        hull_mat.row(i) = hull[i];
+    }
+
+    return hull_mat;
+}
+
+// 矩阵排序.
+void ConvexHull::MatrixSorting(matrix32 &mat) {
+    std::vector<matrix32> vec;
+
+    for (int i = 0; i < mat.rows(); i ++) {
+        vec.emplace_back(mat.row(i));
+    }
+
+    std::sort(vec.begin(),
+              vec.end(),
+              [](matrix32 const& t1, matrix32 const& t2){
+                  return t1(0) < t2(0);
+              });
+
+    for (int i = 0; i < mat.rows(); i ++) {
+        mat.row(i) = vec[i];
+    }
+}
+
+// 计算斜率.
+float32 ConvexHull::GetSlope(const matrix32 &p0, const matrix32 &p1) {
+    if (p0(0) == p1(0)) {
+        return std::numeric_limits<float32>::max();
+    }
+    return (p1(1) - p0(1)) / (p1(0) - p0(0));
+}
+
+// 计算向量积.
+float32 ConvexHull::GetCrossProduct(const matrix32 &p0, const matrix32 &p1, const matrix32 &p2) {
+    return (p1(0) - p0(0)) * (p2(1) - p0(1)) - (p1(1) - p0(1)) * (p2(0) - p0(0));
+}
+
 // 返回均值向量.
 // 输入特征数据和当前的簇标记.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `RowVector` 兼容32位和64位整/浮点型行向量, `Dtype` 兼容32位和64位整/浮点型.
@@ -317,9 +402,9 @@ Matrix InitCentroids1(const Matrix &x, const Dtype &n_clusters, const std::strin
 // `Dtype` 兼容的32位和64位整型数据类型.
 template<typename Matrix, typename Dtype>
 Matrix InitCentroids2(const Matrix &x, const Dtype &n_clusters, Matrix init) {
-    if (init.rows() == n_clusters and init.cols() == x.cols()) {  // 直接给定具体的值.
+    if ((uint32)init.rows() == n_clusters and (uint32)init.cols() == x.cols()) {  // 直接给定具体的值.
         return init;
-    } else if (init.size() == n_clusters) {
+    } else if ((uint32)init.size() == n_clusters) {
         if (init.maxCoeff() >= x.rows() or init.minCoeff() < 0) {
             pybind11::print("ERROR:classicML:你使用了非法的索引(请检查索引是否越界或负值).");
             throw pybind11::value_error("你使用了非法的索引(请检查索引是否越界或负值).");

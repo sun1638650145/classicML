@@ -28,6 +28,25 @@ std::tuple<XMatrix, YMatrix> BootstrapSampling1(const XMatrix &x, const YMatrix 
 template<typename Matrix>
 Matrix BootstrapSampling2(const Matrix &x, const pybind11::object &y, std::optional<uint32> seed); // 用于匹配y为None的情况.
 
+// 使用Graham扫描算法计算二维凸包.
+// 由于仅在绘图中使用, 故单精度提高绘制速度.
+class ConvexHull {
+    public:
+        explicit ConvexHull(matrix32 points);
+        virtual ~ConvexHull() = default;
+
+        matrix32 ComputeConvexHull();
+
+    public:
+        matrix32 points;
+        matrix32 hull;
+
+    private:
+        static void MatrixSorting(matrix32 &mat);
+        static float32 GetSlope(const matrix32 &p0, const matrix32 &p1);
+        static float32 GetCrossProduct(const matrix32 &p0, const matrix32 &p1, const matrix32 &p2);
+};
+
 template<typename Matrix, typename RowVector, typename Float>
 Matrix CalculateCentroids(const Matrix &x, const RowVector &clusters);
 

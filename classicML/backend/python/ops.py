@@ -6,7 +6,7 @@ import numpy as np
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.14a7'
+__version__ = 'backend.python.ops.0.14a8'
 
 
 def bootstrap_sampling(x, y=None, seed=None):

@@ -40,6 +40,7 @@ typedef Eigen::Matrix<int64, -1, -1> matrix64i;
 
 typedef Eigen::VectorXf vector32;
 typedef Eigen::VectorXd vector64;
+typedef Eigen::VectorXi vector32i;
 
 typedef Eigen::RowVectorXf row_vector32f;
 typedef Eigen::RowVectorXd row_vector64f;
