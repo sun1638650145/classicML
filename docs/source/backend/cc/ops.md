@@ -20,6 +20,35 @@ cc_bootstrap_sampling(x, y=None, seed=None)
 
 自助采样后的新样本.
 
+## ConvexHull
+
+使用Graham扫描算法计算二维凸包.
+
+```python
+ConvexHull(points)
+```
+
+### 参数
+
+* <b>points</b>: 一个Numpy数组或列表, 计算凸包的点.
+* <b>hull</b>: 一个Numpy数组或列表, 凸包的点.
+
+###  参考文献
+
+* [Graham Scan Algorithm](https://lvngd.com/blog/convex-hull-graham-scan-algorithm-python/)
+
+### compute_convex_hull
+
+计算二维凸包.
+
+```python
+compute_convex_hull()
+```
+
+#### 返回
+
+二维凸包.
+
 ## cc_calculate_centroids
 
 ```python
