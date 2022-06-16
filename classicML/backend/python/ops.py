@@ -6,7 +6,7 @@ import numpy as np
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.14a8'
+__version__ = 'backend.python.ops.0.14b0'
 
 
 def bootstrap_sampling(x, y=None, seed=None):
@@ -272,7 +272,7 @@ def get_cluster(distances: np.ndarray) -> np.ndarray:
           你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
-    return np.argmin(distances, axis=-1)
+    return np.argmin(distances, axis=-1).astype(_cml_precision.int)
 
 
 def get_conditional_probability(samples_on_attribute,
