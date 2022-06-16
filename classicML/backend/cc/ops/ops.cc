@@ -83,7 +83,7 @@ matrix32 ConvexHull::ComputeConvexHull() {
                   return std::get<1>(t1) < std::get<1>(t2);
               });
     vector32i slope_indices(slope.size());
-    for (int32 i = 0; i < slope.size(); i ++) {
+    for (int32 i = 0; i < (int32)slope.size(); i ++) {
         slope_indices(i) = std::get<0>(slope[i]);
     }
 
@@ -102,7 +102,7 @@ matrix32 ConvexHull::ComputeConvexHull() {
 
     // 转换为Eigen矩阵.
     matrix32 hull_mat(hull.size(), 2);
-    for (int32 i = 0; i < hull.size(); i ++) {
+    for (int32 i = 0; i < (int32)hull.size(); i ++) {
         hull_mat.row(i) = hull[i];
     }
 
@@ -144,10 +144,9 @@ float32 ConvexHull::GetCrossProduct(const matrix32 &p0, const matrix32 &p1, cons
 // 返回均值向量.
 // 输入特征数据和当前的簇标记.
 // `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
-// 不支持不同位数模板兼容.
 template<typename Matrix>
 Matrix CalculateCentroids(const Matrix &x, const row_vector32i &clusters) {
-    auto n_clusters = matrix_op::Unique<row_vector32i, int32>(clusters).size();
+    auto n_clusters = (int32)matrix_op::Unique<row_vector32i, int32>(clusters).size();
     auto distances = Matrix(n_clusters, x.cols());
 
     for (int32 cluster = 0; cluster < n_clusters; cluster ++) {

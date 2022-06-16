@@ -3,10 +3,11 @@ from typing import List, Union
 
 import numpy as np
 
+import classicML as cml
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.14b0'
+__version__ = 'backend.python.ops.0.14b1'
 
 
 def bootstrap_sampling(x, y=None, seed=None):
@@ -88,7 +89,7 @@ class ConvexHull(object):
         for i, point in enumerate(self.points):
             slopes.append([i, self._get_slope(start, point)])  # 逐元素计算斜率.
         slopes.sort(key=lambda x: x[1])  # 根据斜率排序.
-        slopes_indices = np.asarray(slopes, dtype=np.int32)[:, 0]
+        slopes_indices = np.asarray(slopes, dtype=cml.int32)[:, 0]
 
         self.points = self.points[slopes_indices]
 
@@ -272,7 +273,7 @@ def get_cluster(distances: np.ndarray) -> np.ndarray:
           你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
     """
-    return np.argmin(distances, axis=-1).astype(_cml_precision.int)
+    return np.argmin(distances, axis=-1).astype(cml.int32)
 
 
 def get_conditional_probability(samples_on_attribute,
