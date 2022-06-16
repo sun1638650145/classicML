@@ -143,11 +143,11 @@ float32 ConvexHull::GetCrossProduct(const matrix32 &p0, const matrix32 &p1, cons
 
 // 返回均值向量.
 // 输入特征数据和当前的簇标记.
-// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵, `RowVector` 兼容32位和64位整/浮点型行向量, `Dtype` 兼容32位和64位整/浮点型.
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
 // 不支持不同位数模板兼容.
-template<typename Matrix, typename RowVector, typename Dtype>
-Matrix CalculateCentroids(const Matrix &x, const RowVector &clusters) {
-    auto n_clusters = matrix_op::Unique<RowVector, Dtype>(clusters).size();
+template<typename Matrix>
+Matrix CalculateCentroids(const Matrix &x, const row_vector32i &clusters) {
+    auto n_clusters = matrix_op::Unique<row_vector32i, int32>(clusters).size();
     auto distances = Matrix(n_clusters, x.cols());
 
     for (int32 cluster = 0; cluster < n_clusters; cluster ++) {
@@ -574,10 +574,8 @@ template std::tuple<matrix64, matrix64i> BootstrapSampling1(const matrix64 &x,
 template matrix32 BootstrapSampling2(const matrix32 &x, const pybind11::object &y, std::optional<uint32> seed);
 template matrix64 BootstrapSampling2(const matrix64 &x, const pybind11::object &y, std::optional<uint32> seed);
 
-template matrix32 CalculateCentroids<matrix32, row_vector32f, float32>(const matrix32 &x, const row_vector32f &clusters);
-template matrix64 CalculateCentroids<matrix64, row_vector64f, float64>(const matrix64 &x, const row_vector64f &clusters);
-template matrix32 CalculateCentroids<matrix32, row_vector32i, int32>(const matrix32 &x, const row_vector32i &clusters);
-template matrix64 CalculateCentroids<matrix64, row_vector64i, int64>(const matrix64 &x, const row_vector64i &clusters);
+template matrix32 CalculateCentroids<matrix32>(const matrix32 &x, const row_vector32i &clusters);
+template matrix64 CalculateCentroids<matrix64>(const matrix64 &x, const row_vector32i &clusters);
 
 template matrix32 CalculateError<matrix32, vector32, array32>
         (const matrix32 &x,

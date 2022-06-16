@@ -47,8 +47,8 @@ class ConvexHull {
         static float32 GetCrossProduct(const matrix32 &p0, const matrix32 &p1, const matrix32 &p2);
 };
 
-template<typename Matrix, typename RowVector, typename Float>
-Matrix CalculateCentroids(const Matrix &x, const RowVector &clusters);
+template<typename Matrix>
+Matrix CalculateCentroids(const Matrix &x, const row_vector32i &clusters);
 
 template<typename Matrix, typename Vector, typename Array>
 Matrix CalculateError(const Matrix &x,

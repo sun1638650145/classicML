@@ -129,7 +129,7 @@ Return:
 )pbdoc");
 
     // Overloaded function.
-    m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix32, row_vector32f, float32>, R"pbdoc(
+    m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix32>, R"pbdoc(
 计算均值向量.
 
     Args:
@@ -138,25 +138,7 @@ Return:
 
     Return:
         均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("clusters"));
-    m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix64, row_vector64f, float64>, R"pbdoc(
-计算均值向量.
-
-    Args:
-        x: numpy.ndarray, 特征数据.
-        clusters: numpy.ndarray, 当前的簇标记.
-
-    Return:
-        均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("clusters"));
-    m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix32, row_vector32i, int32>, R"pbdoc(
-计算均值向量.
-
-    Args:
-        x: numpy.ndarray, 特征数据.
-        clusters: numpy.ndarray, 当前的簇标记.
-
-    Return:
-        均值向量.)pbdoc", pybind11::arg("x"), pybind11::arg("clusters"));
-    m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix64, row_vector64i, int64>, R"pbdoc(
+    m.def("cc_calculate_centroids", &ops::CalculateCentroids<matrix64>, R"pbdoc(
 计算均值向量.
 
     Args:
@@ -710,5 +692,5 @@ Return:
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.14a8";
+    m.attr("__version__") = "backend.cc.ops.0.14b0";
 }
