@@ -419,7 +419,7 @@ Matrix InitCentroids2(const Matrix &x, const Dtype &n_clusters, Matrix init) {
         }
     } else {
         pybind11::print("ERROR:classicML:你使用了非法的均值向量.");
-        throw pybind11::type_error("你使用了非法的均值向量.");
+        throw pybind11::value_error("你使用了非法的均值向量.");
     }
 }
 

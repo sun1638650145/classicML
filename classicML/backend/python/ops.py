@@ -7,7 +7,7 @@ import classicML as cml
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.14b1'
+__version__ = 'backend.python.ops.0.14'
 
 
 def bootstrap_sampling(x, y=None, seed=None):
@@ -479,6 +479,10 @@ def init_centroids(x: np.ndarray,
         - 该函数提供了非Python后端的实现版本,
           你可以使用其他的版本, 函数的调用方式和接口一致,
           Python版本是没有优化的原始公式版本.
+
+    Raises:
+        ValueError: 聚类簇数量与初始化均值向量数量不一致, 非法索引或不能自动转换的非法均值向量.
+        TypeError: 非法均值向量.
     """
     if init == 'random':
         centroid_indices = np.random.randint(low=0, high=len(x), size=n_clusters)
@@ -487,8 +491,8 @@ def init_centroids(x: np.ndarray,
         init = np.squeeze(init)
         if len(init.shape) == 1:  # 指定训练数据的索引.
             if len(init) != n_clusters:
-                CLASSICML_LOGGER.error('你设置聚类簇数量与初始化均值向量数量不一致[%d, %d].', len(init), n_clusters)
-                raise ValueError('你设置聚类簇数量与初始化均值向量数量不一致[%d, %d].' % (len(init), n_clusters))
+                CLASSICML_LOGGER.error('你设置聚类簇数量与初始化均值向量数量不一致[%d, %d].', n_clusters, len(init))
+                raise ValueError('你设置聚类簇数量与初始化均值向量数量不一致[%d, %d].' % (n_clusters, len(init)))
             elif np.min(init) < 0 or np.max(init) >= len(x):
                 CLASSICML_LOGGER.error('你使用了非法的索引(请检查索引是否越界或负值).')
                 raise ValueError('你使用了非法的索引(请检查索引是否越界或负值).')

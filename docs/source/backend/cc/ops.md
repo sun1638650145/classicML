@@ -308,6 +308,11 @@ cc_init_centroids(x, n_clusters, init)
 
 均值向量.
 
+### 异常
+
+* <b>ValueError</b>: 聚类簇数量与初始化均值向量数量不一致, 非法索引或不能自动转换的非法均值向量. 
+* <b>TypeError</b>: 非法均值向量.
+
 ## cc_select_second_alpha
 
 ```python
