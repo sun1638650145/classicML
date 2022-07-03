@@ -56,7 +56,8 @@ cml.plots.plot_lda(model, ds.x, ds.y, '密度', '含糖率')
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/CLion.svg" width="150"/><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/CLion_icon.svg" width="80"/> <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/PyCharm.svg" width="210"/><img src="https://resources.jetbrains.com/storage/products/company/brand/logos/PyCharm_icon.svg" width="80"/>
 
-## v0.9 预览
+## v0.9.x 预览
 
+* `v0.9` 正式版已经发布!
 * 这个版本将增加`cml.models.cluster`模块, 并添加几种聚类算法
 * 将在`v1.0`之前添加100%的类型注释

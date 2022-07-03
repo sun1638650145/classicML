@@ -43,13 +43,19 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_bootstrap_sampling
     # from classicML.backend.cc.ops import ConvexHull
     from classicML.backend.cc.ops import cc_calculate_centroids
+    from classicML.backend.python.ops import calculate_covariances as cc_calculate_covariances
     from classicML.backend.cc.ops import cc_calculate_error
     from classicML.backend.cc.ops import cc_calculate_euclidean_distance
+    from classicML.backend.python.ops import calculate_means as cc_calculate_means
+    from classicML.backend.python.ops import calculate_mixture_coefficient as cc_calculate_mixture_coefficient
     from classicML.backend.cc.ops import cc_clip_alpha
     from classicML.backend.cc.ops import cc_compare_differences
     from classicML.backend.cc.ops import cc_get_cluster
     from classicML.backend.cc.ops import cc_get_conditional_probability
     from classicML.backend.cc.ops import cc_get_dependent_prior_probability
+    from classicML.backend.python.ops import get_gaussian_mixture_distribution_posterior_probability as cc_get_gaussian_mixture_distribution_posterior_probability
+    from classicML.backend.python.ops import get_gaussian_mixture_distribution_probability_density as cc_get_gaussian_mixture_distribution_probability_density
+    from classicML.backend.python.ops import get_normal_distribution_probability_density as cc_get_normal_distribution_probability_density
     from classicML.backend.cc.ops import cc_get_prior_probability
     from classicML.backend.cc.ops import cc_get_probability_density
     from classicML.backend.cc.ops import cc_get_w as cc_get_w_v1  # 正式版将移除.
@@ -57,6 +63,8 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_get_w_v2 as cc_get_w
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
     from classicML.backend.cc.ops import cc_init_centroids
+    from classicML.backend.python.ops import init_covariances as cc_init_covariances
+    from classicML.backend.python.ops import init_mixture_coefficient as cc_init_mixture_coefficient
     from classicML.backend.cc.ops import cc_select_second_alpha
     from classicML.backend.cc.ops import cc_type_of_target as cc_type_of_target_v1  # 正式版将移除.
     from classicML.backend.cc.ops import cc_type_of_target_v2
@@ -65,18 +73,26 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.cc.ops import cc_bootstrap_sampling as bootstrap_sampling
     from classicML.backend.cc.ops import ConvexHull
     from classicML.backend.cc.ops import cc_calculate_centroids as calculate_centroids
+    from classicML.backend.python.ops import calculate_covariances
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
     from classicML.backend.cc.ops import cc_calculate_euclidean_distance as calculate_euclidean_distance
+    from classicML.backend.python.ops import calculate_means
+    from classicML.backend.python.ops import calculate_mixture_coefficient
     from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
     from classicML.backend.cc.ops import cc_compare_differences as compare_differences
     from classicML.backend.cc.ops import cc_get_cluster as get_cluster
     from classicML.backend.cc.ops import cc_get_conditional_probability as get_conditional_probability
     from classicML.backend.cc.ops import cc_get_dependent_prior_probability as get_dependent_prior_probability
+    from classicML.backend.python.ops import get_gaussian_mixture_distribution_posterior_probability
+    from classicML.backend.python.ops import get_gaussian_mixture_distribution_probability_density
+    from classicML.backend.python.ops import get_normal_distribution_probability_density
     from classicML.backend.cc.ops import cc_get_prior_probability as get_prior_probability
     from classicML.backend.cc.ops import cc_get_probability_density as get_probability_density
     from classicML.backend.cc.ops import cc_get_w_v2 as get_w
     from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix as get_within_class_scatter_matrix
     from classicML.backend.cc.ops import cc_init_centroids as init_centroids
+    from classicML.backend.python.ops import init_covariances
+    from classicML.backend.python.ops import init_mixture_coefficient
     from classicML.backend.cc.ops import cc_select_second_alpha as select_second_alpha
     from classicML.backend.cc.ops import cc_type_of_target_v2 as type_of_target
 
@@ -86,13 +102,19 @@ else:
     from classicML.backend.python.ops import bootstrap_sampling
     from classicML.backend.python.ops import ConvexHull
     from classicML.backend.python.ops import calculate_centroids
+    from classicML.backend.python.ops import calculate_covariances
     from classicML.backend.python.ops import calculate_error
     from classicML.backend.python.ops import calculate_euclidean_distance
+    from classicML.backend.python.ops import calculate_means
+    from classicML.backend.python.ops import calculate_mixture_coefficient
     from classicML.backend.python.ops import clip_alpha
     from classicML.backend.python.ops import compare_differences
     from classicML.backend.python.ops import get_cluster
     from classicML.backend.python.ops import get_conditional_probability
     from classicML.backend.python.ops import get_dependent_prior_probability
+    from classicML.backend.python.ops import get_gaussian_mixture_distribution_posterior_probability
+    from classicML.backend.python.ops import get_gaussian_mixture_distribution_probability_density
+    from classicML.backend.python.ops import get_normal_distribution_probability_density
     from classicML.backend.python.ops import get_prior_probability
     from classicML.backend.python.ops import get_probability_density
     from classicML.backend.python.ops import get_w as get_w_v1  # 正式版将移除.
@@ -100,6 +122,8 @@ else:
     from classicML.backend.python.ops import get_w_v2 as get_w
     from classicML.backend.python.ops import get_within_class_scatter_matrix
     from classicML.backend.python.ops import init_centroids
+    from classicML.backend.python.ops import init_covariances
+    from classicML.backend.python.ops import init_mixture_coefficient
     from classicML.backend.python.ops import select_second_alpha
     from classicML.backend.python.ops import type_of_target
 

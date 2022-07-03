@@ -7,7 +7,7 @@ import classicML as cml
 from classicML import _cml_precision
 from classicML import CLASSICML_LOGGER
 
-__version__ = 'backend.python.ops.0.14'
+__version__ = 'backend.python.ops.0.15a0'
 
 
 def bootstrap_sampling(x, y=None, seed=None):
@@ -150,6 +150,37 @@ def calculate_centroids(x: np.ndarray,
     return np.asarray(centroids, dtype=_cml_precision.float)
 
 
+def calculate_covariances(sample: np.ndarray,
+                          mean: np.ndarray,
+                          gamma: np.ndarray) -> np.ndarray:
+    """计算协方差矩阵.
+
+    Args:
+        sample: numpy.ndarray, 样本的取值.
+        mean: numpy.ndarray, 均值.
+        gamma: numpy.ndarray, 后验概率.
+
+    Return:
+        新的协方差矩阵.
+    """
+    number_of_sample, number_of_properties = sample.shape[0], sample.shape[1]
+    n_components = gamma.shape[1]
+
+    sigma = np.zeros((n_components, number_of_properties, number_of_properties), dtype=_cml_precision.float)
+
+    for i in range(n_components):
+        for j in range(number_of_sample):
+            # 样本和均值(number_of_properties,)传入时, 未转换成矩阵.
+            # inner = (sample[j] - mean[i]).reshape(1, number_of_properties)
+            # np.matmul(inner.T, inner)
+            # np.outer(x, y) = np.matmul(x.T, y)
+            sigma[i] += gamma[j][i] * np.outer(sample[j] - mean[i], sample[j] - mean[i])
+
+        sigma[i] /= np.sum(gamma[:, i])
+
+    return sigma
+
+
 def calculate_error(x, y, i, kernel, alphas, non_zero_alphas, b):
     """计算KKT条件的违背值.
 
@@ -211,6 +242,48 @@ def calculate_euclidean_distance(x0: np.ndarray,
     distances = np.linalg.norm(distances, ord=2, axis=-1)
 
     return distances
+
+
+def calculate_means(sample: np.ndarray,
+                    gamma: np.ndarray) -> np.ndarray:
+    """计算均值.
+
+    Args:
+        sample: numpy.ndarray, 样本的取值.
+        gamma: numpy.ndarray, 后验概率.
+
+    Return:
+        新的均值.
+    """
+    number_of_sample, number_of_properties = sample.shape[0], sample.shape[1]
+    n_components = gamma.shape[1]
+
+    mean = np.zeros((n_components, number_of_properties), dtype=_cml_precision.float)
+
+    for i in range(n_components):
+        for j in range(number_of_sample):
+            mean[i] += gamma[j][i] * sample[j]
+
+        mean[i] /= np.sum(gamma[:, i])
+
+    return mean
+
+
+def calculate_mixture_coefficient(number_of_sample: int,
+                                  gamma: np.ndarray) -> np.ndarray:
+    """计算混合系数.
+
+    Args:
+        number_of_sample: int, 样本的总数.
+        gamma: numpy.ndarray, 后验概率.
+
+    Return:
+        新的混合系数.
+    """
+    alpha = np.ones(gamma.shape[1]) * 1 / number_of_sample
+    alpha *= np.sum(gamma, axis=0)
+
+    return alpha
 
 
 def clip_alpha(alpha, low, high):
@@ -329,6 +402,98 @@ def get_dependent_prior_probability(samples_on_attribute_in_category,
         probability = (samples_on_attribute_in_category + 1) / (number_of_sample + 2 * values_on_attribute)  # 执行平滑操作.
     else:
         probability = samples_on_attribute_in_category / number_of_sample
+
+    return probability
+
+
+def get_gaussian_mixture_distribution_posterior_probability(sample: np.ndarray,
+                                                            mean: np.ndarray,
+                                                            var: np.ndarray,
+                                                            alpha: np.ndarray,
+                                                            n_components: int) -> np.ndarray:
+    """获取高斯混合分布后验概率.
+
+    Arguments:
+        sample: numpy.ndarray, 样本的取值.
+        mean: numpy.ndarray, 样本在某个属性的上的均值.
+        var: numpy.ndarray, 样本在某个属性上的方差.
+        alpha: numpy.ndarray, 混合系数.
+        n_components: int, 混合系数的个数.
+
+    Returns:
+        后验概率.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
+    """
+    probability = np.zeros((sample.shape[0], n_components), dtype=_cml_precision.float)
+    p_mx = get_gaussian_mixture_distribution_probability_density(sample, mean, var, alpha, n_components)
+
+    for i in range(n_components):
+        for j in range(sample.shape[0]):
+            p_xj = get_normal_distribution_probability_density(sample[j], mean[i], var[i])
+            probability[j][i] = alpha[i] * p_xj / p_mx[j]
+
+    return probability
+
+
+def get_gaussian_mixture_distribution_probability_density(sample: np.ndarray,
+                                                          mean: np.ndarray,
+                                                          var: np.ndarray,
+                                                          alpha: np.ndarray,
+                                                          n_components: int) -> np.ndarray:
+    """获取高斯混合分布概率密度.
+
+    Arguments:
+        sample: numpy.ndarray, 样本的取值.
+        mean: numpy.ndarray, 样本在某个属性的上的均值.
+        var: numpy.ndarray, 样本在某个属性上的方差.
+        alpha: numpy.ndarray, 混合系数.
+        n_components: int, 混合系数的个数.
+
+    Returns:
+        概率密度.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
+    """
+    probability = np.zeros(sample.shape[0], dtype=_cml_precision.float)
+
+    for i in range(n_components):
+        for j in range(sample.shape[0]):
+            probability[j] += alpha[i] * get_normal_distribution_probability_density(sample[j], mean[i], var[i])
+
+    return probability
+
+
+def get_normal_distribution_probability_density(sample: np.ndarray,
+                                                mean: np.ndarray,
+                                                var: np.ndarray) -> float:
+    """获取正态分布概率密度.
+
+    Arguments:
+        sample: numpy.ndarray, 样本的取值.
+        mean: numpy.ndarray, 样本在某个属性的上的均值.
+        var: numpy.ndarray, 样本在某个属性上的方差.
+
+    Returns:
+        概率密度.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
+    """
+    probability = 1 / (np.sqrt(np.linalg.det(var)) * np.power(2 * np.pi, sample.size / 2))
+    probability *= np.exp(-1 / 2 * np.matmul(np.matmul((sample - mean), np.linalg.inv(var)), (sample - mean).T))
+    probability = _cml_precision.float(probability)
+
+    if probability == 0.0:
+        probability = _cml_precision.float(1e-36)  # probability有可能为零, 导致取对数会有异常, 因此选择一个常小数.
 
     return probability
 
@@ -509,6 +674,86 @@ def init_centroids(x: np.ndarray,
         raise TypeError('你使用了非法的均值向量.')
 
     return centroids
+
+
+def init_covariances(x: np.ndarray,
+                     n_components: int,
+                     init: Union[List, np.ndarray, None]) -> np.ndarray:
+    """初始化协方差矩阵.
+
+    Args:
+        x: numpy.ndarray, 特征数据.
+        n_components: int, 高斯混合成分的个数.
+        init: list or numpy.ndarray, 协方差矩阵的初始化方式,
+            默认将初始化为主对角线为0.1的对角阵张量, 也可以直接给定具体的协方差矩阵.
+
+    Return:
+        协方差矩阵组成的张量.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
+
+    Raises:
+        ValueError: 协方差矩阵与期望值不一致.
+        TypeError: 非法协方差矩阵.
+    """
+    if init is None:
+        sigma = np.zeros((n_components, x.shape[1], x.shape[1]))
+        sigma[:, :, :] = np.eye(x.shape[1], dtype=_cml_precision.float) * 0.1
+    elif type(init) in (list, np.ndarray):
+        m, n = n_components, x.shape[1]
+        init = np.squeeze(init)
+        if init.shape != (m, n, n):
+            CLASSICML_LOGGER.error(f'你设置的协方差矩阵{init.shape}与期望值{(m, n, n)}不一致.')
+            raise ValueError(f'你设置的协方差矩阵{init.shape}与期望值{(m, n, n)}不一致.')
+        sigma = np.asarray(init, dtype=_cml_precision.float)
+    else:
+        CLASSICML_LOGGER.error('你使用了非法的协方差矩阵.')
+        raise TypeError('你使用了非法的协方差矩阵.')
+
+    return sigma
+
+
+def init_mixture_coefficient(n_components: int,
+                             init: Union[List, np.ndarray, None]) -> np.ndarray:
+    """初始化混合系数.
+
+    Args:
+        n_components: int, 高斯混合成分的个数.
+        init: list or numpy.ndarray, 混合系数的初始化方式,
+            默认将初始化为高斯混合成分的个数的倒数, 也可以直接给定具体的混合系数;
+            无论任何初始化形式, 请保证混合系数的和为1.
+
+    Return:
+        混合系数.
+
+    Notes:
+        - 该函数提供了非Python后端的实现版本,
+          你可以使用其他的版本, 函数的调用方式和接口一致,
+          Python版本是没有优化的原始公式版本.
+
+    Raises:
+        ValueError: 高斯混合成分个数与初始化混合系数数量不一致, 混合系数和不为1.
+        TypeError: 非法混合系数.
+    """
+    if init is None:
+        alpha = np.ones(n_components, dtype=_cml_precision.float) * 1 / n_components
+    elif type(init) in (list, np.ndarray):
+        init = np.squeeze(init)
+        if len(init) != n_components:
+            CLASSICML_LOGGER.error('你设置高斯混合成分个数与初始化混合系数数量不一致[%d, %d].', n_components, len(init))
+            raise ValueError('你设置高斯混合成分个数与初始化混合系数数量不一致[%d, %d].' % (n_components, len(init)))
+        elif np.sum(init) != 1:
+            CLASSICML_LOGGER.error('混合系数的和不为1.')
+            raise ValueError('混合系数的和不为1.')
+        alpha = np.asarray(init, dtype=_cml_precision.float)
+    else:
+        CLASSICML_LOGGER.error('你使用了非法的混合系数.')
+        raise TypeError('你使用了非法的混合系数.')
+
+    return alpha
 
 
 def select_second_alpha(error, error_cache, non_bound_alphas):

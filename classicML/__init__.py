@@ -1,5 +1,5 @@
 """An easy-to-use ML framework."""
-__version__ = '0.9'
+__version__ = '0.9.1a0'
 
 import os
 import logging
@@ -33,6 +33,7 @@ from classicML.api import BPNN
 from classicML.api import BaggingClassifier
 from classicML.api import DecisionStumpClassifier
 from classicML.api import DecisionTreeClassifier
+from classicML.api import GaussianMixture
 from classicML.api import KMeans
 from classicML.api import LinearDiscriminantAnalysis
 from classicML.api import LDA
