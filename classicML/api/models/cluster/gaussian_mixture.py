@@ -1,8 +1,11 @@
+from pathlib import Path
+from pickle import loads, dumps
 from typing import List, Union
 
 import numpy as np
 
 from classicML import _cml_precision
+from classicML import CLASSICML_LOGGER
 from classicML.api.models import BaseModel
 from classicML.backend import init_centroids as init_means
 from classicML.backend import init_covariances
@@ -13,6 +16,7 @@ from classicML.backend import calculate_covariances
 from classicML.backend import calculate_mixture_coefficient
 from classicML.backend import compare_differences
 from classicML.backend import get_cluster
+from classicML.backend import io
 
 
 class GaussianMixture(BaseModel):
@@ -136,5 +140,106 @@ class GaussianMixture(BaseModel):
 
         return self
 
-    def predict(self, x, **kwargs):
-        pass
+    def predict(self,
+                x: Union[np.ndarray, List],
+                **kwargs) -> np.ndarray:
+        """使用高斯混合聚类预测新样本所在的簇.
+
+        Args:
+            x: numpy.ndarray or list, 特征数据.
+
+        Return:
+            新样本所在的簇.
+
+        Raise:
+            ValueError: 模型没有训练的错误.
+        """
+        if self.is_trained is False and self.is_loaded is False:
+            CLASSICML_LOGGER.error('模型没有训练')
+            raise ValueError('你必须先进行训练')
+
+        x = np.asarray(x, dtype=_cml_precision.float)
+        if len(x.shape) == 1:
+            x = np.expand_dims(x, axis=0)
+        # 计算各混合成分生成的后验概率.
+        gamma = get_gaussian_mixture_distribution_posterior_probability(sample=x,
+                                                                        mean=self.mu,
+                                                                        var=self.sigma,
+                                                                        alpha=self.alpha,
+                                                                        n_components=self.n_components)
+        # 划入相应的簇.
+        clusters = get_cluster(-gamma)
+
+        return clusters
+
+    def score(self, x, y=None):
+        """"
+        Raise:
+            NotImplementedError: 无监督学习(聚类)没有score方法.
+        """
+        CLASSICML_LOGGER.error('无监督学习(聚类)没有score方法')
+        raise NotImplementedError('无监督学习(聚类)没有score方法')
+
+    def load_weights(self, filepath: Union[str, Path]):
+        """加载模型参数.
+
+        Args:
+            filepath: str, 权重文件加载的路径.
+
+        Raise:
+            KeyError: 模型权重加载失败.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='r',
+                                                   model_name='GaussianMixture')
+        # 加载模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            self.init = compile_ds.attrs['init']
+            self.covariances_init = loads(compile_ds.attrs['covariances_init'].tobytes())
+            self.mixture_coefficient_init = loads(compile_ds.attrs['mixture_coefficient_init'].tobytes())
+            self.tol = compile_ds.attrs['tol']
+
+            self.mu = weights_ds.attrs['mu']
+            self.sigma = weights_ds.attrs['sigma']
+            self.alpha = weights_ds.attrs['alpha']
+            self.clusters = weights_ds.attrs['clusters']
+            # 标记加载完成
+            self.is_loaded = True
+        except KeyError:
+            CLASSICML_LOGGER.error('模型权重加载失败, 请检查文件是否损坏')
+            raise KeyError('模型权重加载失败')
+
+    def save_weights(self, filepath: Union[str, Path]):
+        """将模型权重保存为一个HDF5文件.
+
+        Args:
+            filepath: str, 权重文件保存的路径.
+
+        Raise:
+            TypeError: 模型权重保存失败.
+        """
+        # 初始化权重文件.
+        parameters_gp = io.initialize_weights_file(filepath=filepath,
+                                                   mode='w',
+                                                   model_name='GaussianMixture')
+        # 保存模型参数.
+        try:
+            compile_ds = parameters_gp['compile']
+            weights_ds = parameters_gp['weights']
+
+            compile_ds.attrs['init'] = self.init
+            compile_ds.attrs['covariances_init'] = np.void(dumps(self.covariances_init))
+            compile_ds.attrs['mixture_coefficient_init'] = np.void(dumps(self.mixture_coefficient_init))
+            compile_ds.attrs['tol'] = self.tol
+
+            weights_ds.attrs['mu'] = self.mu
+            weights_ds.attrs['sigma'] = self.sigma
+            weights_ds.attrs['alpha'] = self.alpha
+            weights_ds.attrs['clusters'] = self.clusters
+        except TypeError:
+            CLASSICML_LOGGER.error('模型权重保存失败, 请检查文件是否损坏')
+            raise TypeError('模型权重保存失败')
