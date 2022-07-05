@@ -43,7 +43,6 @@ class GaussianMixture(BaseModel):
         is_loaded: bool, default=False,
             如果模型加载了权重将被标记为True.
     """
-
     def __init__(self, n_components: int = 3):
         """初始化高斯混合聚类.
 
@@ -132,11 +131,10 @@ class GaussianMixture(BaseModel):
             else:  # 均值向量均未更新, 则提前退出.
                 break
 
-        # 划入相应的簇.
-        # 使用负概率是因为代码共用, KMeans: argmin(-gamma) = Gaussian: argmax(gamma).
-        self.clusters = get_cluster(-gamma)
-
         self.is_trained = True
+
+        # 划入相应的簇.
+        self.clusters = self.predict(x)
 
         return self
 
@@ -168,6 +166,7 @@ class GaussianMixture(BaseModel):
                                                                         alpha=self.alpha,
                                                                         n_components=self.n_components)
         # 划入相应的簇.
+        # 使用负概率是因为代码共用, Gaussian: argmax(gamma) = KMeans: argmin(-gamma).
         clusters = get_cluster(-gamma)
 
         return clusters

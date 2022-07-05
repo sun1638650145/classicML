@@ -31,7 +31,7 @@ def _plot_sample_scatter_and_centroids(x: np.ndarray,
         for centroid in range(len(centroids)):
             # 根据索引分组.
             X = x[clusters == centroid]
-            plt.scatter(X[:, 0], X[:, 1], marker='o', label='样本点')
+            plt.scatter(X[:, 0], X[:, 1], marker='o', label=f'簇{centroid}样本点')
 
         plt.scatter(centroids[:, 0], centroids[:, 1], c='c', marker='x', label='均值向量(簇质心)')
 
