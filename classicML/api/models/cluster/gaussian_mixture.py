@@ -120,7 +120,7 @@ class GaussianMixture(BaseModel):
                                                                             n_components=self.n_components)
             # 计算新参数.
             mu = calculate_means(x, gamma)
-            sigma = calculate_covariances(x, self.mu, gamma)
+            sigma = calculate_covariances(x, mu, gamma)
             alpha = calculate_mixture_coefficient(x.shape[0], gamma)
             # 更新模型参数(EM算法的M步).
             if (compare_differences(self.mu, mu, self.tol).any()
