@@ -57,6 +57,25 @@ plot_ensemble(ensemble_model, x, y, x_label=None, y_label=None, plot_estimators=
 
 * <b>ValueError</b>: 模型没有训练的错误.
 
+### plot_gaussian_mixture
+
+```python
+plot_gaussian_mixture(gaussian_mixture, x, x_label=None, y_label=None)
+```
+
+可视化高斯混合聚类二维示意图.
+
+#### 参数
+
+* <b>gaussian_mixture</b>: `cml.models.GaussianMixture`, 高斯混合聚类实例.
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>x_label</b>: 字符串，横轴的标签.
+* <b>y_label</b>: 字符串，纵轴的标签.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
 ### plot_history
 
 ```python

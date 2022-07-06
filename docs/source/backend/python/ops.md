@@ -66,6 +66,24 @@ calculate_centroids(x, clusters)
 
 均值向量.
 
+## calculate_covariances
+
+```python
+calculate_covariances(sample, mean, gamma)
+```
+
+计算协方差矩阵.
+
+### 参数
+
+* <b>sample</b>: 一个Numpy数组, 样本的取值.
+* <b>mean</b>:一个Numpy数组, 均值.
+* <b>gamma</b>: 一个Numpy数组, 后验概率.
+
+### 返回
+
+新的协方差矩阵.
+
 ## calculate_error
 
 ```python
@@ -103,6 +121,40 @@ calculate_euclidean_distance(x0, x1)
 ### 返回
 
 欧式距离.
+
+## calculate_means
+
+```python
+calculate_means(sample, gamma)
+```
+
+计算均值.
+
+### 参数
+
+* <b>sample</b>: 一个Numpy数组, 样本的取值.
+* <b>gamma</b>: 一个Numpy数组, 后验概率.
+
+### 返回
+
+新的均值.
+
+## calculate_mixture_coefficient
+
+```python
+calculate_mixture_coefficient(number_of_sample, gamma)
+```
+
+计算混合系数.
+
+### 参数
+
+* <b>number_of_sample</b>: 整数, 样本的总数.
+* <b>gamma</b>: 一个Numpy数组, 后验概率.
+
+### 返回
+
+新的混合系数.
 
 ## clip_alpha 
 
@@ -198,6 +250,64 @@ get_dependent_prior_probability(samples_on_attribute_in_category,
 ### 返回
 
 类先验概率.
+
+## get_gaussian_mixture_distribution_posterior_probability
+
+```python
+get_gaussian_mixture_distribution_posterior_probability(sample, mean, var, alpha, n_components)
+```
+
+获取高斯混合分布后验概率.
+
+### 参数
+
+* <b>sample</b>: 一个Numpy数组, 样本的取值.
+* <b>mean</b>: 一个Numpy数组, 样本在某个属性的上的均值.
+* <b>var</b>: 一个Numpy数组, 样本在某个属性上的方差.
+* <b>alpha</b>: 一个Numpy数组, 混合系数.
+* <b>n_components</b>: 整数, 混合系数的个数.
+
+### 返回
+
+高斯混合分布后验概率.
+
+## get_gaussian_mixture_distribution_probability_density
+
+```python
+get_gaussian_mixture_distribution_probability_density(sample, mean, var, alpha, n_components)
+```
+
+获取高斯混合分布概率密度.
+
+### 参数
+
+* <b>sample</b>: 一个Numpy数组, 样本的取值.
+* <b>mean</b>: 一个Numpy数组, 样本在某个属性的上的均值.
+* <b>var</b>: 一个Numpy数组, 样本在某个属性上的方差.
+* <b>alpha</b>: 一个Numpy数组, 混合系数.
+* <b>n_components</b>: 整数, 混合系数的个数.
+
+### 返回
+
+高斯混合分布概率密度.
+
+## get_normal_distribution_probability_density
+
+```python
+get_normal_distribution_probability_density(sample, mean, var)
+```
+
+获取正态分布概率密度.
+
+### 参数
+
+* <b>sample</b>: 一个Numpy数组, 样本的取值.
+* <b>mean</b>: 一个Numpy数组, 样本在某个属性的上的均值.
+* <b>var</b>: 一个Numpy数组, 样本在某个属性上的方差.
+
+### 返回
+
+正态分布概率密度.
 
 ## get_prior_probability
 
@@ -302,7 +412,7 @@ init_centroids(x, n_clusters, init)
 
 ### 参数
 
-* <b>x</b>: 一个 Numpy数组，KKT条件的违背值缓存.
+* <b>x</b>: 一个 Numpy数组，特征数据.
 * <b>n_clusters</b>: 整数, 聚类簇的数量.
 * <b>init</b>: 均值向量的初始化方式,
     * 'random': 采用随机初始化;
@@ -316,6 +426,51 @@ init_centroids(x, n_clusters, init)
 
 * <b>ValueError</b>: 聚类簇数量与初始化均值向量数量不一致, 非法索引或不能自动转换的非法均值向量. 
 * <b>TypeError</b>: 非法均值向量.
+
+## init_covariances
+
+```python
+init_covariances(x, n_components, init)
+```
+
+初始化协方差矩阵.
+
+### 参数
+
+* <b>x</b>: 一个 Numpy数组，特征数据.
+* <b>n_components</b>: 整数, 高斯混合成分的个数.
+* <b>init</b>: 列表或一个Numpy数组, 协方差矩阵的初始化方式,  默认将初始化为主对角线为0.1的对角阵张量, 也可以直接给定具体的协方差矩阵.
+
+### 返回
+
+协方差矩阵组成的张量.
+
+### 异常
+
+* <b>ValueError</b>: 协方差矩阵与期望值不一致.
+* <b>TypeError</b>: 非法协方差矩阵.
+
+## init_mixture_coefficient
+
+```python
+init_mixture_coefficient(n_components, init)
+```
+
+初始化混合系数.
+
+### 参数
+
+* <b>n_components</b>: 整数, 高斯混合成分的个数.
+* <b>init</b>: 列表或一个Numpy数组, 混合系数的初始化方式, 默认将初始化为高斯混合成分的个数的倒数, 也可以直接给定具体的混合系数; 无论任何初始化形式, 请保证混合系数的和为1.
+
+### 返回
+
+混合系数.
+
+### 异常
+
+* <b>ValueError</b>: 高斯混合成分个数与初始化混合系数数量不一致, 混合系数和不为1.
+* <b>TypeError</b>: 非法混合系数.
 
 ## select_second_alpha
 

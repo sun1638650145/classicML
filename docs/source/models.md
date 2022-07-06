@@ -779,6 +779,104 @@ save_weights(filepath)
 
 * 模型将不会保存关于优化器的超参数.
 
+## GaussianMixture
+
+高斯混合聚类.
+
+```python
+cml.models.GaussianMixture(n_components=3)
+```
+
+### 参数
+
+* <b>n_components</b>: 整数, 高斯混合成分的个数.
+
+### compile
+
+```python
+compile(init='random', covariances_init=None, mixture_coefficient_init=None, tol=1e-3)
+```
+
+编译高斯混合聚类.
+
+#### 参数
+
+* <b>init</b>: 均值向量的初始化方式
+    * 'random': 随机初始化;
+    * 列表或一个 Numpy数组: 可以指定训练数据的索引或者值, 也可以直接给定具体的均值向量.
+* <b>covariances_init</b>: 列表或一个 Numpy数组, 协方差矩阵的初始化方式, 默认将初始化为主对角线为0.1的对角阵张量, 也可以直接给定具体的协方差矩阵.
+* <b>mixture_coefficient_init</b>: 列表或一个 Numpy数组, 混合系数的初始化方式, 默认将初始化为高斯混合成分的个数的倒数, 也可以直接给定具体的混合系数, 无论任何初始化形式, 请保证混合系数的和为1.
+* <b>tol</b>: 浮点数, 停止训练的最小调整幅度阈值.
+
+### fit
+
+```python
+fit(x, epochs=100)
+```
+
+训练高斯混合聚类.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组, 特征数据.
+* <b>epochs</b>: 整数, 最大的训练轮数, 如果均值向量已经不更新将会提前自动结束训练.
+
+#### 返回
+
+一个`GaussianMixture`实例.
+
+### predict
+
+```python
+predict(x)
+```
+
+使用高斯混合聚类预测新样本所在的簇.
+
+#### 参数
+
+* <b>x</b>: 一个 Numpy数组或者列表，特征数据.
+
+#### 返回
+
+新样本所在的簇.
+
+#### 异常
+
+* <b>ValueError</b>: 模型没有训练的错误.
+
+### load_weights
+
+```python
+load_weights(filepath)
+```
+
+加载模型参数.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件加载的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重加载失败.
+
+### save_weights
+
+```python
+save_weights(filepath)
+```
+
+将模型权重保存为一个HDF5文件.
+
+#### 参数
+
+* <b>filepath</b>: 字符串，权重文件保存的路径.
+
+#### 异常
+
+* <b>KeyError</b>: 模型权重保存失败.
+
 ## KMeans
 
 K-均值聚类.

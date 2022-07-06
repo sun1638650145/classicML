@@ -43,7 +43,7 @@ def plot_gaussian_mixture(gaussian_mixture: models.GaussianMixture,
     """可视化高斯混合聚类二维示意图.
 
     Args:
-        gaussian_mixture: classicML.models.GaussianMixture, K-均值聚类实例.
+        gaussian_mixture: classicML.models.GaussianMixture, 高斯混合聚类实例.
         x: numpy.ndarray, 特征数据.
         x_label: str, default=None,
             横轴的标签.

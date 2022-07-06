@@ -421,7 +421,7 @@ def get_gaussian_mixture_distribution_posterior_probability(sample: np.ndarray,
         n_components: int, 混合系数的个数.
 
     Returns:
-        后验概率.
+        高斯混合分布后验概率.
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
@@ -454,7 +454,7 @@ def get_gaussian_mixture_distribution_probability_density(sample: np.ndarray,
         n_components: int, 混合系数的个数.
 
     Returns:
-        概率密度.
+        高斯混合分布概率密度.
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
@@ -481,7 +481,7 @@ def get_normal_distribution_probability_density(sample: np.ndarray,
         var: numpy.ndarray, 样本在某个属性上的方差.
 
     Returns:
-        概率密度.
+        正态分布概率密度.
 
     Notes:
         - 该函数提供了非Python后端的实现版本,
