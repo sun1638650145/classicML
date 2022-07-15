@@ -167,14 +167,22 @@ class TestClipAlpha(object):
 class TestCompareDifferences(object):
     def test_answer(self):
         # 数据为随机产生, 不具有任何实际意义.
-        centroids = np.random.random(size=[30, 3])
-        new_centroids = np.random.random(size=[30, 3])
+
+        # matrix.
+        centroids_matrix = np.random.random(size=[30, 3])
+        new_centroids_matrix = np.random.random(size=[30, 3])
+        # tensor.
+        centroids_tensor = np.random.random(size=[30, 3, 2])
+        new_centroids_tensor = np.random.random(size=[30, 3, 2])
         tol = np.random.random()
 
-        cc_answer = cc_compare_differences(centroids, new_centroids, tol)
-        py_answer = compare_differences(centroids, new_centroids, tol)
+        cc_answer_matrix = cc_compare_differences(centroids_matrix, new_centroids_matrix, tol)
+        py_answer_matrix = compare_differences(centroids_matrix, new_centroids_matrix, tol)
+        cc_answer_tensor = cc_compare_differences(centroids_tensor, new_centroids_tensor, tol)
+        py_answer_tensor = compare_differences(centroids_tensor, new_centroids_tensor, tol)
 
-        assert cc_answer.all() == py_answer.all()
+        assert cc_answer_matrix.all() == py_answer_matrix.all()
+        assert cc_answer_tensor.all() == py_answer_tensor.all()
 
 
 class TestGetCluster(object):

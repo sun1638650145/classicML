@@ -244,10 +244,35 @@ RFloat ClipAlpha(PFloat &alpha, PFloat &low, PFloat &high) {
 // 返回差异向量, 输入比较差异的两个值(32/64位浮点型Eigen::Matrix矩阵.)和最小差异阈值(pure float/np.float32/np.float64).
 // 不支持不同位数模板兼容.
 template<typename Matrix, typename Float>
-row_vector_bool CompareDifferences(const Matrix &x0, const Matrix &x1, Float &tol) {
+row_vector_bool CompareDifferences1(const Matrix &x0, const Matrix &x1, Float &tol) {
     auto differences = (x0 - x1).array().abs();
 
     return differences.rowwise().maxCoeff() > tol; // 最大值大于最小阈值即可(即np.any()).
+}
+
+// TODO(Steve R. Sun, tag:code): O(N^3)的时间复杂度需要进行降低.
+// 返回差异向量, 输入比较差异的两个值(32/64位浮点型3维张量.)和最小差异阈值(pure float/np.float32/np.float64).
+// 不支持不同位数模板兼容.
+template<typename Tensor, typename Float>
+matrix_bool CompareDifferences2(const Tensor &x0, const Tensor &x1, Float &tol) {
+    Tensor differences = x0 - x1;
+    auto matrix = matrix_bool(x0.shape(0), x0.shape(1));
+
+    for (int32 i = 0; i < x0.shape(0); i ++) {
+        for (int32 j = 0; j < x0.shape(1); j ++) {
+            auto temp = false;
+
+            for (int32 k = 0; k < x0.shape(2); k ++) {
+                if (abs(differences.at(i, j, k)) > tol) { // 只要有一个元素大于最小阈值即可, 及时break.
+                    temp = true;
+                    break;
+                }
+            }
+            matrix(i, j) = temp;
+        }
+    }
+
+    return matrix;
 }
 
 // 返回簇标记, 输入距离矩阵;
@@ -600,9 +625,12 @@ template np_float32 ClipAlpha(np_float32 &alpha, np_float32 &low, np_float32 &hi
 template np_float64 ClipAlpha(np_float64 &alpha, np_float64 &low, np_float64 &high);
 template np_float32 ClipAlpha(float32 &alpha, float32 &low, float32 &high);
 
-template row_vector_bool CompareDifferences(const matrix32 &x0, const matrix32 &x1, np_float32 &tol);
-template row_vector_bool CompareDifferences(const matrix64 &x0, const matrix64 &x1, np_float64 &tol);
-template row_vector_bool CompareDifferences(const matrix32 &x0, const matrix32 &x1, float32 &tol);
+template row_vector_bool CompareDifferences1(const matrix32 &x0, const matrix32 &x1, np_float32 &tol);
+template row_vector_bool CompareDifferences1(const matrix64 &x0, const matrix64 &x1, np_float64 &tol);
+template row_vector_bool CompareDifferences1(const matrix32 &x0, const matrix32 &x1, float32 &tol);
+template matrix_bool CompareDifferences2(const tensor32 &x0, const tensor32 &x1, np_float32 &tol);
+template matrix_bool CompareDifferences2(const tensor64 &x0, const tensor64 &x1, np_float64 &tol);
+template matrix_bool CompareDifferences2(const tensor32 &x0, const tensor32 &x1, float32 &tol);
 
 template row_vector32i GetCluster(const matrix32 &distances);
 template row_vector32i GetCluster(const matrix64 &distances);

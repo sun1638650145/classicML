@@ -246,7 +246,7 @@ Return:
 )pbdoc", pybind11::arg("alpha"), pybind11::arg("low"), pybind11::arg("high"));
 
     // Overloaded function.
-    m.def("cc_compare_differences", &ops::CompareDifferences<matrix32, np_float32>, R"pbdoc(
+    m.def("cc_compare_differences", &ops::CompareDifferences1<matrix32, np_float32>, R"pbdoc(
 比较差异.
 
     Args:
@@ -256,7 +256,7 @@ Return:
     Return:
         差异向量.
 )pbdoc", pybind11::arg("x0"), pybind11::arg("x1"), pybind11::arg("tol"));
-    m.def("cc_compare_differences", &ops::CompareDifferences<matrix64, np_float64>, R"pbdoc(
+    m.def("cc_compare_differences", &ops::CompareDifferences1<matrix64, np_float64>, R"pbdoc(
 比较差异.
 
     Args:
@@ -266,7 +266,37 @@ Return:
     Return:
         差异向量.
 )pbdoc", pybind11::arg("x0"), pybind11::arg("x1"), pybind11::arg("tol"));
-    m.def("cc_compare_differences", &ops::CompareDifferences<matrix32, float32>, R"pbdoc(
+    m.def("cc_compare_differences", &ops::CompareDifferences1<matrix32, float32>, R"pbdoc(
+比较差异.
+
+    Args:
+        x0, x1: numpy.ndarray, 要比较差异的两个值.
+        tol: float, 最小差异阈值.
+
+    Return:
+        差异向量.
+)pbdoc", pybind11::arg("x0"), pybind11::arg("x1"), pybind11::arg("tol"));
+    m.def("cc_compare_differences", &ops::CompareDifferences2<tensor32, np_float32>, R"pbdoc(
+比较差异.
+
+    Args:
+        x0, x1: numpy.ndarray, 要比较差异的两个值.
+        tol: float, 最小差异阈值.
+
+    Return:
+        差异向量.
+)pbdoc", pybind11::arg("x0"), pybind11::arg("x1"), pybind11::arg("tol"));
+    m.def("cc_compare_differences", &ops::CompareDifferences2<tensor64, np_float64>, R"pbdoc(
+比较差异.
+
+    Args:
+        x0, x1: numpy.ndarray, 要比较差异的两个值.
+        tol: float, 最小差异阈值.
+
+    Return:
+        差异向量.
+)pbdoc", pybind11::arg("x0"), pybind11::arg("x1"), pybind11::arg("tol"));
+    m.def("cc_compare_differences", &ops::CompareDifferences2<tensor32, float32>, R"pbdoc(
 比较差异.
 
     Args:
@@ -708,5 +738,5 @@ Return:
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.14";
+    m.attr("__version__") = "backend.cc.ops.0.15a1";
 }

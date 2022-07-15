@@ -68,7 +68,10 @@ template<typename RFloat, typename PFloat>
 RFloat ClipAlpha(PFloat &alpha, PFloat &low, PFloat &high);
 
 template<typename Matrix, typename Float>
-row_vector_bool CompareDifferences(const Matrix &x0, const Matrix &x1, Float &tol);
+row_vector_bool CompareDifferences1(const Matrix &x0, const Matrix &x1, Float &tol);
+
+template<typename Tensor, typename Float>
+matrix_bool CompareDifferences2(const Tensor &x0, const Tensor &x1, Float &tol);
 
 template<typename Matrix>
 row_vector32i GetCluster(const Matrix &distances);

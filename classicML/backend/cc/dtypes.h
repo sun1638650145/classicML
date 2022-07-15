@@ -10,8 +10,9 @@
 #define CLASSICML_BACKEND_CC_DTYPES_H_
 
 // TODO(Steve R. Sun, tag:code):
-//  由于代码共用的问题, _utils/callbacks模块尽管不需要matrix类型, 但是还是需要在编译时添加Eigen路径.
+//  由于代码共用的问题, _utils/callbacks模块尽管不需要matrix类型, 但是还是需要在编译时添加路径.
 #include "Eigen/Core"
+#include "pybind11/numpy.h"
 
 #include "numpy_patch.h"
 
@@ -33,6 +34,7 @@ typedef pybind11::numpy_scalar<int64> np_int64;
 typedef pybind11::numpy_scalar<uint32> np_uint32;
 typedef pybind11::numpy_scalar<uint64> np_uint64;
 
+typedef Eigen::Matrix<bool, -1, -1> matrix_bool;
 typedef Eigen::MatrixXf matrix32;
 typedef Eigen::MatrixXd matrix64;
 typedef Eigen::MatrixXi matrix32i;
@@ -50,5 +52,8 @@ typedef Eigen::Matrix<bool, 1, -1> row_vector_bool;
 
 typedef Eigen::ArrayXf array32;
 typedef Eigen::ArrayXd array64;
+
+typedef pybind11::array_t<float32> tensor32;
+typedef pybind11::array_t<float64> tensor64;
 
 #endif /* CLASSICML_BACKEND_CC_DTYPES_H_ */
