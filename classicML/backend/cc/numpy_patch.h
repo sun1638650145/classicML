@@ -1,7 +1,7 @@
 //
 // [PR描述](https://github.com/pybind/pybind11/pull/3544)
 // 不确定PR是否会被合并, 如果合并了, 这个feature补丁将会被删除.
-// 当前对应的版本为 pybind11 2.9.x
+// 当前对应的版本为 pybind11 2.9.x ~ 2.10.
 // 由于结构体命名冲突
 // `npy_api` -> `npy_api_patch`
 // `is_complex` -> `is_complex_patch`
@@ -176,7 +176,7 @@ private:
     static npy_api_patch lookup() {
         module_ m = module_::import("numpy.core.multiarray");
         auto c = m.attr("_ARRAY_API");
-        void **api_ptr = (void **) PyCapsule_GetPointer(c.ptr(), NULL);
+        void **api_ptr = (void **) PyCapsule_GetPointer(c.ptr(), nullptr);
         npy_api_patch api;
 #define DECL_NPY_API(Func) api.Func##_ = (decltype(api.Func##_)) api_ptr[API_##Func];
         DECL_NPY_API(PyArray_GetNDArrayCFeatureVersion);
@@ -211,9 +211,9 @@ private:
 };
 
 template <typename T>
-struct is_complex_patch : std::false_type { };
+struct is_complex_patch : std::false_type {};
 template <typename T>
-struct is_complex_patch<std::complex<T>> : std::true_type { };
+struct is_complex_patch<std::complex<T>> : std::true_type {};
 
 template <typename T, typename = void>
 struct npy_format_descriptor_name_patch;
@@ -292,19 +292,19 @@ DECL_NPY_SCALAR(std::complex<long double>, NPY_CLONGDOUBLE);
 
 #undef DECL_NPY_SCALAR
 
-template<typename T>
+template <typename T>
 struct type_caster<numpy_scalar<T>> {
     using value_type = T;
     using type_info = numpy_scalar_info<T>;
 
     PYBIND11_TYPE_CASTER(numpy_scalar<T>, type_info::name);
 
-    static handle& target_type() {
+    static handle &target_type() {
         static handle tp = npy_api_patch::get().PyArray_TypeObjectFromType_(type_info::typenum);
         return tp;
     }
 
-    static handle& target_dtype() {
+    static handle &target_dtype() {
         static handle tp = npy_api_patch::get().PyArray_DescrFromType_(type_info::typenum);
         return tp;
     }
@@ -340,7 +340,7 @@ struct numpy_scalar {
     }
 };
 
-template<typename T>
+template <typename T>
 numpy_scalar<T> make_scalar(T value) {
     return numpy_scalar<T>(value);
 }
