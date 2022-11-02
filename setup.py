@@ -103,11 +103,11 @@ setup(
     cmdclass={'build_ext': build_ext},
     install_requires=[
         'h5py>=3.7.0, <=3.7.0',
-        'matplotlib>=3.5.0, <=3.5.2',
-        'numpy>=1.21.0, <=1.23.1',
+        'matplotlib>=3.5.0, <=3.6.1',
+        'numpy>=1.21.0, <=1.23.4',
         'packaging>=21.3, <=21.3',
-        'pandas>=1.3.4, <=1.4.3',
-        'psutil>=5.7.2, <=5.9.1',
+        'pandas>=1.3.4, <=1.5.1',
+        'psutil>=5.9.3, <=5.9.3',
     ],
     python_requires='>=3.7',
 )

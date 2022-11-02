@@ -15,16 +15,16 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
     - name: Before install
       run: |
         # 安装 setuptools, wheel, twine和pybind11
         python3 -m pip install --upgrade pip;
-        pip install setuptools wheel twine pybind11==2.9.2;
+        pip install setuptools wheel twine pybind11==2.10.1;
         # 安装 eigen3
         vcpkg install eigen3:x64-windows;
     - name: Build and publish

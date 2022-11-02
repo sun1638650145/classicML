@@ -10,23 +10,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-10.15, ubuntu-18.04]
+        os: [macos-11, ubuntu-20.04]
         python-version: ['3.7', '3.8', '3.9', '3.10']
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
     - name: Before install
       run: |
         # 安装 setuptools, wheel, twine和pybind11
         python3 -m pip install --upgrade pip;
-        pip install setuptools wheel twine pybind11==2.9.2;
+        pip install setuptools wheel twine pybind11==2.10.1;
         # 安装 eigen3
-        if [ "${{ matrix.os }}" = "macos-10.15" ]; then
+        if [ "${{ matrix.os }}" = "macos-11" ]; then
           rm -rf /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core;
           brew update;
           brew install eigen;
@@ -52,9 +52,9 @@ jobs:
       run: |
         python3 setup.py sdist bdist_wheel
         # 修改Linux下的包名
-        if [ "${{ matrix.os }}" = "ubuntu-18.04" ]; then
+        if [ "${{ matrix.os }}" = "ubuntu-20.04" ]; then
           filename=`ls dist/*.whl`;
-          newfilename=${filename/"linux"/"manylinux2010"};
-          mv $filename $newfilename;
+          new_filename=${filename/"linux"/"manylinux2010"};
+          mv $filename $new_filename;
         fi
         python3 -m twine upload --repository pypi dist/* --skip-existing;
