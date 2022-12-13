@@ -1,4 +1,4 @@
 recommonmark==0.7.1
-sphinx==5.0.2
-sphinx_markdown_tables==0.0.15
-sphinx_rtd_theme==1.0.0
+sphinx==5.3.0
+sphinx_markdown_tables==0.0.17
+sphinx_rtd_theme==1.1.1
