@@ -8,24 +8,24 @@ import numpy as np
 from classicML import _cml_precision
 from classicML.backend import kernels
 
-from ops import cc_bootstrap_sampling
-from ops import ConvexHull as CcConvexHull
-from ops import cc_calculate_centroids
-from ops import cc_calculate_error
-from ops import cc_calculate_euclidean_distance
-from ops import cc_calculate_means
-from ops import cc_clip_alpha
-from ops import cc_compare_differences
-from ops import cc_get_cluster
-from ops import cc_get_conditional_probability
-from ops import cc_get_dependent_prior_probability
-from ops import cc_get_prior_probability
-from ops import cc_get_probability_density
-from ops import cc_get_w_v2 as cc_get_w
-from ops import cc_get_within_class_scatter_matrix
-from ops import cc_init_centroids
-from ops import cc_select_second_alpha
-from ops import cc_type_of_target_v2 as cc_type_of_target
+from classicML.backend.cc.ops import cc_bootstrap_sampling
+from classicML.backend.cc.ops import ConvexHull as CcConvexHull
+from classicML.backend.cc.ops import cc_calculate_centroids
+from classicML.backend.cc.ops import cc_calculate_error
+from classicML.backend.cc.ops import cc_calculate_euclidean_distance
+from classicML.backend.cc.ops import cc_calculate_means
+from classicML.backend.cc.ops import cc_clip_alpha
+from classicML.backend.cc.ops import cc_compare_differences
+from classicML.backend.cc.ops import cc_get_cluster
+from classicML.backend.cc.ops import cc_get_conditional_probability
+from classicML.backend.cc.ops import cc_get_dependent_prior_probability
+from classicML.backend.cc.ops import cc_get_prior_probability
+from classicML.backend.cc.ops import cc_get_probability_density
+from classicML.backend.cc.ops import cc_get_w_v2 as cc_get_w
+from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
+from classicML.backend.cc.ops import cc_init_centroids
+from classicML.backend.cc.ops import cc_select_second_alpha
+from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
 
 from classicML.backend.python.ops import bootstrap_sampling
 from classicML.backend.python.ops import ConvexHull
