@@ -104,6 +104,23 @@ cc_calculate_euclidean_distance(x0, x1)
 
 欧式距离.
 
+## cc_calculate_means
+
+```python
+cc_calculate_means(sample, gamma)
+```
+
+计算均值.
+
+### 参数
+
+* <b>sample</b>: 一个Numpy数组, 样本的取值.
+* <b>gamma</b>: 一个Numpy数组, 后验概率.
+
+### 返回
+
+新的均值.
+
 ## cc_clip_alpha 
 
 ```python
