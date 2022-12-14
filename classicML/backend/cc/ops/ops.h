@@ -62,6 +62,9 @@ Matrix CalculateError(const Matrix &x,
 template<typename Matrix>
 Matrix CalculateEuclideanDistance(const Matrix &x0, const Matrix &x1);
 
+template<typename Matrix>
+Matrix CalculateMeans(const Matrix &sample, const Matrix &gamma);
+
 // TODO(Steve Sun, tag:code):
 //  overload匹配顺序: 经软件测试发现只使用单个模板参数时, np类型被pure类型兼容处理, 因此使用返回值模板参数和参数模板参数.
 template<typename RFloat, typename PFloat>

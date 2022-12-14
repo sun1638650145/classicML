@@ -227,6 +227,28 @@ Matrix CalculateEuclideanDistance(const Matrix &x0, const Matrix &x1) {
     return distances;
 }
 
+// 返回新的均值, 输入样本的取值和后验概率.
+// `Matrix` 兼容32位和64位浮点型Eigen::Matrix矩阵.
+template<typename Matrix>
+Matrix CalculateMeans(const Matrix &sample, const Matrix &gamma) {
+    int32 number_of_sample = sample.rows();
+    int32 number_of_properties = sample.cols();
+    int32 n_components = gamma.cols();
+
+    auto mean = Matrix(n_components, number_of_properties);
+    mean.setZero(); // 初始化为0.
+
+    for (int32 i = 0; i < n_components; i ++) {
+        for (int32 j = 0; j < number_of_sample; j ++) {
+            mean.row(i) += gamma(j, i) * sample.row(j);
+        }
+
+        mean.row(i) /= gamma.col(i).sum();
+    }
+
+    return mean;
+}
+
 // 返回修剪后的拉格朗日乘子(32/64位), 输入拉格朗日乘子的下界和上界(pure float/np.float32/np.float64).
 template<typename RFloat, typename PFloat>
 RFloat ClipAlpha(PFloat &alpha, PFloat &low, PFloat &high) {
@@ -620,6 +642,9 @@ template matrix64 CalculateError<matrix64, vector64, array64>
 
 template matrix32 CalculateEuclideanDistance(const matrix32 &x0, const matrix32 &x1);
 template matrix64 CalculateEuclideanDistance(const matrix64 &x0, const matrix64 &x1);
+
+template matrix32 CalculateMeans(const matrix32 &sample, const matrix32 &gamma);
+template matrix64 CalculateMeans(const matrix64 &sample, const matrix64 &gamma);
 
 template np_float32 ClipAlpha(np_float32 &alpha, np_float32 &low, np_float32 &high);
 template np_float64 ClipAlpha(np_float64 &alpha, np_float64 &low, np_float64 &high);

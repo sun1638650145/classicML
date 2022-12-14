@@ -211,6 +211,26 @@ Return:
         欧式距离.)pbdoc", pybind11::arg("x0"), pybind11::arg("x1"));
 
     // Overloaded function.
+    m.def("cc_calculate_means", &ops::CalculateMeans<matrix32>, R"pbdoc(
+计算均值.
+
+    Args:
+        sample: numpy.ndarray, 样本的取值.
+        gamma: numpy.ndarray, 后验概率.
+
+    Return:
+        新的均值.)pbdoc", pybind11::arg("sample"), pybind11::arg("gamma"));
+    m.def("cc_calculate_means", &ops::CalculateMeans<matrix64>, R"pbdoc(
+计算均值.
+
+    Args:
+        sample: numpy.ndarray, 样本的取值.
+        gamma: numpy.ndarray, 后验概率.
+
+    Return:
+        新的均值.)pbdoc", pybind11::arg("sample"), pybind11::arg("gamma"));
+
+    // Overloaded function.
     m.def("cc_clip_alpha", &ops::ClipAlpha<np_float32, np_float32>, R"pbdoc(
 修剪拉格朗日乘子.
 
@@ -738,5 +758,5 @@ Return:
         - 注意此函数为CC版本, 暂不能处理多字符的str类型的数据.
 )pbdoc", pybind11::arg("y"));
 
-    m.attr("__version__") = "backend.cc.ops.0.15a1";
+    m.attr("__version__") = "backend.cc.ops.0.15a2";
 }

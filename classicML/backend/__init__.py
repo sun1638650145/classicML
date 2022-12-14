@@ -46,7 +46,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.python.ops import calculate_covariances as cc_calculate_covariances
     from classicML.backend.cc.ops import cc_calculate_error
     from classicML.backend.cc.ops import cc_calculate_euclidean_distance
-    from classicML.backend.python.ops import calculate_means as cc_calculate_means
+    from classicML.backend.cc.ops import cc_calculate_means
     from classicML.backend.python.ops import calculate_mixture_coefficient as cc_calculate_mixture_coefficient
     from classicML.backend.cc.ops import cc_clip_alpha
     from classicML.backend.cc.ops import cc_compare_differences
@@ -76,7 +76,7 @@ if os.environ['CLASSICML_ENGINE'] == 'CC':
     from classicML.backend.python.ops import calculate_covariances
     from classicML.backend.cc.ops import cc_calculate_error as calculate_error
     from classicML.backend.cc.ops import cc_calculate_euclidean_distance as calculate_euclidean_distance
-    from classicML.backend.python.ops import calculate_means
+    from classicML.backend.cc.ops import cc_calculate_means as calculate_means
     from classicML.backend.python.ops import calculate_mixture_coefficient
     from classicML.backend.cc.ops import cc_clip_alpha as clip_alpha
     from classicML.backend.cc.ops import cc_compare_differences as compare_differences

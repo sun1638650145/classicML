@@ -8,29 +8,31 @@ import numpy as np
 from classicML import _cml_precision
 from classicML.backend import kernels
 
-from classicML.backend.cc.ops import cc_bootstrap_sampling
-from classicML.backend.cc.ops import ConvexHull as CcConvexHull
-from classicML.backend.cc.ops import cc_calculate_centroids
-from classicML.backend.cc.ops import cc_calculate_error
-from classicML.backend.cc.ops import cc_calculate_euclidean_distance
-from classicML.backend.cc.ops import cc_clip_alpha
-from classicML.backend.cc.ops import cc_compare_differences
-from classicML.backend.cc.ops import cc_get_cluster
-from classicML.backend.cc.ops import cc_get_conditional_probability
-from classicML.backend.cc.ops import cc_get_dependent_prior_probability
-from classicML.backend.cc.ops import cc_get_prior_probability
-from classicML.backend.cc.ops import cc_get_probability_density
-from classicML.backend.cc.ops import cc_get_w_v2 as cc_get_w
-from classicML.backend.cc.ops import cc_get_within_class_scatter_matrix
-from classicML.backend.cc.ops import cc_init_centroids
-from classicML.backend.cc.ops import cc_select_second_alpha
-from classicML.backend.cc.ops import cc_type_of_target_v2 as cc_type_of_target
+from ops import cc_bootstrap_sampling
+from ops import ConvexHull as CcConvexHull
+from ops import cc_calculate_centroids
+from ops import cc_calculate_error
+from ops import cc_calculate_euclidean_distance
+from ops import cc_calculate_means
+from ops import cc_clip_alpha
+from ops import cc_compare_differences
+from ops import cc_get_cluster
+from ops import cc_get_conditional_probability
+from ops import cc_get_dependent_prior_probability
+from ops import cc_get_prior_probability
+from ops import cc_get_probability_density
+from ops import cc_get_w_v2 as cc_get_w
+from ops import cc_get_within_class_scatter_matrix
+from ops import cc_init_centroids
+from ops import cc_select_second_alpha
+from ops import cc_type_of_target_v2 as cc_type_of_target
 
 from classicML.backend.python.ops import bootstrap_sampling
 from classicML.backend.python.ops import ConvexHull
 from classicML.backend.python.ops import calculate_centroids
 from classicML.backend.python.ops import calculate_error
 from classicML.backend.python.ops import calculate_euclidean_distance
+from classicML.backend.python.ops import calculate_means
 from classicML.backend.python.ops import clip_alpha
 from classicML.backend.python.ops import compare_differences
 from classicML.backend.python.ops import get_cluster
@@ -137,6 +139,18 @@ class TestCalculateEuclideanDistance(object):
 
         cc_answer = cc_calculate_euclidean_distance(x0, x1)
         py_answer = calculate_euclidean_distance(x0, x1)
+
+        assert abs(cc_answer - py_answer).max() <= THRESHOLD
+
+
+class TestCalculateMeans(object):
+    def test_answer(self):
+        # 数据为随机产生, 不具有任何实际意义.
+        x = np.random.random(size=[30, 2])
+        gamma = np.random.random(size=[30, 3])
+
+        cc_answer = cc_calculate_means(x, gamma)
+        py_answer = calculate_means(x, gamma)
 
         assert abs(cc_answer - py_answer).max() <= THRESHOLD
 
