@@ -1,7 +1,7 @@
 //
 // [PR描述](https://github.com/pybind/pybind11/pull/3544)
 // 不确定PR是否会被合并, 如果合并了, 这个feature补丁将会被删除.
-// 当前对应的版本为 pybind11 2.9.x ~ 2.10.2.
+// 当前对应的版本为 pybind11 2.9.x ~ 2.10.3.
 // 由于结构体命名冲突
 // `npy_api` -> `npy_api_patch`
 // `is_complex` -> `is_complex_patch`
