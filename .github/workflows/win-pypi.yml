@@ -24,7 +24,7 @@ jobs:
       run: |
         # 安装 setuptools, wheel, twine和pybind11
         python3 -m pip install --upgrade pip;
-        pip install setuptools wheel twine pybind11==2.10.4;
+        pip install setuptools wheel twine pybind11==2.11;
         # 安装 eigen3
         vcpkg install eigen3:x64-windows;
     - name: Build and publish
